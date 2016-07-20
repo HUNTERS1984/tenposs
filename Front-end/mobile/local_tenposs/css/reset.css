@@ -1,0 +1,43 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,vietnamese);
+a{
+    color: #14c8c8;
+}
+a:focus,a:hover{
+    text-decoration: none;
+}
+p:last-child{
+    margin-bottom: 0;
+}
+.aligncenter{
+    text-align: center;
+}
+.alignright{
+    text-align: right;
+}
+img{
+    max-width: 100%;
+}
+.imageleft .image{
+    float: left;
+    margin: 0 20px 0 0;
+}
+.imageright .image{
+    float: right;
+    margin: 0 0 0 20px;
+}
+.justify p{
+    text-align: justify;
+}
+.block{
+    display: block;
+}
+.img-circle{
+    overflow: hidden;
+}
+.imageleft .image{
+    float: left;
+    margin-right: 30px;
+}
+.pad20{padding: 20px 0;}
+.pad60{padding:60px 0;}
+.marg40{margin-bottom: 40px;}
