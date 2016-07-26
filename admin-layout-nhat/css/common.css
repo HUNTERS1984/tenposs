@@ -31,10 +31,11 @@ aside #as_nav ul li a{
     line-height: 48px;
     padding-left: 40px;
     display: block;
-    color: #fff;
+    color: #eee;
 }
-aside #as_nav ul li a:hover{
+aside #as_nav ul li a:hover,aside #as_nav ul li a.active{
     background: #384b5d url(../img/s_bgnav_on.jpg) left top no-repeat;
+    color: #fff;
 }
 /*---------------------------*/
 /* Switch */
@@ -198,10 +199,17 @@ input:checked + .slider:before {
     border-radius: 4px;
     background: #fff;
 }
-.item-staff p{
+.item-staff a{
+    display: block;
     margin: 7px;
     background: #fafafa;
     text-align: center;
     color: #2878c8;
     line-height: 31px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+.item-staff p{
+    margin: 10px 0;
+    font-size: 14px;
 }
