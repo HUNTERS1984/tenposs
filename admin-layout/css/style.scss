@@ -67,7 +67,7 @@ $bg-nav:#c8d2d6;
 html, body{height:100%; @include mainfont;}
 .page{
 	height:100%;
-	overflow:hidden;
+	// overflow:hidden;
 }
 .header{
 	height:65px;
@@ -92,7 +92,7 @@ html, body{height:100%; @include mainfont;}
 	padding:0;
 }
 .main{
-	height:100%;
+	// height:100%;
 	position:relative;
 	background:#f8f8fa;
 	.sidebar{
@@ -101,6 +101,7 @@ html, body{height:100%; @include mainfont;}
 		background:$bg-sidebar;
 		position:absolute;
 		padding-top:5px;
+		z-index:10;
 		@include transition(all 0.3s);
 		@include media(767px){
 			left:-240px;
@@ -137,6 +138,7 @@ html, body{height:100%; @include mainfont;}
 		width:100%;
 		padding-left:240px;
 		position:relative;
+		z-index:5;
 		@include transition(all 0.3s);
 		@include media(767px){
 			padding:0;
