@@ -14,46 +14,104 @@
 					<a href="#" class="btn-me btn-topbar">スタの新</a>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<!-- END -->
 
 		<div class="main-content staff">
-			<div class="wrap-btn-content">
-				<a href="#" class="btn-me btn-hong">スタの新着情報</a>
-				<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
-			</div>	<!-- end wrap-btn-content-->
-			<div class="wrapper-content clearfix">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-xs-4">
-							<div class="each-menu each-common-pr">
-								<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
-								<a href="#" class="btn-me btn-menu">スタの</a>
-							</div>
-						</div>
-						<div class="col-xs-4">
-							<div class="each-menu each-common-pr">
-								<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
-								<a href="#" class="btn-me btn-menu">スタの</a>
-							</div>
-						</div>
-						<div class="col-xs-4">
-							<div class="each-menu each-common-pr">
-								<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
-								<a href="#" class="btn-me btn-menu">スタの</a>
-							</div>
-						</div>
-						<div class="col-xs-4">
-							<div class="each-menu each-common-pr">
-								<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
-								<a href="#" class="btn-me btn-menu">スタの</a>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="wrap-preview">
+							<div class="wrap-content-prview">
+								<div class="header-preview">
+									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('PATH_ASSETS'))}}/images/nav-icon.png"  alt=""></a>
+									<h2 class="title-prview">Staff</h2>
+								</div>
+								<div class="control-nav-preview">
+									<!-- Slider main container -->
+		                            <div class="swiper-container">
+		                                <!-- Additional required wrapper -->
+		                                <div class="swiper-wrapper">
+		                                    <!-- Slides -->
+		                                    <div class="swiper-slide">Spring</div>
+		                                    <div class="swiper-slide">Summer</div>
+		                                </div>
+
+		                                <!-- If we need navigation buttons -->
+		                                <div class="swiper-button-prev"></div>
+		                                <div class="swiper-button-next"></div>
+		                            </div>
+								</div>
+								<div class="content-preview clearfix">
+									<div class="row-me fixHeight">
+										<div class="col-xs-4 padding-me">
+											<div class="each-staff">
+												<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="">
+											</div>
+										</div>
+										<div class="col-xs-4 padding-me">
+											<div class="each-staff">
+												<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="">
+											</div>
+										</div>
+										<div class="col-xs-4 padding-me">
+											<div class="each-staff">
+												<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="">
+											</div>
+										</div>
+										<div class="col-xs-4 padding-me">
+											<div class="each-staff">
+												<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="">
+											</div>
+										</div>
+									</div>
+
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				
 
-			</div>	<!-- wrap-content-->
+					<div class="col-lg-8">
+						<div class="wrap-btn-content">
+							<a href="#" class="btn-me btn-hong">スタの新着情報</a>
+							<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
+						</div>	<!-- end wrap-btn-content-->
+						<div class="wrapper-content clearfix">
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-xs-4">
+										<div class="each-menu each-common-pr">
+											<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<a href="#" class="btn-me btn-menu">スタの</a>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="each-menu each-common-pr">
+											<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<a href="#" class="btn-me btn-menu">スタの</a>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="each-menu each-common-pr">
+											<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<a href="#" class="btn-me btn-menu">スタの</a>
+										</div>
+									</div>
+									<div class="col-xs-4">
+										<div class="each-menu each-common-pr">
+											<img src="{{asset(env('PATH_ASSETS'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<a href="#" class="btn-me btn-menu">スタの</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>	<!-- wrap-content-->
+					</div>
+				</div>
+			</div>
+
 		</div>
 		<!-- END -->
 	</div>	<!-- end main-content-->
@@ -66,10 +124,21 @@
 	{{Html::script(env('PATH_ASSETS').'/js/switch/lc_switch.js')}}
 	{{Html::style(env('PATH_ASSETS').'/js/switch/lc_switch.css')}}
 
+	{{Html::script(env('PATH_ASSETS').'/js/swiper/swiper.jquery.min.js')}}
+	{{Html::style(env('PATH_ASSETS').'/js/swiper/swiper.min.css')}}
+
 	{{Html::script(env('PATH_ASSETS').'/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('input.lcs_check').lc_switch();
+
+			var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
+	            speed: 400,
+	            spaceBetween: 0,
+	            slidesPerView: 1,
+	            nextButton: '.control-nav-preview .swiper-button-next',
+	            prevButton: '.control-nav-preview .swiper-button-prev'
+	        });
 		})
 	</script>
 @stop
