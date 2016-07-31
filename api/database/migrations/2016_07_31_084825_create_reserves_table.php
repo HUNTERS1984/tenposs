@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMenusTable extends Migration
+class CreateReservesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,13 @@ class CreateMenusTable extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('reserves', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name',255)->nullable();
-            $table->integer('app_id',false)
-                ->unsigned()
-                ->nullable();
+            $table->string('reserve_url',255)->nullable();
+            $table->unsignedInteger('app_id',false)->nullable();
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at');
+            $table->timestamp('deleted_at');
             $table->index('app_id');
         });
     }
@@ -29,6 +30,6 @@ class CreateMenusTable extends Migration
      */
     public function down()
     {
-        Schema::drop('menus');
+        Schema::drop('reserves');
     }
 }

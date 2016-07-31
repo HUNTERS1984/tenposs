@@ -23,7 +23,7 @@ class CreateRelAppsStoresComponentsTable extends Migration
             $table->string('splash_url',255)->nullable();
 
             $table->primary(['app_id','store_id']);
-            $table->timestamps();
+    
         });
     }
 

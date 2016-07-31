@@ -15,7 +15,7 @@ class CreateUserSessionsTable extends Migration
         Schema::create('user_sessions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id',false)->unsigned();
-            $table->integer('app_user_id',false)->unsigned();
+            $table->integer('app_user_id',false)->unsigned()->nullable();
             $table->string('token',255)->nullable();
             $table->smallInteger('type',false)->nullable();
             $table->timestamp('created_at');

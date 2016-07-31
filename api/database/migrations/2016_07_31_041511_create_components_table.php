@@ -14,8 +14,8 @@ class CreateComponentsTable extends Migration
     {
         if( !Schema::hasTable('components') ){
             Schema::create('components', function (Blueprint $table) {
-                $table->integer('id',10)->unsigned();
-                $table->string('name',255);
+                $table->integer('id',false)->unsigned();
+                $table->string('name',255)->nullable();
                 $table->timestamp('created_at');
                 $table->timestamp('updated_at');
                 $table->timestamp('deleted_at');

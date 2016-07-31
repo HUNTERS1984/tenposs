@@ -18,7 +18,7 @@ class CreateRelAppSettingsSidemenusComponentsTable extends Migration
             $table->smallInteger('order',false)->nullable();
 
             $table->primary(['app_setting_id','sidemenu_id']);
-            $table->timestamps();
+            
         });
     }
 

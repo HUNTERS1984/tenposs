@@ -15,14 +15,14 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title',255)->nullable();
-            $table->price('price',100)->nullable();
+            $table->string('price',100)->nullable();
             $table->string('image_url',255)->nullable();
             $table->text('description')->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');
-            $table->integer('coupon_id',false)->nullable();
-            $table->primary('coupon_id');
+            $table->integer('coupon_id',false)->unsigned()->nullable();
+            $table->index('coupon_id');
         });
     }
 

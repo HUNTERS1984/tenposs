@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRelItemsTable extends Migration
+class CreateRelMenusItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateRelItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rel_items', function (Blueprint $table) {
+        Schema::create('rel_menus_items', function (Blueprint $table) {
+            $table->unsignedInteger('menu_id',false)->nullable();
             $table->unsignedInteger('item_id',false)->nullable();
-            $table->unsignedInteger('related_id',false)->nullable();
-            $table->primary(['item_id','related_id']);
+            $table->primary(['menu_id','item_id']);
         });
     }
 
@@ -26,6 +26,6 @@ class CreateRelItemsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('rel_items');
+        Schema::drop('rel_menus_items');
     }
 }

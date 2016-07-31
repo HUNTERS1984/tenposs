@@ -16,9 +16,8 @@ class CreatePhotoCategoriesTable extends Migration
             $table->unsignedInteger('id');
             $table->string('name',255)->nullable();
             $table->unsignedInteger('app_id',false)->nullable();
-
-            $table->primary(['id','app_id']);
-            $table->timestamps();
+            $table->primary(['id']);
+            $table->index('app_id');
         });
     }
 

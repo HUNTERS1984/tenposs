@@ -13,7 +13,7 @@ class CreateAdminContactsTable extends Migration
     public function up()
     {
         Schema::create('admin_contacts', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id');// included increments and unsigned and not null end primary key
             $table->string('email',100);
             $table->string('name',255);
             $table->text('message');

@@ -13,7 +13,7 @@ class CreateAddressesTable extends Migration
     public function up()
     {
         Schema::create('addresses', function (Blueprint $table) {
-            $table->integer('id',false)->unsigned();
+            $table->integer('id',false)->unsigned();// or $table->integer('id',false,true)
             $table->string('lat',20)->nullable();
             $table->string('long',20)->nullable();
             $table->string('tel',20)->nullable();
@@ -21,8 +21,8 @@ class CreateAddressesTable extends Migration
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
             $table->integer('app_id',false)->unsigned();
-            $table->primary(['id','app_id']);
-
+            $table->primary(['id']);
+            $table->index('app_id');
         });
     }
 
