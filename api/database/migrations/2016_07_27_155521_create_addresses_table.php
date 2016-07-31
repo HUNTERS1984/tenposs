@@ -13,16 +13,16 @@ class CreateAddressesTable extends Migration
     public function up()
     {
         Schema::create('addresses', function (Blueprint $table) {
-            $table->integer('id',10)->unsigned();
-            $table->string('lat',20);
-            $table->string('long',20);
-            $table->string('tel',20);
-            $table->string('title',100);
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
-            $table->integer('app_id',10)->unsigned();
-            $table->primary('id');
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->integer('id',false)->unsigned();
+            $table->string('lat',20)->nullable();
+            $table->string('long',20)->nullable();
+            $table->string('tel',20)->nullable();
+            $table->string('title',100)->nullable();
+            $table->timestamp('start_time')->nullable();
+            $table->timestamp('end_time')->nullable();
+            $table->integer('app_id',false)->unsigned();
+            $table->primary(['id','app_id']);
+
         });
     }
 
