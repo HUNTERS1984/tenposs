@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('deleted_at')->nullable();
            // $table->timestamps();
             $table->string('company',255)->nullable();
-            $table->string('string',255)->nullable();
+            $table->string('address',255)->nullable();
             $table->string('tel',20)->nullable();
 
             $table->unique('email');
