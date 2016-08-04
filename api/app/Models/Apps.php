@@ -9,6 +9,6 @@ class Apps extends Model
     //
     protected $table = 'apps';
     public function user(){
-        return $this->belongsTo(Users::class);
+        return $this->belongsTo('App\Models\Users','user_id');
     }
 }
