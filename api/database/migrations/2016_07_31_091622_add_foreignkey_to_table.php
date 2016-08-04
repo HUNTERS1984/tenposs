@@ -16,10 +16,10 @@ class AddForeignkeyToTable extends Migration
 
         Schema::table('addresses', function(Blueprint $table)
         {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
         Schema::table('app_settings', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
             $table->foreign('template_id')->references('id')->on('templates');
         });
 
@@ -32,7 +32,7 @@ class AddForeignkeyToTable extends Migration
         });
 
         Schema::table('coupons', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
 
         Schema::table('items', function (Blueprint $table) {
@@ -40,15 +40,15 @@ class AddForeignkeyToTable extends Migration
         });
 
         Schema::table('menus', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
 
         Schema::table('news', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
 
         Schema::table('photo_categories', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
 
         Schema::table('photos', function (Blueprint $table) {
@@ -81,7 +81,7 @@ class AddForeignkeyToTable extends Migration
         });
 
         Schema::table('reserves', function (Blueprint $table) {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('store_id')->references('id')->on('stores');
         });
 
         Schema::table('user_messages', function (Blueprint $table) {

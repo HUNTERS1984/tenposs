@@ -20,9 +20,9 @@ class CreateAddressesTable extends Migration
             $table->string('title',100)->nullable();
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
-            $table->integer('app_id',false)->unsigned();
+            $table->integer('store_id',false)->unsigned();
             $table->primary(['id']);
-            $table->index('app_id');
+            $table->index('store_id');
         });
     }
 

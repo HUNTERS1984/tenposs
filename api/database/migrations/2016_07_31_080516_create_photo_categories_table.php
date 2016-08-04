@@ -15,9 +15,9 @@ class CreatePhotoCategoriesTable extends Migration
         Schema::create('photo_categories', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->string('name',255)->nullable();
-            $table->unsignedInteger('app_id',false)->nullable();
+            $table->unsignedInteger('store_id',false)->nullable();
             $table->primary(['id']);
-            $table->index('app_id');
+            $table->index('store_id');
         });
     }
 

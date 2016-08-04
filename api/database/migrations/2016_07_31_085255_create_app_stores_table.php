@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReservesTable extends Migration
+class CreateAppStoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,13 @@ class CreateReservesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reserves', function (Blueprint $table) {
+        Schema::create('app_stores', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('reserve_url',255)->nullable();
-            $table->unsignedInteger('store_id',false)->nullable();
+            $table->string('name')->nullable();
+            $table->integer('store_id')->unsigned()->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');
-            $table->index('store_id');
         });
     }
 
@@ -30,6 +29,6 @@ class CreateReservesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('reserves');
+        Schema::drop('app_stores');
     }
 }
