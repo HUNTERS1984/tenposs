@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     protected $tables = [
         'users',
         'apps',
+        'stores',
+        'store_top_main_images'
     ];
 
     /**
@@ -22,6 +24,7 @@ class DatabaseSeeder extends Seeder
      */
     protected $seeders = [
         UsersTableSeeder::class,
+        StoreTableSeeder::class
     ];
     /**
      * Run the database seeds.

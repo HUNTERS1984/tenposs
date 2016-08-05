@@ -47,3 +47,15 @@ $factory->define(App\Models\Apps::class, function (Faker $faker) {
         'status' => $faker->randomElement(array(0,1,3,4))
     ];
 });
+
+$factory->define(App\Models\Stores::class, function (Faker $faker) {
+    return [
+        'name' => $faker->numerify('Stores #####')
+    ];
+});
+
+$factory->define(App\Models\StoreTopMainImages::class, function (Faker $faker) {
+    return [
+        'image_url' => $faker->imageUrl($width = 800, $height = 400, 'cats'),
+    ];
+});
