@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::group(array('prefix' => 'api/v1'), function()
+{
+    Route::post('login','AppUserController@login');
+    Route::get('top/token/{token?}/time/{time?}/sig/{sig?}','TopController@top');
+    Route::get('appinfo/storeid/{store_id?}/token/{token?}/time/{time?}/sig/{sig?}','TopController@appinfo');
+
+});
