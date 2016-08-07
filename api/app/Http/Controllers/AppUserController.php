@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Http\Response;
 use Mockery\CountValidator\Exception;
 
 class AppUserController extends Controller
@@ -46,7 +45,8 @@ class AppUserController extends Controller
                             'profile' => $profile,
                             'token' => '7aef1eea1f967d7f8fbcb8cbe4639dd0',
                             'app_id' => 1,
-                            'login_type' => 'email'
+                            'login_type' => 'email',
+                            'app_user_id' => 1
                         );
                         $response = array('code' => $statusCode,
                             'message' => $message,
@@ -71,7 +71,8 @@ class AppUserController extends Controller
                             'profile' => $profile,
                             'token' => '7aef1eea1f967d7f8fbcb8cbe4639dd0',
                             'app_id' => 1,
-                            'login_type' => 'social'
+                            'login_type' => 'social',
+                            'app_user_id' => 2
                         );
                         $response = array('code' => $statusCode,
                             'message' => $message,
@@ -93,5 +94,47 @@ class AppUserController extends Controller
         } finally {
             return response()->json($response);
         }
+    }
+
+
+    public function setpushkey()
+    {
+
+        try {
+            $statusCode = 1000;
+            $message = 'OK';
+            $token = $this->request['token'];
+            $client = $this->request['client'];
+            $time = $this->request['time'];
+            $app_user_id = $this->request['app_user_id'];
+            $sig = $this->request['sig'];
+            if (!empty($token) && !empty($time) && !empty($sig) && !empty($client) && !empty($app_user_id)) { //input ok
+                $response = array('code' => $statusCode,
+                    'message' => $message);
+            } else {
+                $statusCode = 1004;
+                $message = 'Param input invalid';
+                $response = array(
+                    'code' => $statusCode,
+                    'message' => $message
+                );
+            }
+        } catch (Exception $e) {
+            $statusCode = 1005;
+            $message = 'Unknown error';
+            $response = array(
+                'code' => $statusCode,
+                'message' => $message,
+                'data' => []
+            );
+        } finally {
+            return response()->json($response);
+        }
+    }
+
+    public function test()
+    {
+        $response = $this->request->all();
+        return response()->json($response);
     }
 }
