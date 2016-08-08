@@ -6,6 +6,7 @@ namespace App\Repositories\Eloquents;
 use App\User;
 use App\Repositories\Contracts\UsersRepositoryInterface;
 
+
 class UsersRepository implements UsersRepositoryInterface
 {
     public function all()

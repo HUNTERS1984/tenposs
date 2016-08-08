@@ -12,4 +12,15 @@ class Users extends Model
     public function apps(){
         return $this->hasMany('App\Models\Apps','user_id','id');
     }
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name' => 'required',
+        'email' => 'required|email'
+        //...
+    ];
 }
