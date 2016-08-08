@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
         factory(Users::class, 50)->create()
             ->each(function ($user) {
                 // Create app for per user
-                $user->apps()->saveMany(factory(Apps::class),2)->make();
+                $user->apps()->saveMany(factory(Apps::class,2)->make());
             });
     }
 }

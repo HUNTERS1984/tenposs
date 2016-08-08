@@ -16,6 +16,7 @@ use App\Models\Users;
 use App\Models\AppUsers;
 use App\Models\UserProfiles;
 use App\Models\Apps;
+use App\Models\AdminContacts;
 
 
 
@@ -57,5 +58,44 @@ $factory->define(App\Models\Stores::class, function (Faker $faker) {
 $factory->define(App\Models\StoreTopMainImages::class, function (Faker $faker) {
     return [
         'image_url' => $faker->imageUrl($width = 800, $height = 400, 'cats'),
+    ];
+});
+
+$factory->define(App\Models\Addresses::class, function (Faker $faker) {
+    return [
+        'latitude' => $faker->latitude($min = -90, $max = 90),
+        'longitude' => $faker->longitude($min = -180, $max = 180),// 77.147489
+        'tel' => $faker->phoneNumber,
+        'title' => $faker->streetAddress,
+        'start_time' => $faker->unixTime($max = 'now'),
+        'end_time' => $faker->unixTime($max = 'now')
+    ];
+});
+
+$factory->define(App\Models\AdminContacts::class, function (Faker $faker) {
+    return [
+        'email' => $faker->email,
+        'name' => $faker->name,
+        'message' => $faker->sentence(20)
+    ];
+});
+
+
+$factory->define(App\Models\Templates::class, function (Faker $faker) {
+    return [
+        'name' => $faker->numerify('Template #####'),
+    ];
+});
+
+
+$factory->define(App\Models\PhotoCategories::class, function (Faker $faker) {
+    return [
+        'name' => $faker->numerify('Photo Category #####'),
+    ];
+});
+
+$factory->define(App\Models\Photos::class, function (Faker $faker) {
+    return [
+        'image_url' => $faker->imageUrl($width = 800, $height = 800, 'cats'),
     ];
 });

@@ -14,7 +14,9 @@ class DatabaseSeeder extends Seeder
         'users',
         'apps',
         'stores',
-        'store_top_main_images'
+        'store_top_main_images',
+        'admin_contacts',
+        'templates'
     ];
 
     /**
@@ -24,7 +26,9 @@ class DatabaseSeeder extends Seeder
      */
     protected $seeders = [
         UsersTableSeeder::class,
-        StoreTableSeeder::class
+        StoreTableSeeder::class,
+        AdminContactsSeeder::class,
+        TemplatesSeeder::class
     ];
     /**
      * Run the database seeds.
