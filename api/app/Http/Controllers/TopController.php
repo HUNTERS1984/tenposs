@@ -2,15 +2,26 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests;
+
+use Illuminate\Http\Request;
 
 class TopController extends Controller
 {
-    //
-    public function top($token = null, $time = null, $sig = null)
+
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    public function top()
     {
         try {
+            $token = $this->request['token'];
+            $time = $this->request['time'];
+            $sig = $this->request['sig'];
             if (!empty($token) && !empty($time) && !empty($sig)) { //input ok
                 $statusCode = 1000;
                 $message = 'OK';
@@ -43,6 +54,14 @@ class TopController extends Controller
                     array('image_url' => 'slideimage2.jpg'),
                 ];
                 $data = array(
+                    'store_id' =>1,
+                    'items' => $items,
+                    'photos' => $photo,
+                    'news' => $new,
+                    'images' => $images
+                );
+                $data2 = array(
+                    'store_id' =>2,
                     'items' => $items,
                     'photos' => $photo,
                     'news' => $new,
@@ -51,7 +70,7 @@ class TopController extends Controller
                 $response = array(
                     'code' => $statusCode,
                     'message' => $message,
-                    'data' => $data
+                    'data' => [$data,$data2]
                 );
             } else {
                 $statusCode = 1004;
@@ -79,11 +98,15 @@ class TopController extends Controller
     public function appinfo($store_id = null, $token = null, $time = null, $sig = null)
     {
         try {
+            $store_id = $this->request['store_id'];
+            $token = $this->request['token'];
+            $time = $this->request['time'];
+            $sig = $this->request['sig'];
             if (!empty($token) && !empty($time) && !empty($sig)) { //input ok
                 $statusCode = 1000;
                 $message = 'OK';
                 if (isset($store_id) && $store_id > 0) { //get detail one store
-                    $info = array('lat' => '324324324324', 'long' => '32432432432', 'tel' => '2343432432', 'title' => 'Store 1', 'start_time' => '2016-08-02 10:10:10', 'end_time' => '2016-08-02 23:10:10');
+                    $info = array('latitude' => '324324324324', 'longitude  ' => '32432432432', 'tel' => '2343432432', 'title' => 'Store 1', 'start_time' => '2016-08-02 10:10:10', 'end_time' => '2016-08-02 23:10:10');
                     $setting = array('title' => "App Store 1", 'title_color' => '#sdasda', 'font_size' => 12
                     , 'font_family' => '', 'header_color' => '#aaaaaa', 'menu_icon_color' => '#ffffff', 'menu_background_color' => '#cccccc'
                     , 'menu_font_color' => '', 'menu_font_size' => 14, 'menu_font_family' => '', 'template_id' => 1, 'top_main_image_url' => '');

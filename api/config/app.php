@@ -38,7 +38,6 @@ return [
     | your application so that it is used when running Artisan tasks.
     |
     */
-
     'url' => env('APP_URL', 'http://ec2-54-204-210-230.compute-1.amazonaws.com/tenposs/api/public'),
 
     /*

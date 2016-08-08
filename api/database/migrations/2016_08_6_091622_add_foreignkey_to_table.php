@@ -103,7 +103,11 @@ class AddForeignkeyToTable extends Migration
         {
             $table->foreign('app_user_id')->references('id')->on('app_users');
         });
-        
+
+        Schema::table('store_top_main_images', function(Blueprint $table)
+        {
+            $table->foreign('store_id')->references('id')->on('stores');
+        });
 
     }
 

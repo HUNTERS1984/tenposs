@@ -1,5 +1,5 @@
 <?php
-// app/Repositories/Eloquents/ProductRepository.php
+// app/Repositories/Eloquents/UsersRepository.php
 
 namespace App\Repositories\Eloquents;
 
