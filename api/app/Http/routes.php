@@ -19,9 +19,22 @@ Route::get('/', function () {
 Route::group(array('prefix' => 'api/v1'), function()
 {
     Route::post('login','AppUserController@login');
+
     Route::get('top/token/{token?}/time/{time?}/sig/{sig?}','TopController@top');
     Route::get('appinfo/storeid/{store_id?}/token/{token?}/time/{time?}/sig/{sig?}','TopController@appinfo');
 
-    Route::resource('user','UserController');
 
+    Route::post('setpushkey','AppUserController@setpushkey');
+    Route::get('top','TopController@top');
+    Route::get('appinfo','TopController@appinfo');
+    Route::get('items','ItemController@index');
+    Route::get('items/detail','ItemController@detail');
+    Route::post('test','AppUserController@test');
+    Route::get('news','NewController@index');
+    Route::get('photo','PhotoController@index');
+    Route::get('reserve','ReserveController@index');
+    Route::get('coupon','CouponController@index');
+
+    // User
+    Route::resource('user','UserController');
 });
