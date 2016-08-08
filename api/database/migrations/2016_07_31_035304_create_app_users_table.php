@@ -14,7 +14,7 @@ class CreateAppUsersTable extends Migration
     {
         if (! Schema::hasTable('app_users')) {
             Schema::create('app_users', function (Blueprint $table) {
-                $table->integer('id',false)->unsigned();
+                $table->increments('id');
                 $table->string('email',100)->nullable();
                 $table->string('password',60)->nullable();
                 $table->timestamp('created_at');
@@ -27,7 +27,8 @@ class CreateAppUsersTable extends Migration
                 $table->string('android_push_key',255)->nullable();
                 $table->string('apple_push_key',255)->nullable();
                 $table->smallInteger('role',false)->unsigned();//COMMENT '0: end-user; 1 staff-user'
-                $table->primary(['id']);
+             
+                $table->index('social_id');
                 $table->index('app_id');
             });
         }

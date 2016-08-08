@@ -13,10 +13,10 @@ class CreatePhotoCategoriesTable extends Migration
     public function up()
     {
         Schema::create('photo_categories', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->string('name',255)->nullable();
             $table->unsignedInteger('store_id',false)->nullable();
-            $table->primary(['id']);
+           
             $table->index('store_id');
         });
     }

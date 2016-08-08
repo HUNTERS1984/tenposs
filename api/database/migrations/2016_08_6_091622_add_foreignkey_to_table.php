@@ -67,7 +67,7 @@ class AddForeignkeyToTable extends Migration
 
         Schema::table('rel_apps_stores', function (Blueprint $table) {
             $table->foreign('app_id')->references('id')->on('apps');
-            $table->foreign('store_id')->references('id')->on('stores');
+            $table->foreign('app_store_id')->references('id')->on('app_stores');
         });
 
         Schema::table('rel_items', function (Blueprint $table) {

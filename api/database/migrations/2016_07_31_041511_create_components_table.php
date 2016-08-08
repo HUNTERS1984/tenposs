@@ -14,12 +14,11 @@ class CreateComponentsTable extends Migration
     {
         if( !Schema::hasTable('components') ){
             Schema::create('components', function (Blueprint $table) {
-                $table->integer('id',false)->unsigned();
+                $table->increments('id');
                 $table->string('name',255)->nullable();
                 $table->timestamp('created_at');
                 $table->timestamp('updated_at');
                 $table->timestamp('deleted_at');
-                $table->primary('id');
             });
         }
 

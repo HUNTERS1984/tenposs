@@ -19,6 +19,9 @@ class CreateAppStoresTable extends Migration
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');
+
+            $table->index('store_id');
+
         });
     }
 

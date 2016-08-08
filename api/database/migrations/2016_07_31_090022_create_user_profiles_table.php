@@ -13,7 +13,7 @@ class CreateUserProfilesTable extends Migration
     public function up()
     {
         Schema::create('user_profiles', function (Blueprint $table) {
-            $table->unsignedInteger('id',false);
+            $table->increments('id');
             $table->string('name',100)->nullable();
             $table->smallInteger('gender',false)->nullable();
             $table->string('address',255)->nullable();
@@ -30,7 +30,6 @@ class CreateUserProfilesTable extends Migration
             $table->string('instagram_token',255)->nullable();
             $table->unsignedInteger('app_user_id',false)->nullable();
 
-            $table->primary(['id']);
             $table->index('app_user_id');
         });
     }

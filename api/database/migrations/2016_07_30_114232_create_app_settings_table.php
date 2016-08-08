@@ -30,6 +30,7 @@ class CreateAppSettingsTable extends Migration
             $table->string('menu_font_family',100)->nullable();
             $table->integer('template_id',false)->unsigned();
             $table->string('top_main_image_url',255)->nullable();
+            
             $table->index('store_id');
             $table->index('template_id');
         });

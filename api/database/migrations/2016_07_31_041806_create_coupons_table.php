@@ -14,7 +14,7 @@ class CreateCouponsTable extends Migration
     {
         if(!Schema::hasTable('coupons') ){
             Schema::create('coupons', function (Blueprint $table) {
-                $table->integer('id',false)->unsigned();
+                $table->increments('id');
                 $table->smallInteger('type',false)->nullable();
                 $table->string('title',255)->nullable();
                 $table->text('description')->nullable();
@@ -28,7 +28,6 @@ class CreateCouponsTable extends Migration
                 $table->string('image_url',255)->nullable();
                 $table->integer('limit',false)->nullable();
 
-                $table->primary(['id']);
                 $table->index('store_id');
 
             });
