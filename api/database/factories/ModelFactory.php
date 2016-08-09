@@ -19,6 +19,21 @@ use App\Models\Apps;
 use App\Models\AdminContacts;
 
 
+$factory->define(App\Models\AppUsers::class, function (Faker $faker) {
+    return [
+        'email' => $faker->safeEmail,
+        'password' => bcrypt('123456'), // default password
+        'social_type' => $faker->randomElement(array(0,1,3,4)),
+        'social_id' => $faker->sha1,
+        'temporary_hash' => $faker->sha256,
+        'android_push_key' => $faker->sha256,
+        'apple_push_key' => $faker->sha256,
+        'temporary_hash' => $faker->sha256,
+        'role' => $faker->randomElement(array(0,1,3,4)),
+    ];
+});
+
+
 
 
 $factory->define(App\Models\Users::class, function (Faker $faker) {
@@ -55,7 +70,7 @@ $factory->define(App\Models\Stores::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(App\Models\StoreTopMainImages::class, function (Faker $faker) {
+$factory->define(App\Models\AppTopMainImages::class, function (Faker $faker) {
     return [
         'image_url' => $faker->imageUrl($width = 800, $height = 400, 'cats'),
     ];
@@ -99,3 +114,11 @@ $factory->define(App\Models\Photos::class, function (Faker $faker) {
         'image_url' => $faker->imageUrl($width = 800, $height = 800, 'cats'),
     ];
 });
+
+$factory->define(App\Models\SlideMenus::class, function (Faker $faker) {
+    return [
+        'name' => $faker->numerify('Menu #####'),
+    ];
+});
+
+

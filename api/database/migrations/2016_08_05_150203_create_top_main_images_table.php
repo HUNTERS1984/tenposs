@@ -13,12 +13,12 @@ class CreateTopMainImagesTable extends Migration
     public function up()
     {
         // (id, image_url,created_at,updated_at, storeid)
-        Schema::create('store_top_main_images', function (Blueprint $table) {
+        Schema::create('app_top_main_images', function (Blueprint $table) {
             $table->increments('id');
             $table->string('image_url',255)->nullable();
-            $table->integer('store_id',false)->unsigned();
+            $table->integer('app_id',false)->unsigned()->nullable();
             $table->timestamps();
-            $table->index('store_id');
+            $table->index('app_id');
         });
     }
 
@@ -29,6 +29,6 @@ class CreateTopMainImagesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('store_top_main_images');
+        Schema::drop('app_top_main_images');
     }
 }

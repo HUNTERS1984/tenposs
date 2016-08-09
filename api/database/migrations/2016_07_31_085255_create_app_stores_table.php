@@ -15,7 +15,7 @@ class CreateAppStoresTable extends Migration
         Schema::create('app_stores', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->integer('store_id')->unsigned()->nullable();
+            $table->integer('store_id',false)->unsigned()->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');

@@ -27,7 +27,7 @@ class StoreTableSeeder extends Seeder
                         $category->photo()->saveMany(factory(Photos::class,9)->make());
                     });
 
-
+                
 
             });
     }

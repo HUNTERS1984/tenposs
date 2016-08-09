@@ -21,7 +21,6 @@ class CreateUserMessagesTable extends Migration
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');
             
-          
             $table->index('from_user_id');
             $table->index('to_user_id');
         });

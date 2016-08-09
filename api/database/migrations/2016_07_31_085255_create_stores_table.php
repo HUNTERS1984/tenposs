@@ -15,9 +15,14 @@ class CreateStoresTable extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
+            $table->unsignedInteger('app_id',false);
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at');
+
+            $table->index('app_id');
+
+
         });
     }
 

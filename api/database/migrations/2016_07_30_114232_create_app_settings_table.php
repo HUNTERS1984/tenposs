@@ -14,7 +14,7 @@ class CreateAppSettingsTable extends Migration
     {
         Schema::create('app_settings', function (Blueprint $table) {
             $table->increments('id');// Auto increments and unsigned
-            $table->integer('store_id',false)->unsigned();
+            $table->integer('app_id',false)->unsigned();
             $table->string('title',255)->nullable();
             $table->string('title_color',9)->nullable();
             $table->timestamp('created_at');
@@ -31,7 +31,7 @@ class CreateAppSettingsTable extends Migration
             $table->integer('template_id',false)->unsigned();
             $table->string('top_main_image_url',255)->nullable();
             
-            $table->index('store_id');
+            $table->index('app_id');
             $table->index('template_id');
         });
 

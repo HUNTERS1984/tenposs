@@ -13,13 +13,14 @@ class CreateUserSessionsTable extends Migration
     public function up()
     {
         Schema::create('user_sessions', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('id',false)->unsigned();
+
+            $table->increments('id');
             $table->integer('app_user_id',false)->unsigned()->nullable();
             $table->string('token',255)->nullable();
             $table->smallInteger('type',false)->nullable();
-            $table->timestamp('created_at');
-            $table->primary(['id','app_user_id']);
+            $table->timestamps();
+
+            $table->index(['app_user_id']);
         });
     }
 
