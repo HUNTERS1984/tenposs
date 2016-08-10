@@ -19,7 +19,11 @@ class DatabaseSeeder extends Seeder
         'templates',
         'sidemenus',
         'app_settings',
-        'rel_app_settings_sidemenus'
+        'rel_app_settings_sidemenus',
+        'app_users',
+        'user_profiles',
+        'coupons',
+        'items'
     ];
 
     /**
@@ -29,7 +33,10 @@ class DatabaseSeeder extends Seeder
      */
     protected $seeders = [
         UsersTableSeeder::class,
-        SlideMenuSeeder::class
+        SlideMenuSeeder::class,
+        AdminContactsSeeder::class,
+        UserProfileSeeder::class,
+        ItemsSeeder::class
     ];
     /**
      * Run the database seeds.

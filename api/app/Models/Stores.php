@@ -18,4 +18,7 @@ class Stores extends Model
         return $this->hasMany('App\Models\PhotoCategories','store_id','id');
     }
 
+    public function coupons(){
+        return $this->hasMany('App\Models\Coupons','store_id','id');
+    }
 }

@@ -121,4 +121,37 @@ $factory->define(App\Models\SlideMenus::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(App\Models\UserProfiles::class, function (Faker $faker) {
+    return [
+        'name' => $faker->firstName.' '.$faker->lastName,
+        'gender' => $faker->randomElement(['Male','Female']),
+        'address' => $faker->address,
+        'avatar_url' => $faker->imageUrl(300,300,'cats')
+    ];
+});
 
+
+$factory->define(App\Models\Coupons::class, function (Faker $faker) {
+    return [
+        'type' =>  $faker->randomElement(array(0,1,3,4)),
+        'title' => $faker->numerify('Coupon #####'),
+        'description' => $faker->sentence(10),
+        'start_date' => date($format = 'Y-m-d H:s:i'),
+        'end_date' => date($format = 'Y-m-d H:s:i'),
+        'status' => $faker->randomElement(array(0,1,3,4)),
+        'image_url' => $faker->imageUrl(300,300,'cats'),
+        'limit' => 50
+    ];
+});
+
+
+
+$factory->define(App\Models\Items::class, function (Faker $faker) {
+    return [
+
+        'title' => $faker->numerify('Coupon #####'),
+        'price' => 10000,
+        'image_url' => $faker->imageUrl(300,300,'cats'),
+        'description' => $faker->sentence(10),
+    ];
+});

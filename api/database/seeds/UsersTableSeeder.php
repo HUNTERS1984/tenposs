@@ -9,6 +9,8 @@ use App\Models\Photos;
 use App\Models\Addresses;
 use App\Models\AppTopMainImages;
 use App\Models\Stores;
+use App\Models\Coupons;
+
 
 use Faker\Generator as Faker;
 class UsersTableSeeder extends Seeder
@@ -54,12 +56,18 @@ class UsersTableSeeder extends Seeder
                         )]);
                     });
 
+                // Create app_users
+                $app->app_users()->saveMany(factory(\App\Models\AppUsers::class, 2)->make());
+
+
             });
 
         Stores::all()
             ->each(function($store){
                 $store->address()->saveMany(factory(Addresses::class,2)->make());
                 $store->photo_categories( factory(PhotoCategories::class, 3)->make());
+                $store->coupons( factory(Coupons::class, 5)->make());
+                
             });
 
         PhotoCategories::all()

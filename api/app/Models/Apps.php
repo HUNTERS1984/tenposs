@@ -37,4 +37,8 @@ class Apps extends Model
         return $this->hasMany('App\Models\AppTopMainImages','app_id','id');
     }
 
+    public function app_users(){
+        return $this->hasMany('App\Models\AppUsers','app_id','id');
+    }
+
 }
