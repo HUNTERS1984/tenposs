@@ -16,6 +16,7 @@ class ItemsSeeder extends Seeder
         Coupons::all()
             ->each(function($c){
                 $c->items()->saveMany(factory(\App\Models\Items::class, 5)->make());
+                // rel_menus_items
             });
     }
 }

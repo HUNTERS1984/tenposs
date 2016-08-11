@@ -16,9 +16,9 @@ class CreateAppStoresTable extends Migration
             $table->increments('id');
             $table->string('name')->nullable();
             $table->integer('store_id',false)->unsigned()->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
 
             $table->index('store_id');
 

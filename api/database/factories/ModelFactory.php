@@ -117,9 +117,16 @@ $factory->define(App\Models\Photos::class, function (Faker $faker) {
 
 $factory->define(App\Models\SlideMenus::class, function (Faker $faker) {
     return [
+        'name' => $faker->numerify('Slide Menu #####'),
+    ];
+});
+
+$factory->define(App\Models\Menus::class, function (Faker $faker) {
+    return [
         'name' => $faker->numerify('Menu #####'),
     ];
 });
+
 
 $factory->define(App\Models\UserProfiles::class, function (Faker $faker) {
     return [
@@ -153,5 +160,11 @@ $factory->define(App\Models\Items::class, function (Faker $faker) {
         'price' => 10000,
         'image_url' => $faker->imageUrl(300,300,'cats'),
         'description' => $faker->sentence(10),
+    ];
+});
+
+$factory->define(App\Models\Components::class, function (Faker $faker) {
+    return [
+        'name' => $faker->numerify('Components #####'),
     ];
 });

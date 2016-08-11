@@ -17,9 +17,9 @@ class CreatePhotosTable extends Migration
             $table->string('image_url')->nullable();
             $table->unsignedInteger('photo_category_id',false)->nullable();
 
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
           
             $table->index('photo_category_id');
         });

@@ -17,9 +17,9 @@ class CreateAppSettingsTable extends Migration
             $table->integer('app_id',false)->unsigned();
             $table->string('title',255)->nullable();
             $table->string('title_color',9)->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             $table->smallInteger('font_size',false);
             $table->string('font_family',100)->nullable();
             $table->string('header_color',9)->nullable();

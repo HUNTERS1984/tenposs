@@ -23,7 +23,11 @@ class DatabaseSeeder extends Seeder
         'app_users',
         'user_profiles',
         'coupons',
-        'items'
+        'items',
+        'rel_items',
+        'rel_menus_items',
+        'components',
+        'rel_app_settings_components'
     ];
 
     /**
@@ -36,7 +40,9 @@ class DatabaseSeeder extends Seeder
         SlideMenuSeeder::class,
         AdminContactsSeeder::class,
         UserProfileSeeder::class,
-        ItemsSeeder::class
+        ItemsSeeder::class,
+        RelMenuItemsSeeder::class,
+        Components_RelAppSettingComponents::class
     ];
     /**
      * Run the database seeds.

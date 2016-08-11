@@ -17,9 +17,9 @@ class CreateAppUsersTable extends Migration
                 $table->increments('id');
                 $table->string('email',100)->nullable();
                 $table->string('password',60)->nullable();
-                $table->timestamp('created_at');
-                $table->timestamp('updated_at');
-                $table->timestamp('deleted_at');
+                $table->timestamp('created_at')->nullable();
+                $table->timestamp('updated_at')->nullable();
+                $table->timestamp('deleted_at')->nullable();
                 $table->smallInteger('social_type',false);//COMMENT '0: Facebook; 1: Twitter'
                 $table->string('social_id',255)->nullable();
                 $table->integer('app_id',false)->unsigned();

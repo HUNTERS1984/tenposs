@@ -21,4 +21,9 @@ class Stores extends Model
     public function coupons(){
         return $this->hasMany('App\Models\Coupons','store_id','id');
     }
+
+    public function menus(){
+        return $this->hasMany('App\Models\Menus','store_id','id');
+    }
+
 }

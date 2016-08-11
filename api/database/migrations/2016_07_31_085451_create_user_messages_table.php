@@ -17,9 +17,9 @@ class CreateUserMessagesTable extends Migration
             $table->unsignedInteger('from_user_id',false)->nullable();
             $table->unsignedInteger('to_user_id',false)->nullable();
             $table->string('message')->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             
             $table->index('from_user_id');
             $table->index('to_user_id');

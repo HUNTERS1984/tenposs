@@ -34,8 +34,8 @@ class UsersTableSeeder extends Seeder
         Apps::all()
             ->each(function ($app) {
                 // apps has many stores, stores has many addresses
-                $app->stores()->saveMany(factory(Stores::class, 2)->make());
-                $app->app_top_main_images()->saveMany(factory(AppTopMainImages::class,2)->make());
+                $app->stores()->saveMany( factory(Stores::class, 2)->make() );
+                $app->app_top_main_images()->saveMany( factory(AppTopMainImages::class,2)->make() );
 
                 factory(Templates::class,2)->create()
                     ->each(function($template) use($app){
@@ -64,10 +64,10 @@ class UsersTableSeeder extends Seeder
 
         Stores::all()
             ->each(function($store){
-                $store->address()->saveMany(factory(Addresses::class,2)->make());
-                $store->photo_categories( factory(PhotoCategories::class, 3)->make());
-                $store->coupons( factory(Coupons::class, 5)->make());
-                
+                $store->address()->saveMany( factory(Addresses::class,2)->make() );
+                $store->photo_categories()->saveMany( factory(PhotoCategories::class, 3)->make() );
+                $store->coupons()->saveMany( factory(Coupons::class, 5)->make() );
+                $store->menus()->saveMany(factory(\App\Models\Menus::class, 5)->make());
             });
 
         PhotoCategories::all()
