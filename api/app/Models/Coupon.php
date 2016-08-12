@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Coupons extends Model
+class Coupon extends Model
 {
     //
     protected $table = 'coupons';
 
     public function items(){
-        return $this->hasMany('App\Models\Items','coupon_id','id');
+        return $this->hasMany(Item::class);
     }
 }
