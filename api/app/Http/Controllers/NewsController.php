@@ -29,29 +29,10 @@ use Illuminate\Support\Facades\Hash;
 use DB;
 use Mockery\CountValidator\Exception;
 
-class ItemController extends Controller
+class NewsController extends Controller
 {
-    public function menu(Request $request) {
-
-        $check_items = array('store_id', 'time', 'sig');
-
-        $ret = $this->validate_param($check_items);
-        if ($ret)
-            return $ret;
-
-        try {
-            $app = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
-        } catch (\Illuminate\Database\QueryException $e) {
-            return $this->error(9999);
-        }
-    
-        $this->body['data']['menus'] = $app;
-        return $this->output($this->body);
-    }
-
-    public function items(Request $request) {
-
-        $check_items = array('menu_id', 'pageindex', 'pagesize', 'time', 'sig');
+    public function index(Request $request) {
+        $check_items = array('store_id', 'pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -61,18 +42,19 @@ class ItemController extends Controller
             return $this->error(1004);
 
         $skip = (Input::get('pageindex') - 1)*Input::get('pagesize');
+
         try {
-            $total_items = Menu::find(Input::get('menu_id'))->items()->count();
-            $items = [];
-            if ($total_items > 0)
-                $items = Menu::find(Input::get('menu_id'))->items()->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
+            $total_news = News::where('store_id', Input::get('store_id'))->count();
+            $news = [];
+            if ($total_news > 0)
+                $news = News::where('store_id', Input::get('store_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
     
-        $this->body['data']['items'] = $items;
-        $this->body['data']['total_items'] = $total_items;
+        $this->body['data']['news'] = $news;
+        $this->body['data']['total_news'] = $total_news;
         return $this->output($this->body);
     }
 }

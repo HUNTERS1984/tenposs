@@ -49,7 +49,7 @@ class AddForeignkeyToTable extends Migration
         // apps has many app_top_main_images
         Schema::table('app_top_main_images', function(Blueprint $table)
         {
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('app_setting_id')->references('id')->on('app_settings');
         });
         // apps has many app_top_main_images
         Schema::table('rel_apps_stores', function (Blueprint $table) {
