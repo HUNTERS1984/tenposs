@@ -39,7 +39,7 @@ Route::group(array('prefix' => 'api/v1'), function()
         Route::post('signout','AppUserController@signout');
         Route::post('set_push_key','AppUserController@set_push_key');
         Route::post('set_push_setting','AppUserController@set_push_setting');
-        Route::post('profile','AppUserController@profile');
+        Route::get('profile','AppUserController@profile');
         Route::post('update_profile','AppUserController@update_profile');
     });
 
