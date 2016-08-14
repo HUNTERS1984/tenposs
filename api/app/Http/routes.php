@@ -37,4 +37,6 @@ Route::group(array('prefix' => 'api/v1'), function()
 
     // User
     Route::resource('user','UserController');
+    Route::get('user1','UserController@index');
+    Route::get('top1','TopController@index');
 });

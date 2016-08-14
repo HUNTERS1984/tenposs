@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+
+use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Repositories\Eloquents\TopsRepository;
 use Illuminate\Support\ServiceProvider;
 
 
 use App\Repositories\Contracts\UsersRepositoryInterface;
 use App\Repositories\Eloquents\UsersRepository;
-
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
     protected function bindRepositories()
     {
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
+        $this->app->singleton(TopsRepositoryInterface::class, TopsRepository::class);
     }
 
     /**
@@ -46,6 +49,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         return [
             UsersRepositoryInterface::class,
+            TopsRepositoryInterface::class,
         ];
     }
 }
