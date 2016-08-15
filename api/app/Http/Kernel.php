@@ -34,6 +34,9 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
         ],
+        'api.auth' => [
+            \App\Http\Middleware\AppAuthMiddleware::class,
+        ],
     ];
 
     /**
