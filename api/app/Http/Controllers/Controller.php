@@ -59,7 +59,6 @@ class Controller extends BaseController
     protected function validate_param($params, $data = null) {
         if (!$data)
             $data = Input::all();
-
         foreach ($params as $key => $param) {
             if (!is_array($param)) {
                 if (!isset($data[$param])) {
