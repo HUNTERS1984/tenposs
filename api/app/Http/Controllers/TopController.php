@@ -29,6 +29,7 @@ use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Twitter;
 
 class TopController extends Controller
 {
@@ -79,8 +80,12 @@ class TopController extends Controller
         }        
         $menus_id = '('.implode(',', $menus_id).')';
 
-        $items = DB::select(DB::raw('SELECT item_id, title, price, image_url, coupon_id, created_at, updated_at, deleted_at from rel_menus_items INNER JOIN items on rel_menus_items.item_id=items.id INNER JOIN menus on rel_menus_items.menu_id=menus.id where items.deleted_at is null AND rel_menus_items.menu_id IN '.$menus_id.'ORDER BY items.created_at DESC LIMIT 8'));
+        $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at from rel_menus_items INNER JOIN items on rel_menus_items.item_id=items.id INNER JOIN menus on rel_menus_items.menu_id=menus.id where items.deleted_at is null AND rel_menus_items.menu_id IN '.$menus_id.'ORDER BY items.created_at DESC LIMIT 8'));
 
+        for ($i = 0; $i < count($items); $i++) {
+            $items[$i]->id = intval($items[$i]->id);
+            $items[$i]->image_url = url('/').'/'.$items[$i]->image_url;
+        }
         $photocats_id = [];
         foreach ($photocats as $key => $value) {
             $photocats_id = array_collapse([$photocats_id, array_pluck($value, 'id')]);
@@ -95,11 +100,17 @@ class TopController extends Controller
         }        
         $photos = Photo::whereIn('photo_category_id',$photocats_id)->get();
 
-        $this->body['data']['items'] = $items;
-        $this->body['data']['photos'] = $photos;
-        $this->body['data']['news'] = $news;
-        $this->body['data']['addresses'] = $addresses;
-        $this->body['data']['images'] = $images;
+        $this->body['data']['images']['top_id'] = 1;
+        $this->body['data']['images']['data'] = $images;
+        $this->body['data']['items']['top_id'] = 2;
+        $this->body['data']['items']['data'] = $items;
+        $this->body['data']['photos']['top_id'] = 3;
+        $this->body['data']['photos']['data'] = $photos;
+        $this->body['data']['news']['top_id'] = 4;
+        $this->body['data']['news']['data'] = $news;
+        $this->body['data']['contact']['top_id'] = 5;
+        $this->body['data']['contact']['data'] = $addresses;
+        
 
         return $this->output($this->body);
     }

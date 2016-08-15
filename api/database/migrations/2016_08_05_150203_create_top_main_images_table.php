@@ -15,11 +15,11 @@ class CreateTopMainImagesTable extends Migration
         // (id, image_url,created_at,updated_at, storeid)
         Schema::create('app_top_main_images', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('app_id')->unsigned()->nullable();
+            //$table->integer('app_id')->unsigned()->nullable();
             $table->string('image_url',255)->nullable();
             $table->integer('app_setting_id',false)->unsigned()->nullable();
             $table->timestamps();
-            $table->index('app_id');
+            $table->index('app_setting_id');
         });
     }
 

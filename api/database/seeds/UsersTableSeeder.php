@@ -29,6 +29,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
 
+        $arrImage = [
+            'uploads/1.jpg',
+            'uploads/2.jpg'
+        ];
+
         // Create users clients => apps
         factory(User::class, 5)
             ->create()
@@ -42,38 +47,37 @@ class UsersTableSeeder extends Seeder
             ->each(function ($app) {
                 // apps has many stores, stores has many addresses
                 $app->stores()->saveMany( factory(Store::class, 2)->make() );
-                $app->app_top_main_images()->saveMany( factory(AppTopMainImage::class,2)->make() );
                 // Create app_users
                 $app->app_users()->saveMany(factory(\App\Models\AppUser::class, 2)->make());
             });
 
 
-        factory(Template::class,5)->create();
+        factory(Template::class,10)->create();
 
-        Template::skip(1)->take(2)->get()
-            ->each(function($template){
+        $i = 1;
+        foreach (Template::all() as $temp){
 
-                App::skip(1)->take(2)->get()
-                    ->each(function($app) use ($template){
-                        $faker = \Faker\Factory::create();
-                        DB::table('app_settings')->insert([
-                            'app_id' => $app->id,
-                            'template_id' => $template->id,
-                            'title' => $faker->title,
-                            'title_color' => $faker->hexColor,
-                            'font_size' => $faker->randomElement(array('12','13','14')),
-                            'font_family' => $faker->randomElement(array('Arial','Tahoma')),
-                            'header_color' => $faker->hexColor,
-                            'menu_icon_color' => $faker->hexColor,
-                            'menu_background_color' => $faker->hexColor,
-                            'menu_font_color' => $faker->hexColor,
-                            'menu_font_size' => $faker->randomElement(array('12','13','14')),
-                            'menu_font_family' => $faker->randomElement(array('Arial','Tahoma')),
-                            'top_main_image_url' => $faker->imageUrl(800,600,'cats')
-                        ]);
-                    });
+            $faker = \Faker\Factory::create();
+            DB::table('app_settings')->insert([
+                'app_id' => App::find($i)->id,
+                'template_id' => $temp->id,
+                'title' => $faker->numerify('Setting #####'),
+                'title_color' => $faker->hexColor,
+                'font_size' => $faker->randomElement(array('12', '13', '14')),
+                'font_family' => $faker->randomElement(array('Arial', 'Tahoma')),
+                'header_color' => $faker->hexColor,
+                'menu_icon_color' => $faker->hexColor,
+                'menu_background_color' => $faker->hexColor,
+                'menu_font_color' => $faker->hexColor,
+                'menu_font_size' => $faker->randomElement(array('12', '13', '14')),
+                'menu_font_family' => $faker->randomElement(array('Arial', 'Tahoma')),
+                'top_main_image_url' => $faker->randomElement($arrImage),
+            ]);
 
-            });
+            $i++;
+        }
+
+
 
         Store::all()
             ->each(function($store){
@@ -98,8 +102,20 @@ class UsersTableSeeder extends Seeder
         factory(AdminContacts::class, 10)->create();
 
 
-        factory(Component::class, 10)
-            ->create()
+        $arrComponents = [
+            'Top Slideshow',
+            'Recently',
+            'News',
+            'Contact',
+            'Photo Gallery'
+        ];
+
+        foreach ($arrComponents as $item){
+            Component::create(['name' => $item]);
+        }
+
+
+        Component::all()
             ->each(function( $component ){
                 AppSetting::all()
                     ->each(function($appsetting) use ($component){
@@ -113,7 +129,22 @@ class UsersTableSeeder extends Seeder
             });
 
         //
-        factory(SideMenu::class, 20)->create();
+        //factory(SideMenu::class, 20)->create();
+        $arraySlideMenus = [
+            'Home',
+            'Menu',
+            'Reserve',
+            'News',
+            'Photo Gallery',
+            'Staff',
+            'Coupon',
+            'Chat',
+            'Setting'
+        ];
+
+        foreach ($arraySlideMenus as $item){
+            SideMenu::create(['name' => $item]);
+        }
 
         $setting = DB::table('app_settings')->get();
         foreach ($setting as $set){
@@ -127,6 +158,11 @@ class UsersTableSeeder extends Seeder
                     $i++;
                 });
         }
+
+        AppSetting::all()
+            ->each(function($set){
+                $set->images()->saveMany(factory(\App\TopMainImage::class,2));
+            });
 
         //
         Coupon::all()

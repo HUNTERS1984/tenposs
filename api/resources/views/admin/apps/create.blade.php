@@ -24,19 +24,19 @@
             <div class="wrapper-content">
                 <div class="form-group">
                     <label for="">App Name</label>
-                    <input type="text" class="form-control" name="name">
+                    <input type="text" class="form-control" name="name" value="{{ old('name') }}">
                 </div>
                 <div class="form-group">
                     <label for="">App ID</label>
-                    <input type="text" class="form-control" name="app_app_id">
+                    <input type="text" class="form-control" name="app_app_id" value="{{ old('app_app_id') }}">
                 </div>
                 <div class="form-group">
                     <label for="">App Secret</label>
-                    <input type="text" class="form-control" name="app_app_secret">
+                    <input type="text" class="form-control" name="app_app_secret" value="{{ old('app_app_secret') }}">
                 </div>
                 <div class="form-group">
                     <label for="">App Description</label>
-                    <textarea name="description" id="" cols="30" rows="10" class="form-control"></textarea>
+                    <textarea name="description" id="" cols="30" rows="10" class="form-control">{{ old('description') }}</textarea>
                 </div>
             </div>	<!-- wrap-content-->
         </form>

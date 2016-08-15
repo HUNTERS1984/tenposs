@@ -31,6 +31,11 @@ use App\Models\Component;
 
 
 
+$arrImage = [
+    'uploads/1.jpg',
+    'uploads/2.jpg'
+];
+
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
@@ -85,9 +90,9 @@ $factory->define(Store::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(AppTopMainImage::class, function (Faker $faker) {
+$factory->define(AppTopMainImage::class, function (Faker $faker) use ($arrImage){
     return [
-        'image_url' => $faker->imageUrl($width = 800, $height = 400, 'cats'),
+        'image_url' => $faker->randomElement($arrImage),
     ];
 });
 
@@ -124,9 +129,9 @@ $factory->define(PhotoCat::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(Photo::class, function (Faker $faker) {
+$factory->define(Photo::class, function (Faker $faker) use ($arrImage) {
     return [
-        'image_url' => $faker->imageUrl($width = 800, $height = 800, 'cats'),
+        'image_url' => $faker->randomElement($arrImage),
     ];
 });
 
@@ -143,16 +148,16 @@ $factory->define(Menu::class, function (Faker $faker) {
 });
 
 
-$factory->define(UserProfile::class, function (Faker $faker) {
+$factory->define(UserProfile::class, function (Faker $faker) use ($arrImage){
     return [
         'name' => $faker->firstName.' '.$faker->lastName,
         'gender' => $faker->randomElement(['Male','Female']),
         'address' => $faker->address,
-        'avatar_url' => $faker->imageUrl(300,300,'cats')
+        'avatar_url' => $faker->randomElement($arrImage),
     ];
 });
 
-$factory->define(Coupon::class, function (Faker $faker) {
+$factory->define(Coupon::class, function (Faker $faker) use ($arrImage) {
     return [
         'type' =>  $faker->randomElement(array(0,1,3,4)),
         'title' => $faker->numerify('Coupon #####'),
@@ -160,17 +165,17 @@ $factory->define(Coupon::class, function (Faker $faker) {
         'start_date' => date($format = 'Y-m-d H:s:i'),
         'end_date' => date($format = 'Y-m-d H:s:i'),
         'status' => $faker->randomElement(array(0,1,3,4)),
-        'image_url' => $faker->imageUrl(300,300,'cats'),
+        'image_url' => $faker->randomElement($arrImage),
         'limit' => 50
     ];
 });
 
 
-$factory->define(Item::class, function (Faker $faker) {
+$factory->define(Item::class, function (Faker $faker) use($arrImage) {
     return [
         'title' => $faker->numerify('Coupon #####'),
         'price' => 10000,
-        'image_url' => $faker->imageUrl(300,300,'cats'),
+        'image_url' => $faker->randomElement($arrImage),
         'description' => $faker->sentence(10),
     ];
 });
