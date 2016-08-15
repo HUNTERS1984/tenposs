@@ -3,9 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class App extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'name',
+        'status'
+    ];
+
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
+
    	public function app_setting()
     {
         return $this->hasOne(AppSetting::class)->select(['id', 'app_id', 'title', 'title_color', 'font_size', 'font_family', 'header_color', 'menu_icon_color', 'menu_background_color' ,'menu_font_color', 'menu_font_size', 'menu_font_family', 'template_id']);
