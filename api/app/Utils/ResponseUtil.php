@@ -38,7 +38,7 @@
         public static function error_detail($code = 1005, $detail) {
             self::$body['code'] = $code;
             self::$body['message'] = self::$message[$code];
-            self::$body['data'] = array('detail' => $detail);
+            self::$body['data'] = $detail;//array('detail' => $detail);
             return self::$body;
         }
 

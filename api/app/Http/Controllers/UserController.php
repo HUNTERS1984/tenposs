@@ -19,7 +19,7 @@ class UserController extends Controller
     }
     public function index(){
         return ResponseUtil::success($this->userRespository->all());
-        return $this->userRespository->all();
+       return $this->userRespository->all();
     }
     public function show($id){
         return $this->userRespository->all($id);

@@ -22,4 +22,14 @@ class UsersRepository implements UsersRepositoryInterface
     {
         return Users::findOrFail($id);
     }
+
+    public function login()
+    {
+        // TODO: Implement login() method.
+    }
+
+    public function logout()
+    {
+        // TODO: Implement logout() method.
+    }
 }

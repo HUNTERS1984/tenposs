@@ -36,7 +36,7 @@ class Apps extends Model
                 'menu_font_size',
                 'menu_font_family',
                 'top_main_image_url'
-            )->withTimestamps();;
+            )->withTimestamps();
     }
 
     // apps has many stores

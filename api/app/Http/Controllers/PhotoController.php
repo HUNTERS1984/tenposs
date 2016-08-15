@@ -5,106 +5,75 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
+use App\Models\UserSession;
+use App\Models\AppUser;
+use App\Models\App;
+use App\Models\AppSetting;
+use App\Models\Store;
+use App\Models\Menu;
+use App\Models\News;
+use App\Models\Item;
+use App\Models\PhotoCat;
+use App\Models\Photo;
+use App\Models\Reserve;
+use App\Models\UserProfile;
+use App\Models\UserPush;
+use Mail;
+use App\Address;
+use Illuminate\Support\Facades\Hash;
+use DB;
+use Mockery\CountValidator\Exception;
 
 class PhotoController extends Controller
 {
-    protected $request;
+    public function photo_cat(Request $request) {
 
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
+        $check_items = array('store_id', 'time', 'sig');
 
-    //
-    public function index()
-    {
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
         try {
-            $store_id = $this->request['store_id'];
-            $category_id = $this->request['category_id'];
-            $token = $this->request['token'];
-            $time = $this->request['time'];
-            $sig = $this->request['sig'];
-            $pageindex = $this->request['pageindex'];
-            $pagesize = $this->request['pagesize'];
-            if (!empty($token) && !empty($time) && !empty($sig)) { //input ok
-                $statusCode = 1000;
-                $message = 'OK';
-                if (isset($store_id) && $store_id > 0) { //get detail one store
-
-                    $photos = [
-                        array('id' => 1, 'image_url' => 'Image1.jpg', 'category_id' => 1, 'category_name' => 'Name 1', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 2, 'image_url' => 'Image2.jpg', 'category_id' => 1, 'category_name' => 'Name 1', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 3, 'image_url' => 'Image3.jpg', 'category_id' => 2, 'category_name' => 'Name 2', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 4, 'image_url' => 'Image4.jpg', 'category_id' => 2, 'category_name' => 'Name 2', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 5, 'image_url' => 'Image5.jpg', 'category_id' => 3, 'category_name' => 'Name 3', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 6, 'image_url' => 'Image6.jpg', 'category_id' => 3, 'category_name' => 'Name 4', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                    ];
-
-                    $data = array(
-                        'photos' => $photos,
-                        'store_id' => 1,
-                        'totalphoto' => 6
-                    );
-                    $response = array(
-                        'code' => $statusCode,
-                        'message' => $message,
-                        'data' => array($data)
-                    );
-                } else {
-                    $photos = [
-                        array('id' => 1, 'image_url' => 'Image1.jpg', 'category_id' => 1, 'category_name' => 'Name 1', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 2, 'image_url' => 'Image2.jpg', 'category_id' => 1, 'category_name' => 'Name 1', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 3, 'image_url' => 'Image3.jpg', 'category_id' => 2, 'category_name' => 'Name 2', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 4, 'image_url' => 'Image4.jpg', 'category_id' => 2, 'category_name' => 'Name 2', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 5, 'image_url' => 'Image5.jpg', 'category_id' => 3, 'category_name' => 'Name 3', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 6, 'image_url' => 'Image6.jpg', 'category_id' => 3, 'category_name' => 'Name 4', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                    ];
-
-                    $data = array(
-                        'photos' => $photos,
-                        'store_id' => 1,
-                        'totalphoto' => 6
-                    );
-
-                    $photos2 = [
-                        array('id' => 7, 'image_url' => 'Image1.jpg', 'category_id' => 4, 'category_name' => 'Name 4', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 8, 'image_url' => 'Image2.jpg', 'category_id' => 4, 'category_name' => 'Name 4', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 9, 'image_url' => 'Image3.jpg', 'category_id' => 5, 'category_name' => 'Name 5', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 10, 'image_url' => 'Image4.jpg', 'category_id' => 5, 'category_name' => 'Name 5', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 11, 'image_url' => 'Image5.jpg', 'category_id' => 6, 'category_name' => 'Name 6', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                        array('id' => 12, 'image_url' => 'Image6.jpg', 'category_id' => 6, 'category_name' => 'Name 6', 'created_at' => '2016-08-04 10:20:40', 'updated_at' => '2016-08-04 10:20:40'),
-                    ];
-                    $data2 = array(
-                        'photos' => $photos,
-                        'store_id' => 2,
-                        'totalphoto' => 6
-                    );
-
-                    $response = array(
-                        'code' => $statusCode,
-                        'message' => $message,
-                        'data' => array($data, $data2)
-                    );
-                }
-            } else {
-                $statusCode = 1004;
-                $message = 'Param input invalid';
-                $response = array(
-                    'code' => $statusCode,
-                    'message' => $message,
-                    'data' => []
-                );
-            }
-        } catch (Exception $e) {
-            $statusCode = 1005;
-            $message = 'Unknown error';
-            $response = array(
-                'code' => $statusCode,
-                'message' => $message,
-                'data' => []
-            );
-        } finally {
-            return response()->json($response);
+            $app = PhotoCat::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
         }
+    
+        $this->body['data']['photo_categories'] = $app;
+        return $this->output($this->body);
     }
+
+    public function index(Request $request) {
+        
+        $check_items = array('category_id', 'pageindex', 'pagesize', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+            return $this->error(1004);
+
+        $skip = (Input::get('pageindex') - 1)*Input::get('pagesize');
+        try {
+            $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->count();
+            $photos = [];
+            if ($total_photos > 0)
+                $photos = Photo::where('photo_category_id', Input::get('category_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+    
+        $this->body['data']['photos'] = $photos;
+        $this->body['data']['total_photos'] = $total_photos;
+        return $this->output($this->body);
+    }
+    
 }
