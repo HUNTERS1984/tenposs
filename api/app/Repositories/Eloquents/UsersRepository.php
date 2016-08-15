@@ -3,7 +3,7 @@
 
 namespace App\Repositories\Eloquents;
 
-use App\User;
+use App\Models\Users;
 use App\Repositories\Contracts\UsersRepositoryInterface;
 
 
@@ -11,11 +11,15 @@ class UsersRepository implements UsersRepositoryInterface
 {
     public function all()
     {
-        return User::all();
+        return Users::all();
+    }
+
+    public function paginate($limit){
+    	return Users::paginate($limit);
     }
 
     public function find($id)
     {
-        return User::find($id);
+        return Users::findOrFail($id);
     }
 }

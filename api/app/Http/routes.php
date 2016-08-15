@@ -38,3 +38,20 @@ Route::group(array('prefix' => 'api/v1'), function()
     // User
     Route::resource('user','UserController');
 });
+
+Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function()
+{
+     Route::get('/', array('as'=>'admin.home', function(){
+        return 'Welcome to admin board';
+     } ));
+
+
+    Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
+    Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
+    Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
+    Route::post('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.store','uses' => 'Admin\AppsController@store' ));
+    Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.edit','uses' => 'Admin\AppsController@edit' ));
+    Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as'=>'admin.clients.apps.delete','uses' => 'Admin\AppsController@delete' ));
+
+
+});

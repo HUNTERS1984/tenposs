@@ -3,12 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Apps extends Model
 {
     //
+    use SoftDeletes;
     protected $table = 'apps';
+    protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'name',
+        'status'
+    ];
 
+    public function scopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
     // apps has many app setting
     public function templates(){
         return $this->belongsToMany('App\Models\Templates','app_settings','app_id','template_id')
@@ -40,5 +52,7 @@ class Apps extends Model
     public function app_users(){
         return $this->hasMany('App\Models\AppUsers','app_id','id');
     }
+
+
 
 }

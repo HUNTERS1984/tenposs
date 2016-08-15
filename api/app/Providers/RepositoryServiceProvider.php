@@ -2,11 +2,16 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
 
 
 use App\Repositories\Contracts\UsersRepositoryInterface;
+use App\Repositories\Contracts\AppsRepositoryInterface;
 use App\Repositories\Eloquents\UsersRepository;
+use App\Repositories\Eloquents\AppsRepository;
+use App\Repositories\Contracts\ChatLineRepositoryInterface;
+use App\Repositories\Eloquents\ChatLineRepository;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -34,7 +39,10 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     protected function bindRepositories()
     {
+        
         $this->app->singleton(UsersRepositoryInterface::class, UsersRepository::class);
+        $this->app->singleton(AppsRepositoryInterface::class, AppsRepository::class);
+        $this->app->singleton(ChatLineRepositoryInterface::class, ChatLineRepository::class);
     }
 
     /**
@@ -46,6 +54,8 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         return [
             UsersRepositoryInterface::class,
+            AppsRepositoryInterface::class,
+            ChatLineRepositoryInterface::class
         ];
     }
 }
