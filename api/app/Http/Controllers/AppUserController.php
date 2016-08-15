@@ -108,6 +108,8 @@ class AppUserController extends Controller
                 DB::rollBack();
                 return $this->error(9999);
             }
+        } else {
+            $profile = UserProfile::where('app_user_id', $user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
         }
 
         $token  = md5(Input::get('email').date('Y-m-d H:i:s'));
@@ -123,6 +125,9 @@ class AppUserController extends Controller
         }
 
         $this->body['data']['token'] = $token;
+        $this->body['data']['app_id'] = $user->app_id;
+        $this->body['data']['app_user_id'] = $user->id;
+        $this->body['data']['profile'] = $profile;
         return $this->output($this->body);
 
     }
@@ -184,7 +189,9 @@ class AppUserController extends Controller
 
         $this->body['data']['token'] = $token;
         $this->body['data']['app_id'] = $user->app_id;
+        $this->body['data']['app_user_id'] = $user->id;
         $this->body['data']['profile'] = $profile;
+
 
         return $this->output($this->body);
     }
@@ -222,6 +229,7 @@ class AppUserController extends Controller
 
             $this->body['data']['token'] = $token;
             $this->body['data']['app_id'] = $user->app_id;
+            $this->body['data']['app_user_id'] = $user->id;
             $this->body['data']['profile'] = $profile;
             return $this->output($this->body);
         } else {
