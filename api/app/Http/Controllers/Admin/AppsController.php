@@ -70,7 +70,12 @@ class AppsController extends Controller
         }
     }
     public function delete($user_id,$app_id){
-        $this->appRepo->remove($user_id,$app_id);
+        $removed = $this->appRepo->remove($user_id,$app_id);
+        if($removed){
+            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Delete successful!') );
+        }
+        Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Delete fail!') );
+        return true;
     }
 
 }
