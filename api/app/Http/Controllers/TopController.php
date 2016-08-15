@@ -7,6 +7,28 @@ use App\Http\Requests;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\ResponseUtil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
+use App\Models\UserSession;
+use App\Models\AppUser;
+use App\Models\App;
+use App\Models\AppSetting;
+use App\Models\Store;
+use App\Models\Menu;
+use App\Models\News;
+use App\Models\Item;
+use App\Models\PhotoCat;
+use App\Models\Photo;
+use App\Models\Reserve;
+use App\Models\UserProfile;
+use App\Models\UserPush;
+use Mail;
+use App\Address;
+use Illuminate\Support\Facades\Hash;
+use DB;
 
 class TopController extends Controller
 {
@@ -24,146 +46,86 @@ class TopController extends Controller
         $this->request = $request;
     }
 
-    public function index()
-    {
-//        return $this->_topRepository->getTopMainImage();
-        $data = array("images" => $this->_topRepository->getTopMainImage(),
-            'news' => $this->_topRepository->getTopNew(),
-            'items' => $this->_topRepository->getTopItem(),
-            'photos' => $this->_topRepository->getTopPhoto());
-        return ResponseUtil::success($data);
-//        return $this->_topRepository->all();
-    }
 
-    public function top()
-    {
-        try {
-            $token = $this->request['token'];
-            $time = $this->request['time'];
-            $sig = $this->request['sig'];
-            if (!empty($token) && !empty($time) && !empty($sig)) { //input ok
-                $data = array("images" => $this->_topRepository->getTopMainImage(),
-                    'news' => $this->_topRepository->getTopNew(),
-                    'items' => $this->_topRepository->getTopItem(),
-                    'photos' => $this->_topRepository->getTopPhoto());
-                return ResponseUtil::success($data);
-            } else {
-                return ResponseUtil::error_detail(1004, []);
-            }
+    public function top(Request $request) {
 
-        } catch (Exception $e) {
-            return ResponseUtil::error_detail(1005, []);
-        } finally {
+        $check_items = array('app_id', 'time', 'sig');
 
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $app = App::find(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004); 
+
+        $stores = $app->stores()->with('menus', 'photo_cats', 'news', 'addresses')->get()->toArray();
+
+        $images = $app->app_setting()->first()->images()->get()->toArray();
+
+        for ($i = 0; $i < count($images); $i++)
+        {
+            $images[$i]['image_url'] = url('/').'/'.$images[$i]['image_url'];
         }
+
+        $menus = array_pluck($stores, 'menus');
+        $photocats = array_pluck($stores, 'photo_cats');
+        $news_all = array_pluck($stores, 'news');
+        $addresses = array_pluck($stores, 'addresses');
+        
+        $menus_id = [];
+        foreach ($menus as $key => $value) {
+            $menus_id = array_collapse([$menus_id, array_pluck($value, 'id')]);
+        }        
+        $menus_id = '('.implode(',', $menus_id).')';
+
+        $items = DB::select(DB::raw('SELECT item_id, title, price, image_url, coupon_id, created_at, updated_at, deleted_at from rel_menus_items INNER JOIN items on rel_menus_items.item_id=items.id INNER JOIN menus on rel_menus_items.menu_id=menus.id where items.deleted_at is null AND rel_menus_items.menu_id IN '.$menus_id.'ORDER BY items.created_at DESC LIMIT 8'));
+
+        $photocats_id = [];
+        foreach ($photocats as $key => $value) {
+            $photocats_id = array_collapse([$photocats_id, array_pluck($value, 'id')]);
+        }       
+
+        $photos = Photo::whereIn('photo_category_id',$photocats_id)->get();
+
+        $news = [];
+        foreach ($news_all as $key => $value) {
+
+            $news = array_collapse([$news,$value]);
+        }        
+        $photos = Photo::whereIn('photo_category_id',$photocats_id)->get();
+
+        $this->body['data']['items'] = $items;
+        $this->body['data']['photos'] = $photos;
+        $this->body['data']['news'] = $news;
+        $this->body['data']['addresses'] = $addresses;
+        $this->body['data']['images'] = $images;
+
+        return $this->output($this->body);
     }
 
-    public function appinfo()
-    {
+    public function appinfo(Request $request) {
+        
+        $check_items = array('app_id', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+
         try {
-            $store_id = $this->request['store_id'];
-            $token = $this->request['token'];
-            $time = $this->request['time'];
-            $sig = $this->request['sig'];
-            if (!empty($token) && !empty($time) && !empty($sig)) { //input ok
-                $statusCode = 1000;
-                $message = 'OK';
-                if (isset($store_id) && $store_id > 0) { //get detail one store
-                    $info = array('latitude' => '324324324324', 'longitude  ' => '32432432432', 'tel' => '2343432432', 'title' => 'Store 1', 'start_time' => '2016-08-02 10:10:10', 'end_time' => '2016-08-02 23:10:10');
-                    $setting = array('title' => "App Store 1", 'title_color' => '#sdasda', 'font_size' => 12
-                    , 'font_family' => '', 'header_color' => '#aaaaaa', 'menu_icon_color' => '#ffffff', 'menu_background_color' => '#cccccc'
-                    , 'menu_font_color' => '', 'menu_font_size' => 14, 'menu_font_family' => '', 'template_id' => 1, 'top_main_image_url' => '');
-                    $menus = [
-                        array('id' => 1, "name" => 'Menu 1'),
-                        array('id' => 2, "name" => 'Menu 2'),
-                        array('id' => 3, "name" => 'Menu 3'),
-                        array('id' => 4, "name" => 'Menu 4'),
-                        array('id' => 5, "name" => 'Menu 5'),
-                        array('id' => 6, "name" => 'Menu 6'),
-                        array('id' => 7, "name" => 'Menu 7'),
-                    ];
-                    $data = array(
-                        'id' => 1,
-                        'name' => 'App Store 1',
-                        'info' => $info,
-                        'setting' => $setting,
-                        'menus' => $menus
-                    );
-                    $response = array(
-                        'code' => $statusCode,
-                        'message' => $message,
-                        'data' => array($data)
-                    );
-                } else { //get all store off app
-                    $info = array('lat' => '324324324324', 'long' => '32432432432', 'tel' => '2343432432', 'title' => 'Store 1', 'start_time' => '2016-08-02 10:10:10', 'end_time' => '2016-08-02 23:10:10');
-                    $setting = array('title' => "App Store 1", 'title_color' => '#sdasda', 'font_size' => 12
-                    , 'font_family' => '', 'header_color' => '#aaaaaa', 'menu_icon_color' => '#ffffff', 'menu_background_color' => '#cccccc'
-                    , 'menu_font_color' => '', 'menu_font_size' => 14, 'menu_font_family' => '', 'template_id' => 1, 'top_main_image_url' => '');
-                    $menus = [
-                        array('id' => 1, "name" => 'Menu 1'),
-                        array('id' => 2, "name" => 'Menu 2'),
-                        array('id' => 3, "name" => 'Menu 3'),
-                        array('id' => 4, "name" => 'Menu 4'),
-                        array('id' => 5, "name" => 'Menu 5'),
-                        array('id' => 6, "name" => 'Menu 6'),
-                        array('id' => 7, "name" => 'Menu 7'),
-                    ];
-                    $info1 = array('lat' => '2343432432', 'long' => '23423432432', 'tel' => '2343432432', 'title' => 'Store 2', 'start_time' => '2016-08-02 10:10:10', 'end_time' => '2016-08-02 23:10:10');
-                    $setting1 = array('title' => "App Store 2", 'title_color' => '#sdasda', 'font_size' => 12
-                    , 'font_family' => '', 'header_color' => '#aaaaaa', 'menu_icon_color' => '#ffffff', 'menu_background_color' => '#cccccc'
-                    , 'menu_font_color' => '', 'menu_font_size' => 14, 'menu_font_family' => '', 'template_id' => 2, 'top_main_image_url' => '');
-                    $menus1 = [
-                        array('id' => 1, "name" => 'Menu 1'),
-                        array('id' => 2, "name" => 'Menu 2'),
-                        array('id' => 3, "name" => 'Menu 3'),
-                        array('id' => 4, "name" => 'Menu 4'),
-                        array('id' => 5, "name" => 'Menu 5'),
-                        array('id' => 6, "name" => 'Menu 6'),
-                        array('id' => 7, "name" => 'Menu 7'),
-                    ];
+            $app = App::find(Input::get('app_id'));
+            if ($app)
+                $app_data = $app->with('app_setting','top_components','side_menu', 'stores')->first()->toArray();
+            else
+                return $this->error(1004);
 
-                    $data = array(
-                        'id' => 1,
-                        'name' => 'App Store 1',
-                        'info' => $info,
-                        'setting' => $setting,
-                        'menus' => $menus
-                    );
-
-                    $data1 = array(
-                        'id' => 2,
-                        'name' => 'App Store 2',
-                        'info' => $info1,
-                        'setting' => $setting1,
-                        'menus' => $menus1
-                    );
-                    $response = array(
-                        'code' => $statusCode,
-                        'message' => $message,
-                        'data' => array($data, $data1)
-                    );
-                }
-            } else {
-                $statusCode = 1004;
-                $message = 'Param input invalid';
-                $response = array(
-                    'code' => $statusCode,
-                    'message' => $message,
-                    'data' => []
-                );
-            }
-
-        } catch (Exception $e) {
-            $statusCode = 1005;
-            $message = 'Unknown error';
-            $response = array(
-                'code' => $statusCode,
-                'message' => $message,
-                'data' => []
-            );
-
-        } finally {
-            return response()->json($response);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
         }
+    
+        $this->body['data'] = $app_data;
+        return $this->output($this->body);
     }
+
 }

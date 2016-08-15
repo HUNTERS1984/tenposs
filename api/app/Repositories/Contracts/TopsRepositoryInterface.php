@@ -9,4 +9,5 @@ interface TopsRepositoryInterface
     public function getTopNew();
     public function getTopMainImage();
     public function getAppInfo($id);
+    public function setPushKey();
 }

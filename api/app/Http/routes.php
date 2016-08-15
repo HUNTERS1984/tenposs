@@ -18,19 +18,16 @@ Route::get('/', function () {
 
 Route::group(array('prefix' => 'api/v1'), function()
 {
-    Route::post('login','AppUserController@login');
-
-    Route::get('top/token/{token?}/time/{time?}/sig/{sig?}','TopController@top');
-    Route::get('appinfo/storeid/{store_id?}/token/{token?}/time/{time?}/sig/{sig?}','TopController@appinfo');
-
-
-    Route::post('setpushkey','AppUserController@setpushkey');
+    Route::post('signup','AppUserController@signup');
+    Route::post('signin','AppUserController@signin');
+    Route::post('social_login','AppUserController@social_login');
+    
     Route::get('top','TopController@top');
     Route::get('appinfo','TopController@appinfo');
-    Route::get('items','ItemController@index');
-    Route::get('items/detail','ItemController@detail');
-    Route::post('test','AppUserController@test');
-    Route::get('news','NewController@index');
+    Route::get('menu','ItemController@menu');
+    Route::get('items','ItemController@items');
+    Route::get('news','NewsController@index');
+    Route::get('photo_cat','PhotoController@photo_cat');
     Route::get('photo','PhotoController@index');
     Route::get('reserve','ReserveController@index');
     Route::get('coupon','CouponController@index');
@@ -38,5 +35,13 @@ Route::group(array('prefix' => 'api/v1'), function()
     // User
     Route::resource('user','UserController');
     Route::get('user1','UserController@index');
-    Route::get('top1','TopController@index');
+    Route::get('test','TestController@index');
+    Route::group(['middleware' => 'api.auth'], function () {
+        Route::post('signout','AppUserController@signout');
+        Route::post('set_push_key','AppUserController@set_push_key');
+        Route::post('set_push_setting','AppUserController@set_push_setting');
+        Route::post('profile','AppUserController@profile');
+        Route::post('update_profile','AppUserController@update_profile');
+    });
+
 });

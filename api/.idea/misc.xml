@@ -19,4 +19,7 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app/Repositories/Eloquents/ItemsRepository.php" />
+  </component>
 </project>

@@ -58,4 +58,9 @@ class TopsRepository implements TopsRepositoryInterface
         $appSetting = AppSetting::find($id);
 
     }
+
+    public function setPushKey()
+    {
+        // TODO: Implement setPushKey() method.
+    }
 }
