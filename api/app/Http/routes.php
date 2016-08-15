@@ -35,17 +35,18 @@ Route::group(array('prefix' => 'api/v1'), function()
     // User
     Route::resource('user','UserController');
 
+    Route::group(['middleware' => 'api.auth'], function () {
+        Route::post('signout','AppUserController@signout');
+        Route::post('set_push_key','AppUserController@set_push_key');
+        Route::post('set_push_setting','AppUserController@set_push_setting');
+        Route::post('profile','AppUserController@profile');
+        Route::post('update_profile','AppUserController@update_profile');
+    });
+
 });
 
 Route::get('user1','UserController@index');
 Route::get('test','TestController@index');
-Route::group(['middleware' => 'api.auth'], function () {
-    Route::post('signout','AppUserController@signout');
-    Route::post('set_push_key','AppUserController@set_push_key');
-    Route::post('set_push_setting','AppUserController@set_push_setting');
-    Route::post('profile','AppUserController@profile');
-    Route::post('update_profile','AppUserController@update_profile');
-});
 
 
 Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function()
