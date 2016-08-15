@@ -28,4 +28,7 @@ class Store extends Model
     	 return $this->hasOne(Address::class);
     }
 
+    public function coupons(){
+        return $this->hasMany(Coupon::class);
+    }
 }

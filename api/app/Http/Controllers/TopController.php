@@ -61,7 +61,7 @@ class TopController extends Controller
 
         $stores = $app->stores()->with('menus', 'photo_cats', 'news', 'addresses')->get()->toArray();
 
-        $images = $app->app_setting()->first()->images()->get()->toArray();
+        $images = [];//$app->app_setting()->first()->images()->get()->toArray();
 
         for ($i = 0; $i < count($images); $i++)
         {

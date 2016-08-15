@@ -34,14 +34,32 @@ Route::group(array('prefix' => 'api/v1'), function()
 
     // User
     Route::resource('user','UserController');
-    Route::get('user1','UserController@index');
-    Route::get('test','TestController@index');
-    Route::group(['middleware' => 'api.auth'], function () {
-        Route::post('signout','AppUserController@signout');
-        Route::post('set_push_key','AppUserController@set_push_key');
-        Route::post('set_push_setting','AppUserController@set_push_setting');
-        Route::post('profile','AppUserController@profile');
-        Route::post('update_profile','AppUserController@update_profile');
-    });
+
+});
+
+Route::get('user1','UserController@index');
+Route::get('test','TestController@index');
+Route::group(['middleware' => 'api.auth'], function () {
+    Route::post('signout','AppUserController@signout');
+    Route::post('set_push_key','AppUserController@set_push_key');
+    Route::post('set_push_setting','AppUserController@set_push_setting');
+    Route::post('profile','AppUserController@profile');
+    Route::post('update_profile','AppUserController@update_profile');
+});
+
+
+Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function()
+{
+     Route::get('/', array('as'=>'admin.home', function(){
+        return 'Welcome to admin board';
+     } ));
+
+    Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
+    Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
+    Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
+    Route::post('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.store','uses' => 'Admin\AppsController@store' ));
+    Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.edit','uses' => 'Admin\AppsController@edit' ));
+    Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as'=>'admin.clients.apps.delete','uses' => 'Admin\AppsController@delete' ));
+    
 
 });

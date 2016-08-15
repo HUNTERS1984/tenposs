@@ -53,5 +53,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'token' => \App\Http\Middleware\TokenVerifyMiddleware::class,
+        'log.query' => \App\Http\Middleware\BeforeAnyDbQueryLog::class,
     ];
 }

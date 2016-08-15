@@ -83,4 +83,13 @@ class Controller extends BaseController
         }
         return 0;
     }
+
+    protected function checkTimeExpire($time)
+    {
+        $currentMilliseconds = round(microtime(true) * 1000);
+        if (($currentMilliseconds - $time) < 1000)
+            return true;
+        return false;
+
+    }
 }

@@ -15,10 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*
         \Validator::resolver(function($translator, $data, $rules, $messages)
         {
             return new RestValidator($translator, $data, $rules, $messages);
-        });
+        });*/
     }
 
     /**
