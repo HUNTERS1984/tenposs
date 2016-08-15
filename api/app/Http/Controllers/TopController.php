@@ -83,8 +83,8 @@ class TopController extends Controller
         $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at from rel_menus_items INNER JOIN items on rel_menus_items.item_id=items.id INNER JOIN menus on rel_menus_items.menu_id=menus.id where items.deleted_at is null AND rel_menus_items.menu_id IN '.$menus_id.'ORDER BY items.created_at DESC LIMIT 8'));
 
         for ($i = 0; $i < count($items); $i++) {
-            $item[$i]['id'] = intval($item[$i]['id']);
-            $item[$i]['image_url'] = url('/').$item[$i]['image_url'];
+            $items[$i]['id'] = intval($items[$i]['id']);
+            $items[$i]['image_url'] = url('/').$items[$i]['image_url'];
         }
         $photocats_id = [];
         foreach ($photocats as $key => $value) {
