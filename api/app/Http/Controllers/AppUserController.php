@@ -28,6 +28,7 @@ use App\Address;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use Mockery\CountValidator\Exception;
+use Twitter;
 
 class AppUserController extends Controller
 {
@@ -51,27 +52,56 @@ class AppUserController extends Controller
                 return false;
 
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
         
     }
 
+    public function verify_twitter_token ($id, $token, $secret)
+    {
+        // set the new configurations
+        Twitter::reconfig([
+            // "token" => '2248083320-oz6gVmtW8vRal4sO1ouM34lklztCQ61pyaQX2Hb',
+            // "secret" => 'hXc9ShqBGF0ajy8MakX7zsbJ87EXILuhpDnVVYGvQSSW6',
+            "token" => $token,
+            "secret" => $secret,
+        ]);
+
+        try {
+            $credentials = Twitter::getCredentials();
+            if ($id != $credentials->id)
+                return false;
+
+            return true;
+            
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 
     public function social_login (Request $request) {
+        
+        if (Input::get('social_type') == 1) {
+            $check_items = array('app_id', 'username', 'social_type', 'social_id', 'social_token', 'time', 'sig');
 
-        $check_items = array('app_id', 'username', 'social_type', 'social_id', 'social_token', 'time', 'sig');
+            if ($this->verify_facebook_token(Input::get('social_id'), Input::get('social_token')) == false) {
+                return $this->error(9998);
+            }
+        } else if (Input::get('social_type') == 2) {
+            $check_items = array('app_id', 'username', 'social_type', 'social_id', 'social_token', 'social_secret', 'time', 'sig');
+
+            if ($this->verify_twitter_token(Input::get('social_id'), Input::get('social_token'), Input::get('social_secret')) == false) {
+                return $this->error(9998);
+            }
+        } else {
+            return $this->error(1004);
+        }    
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
-        if ($this->verify_facebook_token(Input::get('social_id'), Input::get('social_token')) == false) {
-            return $this->error(9998);
-        }
-
-        if (Input::get('social_type') == 0)
-            return $this->error(1004);
 
         $user = null;
         try {
@@ -181,7 +211,7 @@ class AppUserController extends Controller
             $user_session = new UserSession();
             $user_session->token = $token;
             $user_session->type = 0;
-            $user_session->app_user_id =  $user->id;
+            $user_session->app_user_id = $user->id;
             $user_session->save();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
@@ -302,6 +332,7 @@ class AppUserController extends Controller
     }
 
     public function profile(Request $request) {
+
 
         $check_items = array('token', 'time', 'sig');
 

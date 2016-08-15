@@ -155,6 +155,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        Thujohn\Twitter\TwitterServiceProvider::class,
     ],
 
     /*
@@ -201,6 +202,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Input' => \Illuminate\Support\Facades\Input::class
+        'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
     ],
 
 ];

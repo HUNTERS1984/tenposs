@@ -29,6 +29,7 @@ use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Twitter;
 
 class TopController extends Controller
 {
