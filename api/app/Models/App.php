@@ -25,4 +25,14 @@ class App extends Model
     {
         return $this->hasMany(Store::class)->select(['id', 'name', 'app_id']);
     }
+
+    public function app_top_main_images(){
+        return $this->hasMany(AppTopMainImage::class);
+    }
+
+    public function app_users(){
+        return $this->hasMany(AppUser::class);
+    }
+
+
 }

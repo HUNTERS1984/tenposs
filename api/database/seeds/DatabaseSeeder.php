@@ -11,23 +11,13 @@ class DatabaseSeeder extends Seeder
      * @var array
      */
     protected $tables = [
-        'users',
-        'apps',
-        'stores',
-        'app_top_main_images',
-        'admin_contacts',
-        'templates',
-        'sidemenus',
-        'app_settings',
-        'rel_app_settings_sidemenus',
-        'app_users',
-        'user_profiles',
-        'coupons',
-        'items',
-        'rel_items',
-        'rel_menus_items',
-        'components',
-        'rel_app_settings_components'
+        'addresses','admin_contacts','apps','app_settings','app_stores','app_top_main_images',
+        'app_users','components','coupons','items','menus','news','photos','photo_categories',
+        'rel_apps_stores','rel_app_settings_components','rel_app_settings_sidemenus','rel_items',
+        'rel_menus_items','reserves','sidemenus','stores','templates','users','user_messages',
+        'user_profiles','user_pushs','user_sessions'
+
+
     ];
 
     /**
@@ -36,13 +26,7 @@ class DatabaseSeeder extends Seeder
      * @var array
      */
     protected $seeders = [
-        UsersTableSeeder::class,
-        SlideMenuSeeder::class,
-        AdminContactsSeeder::class,
-        UserProfileSeeder::class,
-        ItemsSeeder::class,
-        RelMenuItemsSeeder::class,
-        Components_RelAppSettingComponents::class
+        UsersTableSeeder::class
     ];
     /**
      * Run the database seeds.

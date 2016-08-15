@@ -23,6 +23,17 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'name' => 'required',
+        'email' => 'required|email'
+        //...
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -60,4 +71,11 @@ class User extends Authenticatable
     {
         return self::where('temporary_hash', $hash)->first();
     }
+
+    // Users has many apps
+    public function apps(){
+        return $this->hasMany('App\Models\Apps','user_id','id');
+    }
+
+
 }
