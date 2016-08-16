@@ -32,6 +32,7 @@ class AppsRepository implements AppsRepositoryInterface
 
     public function remove($user_id, $app_id)
     {
-        return App::where('id', $app_id)->where('user_id', $user_id)->delete();
+        $app = App::where('id', $app_id)->where('user_id', $user_id)->first();
+        return $app->delete();
     }
 }

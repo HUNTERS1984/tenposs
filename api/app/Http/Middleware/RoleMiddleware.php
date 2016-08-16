@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-
+use Auth;
 class RoleMiddleware
 {
     /**
@@ -18,7 +18,7 @@ class RoleMiddleware
         if (Auth::guest()) {
             return redirect()->route('admin.login');
         }
-
+        
         if (! $request->user()->hasRole($role)) {
             abort(403);
         }

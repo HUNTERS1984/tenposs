@@ -13,24 +13,29 @@
 <div class="page">
   <div class="container">
       <div class="col-lg-4 col-lg-offset-4">
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
           <div class="panel panel-info">
               <div class="panel-body">
                   <div class="panel-title">
-                      Administration Login
+                      Administration
+                      <p>&nbsp;</p>
+                      @include('admin.partials.message')
                   </div>
-
                   <form class="form" action="" method="post">
                         <div class="form-group">
-                            <label for="">Username</label>
-                            <input type="text" class="form-control" name="email">
+                            <label for="">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ old('email') }}">
                         </div>
                         <div class="form-group">
                           <label for="">Password</label>
-                          <input type="text" class="form-control" name="password">
+                          <input type="text" class="form-control" name="password"  value="{{ old('password') }}">
                         </div>
                         <button class="btn btn-primary" type="submit">Login</button>
+                        <p>&nbsp;</p>
                         <p>
-
+                            Email: client@tenposs.com <br>
+                            Pass: 123456
                         </p>
                   </form>
               </div>

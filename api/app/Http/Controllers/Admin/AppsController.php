@@ -73,9 +73,10 @@ class AppsController extends Controller
         $removed = $this->appRepo->remove($user_id,$app_id);
         if($removed){
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Delete successful!') );
+        }else{
+            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Delete fail!') );
         }
-        Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Delete fail!') );
-        return true;
+        return back();
     }
 
 }

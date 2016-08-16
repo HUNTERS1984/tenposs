@@ -5,10 +5,11 @@ use Carbon\Carbon;
 use Hash;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
-
 {
+    use HasRoles;
     const STATUS_TEMPORARY = 0;
     const STATUS_VALID = 1;
     const STATUS_INVALID = 9;

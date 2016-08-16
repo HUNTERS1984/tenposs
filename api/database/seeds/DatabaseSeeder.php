@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
         'app_users','components','coupons','items','menus','news','photos','photo_categories',
         'rel_apps_stores','rel_app_settings_components','rel_app_settings_sidemenus','rel_items',
         'rel_menus_items','reserves','sidemenus','stores','templates','users','user_messages',
-        'user_profiles','user_pushs','user_sessions'
+        'user_profiles','user_pushs','user_sessions','roles','permissions','role_has_permissions',
+        'user_has_permissions','user_has_roles'
 
 
     ];
@@ -26,7 +27,8 @@ class DatabaseSeeder extends Seeder
      * @var array
      */
     protected $seeders = [
-        UsersTableSeeder::class
+        UsersTableSeeder::class,
+        RolePermissionSeeder::class
     ];
     /**
      * Run the database seeds.

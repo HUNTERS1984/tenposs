@@ -55,14 +55,18 @@ Route::get('test','TestController@index');
 
 Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function() {
     Route::get('login', array('as'=>'admin.login','uses' => 'Admin\ClientsController@login' ));
+    Route::post('login', array('as'=>'admin.login.post','uses' => 'Admin\ClientsController@login' ));
 });
 
-Route::group(array('prefix' => 'admin','middlewareGroups' => ['web'],'middleware' => 'auth'), function()
+Route::group(array('prefix' => 'admin',
+    'middlewareGroups' => ['web','auth'],
+    'middleware' => ['role:admin,access_backend']), function()
 {
 
      Route::get('/', array('as'=>'admin.home', function(){
-        return 'Welcome to admin board';
+        return view('admin.dashboard');
      } ));
+    Route::get('/logout', array('as'=>'admin.logout','uses' => 'Admin\ClientsController@logout' ));
 
     Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
     Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
