@@ -31,4 +31,8 @@ class Store extends Model
     public function coupons(){
         return $this->hasMany(Coupon::class);
     }
+
+    public function reserves(){
+        return $this->hasMany(Reserve::class);
+    }
 }

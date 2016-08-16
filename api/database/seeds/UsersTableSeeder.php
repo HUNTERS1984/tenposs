@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-
+        $faker = \Faker\Factory::create();
         $arrImage = [
             'uploads/1.jpg',
             'uploads/2.jpg'
@@ -41,6 +41,24 @@ class UsersTableSeeder extends Seeder
                 // Create apps for per user
                 $user->apps()->saveMany(factory(App::class, 2)->make());
             });
+
+        User::create(
+            [
+                'name' => $faker->name,
+                'email' => 'client@tenposs.com',
+                'password' => bcrypt('123456'), // default password
+                'fullname' => $faker->name,
+                'sex' => $faker->randomElement(array(0,1)),
+                'birthday' => $faker->dateTimeBetween($startDate = '-60 years', $endDate = '-18 years', $timezone = date_default_timezone_get()), // DateTime('2003-03-15 02:00:49', 'Africa/Lagos')
+                'locale' => $faker->locale,
+                'status' => $faker->randomElement(array(0,1,3,4)),
+                'temporary_hash' => md5(32),
+                'remember_token' => '',
+                'company' => $faker->company,
+                'address' => $faker->address,
+                'tel' => $faker->phoneNumber
+            ]
+        );
 
         // Create users apps => stores
         App::all()
@@ -85,6 +103,7 @@ class UsersTableSeeder extends Seeder
                 $store->photo_cats()->saveMany( factory(PhotoCat::class, 3)->make() );
                 $store->coupons()->saveMany( factory(Coupon::class, 5)->make() );
                 $store->menus()->saveMany(factory(\App\Models\Menu::class, 5)->make());
+                $store->reserves()->saveMany(factory(\App\Models\Reserve::class, 5)->make());
             });
 
         PhotoCat::all()
@@ -196,6 +215,10 @@ class UsersTableSeeder extends Seeder
 
             });
 
-
+        // Feed news
+        App::all()
+            ->each(function($app){
+                $app->news()->saveMany(factory(News::class,10)->make());
+            });
     }
 }

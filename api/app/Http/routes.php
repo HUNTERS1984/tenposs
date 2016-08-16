@@ -48,9 +48,17 @@ Route::group(array('prefix' => 'api/v1'), function()
 Route::get('user1','UserController@index');
 Route::get('test','TestController@index');
 
+/*
+ * Admin routing
+ */
 
-Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function()
+Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function() {
+    Route::get('login', array('as'=>'admin.login','uses' => 'Admin\ClientsController@login' ));
+});
+
+Route::group(array('prefix' => 'admin','middlewareGroups' => ['web'],'middleware' => 'auth'), function()
 {
+
      Route::get('/', array('as'=>'admin.home', function(){
         return 'Welcome to admin board';
      } ));
@@ -61,6 +69,6 @@ Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function(
     Route::post('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.store','uses' => 'Admin\AppsController@store' ));
     Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.edit','uses' => 'Admin\AppsController@edit' ));
     Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as'=>'admin.clients.apps.delete','uses' => 'Admin\AppsController@delete' ));
-    
+
 
 });

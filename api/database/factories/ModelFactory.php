@@ -28,8 +28,8 @@ use App\Models\UserProfile;
 use App\Models\Coupon;
 use App\Models\Item;
 use App\Models\Component;
-
-
+use App\Models\News;
+use App\Models\Reserve;
 
 $arrImage = [
     'uploads/1.jpg',
@@ -185,3 +185,20 @@ $factory->define(Component::class, function (Faker $faker) {
         'name' => $faker->numerify('Components #####'),
     ];
 });
+
+$factory->define(News::class, function (Faker $faker) use($arrImage) {
+    return [
+        'title' => $faker->sentence(7),
+        'description' => $faker->sentence(20),
+        'image_url' => $faker->randomElement($arrImage),
+        'date' => $faker->date('Y-m-d H:s:i'),
+    ];
+});
+
+
+$factory->define(Reserve::class, function (Faker $faker) use($arrImage) {
+    return [
+        'reserve_url' => $faker->url,
+    ];
+});
+

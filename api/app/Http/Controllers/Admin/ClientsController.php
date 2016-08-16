@@ -21,5 +21,9 @@ class ClientsController extends Controller
   
         return view('admin.clients.index',['users'=>$this->userRespository->paginate(2)]);
     }
-    
+
+    public function login(){
+      
+        return view('admin.login');
+    }
 }
