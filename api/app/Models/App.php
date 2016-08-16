@@ -44,9 +44,5 @@ class App extends Model
     public function app_users(){
         return $this->hasMany(AppUser::class);
     }
-
-    public function news(){
-        return $this->hasMany(News::class);
-    }
-
+    
 }

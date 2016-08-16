@@ -18,6 +18,7 @@ use App\Models\UserProfile;
 use App\Models\Coupon;
 use App\Models\Item;
 use App\Models\Component;
+use App\Models\News;
 use Faker\Generator as Faker;
 class UsersTableSeeder extends Seeder
 {
@@ -180,7 +181,7 @@ class UsersTableSeeder extends Seeder
 
         AppSetting::all()
             ->each(function($set){
-                $set->images()->saveMany(factory(\App\TopMainImage::class,2));
+                $set->images()->saveMany(factory(\App\Models\TopMainImage::class,2));
             });
 
         //
@@ -216,9 +217,9 @@ class UsersTableSeeder extends Seeder
             });
 
         // Feed news
-        App::all()
-            ->each(function($app){
-                $app->news()->saveMany(factory(News::class,10)->make());
+        Store::all()
+            ->each(function($store){
+                $store->news()->saveMany(factory(News::class,10)->make());
             });
     }
 }
