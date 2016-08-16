@@ -2,43 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\User;
-use App\Models\UserSession;
-use App\Models\AppUser;
-use App\Models\App;
-use App\Models\AppSetting;
-use App\Models\Store;
 use App\Models\Menu;
-use App\Models\News;
-use App\Models\Item;
-use App\Models\PhotoCat;
-use App\Models\Photo;
-use App\Models\Reserve;
-use App\Models\UserProfile;
-use App\Models\UserPush;
 use Mail;
 use App\Address;
-use Illuminate\Support\Facades\Hash;
 use DB;
-use Mockery\CountValidator\Exception;
+use Illuminate\Support\Facades\Config;
 
 class ItemController extends Controller
 {
+    protected $request;
+    protected $_topRepository;
+
+    public function __construct(TopsRepositoryInterface $ur, Request $request)
+    {
+        $this->_topRepository = $ur;
+        $this->request = $request;
+    }
+
     public function menu(Request $request) {
 
-        $check_items = array('store_id', 'time', 'sig');
+        $check_items = array('app_id','store_id', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_menu');
+        print_r($check_sig_items);
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         try {
             $app = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
@@ -49,14 +53,24 @@ class ItemController extends Controller
         return $this->output($this->body);
     }
 
-    public function items(Request $request) {
+    public function items() {
 
-        $check_items = array('menu_id', 'pageindex', 'pagesize', 'time', 'sig');
+        $check_items = array('app_id','menu_id', 'pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_items');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
             return $this->error(1004);
 
