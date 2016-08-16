@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -29,20 +30,23 @@ use Illuminate\Support\Facades\Hash;
 use DB;
 use Mockery\CountValidator\Exception;
 use Twitter;
+use Illuminate\Support\Facades\Config;
 
 class AppUserController extends Controller
 {
     protected $request;
+    protected $_topRepository;
 
-    public function __construct(Request $request)
+    public function __construct(TopsRepositoryInterface $ur, Request $request)
     {
+        $this->_topRepository = $ur;
         $this->request = $request;
     }
 
-    public function verify_facebook_token ($id, $token)
+    public function verify_facebook_token($id, $token)
     {
         try {
-            $graph_url = "https://graph.facebook.com/me?access_token=". $token;
+            $graph_url = "https://graph.facebook.com/me?access_token=" . $token;
             $json = @file_get_contents($graph_url);
             if ($json === false)
                 return false;
@@ -55,10 +59,10 @@ class AppUserController extends Controller
         } catch (\Exception $e) {
             return false;
         }
-        
+
     }
 
-    public function verify_twitter_token ($id, $token, $secret)
+    public function verify_twitter_token($id, $token, $secret)
     {
         // set the new configurations
         Twitter::reconfig([
@@ -74,42 +78,53 @@ class AppUserController extends Controller
                 return false;
 
             return true;
-            
+
         } catch (\Exception $e) {
             return false;
         }
     }
 
 
-    public function social_login (Request $request) {
-        
+    public function social_login(Request $request)
+    {
+
         if (Input::get('social_type') == 1) {
-            $check_items = array('app_id', 'username', 'social_type', 'social_id', 'social_token', 'time', 'sig');
+            $check_items = array('app_id', 'name', 'social_type', 'social_id', 'social_token', 'time', 'sig');
 
             if ($this->verify_facebook_token(Input::get('social_id'), Input::get('social_token')) == false) {
                 return $this->error(9998);
             }
         } else if (Input::get('social_type') == 2) {
-            $check_items = array('app_id', 'username', 'social_type', 'social_id', 'social_token', 'social_secret', 'time', 'sig');
+            $check_items = array('app_id', 'name', 'social_type', 'social_id', 'social_token', 'social_secret', 'time', 'sig');
 
             if ($this->verify_twitter_token(Input::get('social_id'), Input::get('social_token'), Input::get('social_secret')) == false) {
                 return $this->error(9998);
             }
         } else {
             return $this->error(1004);
-        }    
+        }
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_social_login');//array('app_id', 'time', 'social_type', 'social_id');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         $user = null;
         try {
             $user = AppUser::where('social_id', Input::get('social_id'))->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-       
+
 
         if (!$user) {
             try {
@@ -122,8 +137,8 @@ class AppUserController extends Controller
                 $user->save();
 
                 $profile = new UserProfile();
-                $profile->name = Input::get('username');
-                $profile->app_user_id = $user->id;            
+                $profile->name = Input::get('name');
+                $profile->app_user_id = $user->id;
                 $profile->gender = 0;
                 $profile->address = null;
                 $profile->avatar_url = null;
@@ -142,13 +157,13 @@ class AppUserController extends Controller
             $profile = UserProfile::where('app_user_id', $user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
         }
 
-        $token  = md5(Input::get('email').date('Y-m-d H:i:s'));
+        $token = md5(Input::get('email') . date('Y-m-d H:i:s'));
         try {
             UserSession::where('app_user_id', $user->id)->delete();
             $user_session = new UserSession();
             $user_session->token = $token;
             $user_session->type = 1;
-            $user_session->app_user_id =  $user->id;
+            $user_session->app_user_id = $user->id;
             $user_session->save();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
@@ -162,14 +177,25 @@ class AppUserController extends Controller
 
     }
 
-    public function signup(Request $request) {
+    public function signup(Request $request)
+    {
 
-        $check_items = array('app_id','email', 'password', 'username', 'time', 'sig');
+        $check_items = array('app_id', 'email', 'password', 'name', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_signup');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         try {
             $user = AppUser::where('email', Input::get('email'))->first();
         } catch (\Illuminate\Database\QueryException $e) {
@@ -177,25 +203,25 @@ class AppUserController extends Controller
         }
 
         if ($user)
-            return $this->error(9996); 
+            return $this->error(9996);
 
         try {
             DB::beginTransaction();
             $user = new AppUser();
             $user->email = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
-            $user->app_id =  Input::get('app_id');
+            $user->app_id = Input::get('app_id');
             $user->save();
 
             $profile = new UserProfile();
-            $profile->name = Input::get('username');
+            $profile->name = Input::get('name');
             $profile->gender = 0;
             $profile->address = null;
             $profile->avatar_url = null;
             $profile->facebook_status = 0;
             $profile->twitter_status = 0;
             $profile->instagram_status = 0;
-            $profile->app_user_id =  $user->id;
+            $profile->app_user_id = $user->id;
 
             $profile->save();
 
@@ -205,7 +231,7 @@ class AppUserController extends Controller
             return $this->error(9999);
         }
 
-        $token  = md5(Input::get('email').date('Y-m-d H:i:s'));
+        $token = md5(Input::get('email') . date('Y-m-d H:i:s'));
         try {
             UserSession::where('app_user_id', $user->id)->delete();
             $user_session = new UserSession();
@@ -226,23 +252,34 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function signin(Request $request) {
+    public function signin(Request $request)
+    {
 
         $check_items = array('email', 'password', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_signin');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         try {
             $user = AppUser::where('email', Input::get('email'))->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-       
+
 
         if ($user && Hash::check(Input::get('password'), $user->password)) {
-            $token  = md5(Input::get('email').date('Y-m-d H:i:s'));
+            $token = md5(Input::get('email') . date('Y-m-d H:i:s'));
 
             try {
                 $profile = UserProfile::where('app_user_id', $user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
@@ -251,7 +288,7 @@ class AppUserController extends Controller
                 $user_session = new UserSession();
                 $user_session->token = $token;
                 $user_session->type = 0;
-                $user_session->app_user_id =  $user->id;
+                $user_session->app_user_id = $user->id;
                 $user_session->save();
             } catch (\Illuminate\Database\QueryException $e) {
                 return $this->error(9999);
@@ -266,18 +303,29 @@ class AppUserController extends Controller
             return $this->error(9995);
         }
 
-        
+
     }
 
 
-    public function signout(Request $request) {
-        
+    public function signout(Request $request)
+    {
+
         $check_items = array('token', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_signin');
+        // check app_id in database
+        $app = $this->_topRepository->get_user_session(Input::get('token'));
+        if (!$app)
+            return $this->error(9998);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         try {
             UserSession::where('app_user_id', $request->user->id)->delete();
             $request->user->android_push_key = null;
@@ -286,11 +334,12 @@ class AppUserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-    
+
         return $this->output($this->body);
     }
 
-    public function set_push_key(Request $request) {
+    public function set_push_key(Request $request)
+    {
 
         $check_items = array('token', 'client', 'key', 'time', 'sig');
 
@@ -300,7 +349,7 @@ class AppUserController extends Controller
 
         if (Input::get('client') == 0)
             $request->user->android_push_key = Input::get('key');
-        else 
+        else
             $request->user->apple_push_key = Input::get('key');
 
         $request->user->save();
@@ -308,7 +357,8 @@ class AppUserController extends Controller
     }
 
 
-    public function set_push_setting(Request $request) {
+    public function set_push_setting(Request $request)
+    {
 
         $check_items = array('token', 'ranking', 'news', 'coupon', 'chat', 'time', 'sig');
 
@@ -317,9 +367,9 @@ class AppUserController extends Controller
             return $ret;
 
         $push = UserPush::where('app_user_id', $request->user->id)->first();
-        
+
         if (!$push)
-            return $this->error(1004); 
+            return $this->error(1004);
 
         $push->ranking = Input::get('ranking');
         $push->news = Input::get('news');
@@ -331,7 +381,8 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function profile(Request $request) {
+    public function profile(Request $request)
+    {
 
 
         $check_items = array('token', 'time', 'sig');
@@ -343,33 +394,34 @@ class AppUserController extends Controller
         if (!$request->user || !$request->user->profile)
             return $this->error(1004);
 
-        $request->user->profile->avatar_url = url('/').$request->user->profile->avatar_url;
+        $request->user->profile->avatar_url = url('/') . $request->user->profile->avatar_url;
         $this->body['data']['user'] = $request->user;
 
         return $this->output($this->body);
     }
 
 
-    public function update_profile(Request $request) {
+    public function update_profile(Request $request)
+    {
 
         $check_items = array('token', 'username', 'gender', 'address');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-        
-        if (Input::get('gender') != '0' && Input::get('gender') != '1')
-            return $this->error(1004); 
 
-        if (Input::file('avatar') != null && Input::file('avatar')->isValid()){   
+        if (Input::get('gender') != '0' && Input::get('gender') != '1')
+            return $this->error(1004);
+
+        if (Input::file('avatar') != null && Input::file('avatar')->isValid()) {
             $file = array('avatar' => Input::file('avatar'));
             $destinationPath = 'uploads'; // upload path
             $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
-            $fileName = md5(Input::file('avatar')->getClientOriginalName().date('Y-m-d H:i:s')).'.'.$extension; // renameing image
+            $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
-            $request->user->profile->avatar_url = '/'.$destinationPath.'/'.$fileName;
+            $request->user->profile->avatar_url = '/' . $destinationPath . '/' . $fileName;
         } else {
-            return $this->error(1004); 
+            return $this->error(1004);
         }
 
         try {

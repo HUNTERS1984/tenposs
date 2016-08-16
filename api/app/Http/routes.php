@@ -31,7 +31,8 @@ Route::group(array('prefix' => 'api/v1'), function()
     Route::get('photo','PhotoController@index');
     Route::get('reserve','ReserveController@index');
     Route::get('coupon','CouponController@index');
-
+    Route::get('get_sig_test','TopController@get_sig_time_test');
+    Route::get('list_app','TopController@list_app');
     // User
     Route::resource('user','UserController');
 

@@ -3,7 +3,9 @@ namespace App\Repositories\Eloquents;
 
 use App\AppSetting;
 use App\Item;
+use App\Models\App;
 use App\Models\News;
+use App\Models\UserSession;
 use App\Photo;
 use App\TopMainImage;
 use App\User;
@@ -62,5 +64,20 @@ class TopsRepository implements TopsRepositoryInterface
     public function setPushKey()
     {
         // TODO: Implement setPushKey() method.
+    }
+
+    public function get_app_info($app_app_id)
+    {
+        return App::where('app_app_id', '=', $app_app_id)->first();
+    }
+
+    public function get_user_session($token)
+    {
+        return UserSession::where('token','=',$token);
+    }
+
+    public function list_app()
+    {
+        return App::all(['name','app_app_id','app_app_secret']);
     }
 }

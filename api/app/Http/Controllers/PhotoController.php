@@ -2,43 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\User;
-use App\Models\UserSession;
-use App\Models\AppUser;
-use App\Models\App;
-use App\Models\AppSetting;
-use App\Models\Store;
-use App\Models\Menu;
-use App\Models\News;
-use App\Models\Item;
 use App\Models\PhotoCat;
 use App\Models\Photo;
-use App\Models\Reserve;
-use App\Models\UserProfile;
-use App\Models\UserPush;
 use Mail;
 use App\Address;
-use Illuminate\Support\Facades\Hash;
 use DB;
-use Mockery\CountValidator\Exception;
+use Illuminate\Support\Facades\Config;
 
 class PhotoController extends Controller
 {
-    public function photo_cat(Request $request) {
+    protected $request;
+    protected $_topRepository;
 
-        $check_items = array('store_id', 'time', 'sig');
+    public function __construct(TopsRepositoryInterface $ur, Request $request)
+    {
+        $this->_topRepository = $ur;
+        $this->request = $request;
+    }
+    public function photo_cat() {
+
+        $check_items = array('app_id','store_id', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_photo_cat');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         try {
             $app = PhotoCat::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
@@ -56,7 +59,17 @@ class PhotoController extends Controller
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_photo');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
         if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
             return $this->error(1004);
 
