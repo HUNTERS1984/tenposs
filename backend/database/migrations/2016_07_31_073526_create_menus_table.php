@@ -15,10 +15,10 @@ class CreateMenusTable extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name',255)->nullable();
-            $table->integer('app_id',false)
+            $table->integer('store_id',false)
                 ->unsigned()
                 ->nullable();
-            $table->index('app_id');
+            $table->index('store_id');
         });
     }
 

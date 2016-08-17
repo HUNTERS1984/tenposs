@@ -10,27 +10,25 @@ namespace App\Repositories\Eloquents;
 
 
 use App\Repositories\Contracts\ReservesRepositoryInterface;
-use App\Reserve;
+use App\Models\Reserve;
 
 class ReservesRepository implements ReservesRepositoryInterface
 {
 
     public function getList($store_id)
     {
-        $arrResult = [];
+        $reserve = [];
         try {
             $news = [];
             if ($store_id > 0) {
-                $news = Reserve::where('store_id', '=', $store_id)->get()->toArray();
-                $arrResult['reserve'] = $news;
+                $reserve = Reserve::where('store_id', '=', $store_id)->get()->toArray();
 
             } else {
-                $photos = Reserve::all()->toArray();
-                $arrResult['reserve'] = $photos;
+                $reserve = Reserve::all()->toArray();
             }
         } catch (QueryException $e) {
             throw $e;
         }
-        return $arrResult;
+        return $reserve;
     }
 }

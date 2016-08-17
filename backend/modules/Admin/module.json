@@ -1,15 +1,9 @@
 {
-    "name": "Admin",
-    "alias": "admin",
-    "description": "",
-    "keywords": [],
-    "active": 1,
-    "order": 0,
-    "providers": [
-        "Modules\\Admin\\Providers\\AdminServiceProvider"
-    ],
-    "aliases":{},
-    "files": [
-        "start.php"
-    ]
+	"name": "Admin",
+	"slug": "admin",
+	"namespace": "Admin",
+	"version": "1.0",
+	"author": "LiemPhan",
+	"license": "MIT",
+	"description": "This is the description for the Admin module."
 }

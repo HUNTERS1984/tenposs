@@ -16,7 +16,10 @@ class CreateRelAppSettingsComponentsTable extends Migration
             $table->unsignedInteger('app_setting_id',false)->nullable();
             $table->unsignedInteger('component_id',false)->nullable();
             $table->smallInteger('order',false)->nullable();
+            
             $table->primary(['app_setting_id','component_id']);
+
+
         });
     }
 

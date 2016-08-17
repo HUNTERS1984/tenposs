@@ -43,44 +43,13 @@ class TopController extends Controller
         if ($ret_sig)
             return $ret_sig;
 
-        $stores = $app->stores()->with('menus', 'photo_cats', 'news', 'addresses')->get()->toArray();
+        $stores = $app->stores()->lists('id')->toArray();
 
-        $images = [];//$app->app_setting()->first()->images()->get()->toArray();
-
-        for ($i = 0; $i < count($images); $i++) {
-            $images[$i]['image_url'] = url('/') . '/' . $images[$i]['image_url'];
-        }
-
-        $menus = array_pluck($stores, 'menus');
-        $photocats = array_pluck($stores, 'photo_cats');
-        $news_all = array_pluck($stores, 'news');
-        $addresses = array_pluck($stores, 'addresses');
-
-        $menus_id = [];
-        foreach ($menus as $key => $value) {
-            $menus_id = array_collapse([$menus_id, array_pluck($value, 'id')]);
-        }
-        $menus_id = '(' . implode(',', $menus_id) . ')';
-
-        $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at from rel_menus_items INNER JOIN items on rel_menus_items.item_id=items.id INNER JOIN menus on rel_menus_items.menu_id=menus.id where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT 8'));
-
-        for ($i = 0; $i < count($items); $i++) {
-            $items[$i]->id = intval($items[$i]->id);
-            $items[$i]->image_url = url('/') . '/' . $items[$i]->image_url;
-        }
-        $photocats_id = [];
-        foreach ($photocats as $key => $value) {
-            $photocats_id = array_collapse([$photocats_id, array_pluck($value, 'id')]);
-        }
-
-        $photos = Photo::whereIn('photo_category_id', $photocats_id)->get();
-
-        $news = [];
-        foreach ($news_all as $key => $value) {
-
-            $news = array_collapse([$news, $value]);
-        }
-        $photos = Photo::whereIn('photo_category_id', $photocats_id)->get();
+        $images = $this->_topRepository->get_top_images(Input::get('app_id'));
+        $news = $this->_topRepository->get_top_news(Input::get('app_id'));
+        $photos = $this->_topRepository->get_top_photos(Input::get('app_id'));
+        $items = $this->_topRepository->get_top_items(Input::get('app_id'));
+        $contacts = $this->_topRepository->get_top_contacts(Input::get('app_id'));
 
         $this->body['data']['images']['top_id'] = 1;
         $this->body['data']['images']['data'] = $images;
@@ -91,7 +60,7 @@ class TopController extends Controller
         $this->body['data']['news']['top_id'] = 4;
         $this->body['data']['news']['data'] = $news;
         $this->body['data']['contact']['top_id'] = 5;
-        $this->body['data']['contact']['data'] = $addresses;
+        $this->body['data']['contact']['data'] = $contacts;
 
 
         return $this->output($this->body);
@@ -114,7 +83,7 @@ class TopController extends Controller
             $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
             if ($ret_sig)
                 return $ret_sig;
-            $app_data = $app->with('app_setting', 'top_components', 'side_menu', 'stores')->first()->toArray();
+            $app_data = $app->with('app_setting', 'top_components', 'side_menu', 'stores')->select(['id', 'name', 'description', 'status', 'created_at', 'updated_at'])->first()->toArray();
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);

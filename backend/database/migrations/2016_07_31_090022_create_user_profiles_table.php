@@ -13,14 +13,14 @@ class CreateUserProfilesTable extends Migration
     public function up()
     {
         Schema::create('user_profiles', function (Blueprint $table) {
-            $table->unsignedInteger('id',false);
+            $table->increments('id');
             $table->string('name',100)->nullable();
-            $table->smallInteger('gender',false)->nullable();
+            $table->smallInteger('gender',false)->default(0);
             $table->string('address',255)->nullable();
             $table->string('avatar_url',255)->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
 
             $table->smallInteger('facebook_status',false)->default(0);
             $table->smallInteger('twitter_status',false)->default(0);
@@ -30,7 +30,6 @@ class CreateUserProfilesTable extends Migration
             $table->string('instagram_token',255)->nullable();
             $table->unsignedInteger('app_user_id',false)->nullable();
 
-            $table->primary(['id']);
             $table->index('app_user_id');
         });
     }

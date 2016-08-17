@@ -12,5 +12,9 @@ class PhotoCat extends Model {
     public function photo(){
         return $this->hasMany(Photo::class,'photo_category_id');
     }
+
+    public function store(){
+    	 return $this->belongsTo(Store::class);
+    }
 }
 

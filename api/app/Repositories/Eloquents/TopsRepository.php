@@ -1,69 +1,138 @@
 <?php
 namespace App\Repositories\Eloquents;
 
-use App\AppSetting;
-use App\Item;
+use App\Models\AppSetting;
 use App\Models\App;
+use App\Models\Address;
 use App\Models\News;
 use App\Models\UserSession;
-use App\Photo;
-use App\TopMainImage;
-use App\User;
+use App\Models\Photo;
+use App\Models\PhotoCat;
+use App\Models\Item;
+use App\Models\Menu;
+use App\Models\TopMainImage;
+use App\Models\User;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use DB;
 
+define("TOP_MAX_ITEM", 8);
+
 class TopsRepository implements TopsRepositoryInterface
 {
-    public function all()
+    public function get_top_items($app_app_id)
     {
-        return User::all();
+        $items = [];
+        $app = $this->get_app_info($app_app_id);
+        if ($app)
+        {
+            $stores = $app->stores()->lists('id')->toArray();
+
+            $menus = Menu::whereHas('store', function($query) use ($stores)
+            {
+                $query->whereIn('store_id', $stores);
+            })->lists('id')->toArray();
+   
+            $menus_id = '(' . implode(',', $menus) . ')';
+
+            $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at 
+                from rel_menus_items 
+                INNER JOIN items on rel_menus_items.item_id=items.id 
+                INNER JOIN menus on rel_menus_items.menu_id=menus.id 
+                where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT '.TOP_MAX_ITEM));
+            for ($i = 0; $i < count($items); $i++)
+            {
+                $items[$i]->image_url = url('/').'/'.$items[$i]->image_url;
+            }
+        }
+
+        return $items;
     }
 
-    public function find($id)
-    {
-        return User::find($id);
-    }
-
-    public function getTopItem()
-    {
-        return Item::all()->take(10);
-    }
-
-    public function getTopPhoto()
+    public function get_top_photos($app_app_id)
     {
 //        return Photo::all()->take(10);
 //        return DB::table('photos')
 //            ->join('photo_categories', 'photo_categories.id', '=', 'photos.photo_category_id')
 //            ->select('photos.id','photos.image_url','photos.photo_category_id', 'photo_categories.name')
 //            ->paginate(6);
-        return DB::select('select p.id,p.image_url,p.photo_category_id,pc.`name` from `photos` p 
-                            inner join `photo_categories` pc
-                            on p.photo_category_id = pc.id 
-                            order by p.id desc
-                            limit 10
-                            ');
+        // return DB::select('select p.id,p.image_url,p.photo_category_id,pc.`name` from `photos` p 
+        //                     inner join `photo_categories` pc
+        //                     on p.photo_category_id = pc.id 
+        //                     order by p.id desc
+        //                     limit 10
+        //                     ');
 
+        $photos = [];
+        $app = $this->get_app_info($app_app_id);
+        if ($app)
+        {
+            $stores = $app->stores()->lists('id')->toArray();
+
+            $photocats_id = PhotoCat::whereHas('store', function($query) use ($stores)
+            {
+                $query->whereIn('store_id', $stores);
+            })->lists('id')->toArray();
+
+            $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
+            for ($i = 0; $i < count($photos); $i++)
+            {
+                $photos[$i]['image_url'] = url('/').'/'.$photos[$i]['image_url'];
+            }
+        }
+
+        return $photos;
     }
 
-    public function getTopNew()
+    public function get_top_news($app_app_id)
     {
-        return News::all(['id','title','description','date','store_id','image_url'])->take(10);
+        $news = [];
+        $app = $this->get_app_info($app_app_id);
+        if ($app)
+        {
+            $stores = $app->stores()->lists('id')->toArray();
+
+            $news = News::whereHas('store', function($query) use ($stores)
+            {
+                $query->whereIn('store_id', $stores);
+            })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
+            for ($i = 0; $i < count($news); $i++)
+            {
+                $news[$i]['image_url'] = url('/').'/'.$news[$i]['image_url'];
+            }
+        }
+        return $news;
     }
 
-    public function getTopMainImage()
+    public function get_top_images($app_app_id)
     {
-        return TopMainImage::all(['id','image_url'])->take(10);
+        $images = [];
+        $app_setting = $this->get_app_info($app_app_id)->app_setting()->first();
+        if ($app_setting) {
+            $images =  $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
+            for ($i = 0; $i < count($images); $i++)
+            {
+                $images[$i]['image_url'] = url('/').'/'.$images[$i]['image_url'];
+            }
+        }
+
+        return $images;    
     }
 
-    public function getAppInfo($id)
+    public function get_top_contacts($app_app_id)
     {
-        $appSetting = AppSetting::find($id);
+        $contacts = [];
+        $app = $this->get_app_info($app_app_id);
+        if ($app)
+        {
+            $stores = $app->stores()->lists('id')->toArray();
 
-    }
+            $contacts = Address::whereHas('store', function($query) use ($stores)
+            {
+                $query->whereIn('store_id', $stores);
+            })->select('id', 'title', 'latitude', 'longitude', 'tel', 'start_time', 'end_time')->get()->toArray();
+        }
 
-    public function setPushKey()
-    {
-        // TODO: Implement setPushKey() method.
+        return $contacts;
     }
 
     public function get_app_info($app_app_id)
@@ -71,10 +140,6 @@ class TopsRepository implements TopsRepositoryInterface
         return App::where('app_app_id', '=', $app_app_id)->first();
     }
 
-    public function get_user_session($token)
-    {
-        return UserSession::where('token','=',$token);
-    }
 
     public function list_app()
     {

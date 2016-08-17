@@ -18,9 +18,9 @@ class CreateItemsTable extends Migration
             $table->string('price',100)->nullable();
             $table->string('image_url',255)->nullable();
             $table->text('description')->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             $table->integer('coupon_id',false)->unsigned()->nullable();
             $table->index('coupon_id');
         });

@@ -156,9 +156,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Pingpong\Modules\ModulesServiceProvider::class,
         Spatie\LaravelAnalytics\LaravelAnalyticsServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class
+        Collective\Html\HtmlServiceProvider::class,
+        Caffeinated\Modules\ModulesServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Cviebrock\ImageValidator\ImageValidatorServiceProvider::class
 
     ],
 
@@ -205,11 +207,12 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Analytics' => Spatie\LaravelAnalytics\LaravelAnalyticsFacade::class,
-        'Module' => Pingpong\Modules\Facades\Module::class,
         'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class
+        'Html' => Collective\Html\HtmlFacade::class,
+        'Analytics' => Spatie\LaravelAnalytics\LaravelAnalyticsFacade::class,
+        'Module' => Caffeinated\Modules\Facades\Module::class,
+        'Image' => Intervention\Image\Facades\Image::class
+
     ],
 
 ];

@@ -15,11 +15,11 @@ class CreateReservesTable extends Migration
         Schema::create('reserves', function (Blueprint $table) {
             $table->increments('id');
             $table->string('reserve_url',255)->nullable();
-            $table->unsignedInteger('app_id',false)->nullable();
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->timestamp('deleted_at');
-            $table->index('app_id');
+            $table->unsignedInteger('store_id',false)->nullable();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+            $table->index('store_id');
         });
     }
 
