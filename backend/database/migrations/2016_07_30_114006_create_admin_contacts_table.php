@@ -18,8 +18,8 @@ class CreateAdminContactsTable extends Migration
             $table->string('name',255);
             $table->text('message');
             $table->timestamps();
-            $table->index('email');
 
+            $table->index('email');
         });
     }
 

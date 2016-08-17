@@ -1,72 +1,76 @@
 <?php
+namespace Modules\Admin\Http\Controllers\Auth;
 
-namespace App\Http\Controllers\Auth;
-
-use App\User;
+use App\Models\Users;
 use Validator;
+use Auth;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+use Illuminate\Http\Request;
+use Modules\Admin\Http\Requests\AdminLoginRequest;
+
+use App\Http\Requests;
+
+
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
+	use AuthenticatesAndRegistersUsers, ThrottlesLogins ;
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+	protected $validator;
+	protected $redirectTo = '/admin/top';
+	protected $redirectPath = "admin/top";
 
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+	protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'role'=>'required',
         ]);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
     protected function create(array $data)
     {
-        return User::create([
+        return Users::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'role'=>$data['role'],
         ]);
     }
+
+	public function showLoginForm()
+	{
+		if (Auth::check())
+		{
+			if(Auth::user()->role() === 'admin'){
+				return redirect()->route('admin::pages.admin.dashboard');
+			}else{
+				Auth::logout();
+				return $this->showLoginForm();
+			}
+		}
+		return view('admin::pages.auth.login');
+	}
+
+	public function showRegistrationForm()
+	{
+		return view('admin::pages.auth.register');
+	}
+
+	public function resetPassword()
+	{
+		return view('admin.auth.passwords.email');
+	}
+
+	public function logout(){
+		Auth::logout();
+		return redirect('/admin/login');
+	}
+
 }

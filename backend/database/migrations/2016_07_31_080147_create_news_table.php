@@ -17,9 +17,9 @@ class CreateNewsTable extends Migration
             $table->string('title',255)->nullable();
             $table->text('description')->nullable();
             $table->date('date')->nullable();
-            $table->integer('app_id',false)->unsigned()->nullable();
+            $table->integer('store_id',false)->unsigned()->nullable();
             $table->string('image_url',255)->nullable();
-            $table->index('app_id');
+            $table->index('store_id');
 
         });
     }

@@ -14,22 +14,21 @@ class CreateCouponsTable extends Migration
     {
         if(!Schema::hasTable('coupons') ){
             Schema::create('coupons', function (Blueprint $table) {
-                $table->integer('id',false)->unsigned();
+                $table->increments('id');
                 $table->smallInteger('type',false)->nullable();
                 $table->string('title',255)->nullable();
                 $table->text('description')->nullable();
                 $table->date('start_date')->nullable();
                 $table->date('end_date')->nullable();
                 $table->smallInteger('status',false)->nullable();
-                $table->timestamp('created_at');
-                $table->timestamp('updated_at');
-                $table->timestamp('deleted_at');
-                $table->integer('app_id',false)->unsigned()->nullable();
+                $table->timestamp('created_at')->nullable();
+                $table->timestamp('updated_at')->nullable();
+                $table->timestamp('deleted_at')->nullable();
+                $table->integer('store_id',false)->unsigned()->nullable();
                 $table->string('image_url',255)->nullable();
                 $table->integer('limit',false)->nullable();
 
-                $table->primary(['id']);
-                $table->index('app_id');
+                $table->index('store_id');
 
             });
         }
