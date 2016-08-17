@@ -131,7 +131,7 @@ class AppUserController extends Controller
                 DB::beginTransaction();
 
                 $user = new AppUser();
-                $user->app_id = Input::get('app_id');
+                $user->app_id = $app->id;
                 $user->social_type = Input::get('social_type');
                 $user->social_id = Input::get('social_id');
                 $user->save();
@@ -210,7 +210,7 @@ class AppUserController extends Controller
             $user = new AppUser();
             $user->email = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
-            $user->app_id = Input::get('app_id');
+            $user->app_id = $app->id;
             $user->save();
 
             $profile = new UserProfile();
