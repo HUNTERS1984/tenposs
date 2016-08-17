@@ -14,4 +14,8 @@ class Menu extends Model
     {
         return $this->belongsToMany(Item::class, 'rel_menus_items', 'menu_id', 'item_id');
     }
+
+    public function store(){
+    	 return $this->belongsTo(Store::class);
+    }
 }
