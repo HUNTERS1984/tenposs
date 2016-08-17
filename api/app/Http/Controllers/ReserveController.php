@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Repositories\Contracts\ReservesRepositoryInterface;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -18,10 +19,12 @@ class ReserveController extends Controller
 
     protected $request;
     protected $_topRepository;
+    protected $_reserveRepository;
 
-    public function __construct(TopsRepositoryInterface $ur, Request $request)
+    public function __construct(TopsRepositoryInterface $ur, ReservesRepositoryInterface $rr, Request $request)
     {
         $this->_topRepository = $ur;
+        $this->_reserveRepository = $rr;
         $this->request = $request;
     }
 
@@ -35,7 +38,7 @@ class ReserveController extends Controller
 
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_reserve');
-        print_r($check_sig_items);
+
         // check app_id in database
         $app = $this->_topRepository->get_app_info(Input::get('app_id'));
         if (!$app)
@@ -46,7 +49,7 @@ class ReserveController extends Controller
             return $ret_sig;
         //end validate app_id and sig
         try {
-            $reserve = Reserve::find(Input::get('store_id'));
+            $reserve = $this->_reserveRepository->getList(Input::get('store_id'));
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
