@@ -75,7 +75,7 @@ class User extends Authenticatable
 
     // Users has many apps
     public function apps(){
-        return $this->hasMany('App\Models\Apps','user_id','id');
+        return $this->hasMany(App::class);
     }
 
 

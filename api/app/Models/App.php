@@ -12,6 +12,9 @@ class App extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
+        'app_app_id',
+        'app_app_secret',
+        'description',
         'status'
     ];
 

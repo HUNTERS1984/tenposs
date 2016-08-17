@@ -22,12 +22,20 @@ class AppsRepository implements AppsRepositoryInterface
         return $user->apps()->save($app);
     }
 
+    public function updateApp($user,$app_id, $arrayApp)
+    {
+        return $user->apps()->findOrFail($app_id)->update($arrayApp);
+    }
 
     public function fetchAppsByUser(AppsFilters $filters, $user_id, $limit = 20)
     {
 
         $app = App::where('user_id', $user_id)->filter($filters)->paginate($limit);
         return $app;
+    }
+
+    public function show($user, $app_id){
+        return $user->apps()->findOrFail($app_id);
     }
 
     public function remove($user_id, $app_id)

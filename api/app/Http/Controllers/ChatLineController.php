@@ -12,7 +12,17 @@ class ChatLineController extends Controller
     //
 
    
+    public function index(){
+        return view('chat.message');
+    }
 
+    public function login(){
+        return view('chat.login');
+    }
+
+    public function authentication(Request $request){
+        dd($request->all());
+    }
 
     public function chatToUser(){
 

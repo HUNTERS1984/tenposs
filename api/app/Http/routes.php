@@ -49,6 +49,20 @@ Route::group(array('prefix' => 'api/v1'), function()
 Route::get('user1','UserController@index');
 Route::get('test','TestController@index');
 
+
+/*
+ * Chat routing clients
+ */
+
+Route::group(array('prefix' => 'chat'), function() {
+
+    Route::get('login', array('as'=>'chat.login','uses' => 'ChatLineController@login' ));
+    Route::get('authentication', array('as'=>'chat.authentication','uses' => 'ChatLineController@authentication' ));
+    Route::get('message', array('as'=>'chat.message','uses' => 'ChatLineController@index' ));
+
+});
+
+
 /*
  * Admin routing
  */
@@ -70,9 +84,11 @@ Route::group(array('prefix' => 'admin',
 
     Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
     Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
+    // Clients
     Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
     Route::post('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.store','uses' => 'Admin\AppsController@store' ));
     Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.edit','uses' => 'Admin\AppsController@edit' ));
+    Route::post('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.update','uses' => 'Admin\AppsController@update' ));
     Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as'=>'admin.clients.apps.delete','uses' => 'Admin\AppsController@delete' ));
 
 
