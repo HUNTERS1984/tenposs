@@ -1,9 +1,13 @@
 <?php
 namespace App\Repositories\Eloquents;
-use App\News;
+
+use App\Models\News;
 use App\Repositories\Contracts;
 use Illuminate\Database\QueryException;
 use  DB;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Config;
+
 class NewsRepository implements Contracts\NewsRepositoryInterface
 {
 
@@ -31,9 +35,17 @@ class NewsRepository implements Contracts\NewsRepositoryInterface
             }
             else
             {
+                $key = "user_1";
+
+
                 $total_data = News::all()->count();
                 if ($total_data > 0) {
-                    $photos = DB::table('news')->skip($page)->take($pagesize)->get()->toArray();
+                        $photos =   Redis::get($key);
+                        if ($photos != null) {
+                            $photos = DB::table('news')->skip($page)->take($pagesize)->get();
+                            Redis::set($key,serialize(array(5, 10)));
+                        }
+
                     $arrResult['news']  = $photos;
                     $arrResult['total_news'] = $total_data;
                 }
@@ -47,6 +59,9 @@ class NewsRepository implements Contracts\NewsRepositoryInterface
         {
             throw $e;
         }
+        $key = Config::get('api.cache_news').'_$store_id_$pagesize_$pagesize';
+        $redis = Redis::connection();
+        $redis->set($key,json_encode($arrResult));
         return $arrResult;
     }
 

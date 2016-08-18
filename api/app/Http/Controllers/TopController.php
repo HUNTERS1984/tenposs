@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Utils\RedisUtil;
 use Illuminate\Support\Facades\Config;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class TopController extends Controller
         if (!$app)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
         if ($ret_sig)
             return $ret_sig;
 
@@ -74,15 +75,23 @@ class TopController extends Controller
         if ($ret)
             return $ret;
         try {
-//            $app = App::find(Input::get('app_id'));
             // check app_id in database
             $app = $this->_topRepository->get_app_info(Input::get('app_id'));
-            if (!$app)
+            if ($app == null || count($app) == 0)
                 return $this->error(1004);
             //validate sig
-            $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+            $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
             if ($ret_sig)
                 return $ret_sig;
+            //creare key redis
+            $key = sprintf(Config::get('api.cache_app_info'), Input::get('app_id'));
+            //get data from redis
+            $data = RedisUtil::getInstance()->get_cache($key);
+            //check data and return data
+            if ($data != null) {
+                $this->body = $data;
+                return $this->output($this->body);
+            }
             $app_data = $app->with('app_setting', 'top_components', 'side_menu', 'stores')->select(['id', 'name', 'description', 'status', 'created_at', 'updated_at'])->first()->toArray();
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -90,6 +99,9 @@ class TopController extends Controller
         }
 
         $this->body['data'] = $app_data;
+        if ($app_data != null && count($app_data) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
         return $this->output($this->body);
     }
 
@@ -99,7 +111,7 @@ class TopController extends Controller
             // check app_id in database
             $app_id = Input::get('app_id');
             $app = $this->_topRepository->get_app_info($app_id);
-            if (!$app)
+            if ($app == null || count($app) == 0)
                 return $this->error(1004);
             $api_function = Input::get('api_function');
 
@@ -109,61 +121,61 @@ class TopController extends Controller
             $str_hash = [];
             switch ($api_function) {
                 case 'top': {
-                    $str_sig = hash('sha256', $app_id . $time . $app['app_app_secret']);
+                    $str_sig = hash('sha256', $app_id . $time . $app->app_app_secret);
                     $str_hash = Config::get('api.sig_top');
                     break;
                 }
                 case 'appinfo': {
-                    $str_sig = hash('sha256', $app_id . $time . $app['app_app_secret']);
+                    $str_sig = hash('sha256', $app_id . $time . $app->app_app_secret);
                     $str_hash = Config::get('api.sig_appinfo');
                     break;
                 }
                 case 'signup': {
                     $str_hash = Config::get('api.sig_signup');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'signin': {
                     $str_hash = Config::get('api.sig_signin');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'menu': {
                     $str_hash = Config::get('api.sig_menu');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'items': {
                     $str_hash = Config::get('api.sig_items');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'news': {
                     $str_hash = Config::get('api.sig_news');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'photo_cat': {
                     $str_hash = Config::get('api.sig_photo_cat');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'photo': {
                     $str_hash = Config::get('api.sig_photo');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 case 'reserve': {
                     $str_hash = Config::get('api.sig_reserve');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app['app_app_secret'], $time);
+                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
                     break;
                 }
                 default:

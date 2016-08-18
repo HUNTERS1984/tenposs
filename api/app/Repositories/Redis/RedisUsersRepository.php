@@ -14,4 +14,14 @@ class RedisUsersRepository implements UsersRepositoryInterface
     {
         return 'Get single product by id: ' . $id;
     }
+
+    public function login()
+    {
+        // TODO: Implement login() method.
+    }
+
+    public function logout()
+    {
+        // TODO: Implement logout() method.
+    }
 }

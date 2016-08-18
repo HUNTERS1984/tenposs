@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e735dd4e644689558d66b1057a64246c",
-    "content-hash": "eb4da27518235ec0186897b2bf1cd0e1",
+    "hash": "6009e82c33fdc1d3c5e427639f1fd93b",
+    "content-hash": "688fe65f904bdbda0effd1c29d7f44e9",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -990,6 +990,56 @@
             "time": "2016-03-18 20:34:03"
         },
         {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16 16:22:20"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1142,6 +1192,59 @@
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
             "time": "2016-05-03 17:50:52"
+        },
+        {
+            "name": "spatie/laravel-permission",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-permission.git",
+                "reference": "5b06b18f5e6dace43b54f4c6237751ce0ff1f95e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/5b06b18f5e6dace43b54f4c6237751ce0ff1f95e",
+                "reference": "5b06b18f5e6dace43b54f4c6237751ce0ff1f95e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^5.1",
+                "laravel/framework": "^5.1.11",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.1.4",
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Permission\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Permission handling for Laravel 5.1",
+            "homepage": "https://github.com/spatie/laravel-permission",
+            "keywords": [
+                "acl",
+                "laravel",
+                "permission",
+                "security",
+                "spatie"
+            ],
+            "time": "2016-07-23 22:52:29"
         },
         {
             "name": "swiftmailer/swiftmailer",

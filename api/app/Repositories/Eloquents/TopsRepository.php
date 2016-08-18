@@ -13,7 +13,9 @@ use App\Models\Menu;
 use App\Models\TopMainImage;
 use App\Models\User;
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Utils\RedisUtil;
 use DB;
+use Illuminate\Support\Facades\Config;
 
 define("TOP_MAX_ITEM", 8);
 
@@ -23,25 +25,22 @@ class TopsRepository implements TopsRepositoryInterface
     {
         $items = [];
         $app = $this->get_app_info($app_app_id);
-        if ($app)
-        {
+        if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
 
-            $menus = Menu::whereHas('store', function($query) use ($stores)
-            {
+            $menus = Menu::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
             })->lists('id')->toArray();
-   
+
             $menus_id = '(' . implode(',', $menus) . ')';
 
             $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at 
                 from rel_menus_items 
                 INNER JOIN items on rel_menus_items.item_id=items.id 
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
-                where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT '.TOP_MAX_ITEM));
-            for ($i = 0; $i < count($items); $i++)
-            {
-                $items[$i]->image_url = url('/').'/'.$items[$i]->image_url;
+                where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
+            for ($i = 0; $i < count($items); $i++) {
+                $items[$i]->image_url = url('/') . '/' . $items[$i]->image_url;
             }
         }
 
@@ -64,19 +63,16 @@ class TopsRepository implements TopsRepositoryInterface
 
         $photos = [];
         $app = $this->get_app_info($app_app_id);
-        if ($app)
-        {
+        if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
 
-            $photocats_id = PhotoCat::whereHas('store', function($query) use ($stores)
-            {
+            $photocats_id = PhotoCat::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
             })->lists('id')->toArray();
 
             $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
-            for ($i = 0; $i < count($photos); $i++)
-            {
-                $photos[$i]['image_url'] = url('/').'/'.$photos[$i]['image_url'];
+            for ($i = 0; $i < count($photos); $i++) {
+                $photos[$i]['image_url'] = url('/') . '/' . $photos[$i]['image_url'];
             }
         }
 
@@ -87,17 +83,14 @@ class TopsRepository implements TopsRepositoryInterface
     {
         $news = [];
         $app = $this->get_app_info($app_app_id);
-        if ($app)
-        {
+        if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
 
-            $news = News::whereHas('store', function($query) use ($stores)
-            {
+            $news = News::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
             })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
-            for ($i = 0; $i < count($news); $i++)
-            {
-                $news[$i]['image_url'] = url('/').'/'.$news[$i]['image_url'];
+            for ($i = 0; $i < count($news); $i++) {
+                $news[$i]['image_url'] = url('/') . '/' . $news[$i]['image_url'];
             }
         }
         return $news;
@@ -108,26 +101,23 @@ class TopsRepository implements TopsRepositoryInterface
         $images = [];
         $app_setting = $this->get_app_info($app_app_id)->app_setting()->first();
         if ($app_setting) {
-            $images =  $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
-            for ($i = 0; $i < count($images); $i++)
-            {
-                $images[$i]['image_url'] = url('/').'/'.$images[$i]['image_url'];
+            $images = $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
+            for ($i = 0; $i < count($images); $i++) {
+                $images[$i]['image_url'] = url('/') . '/' . $images[$i]['image_url'];
             }
         }
 
-        return $images;    
+        return $images;
     }
 
     public function get_top_contacts($app_app_id)
     {
         $contacts = [];
         $app = $this->get_app_info($app_app_id);
-        if ($app)
-        {
+        if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
 
-            $contacts = Address::whereHas('store', function($query) use ($stores)
-            {
+            $contacts = Address::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
             })->select('id', 'title', 'latitude', 'longitude', 'tel', 'start_time', 'end_time')->get()->toArray();
         }
@@ -137,12 +127,23 @@ class TopsRepository implements TopsRepositoryInterface
 
     public function get_app_info($app_app_id)
     {
-        return App::where('app_app_id', '=', $app_app_id)->first();
+        //create key redis
+        $key = sprintf(Config::get('api.cache_app_detail'), $app_app_id);
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            return $data;
+        }
+        $arr = App::where('app_app_id', '=', $app_app_id)->first()->toArray();
+        if ($arr != null && count($arr) > 0)//set cache redis
+            RedisUtil::getInstance()->set_cache($key, $arr);
+        return $arr;
     }
 
 
     public function list_app()
     {
-        return App::all(['name','app_app_id','app_app_secret']);
+        return App::all(['name', 'app_app_id', 'app_app_secret']);
     }
 }

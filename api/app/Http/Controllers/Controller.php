@@ -132,7 +132,6 @@ class Controller extends BaseController
         $str_sig = '';
         if (!$data)
             $data = Input::all();
-        print_r($params);
         foreach ($params as $key => $param) {
             if (!is_array($param)) {
                 if ($param == 'time')

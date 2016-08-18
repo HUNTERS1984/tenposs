@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Repositories\Contracts\ReservesRepositoryInterface;
+use App\Utils\RedisUtil;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,7 +29,7 @@ class ReserveController extends Controller
         $this->request = $request;
     }
 
-    public function index(Request $request) {
+    public function index() {
 
         $check_items = array('app_id','store_id', 'time', 'sig');
 
@@ -41,13 +42,22 @@ class ReserveController extends Controller
 
         // check app_id in database
         $app = $this->_topRepository->get_app_info(Input::get('app_id'));
-        if (!$app)
+        if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
         if ($ret_sig)
             return $ret_sig;
         //end validate app_id and sig
+        // create key
+        $key = sprintf(Config::get('api.cache_reserve'), Input::get('app_id'), Input::get('store_id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
         try {
             $reserve = $this->_reserveRepository->getList(Input::get('store_id'));
 
@@ -56,6 +66,9 @@ class ReserveController extends Controller
         }
     
         $this->body['data']['reserve'] = $reserve;
+        if ($reserve != null && count($reserve) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
         return $this->output($this->body);
     }
 }
