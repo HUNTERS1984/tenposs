@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Utils\RedisUtil;
+use App\Utils\ValidateUtil;
 use Illuminate\Support\Facades\Config;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
@@ -36,7 +37,8 @@ class TopController extends Controller
         if ($ret)
             return $ret;
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+
         if (!$app)
             return $this->error(1004);
         //validate sig
@@ -44,7 +46,7 @@ class TopController extends Controller
         if ($ret_sig)
             return $ret_sig;
 
-        $stores = $app->stores()->lists('id')->toArray();
+//        $stores = $app->stores()->lists('id')->toArray();
 
         $images = $this->_topRepository->get_top_images(Input::get('app_id'));
         $news = $this->_topRepository->get_top_news(Input::get('app_id'));
@@ -76,7 +78,7 @@ class TopController extends Controller
             return $ret;
         try {
             // check app_id in database
-            $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+            $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
             if ($app == null || count($app) == 0)
                 return $this->error(1004);
             //validate sig
@@ -114,68 +116,78 @@ class TopController extends Controller
             if ($app == null || count($app) == 0)
                 return $this->error(1004);
             $api_function = Input::get('api_function');
-
-            $time = round(microtime(true) * 1000);
+            $time = Input::get('time');
+            $secret_key = Input::get('secret_key');
+            if (empty($time))
+                $time = ValidateUtil::getDateMilisecondGMT0(); //round(microtime(true) * 1000);
+            if (empty($secret_key))
+                $secret_key = $app->app_app_secret;
             $str_sig = '';
             $str_param = true;
             $str_hash = [];
             switch ($api_function) {
                 case 'top': {
-                    $str_sig = hash('sha256', $app_id . $time . $app->app_app_secret);
+                    $str_sig = hash('sha256', $app_id . $time . $secret_key);
                     $str_hash = Config::get('api.sig_top');
                     break;
                 }
                 case 'appinfo': {
-                    $str_sig = hash('sha256', $app_id . $time . $app->app_app_secret);
+                    $str_sig = hash('sha256', $app_id . $time .$secret_key);
                     $str_hash = Config::get('api.sig_appinfo');
                     break;
                 }
                 case 'signup': {
                     $str_hash = Config::get('api.sig_signup');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'signin': {
                     $str_hash = Config::get('api.sig_signin');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'menu': {
                     $str_hash = Config::get('api.sig_menu');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'items': {
                     $str_hash = Config::get('api.sig_items');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'news': {
                     $str_hash = Config::get('api.sig_news');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'photo_cat': {
                     $str_hash = Config::get('api.sig_photo_cat');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'photo': {
                     $str_hash = Config::get('api.sig_photo');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 case 'reserve': {
                     $str_hash = Config::get('api.sig_reserve');
                     $str_param = $this->validate_param_test($str_hash);
-                    $str_sig = $this->get_sig($str_hash, $app->app_app_secret, $time);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
+                    break;
+                }
+                case 'coupon': {
+                    $str_hash = Config::get('api.sig_coupon');
+                    $str_param = $this->validate_param_test($str_hash);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
                 default:
@@ -198,6 +210,8 @@ class TopController extends Controller
     public function list_app()
     {
         try {
+//            $arr = $this->_topRepository->get_app_info_from_token(123456);
+            
             $arr = $this->_topRepository->list_app();
 
 

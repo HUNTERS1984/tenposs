@@ -38,7 +38,7 @@ class PhotoController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_photo_cat');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
@@ -80,7 +80,7 @@ class PhotoController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_photo');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
@@ -93,7 +93,7 @@ class PhotoController extends Controller
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key redis
-        $key = sprintf(Config::get('api.cache_photo_cat'), Input::get('app_id'), Input::get('store_id'));
+        $key = sprintf(Config::get('api.cache_photos'), Input::get('app_id'), Input::get('store_id'), Input::get('pageindex'),Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
@@ -113,7 +113,6 @@ class PhotoController extends Controller
 
         $this->body['data']['photos'] = $photos;
         $this->body['data']['total_photos'] = $total_photos;
-        print_r($this->body);die;
         if ($total_photos > 0) { // set cache reiis
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }

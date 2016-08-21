@@ -35,7 +35,7 @@ class NewsController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_news');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig

@@ -39,7 +39,7 @@ class ItemController extends Controller
         $check_sig_items = Config::get('api.sig_menu');
         print_r($check_sig_items);
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
@@ -79,7 +79,7 @@ class ItemController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_items');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
