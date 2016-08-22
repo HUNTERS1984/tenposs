@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Utils\RedisUtil;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,6 +13,8 @@ use Mail;
 use App\Address;
 use DB;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redis;
+use Predis\Connection\ConnectionException;
 
 class ItemController extends Controller
 {
@@ -24,9 +27,10 @@ class ItemController extends Controller
         $this->request = $request;
     }
 
-    public function menu(Request $request) {
+    public function menu(Request $request)
+    {
 
-        $check_items = array('app_id','store_id', 'time', 'sig');
+        $check_items = array('app_id', 'store_id', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -35,27 +39,39 @@ class ItemController extends Controller
         $check_sig_items = Config::get('api.sig_menu');
         print_r($check_sig_items);
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
-        if (!$app)
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
         if ($ret_sig)
             return $ret_sig;
         //end validate app_id and sig
+        // create key
+        $key = sprintf(Config::get('api.cache_menus'), Input::get('app_id'), Input::get('store_id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
         try {
             $app = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-    
         $this->body['data']['menus'] = $app;
+        if ($app != null && count($app) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
         return $this->output($this->body);
     }
 
-    public function items() {
+    public function items()
+    {
 
-        $check_items = array('app_id','menu_id', 'pageindex', 'pagesize', 'time', 'sig');
+        $check_items = array('app_id', 'menu_id', 'pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -63,18 +79,27 @@ class ItemController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_items');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
-        if (!$app)
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
         if ($ret_sig)
             return $ret_sig;
         //end validate app_id and sig
         if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
             return $this->error(1004);
 
-        $skip = (Input::get('pageindex') - 1)*Input::get('pagesize');
+        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        //create key
+        $key = sprintf(Config::get('api.cache_items'), Input::get('app_id'), Input::get('menu_id'), Input::get('pageindex'), Input::get('pagesize'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
         try {
             $total_items = Menu::find(Input::get('menu_id'))->items()->count();
             $items = [];
@@ -84,9 +109,13 @@ class ItemController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-    
+
         $this->body['data']['items'] = $items;
         $this->body['data']['total_items'] = $total_items;
+        if ($total_items > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+
         return $this->output($this->body);
     }
 }
