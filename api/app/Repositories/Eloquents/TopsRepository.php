@@ -126,19 +126,21 @@ class TopsRepository implements TopsRepositoryInterface
     {
         //create key redis
         $key = sprintf(Config::get('api.cache_top_images'), $app_app_id);
-        //get data from redis
+//        //get data from redis
         $images = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
         if ($images != null) {
             return $images;
         }
         $app_setting = $this->get_app_info($app_app_id)->app_setting()->first();
+//        print_r($app_setting->images()->select('image_url')->get());die;
         if ($app_setting) {
             $images = $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($images); $i++) {
                 $images[$i]['image_url'] = url('/') . '/' . $images[$i]['image_url'];
             }
         }
+
         if ($images != null && count($images) > 0)//set cache redis
             RedisUtil::getInstance()->set_cache($key, $images);
         return $images;
@@ -147,7 +149,7 @@ class TopsRepository implements TopsRepositoryInterface
     public function get_top_contacts($app_app_id)
     {
         //create key redis
-        $key = sprintf(Config::get('api.cache_top_images'), $app_app_id);
+        $key = sprintf(Config::get('api.cache_top_contacts'), $app_app_id);
         //get data from redis
         $contacts = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
