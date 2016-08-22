@@ -396,11 +396,11 @@ class AppUserController extends Controller
         $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
         if ($app == null || count($app) == 0)
             return $this->error(1004);
-        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
         //creare key redis
-        $key = sprintf(Config::get('api.cache_profile'), $app->app_app_id);
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id']);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
