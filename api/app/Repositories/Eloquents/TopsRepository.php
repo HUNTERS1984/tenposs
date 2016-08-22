@@ -211,6 +211,7 @@ class TopsRepository implements TopsRepositoryInterface
         if ($app_info != null) {
             return $app_info;
         }
+//        print_r($app_info);
         $session = UserSession::where('token', $token)->first();
         if ($session) {
             $user = $session->app_user()->first()->toArray();
@@ -218,6 +219,7 @@ class TopsRepository implements TopsRepositoryInterface
                 $app_info = App::where('id','=',$user['app_id'])->first()->toArray();
             }
         }
+//        print_r($app_info);die;
         if ($app_info != null && count($app_info) > 0)//set cache redis
             RedisUtil::getInstance()->set_cache($key, $app_info);
         return $app_info;

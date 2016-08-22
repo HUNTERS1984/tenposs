@@ -48,7 +48,7 @@ class RedisUtil
     {
         try {
             if ($this->_redis->get($key)) {
-                return json_decode($this->_redis->get($key));
+                return json_decode($this->_redis->get($key),true);
             }
         } catch (ConnectionException $e) {
 

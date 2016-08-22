@@ -39,7 +39,7 @@ class NewsController extends Controller
         if ($app == null || count($app) == 0)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
         //end validate app_id and sig

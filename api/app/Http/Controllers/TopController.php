@@ -42,7 +42,7 @@ class TopController extends Controller
         if (!$app)
             return $this->error(1004);
         //validate sig
-        $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
 
@@ -82,7 +82,7 @@ class TopController extends Controller
             if ($app == null || count($app) == 0)
                 return $this->error(1004);
             //validate sig
-            $ret_sig = $this->validate_sig($check_sig_items, $app->app_app_secret);
+            $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
             if ($ret_sig)
                 return $ret_sig;
             //creare key redis
@@ -121,7 +121,7 @@ class TopController extends Controller
             if (empty($time))
                 $time = ValidateUtil::getDateMilisecondGMT0(); //round(microtime(true) * 1000);
             if (empty($secret_key))
-                $secret_key = $app->app_app_secret;
+                $secret_key = $app['app_app_secret'];
             $str_sig = '';
             $str_param = true;
             $str_hash = [];
@@ -210,7 +210,7 @@ class TopController extends Controller
     public function list_app()
     {
         try {
-//            $arr = $this->_topRepository->get_app_info_from_token(123456);
+            $arr = $this->_topRepository->get_app_info_from_token(123456);
             
             $arr = $this->_topRepository->list_app();
 
