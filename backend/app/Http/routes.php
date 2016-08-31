@@ -11,6 +11,14 @@
 |
 */
 
+use Illuminate\Support\Facades\Redis;
+use Predis\Connection\ConnectionException;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/push', function () {
+	for ($i = 0; $i < 10; $i++)
+    	Redis::publish('channel', json_encode(['mes' => 'test7']));
 });

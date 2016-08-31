@@ -24,8 +24,10 @@ class NewsController extends Controller
         $this->store = $store;
 	}
     public function index(){
-        $news = $this->entity->orderBy('id','DESC')->paginate(6);
-        $list_store = $this->store->lists('name','id');
+        $stores = $this->request->stores;
+        $news = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(10);
+        $list_store = $stores->lists('name','id');
+        //dd($list_store);
     	return view('admin::pages.news.index',compact('news','list_store'));
     }
 
@@ -34,32 +36,34 @@ class NewsController extends Controller
     }
 
     public function store(ImageRequest $imgrequest){
-        if($imgrequest->hasFile('img')){
-            $file = $imgrequest->file('img');
-            $destinationPath = env('UPLOAD_PATH');
-            $filename = time().'.'.$file->getClientOriginalName();
 
-            $size = getimagesize($file);
-            if($size[0] > 300){
-                \Image::make($file->getRealPath())->resize(300,null,function($constraint){$constraint->aspectRatio();})->save($destinationPath.'/'.$filename);
-            }else{
-                $file->move($destinationPath,$filename);
+        if($imgrequest->hasFile('image_create')){
+            $file = array('image_create' => $this->request->image_create);
+            $destinationPath = 'uploads'; // upload path
+            $extension = $this->request->image_create->getClientOriginalExtension(); // getting image extension
+            $fileName = md5($this->request->image_create->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            $allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
+            $contentType = mime_content_type($this->request->image_create->getRealPath());
+
+            if(! in_array($contentType, $allowedMimeTypes) ){
+              return redirect()->back()->withError('The uploaded file is not an image');
             }
-            $img_url = $destinationPath.'/'.$filename;
+            $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
+            $image_create = $destinationPath . '/' . $fileName;
         }else{
-            $img_url = env('ASSETS_BACKEND').'/images/no-user-image.gif';
+            $image_create = env('ASSETS_BACKEND').'/images/wall.jpg';
         }
         $date = Carbon::now()->toDateString();
-    	$data = [
-    		'title' => $this->request->input('title'),
-            'description' => $this->request->input('description'),
-    		'store_id' => $this->request->input('store_id'),
-            'date' => $date,
-    		'image_url' => $img_url,
-    	];
-    	$this->entity->create($data);
 
-    	return redirect()->route('admin.news.index');
+    	$this->entity = new News();
+        $this->entity->title = $this->request->input('title');
+        $this->entity->description = $this->request->input('description');
+        $this->entity->image_url = $image_create;
+        $this->entity->date = $date;
+        $this->entity->store_id = intval($this->request->input('store_id'));
+        $this->entity->save();
+
+    	return redirect()->route('admin.news.index')->withSuccess('Add a news successfully');
 
     }
 
@@ -73,36 +77,35 @@ class NewsController extends Controller
     }
 
     public function update(ImageRequest $imgrequest, $id){
-    	if($imgrequest->hasFile('img')){
-            $file = $imgrequest->file('img');
-            $destinationPath = env('UPLOAD_PATH');
-            $filename = time().'.'.$file->getClientOriginalName();
+        $image_edit = null;
+    	if($imgrequest->hasFile('image_edit')){
+            $file = array('image_edit' => $this->request->image_edit);
+            $destinationPath = 'uploads'; // upload path
+            $extension = $this->request->image_edit->getClientOriginalExtension(); // getting image extension
+            $fileName = md5($this->request->image_edit->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            $allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
+            $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
-            $size = getimagesize($file);
-            if($size[0] > 300){
-                \Image::make($file->getRealPath())->resize(300,null)->save($destinationPath.'/'.$filename);
-            }else{
-                $file->move($destinationPath,$filename);
+            if(! in_array($contentType, $allowedMimeTypes) ){
+              return redirect()->back()->withError('The uploaded file is not an image');
             }
-            $img_url = $destinationPath.'/'.$filename;
-    	}else{
-            $img_url = $this->request->input('img_bk');
-    	}
+            $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
+            $image_edit = $destinationPath . '/' . $fileName;
+        }
 
         $news = $this->entity->find($id);
         $news->title = $this->request->input('title');
         $news->description = $this->request->input('description');
         $news->store_id = $this->request->input('store_id');
-        $news->store_id = $this->request->input('store_id');
-        $news->store_id = $this->request->input('store_id');
-        $news->image_url = $img_url;
+        if ($image_edit)
+            $news->image_url = $image_edit;
         $news->save();
 
-        return redirect()->route('admin.news.index');
+        return redirect()->route('admin.news.index')->withSuccess('Update the news successfully');
     }
 
     public function destroy($id){
     	$this->entity->destroy($id);
-        return redirect()->route('admin.news.index');
+        return redirect()->route('admin.news.index')->withSuccess('Delete the news successfully');
     }
 }

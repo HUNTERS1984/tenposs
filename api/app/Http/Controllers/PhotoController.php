@@ -113,6 +113,7 @@ class PhotoController extends Controller
 
         $this->body['data']['photos'] = $photos;
         $this->body['data']['total_photos'] = $total_photos;
+
         if ($total_photos > 0) { // set cache reiis
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }

@@ -8,7 +8,10 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">News</h1>
+					<h1 class="title">ニュース</h1>
+				</div>
+				<div class="right-topbar">
+					<a href="{{ URL::previous() }}" class="btn-me btn-topbar">戻る</a>
 				</div>
 			</div>
 		</div>
@@ -17,69 +20,34 @@
 		<div class="main-content news">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-4">
-						<div class="wrap-preview">
-							<div class="wrap-content-prview">
-								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
-									<h2 class="title-prview">NEWS</h2>
-								</div>
-								<div class="control-nav-preview">
-									<!-- Slider main container -->
-		                            <div class="swiper-container">
-		                                <!-- Additional required wrapper -->
-		                                <div class="swiper-wrapper">
-		                                    <!-- Slides -->
-		                                    <div class="swiper-slide">Spring</div>
-		                                    <div class="swiper-slide">Summer</div>
-		                                </div>
-
-		                                <!-- If we need navigation buttons -->
-		                                <div class="swiper-button-prev"></div>
-		                                <div class="swiper-button-next"></div>
-		                            </div>
-								</div>
-								<div class="content-preview">
-									@if(empty($newsAll))
-										No data
-									@else
-										@foreach($newsAll as $item_thumb)
-											<div class="each-coupon clearfix">
-												<img src="{{asset($item_thumb->image_url)}}" class="img-responsive img-prview">
-												<div class="inner-preview">
-													<p class="title-inner" style="font-size:9px; color:#14b4d2">{{$item_thumb->title}}</p>
-													<!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
-													<p class="text-inner" style="font-size:9px;">{{$item_thumb->description}}</p>
-												</div>
-											</div>
-										@endforeach
-									@endif
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="col-lg-8">
-						
+						@if (Session::has('success'))
+						    <div class="alert alert-info">{{ Session::get( 'success' ) }}</div>
+						@endif
+						@if (Session::has('error'))
+						    <div class="alert alert-danger">{{ Session::get( 'error' ) }}</div>
+						@endif
 						<div class="wrapper-content">
 							{{Form::model($news,array('route'=>array('admin.news.update',$news->id),'method'=>'PUT','files'=>true))}}
 								<div class="form-group">
+									{{Form::label('store','ストア')}}
 									{{Form::select('store_id',$list_store,$news->store_id,array('class'=>'form-control'))}}
 								</div>
 								<div class="form-group">
+									{{Form::label('title','タイトル')}}
 									{{Form::text('title',old('title'),array('class'=>'form-control', 'placeholder'=>'Type the title'))}}
 								</div>
 								<div class="form-group">
-									{{Form::text('description',old('description'),array('class'=>'form-control', 'placeholder'=>'Type the description'))}}
+									{{Form::label('description','説明')}}
+									{{Form::textarea('description',old('description'),array('class'=>'form-control', 'placeholder'=>'Type the description'))}}
 								</div>
 								<div class="form-group">
-									{{Form::hidden('img_bk',$news->image_url)}}
-									<div class="wrap-img-preview">
-										<img src="{{asset($news->image_url)}}" class="img-responsive" alt="">
-									</div>
-									{{Form::file('img')}}
+									<img class="edit_img" src="{{asset($news->image_url)}}" width="100%">
+									<button class="btn_upload_img edit " type="button"><i class="fa fa-picture-o" aria-hidden="true"></i>画像アップロード</button>
+                					{!! Form::file('image_edit',['class'=>'btn_upload_ipt edit', 'hidden', 'type' => 'button', 'id' => 'image_edit']) !!}
 								</div>
 								<div class="form-group">
-									{{Form::submit('Save changes',array('class'=>'btn btn-primary'))}}
+									{{Form::submit('保存',array('class'=>'btn btn-primary'))}}
 								</div>
 							{{Form::close()}}
 						</div>	<!-- wrap-content-->
@@ -116,6 +84,27 @@
 	            nextButton: '.control-nav-preview .swiper-button-next',
 	            prevButton: '.control-nav-preview .swiper-button-prev'
 	        });
+
+	        $('.btn_upload_img.edit').click(function(){
+	           $('.btn_upload_ipt.edit').click();
+	        });
+
+			function readURL(input) {
+			    if (input.files && input.files[0]) {
+			        var reader = new FileReader();
+
+			        reader.onload = function (e) {
+			            $('.edit_img').attr('src', e.target.result);
+			        }
+
+			        reader.readAsDataURL(input.files[0]);
+			    }
+			}
+
+			$("#image_edit").change(function(){
+			    readURL(this);
+			});
+
 		})
 	</script>
 @stop

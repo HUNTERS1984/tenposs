@@ -19,8 +19,4 @@ class Item extends Model {
         return $this->belongsToMany(Item::class, 'rel_items', 'item_id', 'related_id')->select(['id', 'price','image_url','description', 'title'])->take(8);
     }
 
-    public function store()
-    {
-        return $this->belongsTo(Store::class);
-    }
 }
