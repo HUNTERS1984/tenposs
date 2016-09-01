@@ -27,6 +27,9 @@
             </div>
           @endforeach
         </div>
+        <div class="panel-footer">
+          <a href="{{ route('chat.login') }}">Login Another</a>
+        </div>
       </div><!--end panel --> 
     </div><!--end container -->  
   </body>

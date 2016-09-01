@@ -15,7 +15,7 @@
       <div class="panel panel-info">
         <div class="panel-heading">Tenposs</div>
         <div class="panel-body">
-          <div id="" class="rooms">
+          <div id="" class="">
               <ul class="messages scrollbar-macosx"></ul>
           </div>
         </div>
@@ -55,75 +55,26 @@
 
 
 var socket;
-
-
 var profile = $.parseJSON('<?php echo ($profile) ?>');
-var room_id = '{{ $room_id }}';
-
-function drawMessage(side, profile, message){
-     
-    var $message;
-    var $messages = $('ul.messages');
-    var d = new Date();
-    $message = $($('.message_template').clone().html());
-    $message.addClass(side).find('.text').html(message);
-    $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(d.getTime()/1000);
-    $messages.append($message);
-    setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-}
-
-function drawSystemMessage(text){
-  $message = $($('.message_template_system').clone().html());
-  $message.find('p').text(text);
-  $('.messages').append($message);
-    return setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
-}
- 
-function getMessageText() {
-   return $('.message_input').val();
-};
-
-
-function sendMessage(text) {
-    var $messages, message;
-    if (text.trim() === '') {
-        return;
-    }
-    $('.message_input').val('');
-    $messages = $('ul.messages');
-    drawMessage('right',profile, text);
-    // Send message to server
-    var d = new Date();
-    var params = {
-        'action': 'message',
-        'message': text,
-        'timestamp': d.getTime()/1000
-    };
-    conn.send(JSON.stringify(params));
-    console.log('Send message');
-    console.log(JSON.stringify(params));
-    
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-};
+var channel = '{{ $channel }}';
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect('https://tenposs-phanvannhien.c9users.io:8989', {
+    socket = new io.connect('tenposs-end-phanvannhien.c9users.io:8081', {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
         'reconnectionAttempts': 5
     });
-    // when user connect, store the user id and name
+
     socket.on('connect', function (user) {
-      console.log('request connect');
-        socket.emit('join', {id: "123", name: "Nhienphan"});
+        console.log('Request connect');
+        var package = {
+            from: 'enduser',
+            channel: channel,
+            profile: profile
+        }
+        socket.emit('join', package);
     });
         
             
@@ -181,6 +132,58 @@ function connectToChat() {
     return false;
 }
 
+
+function drawMessage(side, profile, message){
+     
+    var $message;
+    var $messages = $('ul.messages');
+    var d = new Date();
+    $message = $($('.message_template').clone().html());
+    $message.addClass(side).find('.text').html(message);
+    $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
+    $message.find('.timestamp').text(d.getTime()/1000);
+    $messages.append($message);
+    setTimeout(function () {
+        return $message.addClass('appeared');
+    }, 0);
+    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+}
+
+function drawSystemMessage(text){
+  $message = $($('.message_template_system').clone().html());
+  $message.find('p').text(text);
+  $('.messages').append($message);
+    return setTimeout(function () {
+        return $message.addClass('appeared');
+    }, 0);
+}
+ 
+function getMessageText() {
+   return $('.message_input').val();
+};
+
+
+function sendMessage(text) {
+    var $messages, message;
+    if (text.trim() === '') {
+        return;
+    }
+    $('.message_input').val('');
+    $messages = $('ul.messages');
+    drawMessage('right',profile, text);
+    // Send message to server
+    var d = new Date();
+    var params = {
+        'action': 'message',
+        'message': text,
+        'timestamp': d.getTime()/1000
+    };
+    conn.send(JSON.stringify(params));
+    console.log('Send message');
+    console.log(JSON.stringify(params));
+    
+    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+};
 
 
 

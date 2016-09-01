@@ -58,7 +58,7 @@ Route::group(array('prefix' => 'chat'), function() {
     Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
     Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
     Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
-    Route::get('{user_id}','ChatLineController@chat');
+    Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
     Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
 
 });

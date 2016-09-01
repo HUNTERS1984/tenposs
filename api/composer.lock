@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dde2cef92a3d591d25194b194b8dfcde",
-    "content-hash": "ab60908540651848e456fd23cd570ff6",
+    "hash": "0d9bb7ae8c47ca8cce9a295521bf856d",
+    "content-hash": "adae20e9634bf2c03b9648bef52d6faf",
     "packages": [
+        {
+            "name": "anlutro/curl",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anlutro/php-curl.git",
+                "reference": "482c85b3e1635146ae967340b17a22b10c1aae80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anlutro/php-curl/zipball/482c85b3e1635146ae967340b17a22b10c1aae80",
+                "reference": "482c85b3e1635146ae967340b17a22b10c1aae80",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "anlutro\\cURL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Lutro",
+                    "email": "anlutro@gmail.com"
+                }
+            ],
+            "description": "Simple OOP cURL wrapper.",
+            "time": "2016-03-23 16:09:50"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "3.0.0",
@@ -858,16 +897,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.2.43",
+            "version": "v5.2.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5490b8f00564bb60839002f86828e27edd1e5610"
+                "reference": "2a79f920d5584ec6df7cf996d922a742d11095d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5490b8f00564bb60839002f86828e27edd1e5610",
-                "reference": "5490b8f00564bb60839002f86828e27edd1e5610",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2a79f920d5584ec6df7cf996d922a742d11095d1",
+                "reference": "2a79f920d5584ec6df7cf996d922a742d11095d1",
                 "shasum": ""
             },
             "require": {
@@ -948,7 +987,7 @@
                 "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~2.0).",
                 "symfony/css-selector": "Required to use some of the crawler integration testing tools (2.8.*|3.0.*).",
                 "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (2.8.*|3.0.*).",
-                "symfony/psr-http-message-bridge": "Required to psr7 bridging features (0.2.*)."
+                "symfony/psr-http-message-bridge": "Required to use psr7 bridging features (0.2.*)."
             },
             "type": "library",
             "extra": {
@@ -984,7 +1023,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-08-10 12:23:59"
+            "time": "2016-08-26 11:44:52"
         },
         {
             "name": "league/container",
@@ -1782,22 +1821,22 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "1.5.1",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "5b06b18f5e6dace43b54f4c6237751ce0ff1f95e"
+                "reference": "99f5574fc59b6d1e3951d0039199e94a6958207a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/5b06b18f5e6dace43b54f4c6237751ce0ff1f95e",
-                "reference": "5b06b18f5e6dace43b54f4c6237751ce0ff1f95e",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/99f5574fc59b6d1e3951d0039199e94a6958207a",
+                "reference": "99f5574fc59b6d1e3951d0039199e94a6958207a",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "^5.1",
                 "laravel/framework": "^5.1.11",
-                "php": ">=5.6.0"
+                "php": ">=5.5.0"
             },
             "require-dev": {
                 "orchestra/testbench": "^3.1.4",
@@ -1831,7 +1870,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2016-07-23 22:52:29"
+            "time": "2016-05-08 17:18:03"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2753,35 +2792,35 @@
         },
         {
             "name": "vinkla/instagram",
-            "version": "4.2.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vinkla/laravel-instagram.git",
-                "reference": "52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9"
+                "reference": "73ce0323cbbd4b60811bf9e62c442d987c3a3bad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vinkla/laravel-instagram/zipball/52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9",
-                "reference": "52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9",
+                "url": "https://api.github.com/repos/vinkla/laravel-instagram/zipball/73ce0323cbbd4b60811bf9e62c442d987c3a3bad",
+                "reference": "73ce0323cbbd4b60811bf9e62c442d987c3a3bad",
                 "shasum": ""
             },
             "require": {
-                "graham-campbell/manager": "^2.4",
+                "graham-campbell/manager": "^2.3",
                 "illuminate/contracts": "5.1.* || 5.2.* || 5.3.*",
                 "illuminate/session": "5.1.* || 5.2.* || 5.3.*",
                 "illuminate/support": "5.1.* || 5.2.* || 5.3.*",
                 "larabros/elogram": "^1.1",
-                "php": "^5.6.4 || ^7.0"
+                "php": "^5.5.9 || ^7.0"
             },
             "require-dev": {
-                "graham-campbell/testbench": "^3.2",
-                "mockery/mockery": "^0.9.5",
-                "phpunit/phpunit": "^5.4"
+                "graham-campbell/testbench": "^3.1",
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "^4.8 || ^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -2809,7 +2848,7 @@
                 "laravel",
                 "media"
             ],
-            "time": "2016-07-11 19:12:15"
+            "time": "2016-05-05 11:03:54"
         },
         {
             "name": "vlucas/phpdotenv",

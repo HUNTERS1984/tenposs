@@ -50,27 +50,21 @@ class ChatLineController extends Controller
     */
     public function index(Request $request){
         
-        
-        return view('welcome');
+
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
             return view('welcome');
         }
-        $this->user = $user->where('email','test@gmail.com')->first();
-    	$this->botService = [
-	        'channelId' => $this->user->channelId,
-	        'channelSecret' => $this->user->channelSecret,
-	        'channelMid' => $this->user->channelMid,
-	    ];
-	    
-    	$this->bot = new LINEBot($this->botService, new GuzzleHTTPClient($this->botService));
-       
+ 
         $data = $data->result[0];
         Log::info(print_r($data, true));
         //“138311609000106303”	Received message (example: text, images)
         //“138311609100106403”	Received operation (example: added as friend)
         if ( $data->eventType == '138311609000106303' ){
+            // Get BOT Info
+
+            
             if( $data->toChannel == $this->user->channelId  && $data->to[0] == $this->user->channelMid){
                 //1	Text message
                 //2	Image message
@@ -78,11 +72,15 @@ class ChatLineController extends Controller
                 //4	Audio message
                 //7	Location message
                 //8	Sticker message
-                //10	Contact message
+                //10 Contact message
+                
+                
                 
                 switch ($data->content->contentType) {
                     
                     case 1: // Text Message
+                        
+                    
                         $redis = L5Redis::connection();
                         $redis->publish('line.message', json_encode($data->content));
                         break;
@@ -93,16 +91,21 @@ class ChatLineController extends Controller
                 }
                 
             }
-            
-            
-            
         }
-  
+    }
+    
+    public function login(){
+        if( !Session::has('appuser') ){
+            abort(503);
+        }
+        $app_user = Session::get('appuser');
+        $app = AppClient::findOrFail($app_user->app_id);
+        return view('chat.login',['app' => $app]);
     }
     
     /*
     * Route: /chat/screen/{app_user_id}
-    * View chat enduser
+    * View list line accounts
     */
     public function chatScreen($app_user_id){
         
@@ -122,23 +125,17 @@ class ChatLineController extends Controller
     }
     
     /*
-    * Route: /chat/{mid}
-    * View chat enduser
-    */
-    public function chat($mid){
-      
-        return view('chat.message',[
-            'profile' => '',
-            'room_id' => ''
-        ]);
-    }
-    
-    /*
     * Route: chat/line/verifined/token/{mid}
     * Login LINE button
     */
     public function verifinedToken($mid){
+        if( !Session::has('appuser') ){
+            abort(503);
+        }
         $lineAccount = LineAccount::where('mid',$mid)->firstOrFail();
+        
+        $appuser = Session::get('appuser');
+        $app = AppClient::findOrFail($appuser->app_id);
         
         $request = $this->curl->newRequest('get',self::API_VERIFIED_TOKEN)
              ->setHeader('Authorization', $lineAccount->token_type.' '.$lineAccount->access_token);
@@ -146,11 +143,15 @@ class ChatLineController extends Controller
         $responseData = json_decode(json_encode($response->body));
         
         if( isset( $responseData->statusCode ) && $responseData->statusCode == 401 ){
-            $appuser = Session::get('appuser');
-            $app = AppClient::findOrFail($appuser->app_id);
             return view('chat.login',['app' => $app]);
         }else{
-            return redirect('chat/'.$mid);
+            $profile = [
+                'mid' => $lineAccount->mid,
+                'pictureUrl' => $lineAccount->pictureUrl,
+                'displayName' => $lineAccount->displayName
+            ];
+   
+            return view('chat.message',[ 'profile' => json_encode($profile), 'channel' => $app->bot_channel_id ]);
             if( $this->user->client_id ==  $responseData->channelId )
             {
                 
@@ -165,11 +166,12 @@ class ChatLineController extends Controller
     * Callback LINE authentication
     */
     public function verifined(Request $request){
-       
+        if( !Session::has('appuser') ){
+            abort(503);
+        }
         if( $request->has('code') ){
             $curl = new \anlutro\cURL\cURL;
             $appuser = Session::get('appuser');
-            
             $app = AppClient::findOrFail($appuser->app_id);
             
             $paramsRequestToken = array(
@@ -193,7 +195,7 @@ class ChatLineController extends Controller
          
                 // Save Line Account
                 $exitsLineAccount = LineAccount::where('mid', $dataToken->mid )->first();
-                if( $exitsLineAccount->count() > 0 ){
+                if( $exitsLineAccount ){
                     // Update token
                     $exitsLineAccount->access_token = $dataToken->access_token;
                     $exitsLineAccount->token_type = $dataToken->token_type;
@@ -220,14 +222,14 @@ class ChatLineController extends Controller
                 
                 // Subcribe to socket welcome
                 //$res = $this->bot->sendText($data->mid, 'Welcome to Tenposs');
-                return redirect('chat/'.$dataToken->mid);
+                return view('chat.message',[ 'profile' => json_encode($profile),'channel' => $app->bot_channel_id ]);
             }
             
             
         }
         // if request LINE login fail
         if( $request->has('errorCode') ){
-            return view('login',['errors' => $request->input('errorMessage') ]);
+            
         }
         
     }
@@ -237,8 +239,9 @@ class ChatLineController extends Controller
     * Route: /admin/chat
     * 
     */
-    public function chatAdmin(){
-        return view('admin.chat.message');
+    public function chatAdmin($app_id){
+        $app = AppClient::findOrFail($app_id);
+        return view('admin.clients.message',['app' => $app]);
     }
     
 }
