@@ -55,12 +55,16 @@ Route::get('test','TestController@index');
  */
 
 Route::group(array('prefix' => 'chat'), function() {
+    
+    Route::get('app/{app_id}',array('as'=>'admin.clients.chat','uses'=> 'ChatLineController@chatAdmin'));
+    
     Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
     Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
     Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
     Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
     Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
 
+    
 });
 
 /*

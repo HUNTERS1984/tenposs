@@ -38,6 +38,7 @@ class ChatLineController extends Controller
     const API_REQUEST_TOKEN = 'https://api.line.me/v1/oauth/accessToken';
     const API_REQUEST_PROFILE = 'https://api.line.me/v1/profile';
     const API_VERIFIED_TOKEN = 'https://api.line.me/v1/oauth/verify';
+    const API_BOT_PROFILE = 'https://trialbot-api.line.me/v1/profiles';
     
    
     public function __construct(App\Models\User $user){
@@ -92,6 +93,33 @@ class ChatLineController extends Controller
                 
             }
         }
+    }
+    
+    /*
+    * Route: /admin/chat
+    * 
+    */
+    public function chatAdmin($app_id){
+        $app = AppClient::findOrFail($app_id);
+        // Get profile BOT
+        $config = [
+            'channelId' =>  $app->bot_channel_id,
+            'channelSecret' => $app->bot_channel_secret,
+            'channelMid' => $app->bot_mid,
+        ];
+        $bot = new LINEBot($config, new GuzzleHTTPClient($config));
+        
+        $profile = $bot->getUserProfile([$app->bot_mid]);
+       
+        $request = $this->curl->newRequest('get',self::API_BOT_PROFILE,['mids' => 'u9c1af340d8af0d5aa7e63fffa2c2aa28'])
+            ->setHeader('Accept-Charset', 'utf-8')
+             ->setHeader('X-Line-ChannelID', $app->bot_channel_id)
+             ->setHeader('X-Line-ChannelSecret', $app->bot_channel_secret)
+             ->setHeader('X-Line-Trusted-User-With-ACL', $app->bot_mid);
+             
+        return view('clients.message',[
+            'channel' =>  $app->bot_channel_id,
+            'profile' => json_encode($profile['contacts'][0])]);
     }
     
     public function login(){
@@ -235,13 +263,6 @@ class ChatLineController extends Controller
     }
 
    
-    /*
-    * Route: /admin/chat
-    * 
-    */
-    public function chatAdmin($app_id){
-        $app = AppClient::findOrFail($app_id);
-        return view('admin.clients.message',['app' => $app]);
-    }
+  
     
 }

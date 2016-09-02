@@ -5,9 +5,7 @@
     <title>Enduser Chat</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ secure_asset('assets/css/front-chat.css') }} "/>
-    <script type="text/javascript" src="{{ secure_asset('assets/js/jquery-1.11.2.min.js') }} "></script>
-    <script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
+    <link rel="stylesheet" href="{{ secure_asset('assets/css/chat.css') }} "/>
   </head>
   <body>
     <div class="container">
@@ -49,10 +47,10 @@
       
     </div><!--end container -->
     
-
+<script type="text/javascript" src="{{ secure_asset('assets/js/jquery-1.11.2.min.js') }} "></script>
+<script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>    
 <script type="text/javascript">
-
 
 var socket;
 var profile = $.parseJSON('<?php echo ($profile) ?>');
@@ -76,59 +74,21 @@ function connectToChat() {
         }
         socket.emit('join', package);
     });
-        
-            
-    /*
-    conn.onopen = function() {
-        var params = {
-            'action': 'connect',
-            'roomId': room_id,
-            'from' : {
-              'user_type' : 'endusers',
-              'profile' : profile
-            }
-        };
-        console.log('Send request connect');
-        console.log(params);
-        console.log('----------------------------------------------------------------------------------------------');
-        conn.send(JSON.stringify(params));
-    };
-
-    // client handle message from server
-    conn.onmessage = function(e) {
-        console.log('Client handle message from server');
-        console.log(e.data);
-        console.log('---------------------------------------------------------');
-        var data = JSON.parse(e.data);
-        
-        if (data.hasOwnProperty('type')) {
-          if( data.type == 'user-connected' && data.hasOwnProperty('message_type') && data.hasOwnProperty('message')){
-            if( data.message_type == 'system_status' ){
-              drawSystemMessage(data.message);
-            }
-          }
-          
-          if (data.type = 'message' && data.hasOwnProperty('message') && data.hasOwnProperty('from')) {
-            drawMessage('left',data.from, data.message);
-          }
-          
-          if (data.type = 'user-disconnected' && data.hasOwnProperty('message_type') && data.hasOwnProperty('message')) {
-            if( data.message_type == 'system_status' ){
-              drawSystemMessage(data.message);
-            }
-          }
-        }
-        
-      
-    };
-
-    conn.onerror = function(e) {
-        console.log(e);
-    };
-    conn.onclose =function(e){
-        console.log('Connection closed');
-    };
-    */
+    
+    socket.on('receive.user.message',function(package){
+      console.log(package);
+      drawMessage('left',package.user.profile,package.message.message);
+    });
+    
+    socket.on('receive.user.connected',function(package){
+      drawSystemMessage(package.message);
+    });
+    
+    socket.on('receive.user.disconnect',function(package){
+      drawSystemMessage(package.message);
+    });
+    
+    socket.on('');
     return false;
 }
 
@@ -150,18 +110,16 @@ function drawMessage(side, profile, message){
 }
 
 function drawSystemMessage(text){
-  $message = $($('.message_template_system').clone().html());
+  var $messages = $('ul.messages');
+  var $message = $($('.message_template_system').clone().html());
   $message.find('p').text(text);
-  $('.messages').append($message);
-    return setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
+  $messages.append($message);
+  setTimeout(function () {
+      return $messages.addClass('appeared');
+  }, 0);
+  return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 }
  
-function getMessageText() {
-   return $('.message_input').val();
-};
-
 
 function sendMessage(text) {
     var $messages, message;
@@ -173,26 +131,23 @@ function sendMessage(text) {
     drawMessage('right',profile, text);
     // Send message to server
     var d = new Date();
-    var params = {
-        'action': 'message',
+    var package = {
         'message': text,
         'timestamp': d.getTime()/1000
     };
-    conn.send(JSON.stringify(params));
-    console.log('Send message');
-    console.log(JSON.stringify(params));
-    
+    socket.emit('send.user.message',package);
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-
-
-
+function getMessageText() {
+   return $('.message_input').val();
+};
 
 $(document).ready(function(){
-    jQuery('.scrollbar-macosx').scrollbar();
     connectToChat();
+    jQuery('.scrollbar-macosx').scrollbar();
     $('.send_message').click(function (e) {
+        e.preventDefault();
         return sendMessage(getMessageText());
     });
     $('.message_input').keyup(function (e) {
@@ -202,8 +157,6 @@ $(document).ready(function(){
     });
     
 });
-
-      
 </script>
 </body>
 </html>

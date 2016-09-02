@@ -7,7 +7,7 @@
 	<title>Tenposs</title>
 	<link rel="stylesheet" href="{{ secure_asset('adcp/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ secure_asset('adcp/css/style.css') }}">
-	<link rel="stylesheet" href="{{ secure_asset('assets/css/front-chat.css') }}">
+	<link rel="stylesheet" href="{{ secure_asset('assets/css/chat.css') }}">
 	<style>
 	    .panel{
 	        max-width: 300px;
@@ -85,36 +85,43 @@
 			<div class="clearfix"></div>
 		</div>	<!--end main -->
 	</div>
-	<script type="text/javascript" src="{{ secure_asset('adcp/js/jquery-1.11.2.min.js') }}"></script>
-	<script type="text/javascript" src="{{ secure_asset('adcp/js/bootstrap.min.js') }}"></script>
-	<script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
-
-
+	
+<script type="text/javascript" src="{{ secure_asset('adcp/js/jquery-1.11.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ secure_asset('adcp/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>    	
 <script type="text/javascript">
 
 var socket;
-var app = $.parseJSON('{{ $app }} ');
+var profile = $.parseJSON('<?php echo ($profile) ?>');
+var channel = '{{ $channel }}';
 
-function drawMessage(side, profile, message){
+
+function drawMessage(package){
 	var $message;
-    var d = new Date();
-    
-    $messages = $('div#box-'+profile.mid+' ul.messages');
-    
-    $message = $($('.message_template').clone().html());
-    $message.addClass(side).find('.text').html(message);
-    $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(d.getTime()/1000);
-    
-    console.log('Kiem tra ton tai');
-    if( checkExistBoxItems(profile) ){
-        renderChatLists(profile);
-        renderChatBox(profile);
-        $messages.append($message);
-    }else{
-        $messages.append($message);
+	var side = 'left';
+	if( package.user.profile.mid == profile.mid ){
+	    side = 'right';
+	}
+	
+  
+ 
+    if( checkExistBoxItems(package.user.profile) ){
+        renderChatLists(package.user.profile);
+        renderChatBox(package.user.profile,function(valid){
+            if( valid ){}
+        });
+        
     }
+    
+    $messages = $('div#box-'+ package.user.profile.mid +' ul.messages');
+    $message = $($('.message_template').clone().html());
+    $message.addClass(side).find('.text').html(package.message.message);
+    $message.find('.avatar img').attr('src',package.user.profile.pictureUrl+'/small')
+    $message.find('.timestamp').text(package.message.timestamp);
+    
+    $messages.append($message);
+    
     
     setTimeout(function () {
         return $message.addClass('appeared');
@@ -132,7 +139,7 @@ function sendMessage(target) {
     console.log(target);
     var closest = $(target).closest('.panel');
     var $messages, message;
-    if ($(target).val().trim() === '') {
+    if ($(closest).find('input').val().trim() === '') {
         return;
     }
     
@@ -141,7 +148,7 @@ function sendMessage(target) {
 
     var d = new Date();
     $message = $($('.message_template').clone().html());
-    $message.addClass('right').find('.text').html( $(target).val() );
+    $message.addClass('right').find('.text').html($(closest).find('input').val() );
     $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
     $message.find('.timestamp').text(d.getTime()/1000);
     $messages.append($message);
@@ -151,66 +158,53 @@ function sendMessage(target) {
     // Send message to server
     var d = new Date();
     var params = {
-        'message': $(target).val(),
         'to': $(closest).attr('data-id'),
-        'action': 'message',
+        'message': $(target).val(),
         'timestamp': d.getTime()/1000
     };
-    conn.send(JSON.stringify(params));
-    $(target).val('');
+    socket.emit('send.admin.message',params);
+    $(closest).find('input').val('')
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
 // Connect to server 
 function connectToChat() {
-    conn = new WebSocket(ws_url);
-    conn.onopen = function() {
-    	var params = {
-            'action': 'connect',
-            'roomId': 'uaa357d613605ebf36f6366a7ce896180',
-            'from' : {
-              'user_type' : 'clients',
-              'profile' : profile
-            }
-        };
-        
-        console.log('Client request connect:');
-        console.log(params);
-        conn.send(JSON.stringify(params));
-    };
-
-    conn.onmessage = function(e) {
-        console.log('Get message from enduser:');
-        console.log(JSON.parse(e.data));
-        var data = JSON.parse(e.data);
-        
-        
-  
-        if (data.hasOwnProperty('type')) {
-           
-            if (data.type == 'list-users' && data.hasOwnProperty('clients')) {
-                displayListEndUsers(data.clients);
-            }
-            
-            else if (data.type == 'message' && data.hasOwnProperty('message')) {
-                drawMessage( 'left', data.from, data.message );
-            }
-            
-        }
-    };
-
-    conn.onerror = function(e) {
-        console.log(e);
-    };
+    socket = new io.connect('tenposs-end-phanvannhien.c9users.io:8081', {
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': 5
+    });
     
-    conn.onclose =function(e){
-        console.log('Connection closed');
-    };
+    socket.on('connect', function (user) {
+        console.log('Request connect');
+        var package = {
+            from: 'client',
+            channel: channel,
+            profile: profile
+        }
+        socket.emit('join', package);
+    });
+    
+    socket.on('receive.admin.message',function( package ){
+        drawMessage(package);
+        console.log('Client send');
+        console.log(package);
+    })
 
-
-    return false;
+    socket.on('receive.admin.connected',function(package){
+      drawSystemMessage(package);
+    })
+    
+    socket.on('receive.admin.disconnect',function(package){
+      drawSystemMessage(package);
+    })
 }
 
+
+function drawSystemMessage(package){
+    
+}
 
 function displayListEndUsers(endUsers){
     $(endUsers).each(function(index,item){
@@ -222,8 +216,10 @@ function displayListEndUsers(endUsers){
     });
 }
 
-function checkExistBoxItems(enduser){
-    if( $('#enduser-chat-list #'+enduser.mid).length > 0 ){
+function checkExistBoxItems(profile){
+    if(  
+        $('#enduser-chat-list #'+profile.mid) != typeof undefined &&
+        $('#enduser-chat-list #'+profile.mid).length > 0 ){
         return false;
     }else{
         return true;
@@ -233,13 +229,13 @@ function checkExistBoxItems(enduser){
 }
 
 
-function renderChatLists(enduser){
+function renderChatLists(profile){
     var $template;
     $template = $($('#members-template').clone().html());
-    $template.attr('id',enduser.mid).addClass('rendered');
-    $template.find('.media-object').attr('src',enduser.pictureUrl+'/small');
-    $template.find('.media-heading').html(enduser.displayName);
-    $template.find('.media-body p').text(enduser.statusMessage);
+    $template.attr('id',profile.mid).addClass('rendered');
+    $template.find('.media-object').attr('src',profile.pictureUrl+'/small');
+    $template.find('.media-heading').html(profile.displayName);
+    $template.find('.media-body p').text(profile.statusMessage);
       
     $('#enduser-chat-list').append($template);
     return setTimeout(function () {
@@ -248,17 +244,16 @@ function renderChatLists(enduser){
 }
 
 
-function renderChatBox(enduser){
+function renderChatBox(profile,callback){
     
     var $template;
     $template = $($('#room-template .rooms').clone().html());
-    $template.attr('id','box-'+enduser.mid).attr('data-id',enduser.mid)
-        .find('.panel-heading').html(enduser.displayName);
+    $template.attr('id','box-'+profile.mid).attr('data-id',profile.mid)
+        .find('.panel-heading').html(profile.displayName);
     $('#message-wrapper').append($template);
-    return setTimeout(function () {
-        return $template.addClass('appeared');
-    }, 0);
+    callback(true);
 }
+
 
 
 $(document).ready(function(){
@@ -272,9 +267,7 @@ $(document).ready(function(){
     });
     
     $('#message-wrapper').on('click','.send_message',function(e){
-        
-    	var target = $(this).parent().next('input');
-    	$(target).trigger('keyup');
+        return sendMessage(this);
     	
     })
 });
