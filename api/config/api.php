@@ -9,7 +9,7 @@ return [
     'sig_social_login' => array('app_id', 'time', 'social_type', 'social_id'),
     'sig_signin' => array('app_id','time', 'email'),
     'sig_signout' => array('token','time'),
-    'sig_menu' => array('app_id','time','store_'),
+    'sig_menu' => array('app_id','time','store_id'),
     'sig_items' => array('app_id','time','menu_id'),
     'sig_news' => array('app_id','time','store_id'),
     'sig_photo_cat' => array('app_id','time','store_id'),
@@ -34,4 +34,7 @@ return [
     'cache_top_items' => 'top_items_%s', // app_id
     'cache_top_contacts' => 'top_contacts_%s', // app_id
     'cache_profile' => 'profile_%s', // app_id
+
+    'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
+    'noti_apple_url'=>'ssl://gateway.sandbox.push.apple.com:2195'
 ];

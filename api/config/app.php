@@ -158,6 +158,8 @@ return [
         Thujohn\Twitter\TwitterServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
+        Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
+
     ],
 
     /*
@@ -205,6 +207,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Input' => \Illuminate\Support\Facades\Input::class,
         'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+        'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class,
+
     ],
 
 ];
