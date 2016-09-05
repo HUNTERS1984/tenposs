@@ -73,6 +73,22 @@ function connectToChat() {
             profile: profile
         }
         socket.emit('join', package);
+        
+        socket.on('history', function( package ){
+          console.log('History');
+          console.log(package);
+            if( package.messages ){
+              for( var i in package.messages ){
+                if( profile.mid == package.messages[i].from_mid ){
+                  drawMessage('right',profile,package.messages[i].message);
+                }else{
+                   drawMessage('left',package.to,package.messages[i].message);
+                }
+              }
+            }
+        });
+        
+        
     });
     
     socket.on('receive.user.message',function(package){

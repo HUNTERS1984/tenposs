@@ -24,7 +24,7 @@ exports.getMessageHistory = function(from, to, limit, _callback){
                 values: [from,to,from,to,limit]
             }, function (error, results, fields) {
                 if(error) return false;
-                return _callback(results[0]);
+                return _callback(results);
             });
         
     }
