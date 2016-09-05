@@ -23,12 +23,12 @@ class TestController extends Controller
     //
     public function index()
     {
-        try
-        {
-           return $this->_testRepository->getList(0,1,10);
-        } catch (QueryException $e)
-        {
-            return $e;
-        }
+        // try
+        // {
+        //     return $this->_testRepository->getList(0,1,10);
+        // } catch (QueryException $e)
+        // {
+        //     return $e;
+        // }
     }
 }

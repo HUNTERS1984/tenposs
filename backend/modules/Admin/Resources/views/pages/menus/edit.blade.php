@@ -1,6 +1,6 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Menu')
+@section('title', 'メニュー')
 
 @section('content')
 	<div class="content">
@@ -8,66 +8,51 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">Menu</h1>
+					<h1 class="title">メニュー</h1>
 				</div>
 			</div>
 		</div>
 		<!-- END -->
 
 		<div class="main-content news">
+			@include('admin::layouts.message')
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-4">
-						<div class="wrap-preview">
-							<div class="wrap-content-prview">
-								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
-									<h2 class="title-prview">MENU</h2>
-								</div>
-								<div class="control-nav-preview">
-									<!-- Slider main container -->
-		                            <div class="swiper-container">
-		                                <!-- Additional required wrapper -->
-		                                <div class="swiper-wrapper">
-		                                    <!-- Slides -->
-		                                    <div class="swiper-slide">Spring</div>
-		                                    <div class="swiper-slide">Summer</div>
-		                                </div>
-
-		                                <!-- If we need navigation buttons -->
-		                                <div class="swiper-button-prev"></div>
-		                                <div class="swiper-button-next"></div>
-		                            </div>
-								</div>
-								<div class="content-preview">
-									@if($all_menus->isEmpty())
-										No data
-									@else
-										@foreach($all_menus as $item_thumb)
-											<div class="each-coupon clearfix">
-												<!-- <img src="{{asset($item_thumb->image_url)}}" class="img-responsive img-prview"> -->
-												<div class="inner-preview">
-													<p class="title-inner" style="font-size:9px; color:#14b4d2">{{$item_thumb->name}}</p>
-												</div>
-											</div>
-										@endforeach
-									@endif
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="col-lg-8">
 						
 						<div class="wrapper-content">
-							{{Form::model($menus,array('route'=>array('admin.menus.update',$menus->id),'method'=>'PUT','files'=>true))}}
+							{{Form::model($item,array('route'=>array('admin.menus.update',$item->id),'method'=>'PUT','files'=>true))}}
 								<div class="form-group">
-									{{Form::select('store_id',$list_store,$menus->store_id,array('class'=>'form-control'))}}
+									<img class="edit_img" src="{{asset($item->image_url)}}" width="100%">
+									<button class="btn_upload_img edit " type="button"><i class="fa fa-picture-o" aria-hidden="true"></i>画像アップロード</button>
+                					{!! Form::file('image_edit',['class'=>'btn_upload_ipt edit', 'hidden', 'type' => 'button', 'id' => 'image_edit']) !!}
 								</div>
 								<div class="form-group">
-									{{Form::text('name',old('name'),array('class'=>'form-control', 'placeholder'=>'Type the title'))}}
-								</div>
+						      		{{Form::label('menu','メニュー')}}
+						      		{{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('title','タイトル')}}
+						      		{{Form::text('title',old('title'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('description','説明')}}
+						      		{{Form::textarea('description',old('description'),['class'=>'form-control'])}}
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('price','価格')}}
+						      		{{Form::text('price',old('price'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('item_link','URL')}}
+						      		{{Form::text('item_link',old('item_link'),['class'=>'form-control'])}}
+
+						      	</div>
 								<div class="form-group">
-									{{Form::submit('Save changes',array('class'=>'btn btn-primary'))}}
+									{{Form::submit('保存',array('class'=>'btn btn-primary'))}}
 								</div>
 							{{Form::close()}}
 						</div>	<!-- wrap-content-->
@@ -104,6 +89,26 @@
 	            nextButton: '.control-nav-preview .swiper-button-next',
 	            prevButton: '.control-nav-preview .swiper-button-prev'
 	        });
+
+	        $('.btn_upload_img.edit').click(function(){
+	           $('.btn_upload_ipt.edit').click();
+	        });
+
+			function readURL(input) {
+			    if (input.files && input.files[0]) {
+			        var reader = new FileReader();
+
+			        reader.onload = function (e) {
+			            $('.edit_img').attr('src', e.target.result);
+			        }
+
+			        reader.readAsDataURL(input.files[0]);
+			    }
+			}
+
+			$("#image_edit").change(function(){
+			    readURL(this);
+			});
 		})
 	</script>
 @stop

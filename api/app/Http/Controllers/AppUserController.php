@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use DB; 
 use Twitter;
 use Illuminate\Support\Facades\Config;
+use App\Jobs\InstagramHashtagJob;
 
 class AppUserController extends Controller
 {
@@ -396,9 +397,11 @@ class AppUserController extends Controller
         }
         $request->user->profile->avatar_url = url('/') . $request->user->profile->avatar_url;
         $this->body['data']['user'] = $request->user;
+
         if ($request->user != null && count($request->user) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
+
         return $this->output($this->body);
     }
 
@@ -406,7 +409,7 @@ class AppUserController extends Controller
     public function update_profile(Request $request)
     {
 
-        $check_items = array('token', 'username', 'gender', 'address');
+        $check_items = array('token', 'username', 'gender', 'address', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -421,7 +424,7 @@ class AppUserController extends Controller
             $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
             $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
-            $request->user->profile->avatar_url = '/' . $destinationPath . '/' . $fileName;
+            $request->user->profile->avatar_url = $destinationPath . '/' . $fileName;
         } else {
             return $this->error(1004);
         }

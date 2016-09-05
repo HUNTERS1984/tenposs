@@ -16,6 +16,7 @@ class IsLoginMiddleware
      */
     public function handle($request, Closure $next)
     {
+
         if(Auth::check()){
             return redirect()->back()->withErrors("You're already logined.");
         }
