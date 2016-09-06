@@ -1821,22 +1821,22 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "1.4.0",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "99f5574fc59b6d1e3951d0039199e94a6958207a"
+                "reference": "554e43d5576d1c4c723d19774e7e6f34c7c41e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/99f5574fc59b6d1e3951d0039199e94a6958207a",
-                "reference": "99f5574fc59b6d1e3951d0039199e94a6958207a",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/554e43d5576d1c4c723d19774e7e6f34c7c41e9b",
+                "reference": "554e43d5576d1c4c723d19774e7e6f34c7c41e9b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "^5.1",
-                "laravel/framework": "^5.1.11",
-                "php": ">=5.5.0"
+                "illuminate/contracts": "~5.1.0|~5.2.0|~5.3.0",
+                "laravel/framework": "~5.1.11|~5.2.0|~5.3.0",
+                "php": ">=5.6.0"
             },
             "require-dev": {
                 "orchestra/testbench": "^3.1.4",
@@ -1870,7 +1870,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2016-05-08 17:18:03"
+            "time": "2016-08-26 07:17:52"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2044,7 +2044,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -2792,35 +2792,35 @@
         },
         {
             "name": "vinkla/instagram",
-            "version": "4.1.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vinkla/laravel-instagram.git",
-                "reference": "73ce0323cbbd4b60811bf9e62c442d987c3a3bad"
+                "reference": "52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vinkla/laravel-instagram/zipball/73ce0323cbbd4b60811bf9e62c442d987c3a3bad",
-                "reference": "73ce0323cbbd4b60811bf9e62c442d987c3a3bad",
+                "url": "https://api.github.com/repos/vinkla/laravel-instagram/zipball/52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9",
+                "reference": "52ac2231bdb2aec7c5af1e83b3dff07cae70e3b9",
                 "shasum": ""
             },
             "require": {
-                "graham-campbell/manager": "^2.3",
+                "graham-campbell/manager": "^2.4",
                 "illuminate/contracts": "5.1.* || 5.2.* || 5.3.*",
                 "illuminate/session": "5.1.* || 5.2.* || 5.3.*",
                 "illuminate/support": "5.1.* || 5.2.* || 5.3.*",
                 "larabros/elogram": "^1.1",
-                "php": "^5.5.9 || ^7.0"
+                "php": "^5.6.4 || ^7.0"
             },
             "require-dev": {
-                "graham-campbell/testbench": "^3.1",
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "^4.8 || ^5.0"
+                "graham-campbell/testbench": "^3.2",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -2848,20 +2848,20 @@
                 "laravel",
                 "media"
             ],
-            "time": "2016-05-05 11:03:54"
+            "time": "2016-07-11 19:12:15"
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a"
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/9ca5644c536654e9509b9d257f53c58630eb2a6a",
-                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
+                "reference": "3cc116adbe4b11be5ec557bf1d24dc5e3a21d18c",
                 "shasum": ""
             },
             "require": {
@@ -2873,7 +2873,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2898,7 +2898,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-06-14 14:14:52"
+            "time": "2016-09-01 10:05:43"
         }
     ],
     "packages-dev": [
@@ -4176,16 +4176,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.1.3",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac"
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/1819adf2066880c7967df7180f4f662b6f0567ac",
-                "reference": "1819adf2066880c7967df7180f4f662b6f0567ac",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f291ed25eb1435bddbe8a96caaef16469c2a092d",
+                "reference": "f291ed25eb1435bddbe8a96caaef16469c2a092d",
                 "shasum": ""
             },
             "require": {
@@ -4221,7 +4221,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17 14:02:08"
+            "time": "2016-09-02 02:12:52"
         },
         {
             "name": "webmozart/assert",
