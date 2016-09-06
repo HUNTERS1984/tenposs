@@ -197,7 +197,7 @@ class AppUserController extends Controller
             $user = new AppUser();
             $user->email = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
-            $user->app_id = $app->id;
+            $user->app_id = $app['id'];
             $user->save();
 
             $profile = new UserProfile();
