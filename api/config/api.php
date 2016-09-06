@@ -3,6 +3,9 @@
 return [
     'time_expire' => 5000000,
 
+    //items
+    'items_notification' => array('app_user_id', 'type','created_by'),
+    //sig
     'sig_top' => array('app_id', 'time'),
     'sig_appinfo' => array('app_id', 'time'),
     'sig_signup' => array('app_id', 'time', 'email', 'password'),
@@ -36,6 +39,13 @@ return [
     'cache_top_items' => 'top_items_%s', // app_id
     'cache_top_contacts' => 'top_contacts_%s', // app_id
     'cache_profile' => 'profile_%s', // app_id
+    'cache_app_user_push' => 'app_user_push_%s', // app_id
+
+    'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
+    'noti_apple_url'=>'ssl://gateway.sandbox.push.apple.com:2195',
+    'redis_chanel_notification'=>'notification_mobile',
+
     'cache_staff' => 'staff_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
     'cache_staff_categories' => 'staff_categories_%s_%s', // app_id,menu_id
+
 ];

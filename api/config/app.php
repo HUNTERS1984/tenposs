@@ -158,6 +158,7 @@ return [
         Thujohn\Twitter\TwitterServiceProvider::class,
         Vinkla\Instagram\InstagramServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+
     ],
 
     /*

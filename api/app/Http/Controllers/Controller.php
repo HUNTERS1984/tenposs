@@ -108,6 +108,7 @@ class Controller extends BaseController
 
     protected function validate_sig($params, $private_key, $data = null)
     {
+	return 0;
         $str_sig = '';
         if (!$data)
             $data = Input::all();
