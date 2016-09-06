@@ -1,6 +1,6 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Global')
+@section('title', 'グローバル')
 
 @section('content')
 	<div class="content">
@@ -8,10 +8,10 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">Global</h1>
+					<h1 class="title">グローバル</h1>
 				</div>
 				<div class="right-topbar">
-					<a href="#" class="btn-me btn-topbar">スタの新</a>
+					<a href="#" class="btn-me btn-topbar">保存</a>
 				</div>
 			</div>
 		</div>
@@ -23,9 +23,9 @@
 					<div class="col-xs-12">
 						<div class="global-tab">
 							<ul class="nav-tab clearfix">
-								<li><a href="#" alt="tab1" class="active">Tab 1</a></li>
-								<li><a href="#" alt="tab2">Tab 2</a></li>
-								<li><a href="#" alt="tab3">Tab 3</a></li>
+								<li><a href="#" alt="tab1" class="active">ヘッダー</a></li>
+								<li><a href="#" alt="tab2">サイトメニュー</a></li>
+								<li><a href="#" alt="tab3">Appストア</a></li>
 							</ul>
 						</div>
 					</div>
@@ -63,17 +63,17 @@
 					<div class="col-lg-8">
 						<div class="wrapper-content">
 							<div class="content-global" id="tab1">
-								<form action="" class="formCommon">
+								{{Form::open(array('route'=>'admin.menus.store', 'class' => 'formCommon'))}}
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">タイトル</label>
 										<input type="text" name="" class="first-input">
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">タイトルカラー</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
 											<select name="fontsize" class="font-size">
 												<option value="12">12px</option>
@@ -85,29 +85,29 @@
 										</span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">ヘッダーカラー</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">メニューイコンカラー</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 
-								</form>
+								{{Form::close()}}
 							</div> <!-- end content global -->
 
 							<div class="content-global" id="tab2">
-								<form action="" class="formCommon">
+								{{Form::open(array('route'=>'admin.menus.store', 'class' => 'formCommon'))}}
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">バックグラウンドカラー</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">フォントカラー</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
 											<select name="fontsize" class="font-size">
 												<option value="12">12px</option>
@@ -119,10 +119,10 @@
 										</span>
 									</div>
 									<div class="form-group clearfix">
-										<label for="">スタの新 スタの新</label>
+										<label for="">サイトメニュー項目</label>
 										<div class="wrap-table">
 											<div class="wrap-transfer col">
-												<p class="title-form">スタの新</p>
+												<p class="title-form">表示</p>
 												<ul class="nav-left from-nav">
 													<li>TEST 1</li>
 													<li>TEST 2</li>
@@ -134,25 +134,26 @@
 												<a href="javascript:moveTo('to-nav','from-nav')" ><span class="glyphicon glyphicon-triangle-left"></span></a>
 											</div>
 											<div class="wrap-transfer col">
-												<p class="title-form">スタの新</p>
+												<p class="title-form">非表示</p>
 												<ul class="nav-right to-nav">
 												</ul>
 											</div>
 										</div>
 									</div>
-								</form>
+								{{Form::close()}}
 							</div>
 							<div class="content-global" id="tab3">
-								<form action="" class="formCommon">
+								{{Form::open(array('route'=>'admin.menus.store', 'class' => 'formCommon'))}}
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">アプリアイコン</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
-										<label for="">スタの新</label>
+										<label for="">Store用画像</label>
 										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 								</form>
+								{{Form::close()}}
 							</div>
 						</div>	<!-- wrap-content-->
 					</div>
@@ -162,6 +163,7 @@
 		</div>
 		<!-- END -->
 	</div>	<!-- end main-content-->
+
 @stop
 
 @section('script')

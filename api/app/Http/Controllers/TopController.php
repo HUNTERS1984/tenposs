@@ -58,12 +58,13 @@ class TopController extends Controller
         $this->body['data']['images']['data'] = $images;
         $this->body['data']['items']['top_id'] = 2;
         $this->body['data']['items']['data'] = $items;
-        $this->body['data']['photos']['top_id'] = 3;
-        $this->body['data']['photos']['data'] = $photos;
-        $this->body['data']['news']['top_id'] = 4;
+        $this->body['data']['news']['top_id'] = 3;
         $this->body['data']['news']['data'] = $news;
-        $this->body['data']['contact']['top_id'] = 5;
+        $this->body['data']['contact']['top_id'] = 4;
         $this->body['data']['contact']['data'] = $contacts;
+        $this->body['data']['photos']['top_id'] = 5;
+        $this->body['data']['photos']['data'] = $photos;
+
 
 
         return $this->output($this->body);
@@ -89,6 +90,7 @@ class TopController extends Controller
             $key = sprintf(Config::get('api.cache_app_info'), Input::get('app_id'));
             //get data from redis
             $data = RedisUtil::getInstance()->get_cache($key);
+
             //check data and return data
             if ($data != null) {
                 $this->body = $data;
@@ -186,6 +188,18 @@ class TopController extends Controller
                 }
                 case 'coupon': {
                     $str_hash = Config::get('api.sig_coupon');
+                    $str_param = $this->validate_param_test($str_hash);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
+                    break;
+                }
+                case 'sig_staff_category': {
+                    $str_hash = Config::get('api.sig_staff_category');
+                    $str_param = $this->validate_param_test($str_hash);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
+                    break;
+                }
+                case 'sig_staffs': {
+                    $str_hash = Config::get('api.sig_staffs');
                     $str_param = $this->validate_param_test($str_hash);
                     $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;

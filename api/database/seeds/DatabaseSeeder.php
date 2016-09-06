@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
      */
     protected $seeders = [
         UsersTableSeeder::class,
-        RolePermissionSeeder::class
+        RolePermissionSeeder::class,
+        AppDemoSeeder::class
     ];
     /**
      * Run the database seeds.

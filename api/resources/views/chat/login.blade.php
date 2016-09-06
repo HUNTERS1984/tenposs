@@ -22,7 +22,7 @@
 </head>
 <body >
     <div style="position: relative">
-        <a  href="https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id={{config('linechat.channelId')}}&redirect_uri={{ route('chat.authentication') }}&state=">
+        <a  href="https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id={{$app->line_channel_id}}&redirect_uri=https://tenposs-end-phanvannhien.c9users.io/chat/verifined&state=">
             <img class="center-block" src="{{ url('assets/plugins/linechat/images/btn_login_base.png') }}" alt="">
         </a>
     </div>

@@ -37,7 +37,7 @@ class ItemController extends Controller
             return $ret;
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_menu');
-        print_r($check_sig_items);
+        //print_r($check_sig_items);
         // check app_id in database
         $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
@@ -57,12 +57,12 @@ class ItemController extends Controller
             return $this->output($this->body);
         }
         try {
-            $app = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
+            $menus = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-        $this->body['data']['menus'] = $app;
-        if ($app != null && count($app) > 0) { // set cache
+        $this->body['data']['menus'] = $menus;
+        if ($menus != null && count($menus) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
         return $this->output($this->body);

@@ -15,4 +15,12 @@ class AppUser extends Model {
     	 return $this->hasOne(UserProfile::class)->select(['id', 'name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status', 'app_user_id']);
     }
 
+    public function social(){
+         return $this->hasOne(SocialProfile::class);
+    }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'rel_app_users_coupons', 'app_user_id', 'coupon_id');
+    }
 }

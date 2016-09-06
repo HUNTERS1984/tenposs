@@ -74,6 +74,26 @@ html, body {
 .ui-content {
   padding: 0; }
 
+.btn_upload_ipt{display: none !important;}
+.btn_upload_img.create {
+    width: 100%;
+    padding: 10px;
+    border: solid 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #434b4e;
+    color: white;
+}
+.btn_upload_img.edit {
+    width: 100%;
+    padding: 10px;
+    border: solid 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #434b4e;
+    color: white;
+}
+
 .main {
   position: relative;
   background: #f8f8fa; }
@@ -201,6 +221,10 @@ html, body {
           .main .content .main-content .wrap-preview .content-preview .each-coupon {
             margin-bottom: 10px; }
             .main .content .main-content .wrap-preview .content-preview .each-coupon .img-prview {
+              object-fit: cover;
+              object-position: center;
+              height: 60px;
+              width: 60px;
               float: left;
               border: 3px solid #fff;
               max-width: 60px;
@@ -214,9 +238,21 @@ html, body {
               margin-bottom: 5px; }
             .main .content .main-content .wrap-preview .content-preview .each-coupon .inner-preview p.text-inner {
               font-size: 9px; }
-          .main .content .main-content .wrap-preview .content-preview .each-staff {
+            .main .content .main-content .wrap-preview .content-preview .each-staff {
             margin-bottom: 12px; }
-          .main .content .main-content .wrap-preview .content-preview .row-me {
+            .main .content .main-content .wrap-preview .content-preview .each-staff img{
+            object-fit: cover;
+            object-position: center;
+            height: 60px;
+            width: 60px;
+            margin-bottom: 12px; }
+            .main .content .main-content .wrap-preview .content-preview .each-menu img{
+            object-fit: cover;
+            object-position: center;
+            height: 100px;
+            width: 100px;
+            margin-bottom: 12px; }
+            .main .content .main-content .wrap-preview .content-preview .row-me {
             margin-left: -8px;
             margin-right: -8px; }
             .main .content .main-content .wrap-preview .content-preview .row-me .padding-me {
@@ -245,6 +281,10 @@ html, body {
         .main .content .main-content .wrapper-content .each-item.first {
           margin-top: 0; }
         .main .content .main-content .wrapper-content .each-item img {
+          object-fit: cover;
+          object-position: center;
+          height: 200px;
+          width: 200px;
           float: left;
           margin: 0 15px 5px 0;
            }
@@ -301,6 +341,10 @@ html, body {
         }
       }
         .main .content .main-content .each-common-pr img {
+          object-fit: cover;
+          object-position: center;
+          height: 200px;
+          width: 200px;
           border-radius: 5px;
           margin-bottom: 5px; }
         .main .content .main-content .each-common-pr p.title-menu {

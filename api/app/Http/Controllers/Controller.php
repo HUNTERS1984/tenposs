@@ -122,7 +122,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
-//        print_r($str_sig);die;
+        //dd($str_sig);die;
         $str_sig = hash('sha256', $str_sig);
         if (strtolower($str_sig) !== strtolower($sig_param))
             return $this->error_detail(1013, 'Parameter sig is not valid.');
@@ -144,6 +144,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
+        //dd($str_sig);
         return hash('sha256', $str_sig);
     }
 

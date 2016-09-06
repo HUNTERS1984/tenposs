@@ -18,6 +18,11 @@ class CreateAppsTable extends Migration
                 $table->string('name',255)->nullable();
                 $table->string('app_app_id',255)->nullable();
                 $table->string('app_app_secret',255)->nullable();
+                $table->string('line_channel_id',255)->nullable();
+                $table->string('line_channel_secret',255)->nullable();
+                $table->string('bot_channel_id',255)->nullable();
+                $table->string('bot_channel_secret',255)->nullable();
+                $table->string('bot_mid',255)->nullable();
                 $table->text('description')->nullable();
                 $table->timestamp('created_time')->nullable();
                 $table->smallInteger('status',false)->nullable();

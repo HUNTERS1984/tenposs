@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories\Eloquents;
 
-
+use App\Models\Item;
 use App\Models\Menu;
 use App\Repositories\Contracts\ItemsRepositoryInterface;
 use DB;

@@ -42,7 +42,7 @@ class TopsRepository implements TopsRepositoryInterface
 
             $menus_id = '(' . implode(',', $menus) . ')';
 
-            $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.coupon_id, items.created_at, items.updated_at, items.deleted_at 
+            $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.created_at, items.updated_at, items.deleted_at 
                 from rel_menus_items 
                 INNER JOIN items on rel_menus_items.item_id=items.id 
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
@@ -195,10 +195,14 @@ class TopsRepository implements TopsRepositoryInterface
         if ($data != null) {
             return $data;
         }
-        $arr = App::where('app_app_id', '=', $app_app_id)->first()->toArray();
+        $arr = App::where('app_app_id', '=', $app_app_id)->first();
         if ($arr != null && count($arr) > 0)//set cache redis
+        {
             RedisUtil::getInstance()->set_cache($key, $arr);
-        return $arr;
+            return $arr;
+        }
+        
+        return null;       
     }
 
     public function get_app_info_from_token($token)

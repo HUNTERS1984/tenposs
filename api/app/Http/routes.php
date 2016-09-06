@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
+Route::any('/', function () {
     return view('welcome');
 });
 
@@ -26,6 +26,8 @@ Route::group(array('prefix' => 'api/v1'), function()
     Route::get('appinfo','TopController@appinfo');
     Route::get('menu','ItemController@menu');
     Route::get('items','ItemController@items');
+    Route::get('staff_categories','StaffController@staff_categories');
+    Route::get('staffs','StaffController@staffs');
     Route::get('news','NewsController@index');
     Route::get('photo_cat','PhotoController@photo_cat');
     Route::get('photo','PhotoController@index');
@@ -55,13 +57,17 @@ Route::get('test','TestController@index');
  */
 
 Route::group(array('prefix' => 'chat'), function() {
+    
+    Route::get('app/{app_id}',array('as'=>'admin.clients.chat','uses'=> 'ChatLineController@chatAdmin'));
+    
+    Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
+    Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
+    Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
+    Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
+    Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
 
-    Route::get('login', array('as'=>'chat.login','uses' => 'ChatLineController@login' ));
-    Route::get('authentication', array('as'=>'chat.authentication','uses' => 'ChatLineController@authentication' ));
-    Route::get('message', array('as'=>'chat.message','uses' => 'ChatLineController@index' ));
-
+    
 });
-
 
 /*
  * Admin routing
