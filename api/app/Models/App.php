@@ -30,12 +30,16 @@ class App extends Model
 
     public function top_components()
     {
-        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')->select(array('id', 'name'));
+        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')->orderBy('order', 'asc')->whereNotNull('top')->select(array('id', 'top AS name', 'viewmore','sidemenu'));
     }
 
+    // public function side_menu()
+    // {
+    //     return $this->belongsToMany(Component::class, 'rel_app_settings_sidemenus', 'app_setting_id', 'sidemenu_id')->select(array('id', 'name'));
+    // }
     public function side_menu()
     {
-        return $this->belongsToMany(Component::class, 'rel_app_settings_sidemenus', 'app_setting_id', 'sidemenu_id')->select(array('id', 'name'));
+        return $this->belongsToMany(Component::class, 'rel_app_settings_sidemenus', 'app_setting_id', 'sidemenu_id')->orderBy('order', 'asc')->whereNotNull('sidemenu')->select(array('id', 'sidemenu AS name'));
     }
 
     public function stores()

@@ -17,4 +17,12 @@ class Coupon extends Model
     public function coupon_type(){
         return $this->belongsTo(CouponType::class);
     }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class, 'rel_coupons_tags', 'coupon_id', 'tag_id');
+    }
+
+    public function app_users(){
+        return $this->belongsToMany(AppUser::class, 'rel_app_users_coupons', 'coupon_id', 'app_user_id');
+    }
 }

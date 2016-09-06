@@ -9,6 +9,7 @@
 namespace App\Repositories\Eloquents;
 
 
+use App\Models\Apps;
 use App\Models\AppUser;
 use App\Models\News;
 use App\Models\UserPushLogTracking;
@@ -24,10 +25,10 @@ use Predis\PredisException;
 class NotificationRepository implements NotificationRepositoryInterface
 {
 
-    public function get_app_push_from_app_id($app_id)
+    public function get_app_push_from_app_id($app_user_id)
     {
         try {
-            if ($app_id > 0) {
+            if ($app_user_id > 0) {
                 //create key redis
 //                $key = sprintf(Config::get('api.cache_app_user_push'), $app_id);
 ////        //get data from redis
@@ -36,10 +37,30 @@ class NotificationRepository implements NotificationRepositoryInterface
 //                if ($rs != null) {
 //                    return $rs;
 //                }
-                $rs = AppUser::with('userpushs')->where('id', $app_id)->get()->toArray();
+                $result = null;
+                $rs = AppUser::with('userpushs')->where('id', $app_user_id)->get()->toArray();
+                if (count($rs) > 0) {
+                    $app_id = $rs[0]['app_id'];
+
+                    $rsApp = Apps::where('id', $app_id)->get()->toArray();
+                    if (count($rsApp) > 0) {
+                        $result = array("user" => array(
+                            "android_push_key" => $rs[0]['android_push_key'],
+                            "apple_push_key" => $rs[0]['apple_push_key'],
+                        ),
+                            "app" => array(
+                                "android_push_service_file" => $rsApp[0]['android_push_service_file'],
+                                "android_push_api_key" => $rsApp[0]['android_push_api_key'],
+                                "apple_push_cer_file" => $rsApp[0]['apple_push_cer_file'],
+                                "apple_push_cer_password" => $rsApp[0]['apple_push_cer_password']
+                            ),
+                            "userpushs" => $rs[0]['userpushs']);
+
+                    }
+                }
 //                if ($rs != null && count($rs) > 0)//set cache redis
 //                    RedisUtil::getInstance()->set_cache($key, $rs);
-                return $rs;
+                return $result;
             }
         } catch (QueryException $ex) {
             Log::error($ex->getMessage());
@@ -70,14 +91,14 @@ class NotificationRepository implements NotificationRepositoryInterface
     {
         $rs = $this->get_app_push_from_app_id($app_id);
         if (count($rs) > 0) {
-            $isPerNoti = $this->check_permission_notify_from_data($rs, $type);
+            $isPerNoti = $this->check_permission_notify_from_data($rs['userpushs'], $type);
             if ($isPerNoti) {
-                return array("android_push_key" => $rs[0]['android_push_key'],
-                    "apple_push_key" => $rs[0]['apple_push_key'],
-                    "android_push_service_file" => $rs[0]['android_push_service_file'],
-                    "android_push_api_key" => $rs[0]['android_push_api_key'],
-                    "apple_push_cer_file" => $rs[0]['apple_push_cer_file'],
-                    "apple_push_cer_password" => $rs[0]['apple_push_cer_password']);
+                return array("android_push_key" => $rs['user']['android_push_key'],
+                    "apple_push_key" => $rs['user']['apple_push_key'],
+                    "android_push_service_file" => $rs['app']['android_push_service_file'],
+                    "android_push_api_key" => $rs['app']['android_push_api_key'],
+                    "apple_push_cer_file" => $rs['app']['apple_push_cer_file'],
+                    "apple_push_cer_password" => $rs['app']['apple_push_cer_password']);
             }
         }
         return null;
@@ -86,13 +107,14 @@ class NotificationRepository implements NotificationRepositoryInterface
     public function check_permission_notify_from_data($data, $type)
     {
         $isValid = false;
-        if (count($data) > 0 && array_key_exists('userpushs', $data[0]) && !empty($type)) {
-            $data = $data[0]['userpushs'];
-            if (count($data) > 0) {
-                if (array_key_exists($type, $data[0]) && $data[0][$type] == 1)
-                    $isValid = true;
-            }
+//        if (count($data) > 0 && array_key_exists('userpushs', $data[0]) && !empty($type)) {
+//            $data = $data[0]['userpushs'];
+
+        if (count($data) > 0) {
+            if (array_key_exists($type, $data[0]) && $data[0][$type] == 1)
+                $isValid = true;
         }
+//        }
         return $isValid;
     }
 
@@ -111,6 +133,7 @@ class NotificationRepository implements NotificationRepositoryInterface
             if (count($obj) > 0) {
                 if (property_exists($obj, "app_user_id") && property_exists($obj, "type")) {
                     $notify_info = $this->get_info_nofication($obj->app_user_id, $obj->type);
+
                     $data_notify = null;
                     if (count($notify_info) > 0) {
                         switch ($obj->type) {
@@ -154,7 +177,7 @@ class NotificationRepository implements NotificationRepositoryInterface
 
                             if (!empty($notify_info['apple_push_key'] && !empty($notify_info['apple_push_cer_file'] && !empty($notify_info['apple_push_cer_password'])))) {
                                 //notification to apple
-                                $rs_ios = PushNotification::getInstance()->iOS($data_notify, $notify_info['apple_push_key'], $notify_info['apple_push_cer_file'], $notify_info['apple_push_cer_password']);
+                                $rs_ios = PushNotification::getInstance()->iOS($data_notify, $notify_info['apple_push_key'], base_path() . $notify_info['apple_push_cer_file'], $notify_info['apple_push_cer_password']);
                                 $obj->platform = 'ios';
                                 if ($rs_android)
                                     $obj->notify_status = 1;//success

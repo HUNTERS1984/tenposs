@@ -43,4 +43,14 @@ class AppsRepository implements AppsRepositoryInterface
         $app = App::where('id', $app_id)->where('user_id', $user_id)->first();
         return $app->delete();
     }
+
+    public function updateNotifyInfo($app_id, $arrayInfo)
+    {
+       return App::where('id',$app_id)->update($arrayInfo);
+    }
+
+    public function getAppInfoById($app_id)
+    {
+        return App::where('id',$app_id)->get()->toArray();
+    }
 }

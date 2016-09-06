@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddNotificationToAppUsers extends Migration
+class AddNotificationToApps extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,7 @@ class AddNotificationToAppUsers extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('app_users', function($table) {
+        Schema::table('apps', function($table) {
             $table->string('android_push_api_key');
             $table->string('android_push_service_file');
             $table->string('apple_push_cer_file');
@@ -28,8 +27,7 @@ class AddNotificationToAppUsers extends Migration
      */
     public function down()
     {
-        //
-        Schema::table('app_users', function($table) {
+        Schema::table('apps', function($table) {
             $table->dropColumn('android_push_api_key');
             $table->dropColumn('android_push_service_file');
             $table->dropColumn('apple_push_cer_file');

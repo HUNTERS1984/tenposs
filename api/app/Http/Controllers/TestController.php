@@ -25,7 +25,7 @@ class TestController extends Controller
     public function index()
     {
 //        echo '1';die;
-        $value = $this->_testRepository->process_notify("a");
+        $value = $this->_testRepository->get_info_nofication(1,"chat");
         return $value;
         // try
         // {

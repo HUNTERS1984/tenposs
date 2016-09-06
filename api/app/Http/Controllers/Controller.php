@@ -73,8 +73,8 @@ class Controller extends BaseController
             $data = Input::all();
         foreach ($params as $key => $param) {
             if (!is_array($param)) {
-                // if ($param == 'time' && isset($data[$param]) && !$this->validate_time_expire($data[$param]))
-                //     return $this->error_detail(1011, 'Time expire');
+                if ($param == 'time' && isset($data[$param]) && !$this->validate_time_expire($data[$param]))
+                    return $this->error_detail(1011, 'Time expire');
                 if (!isset($data[$param])) {
                     return $this->error_detail(1002, 'not found ' . $param);
                 }
@@ -108,7 +108,6 @@ class Controller extends BaseController
 
     protected function validate_sig($params, $private_key, $data = null)
     {
-        return 0;
         $str_sig = '';
         if (!$data)
             $data = Input::all();
@@ -123,7 +122,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
-//        print_r($str_sig);die;
+        //dd($str_sig);die;
         $str_sig = hash('sha256', $str_sig);
         if (strtolower($str_sig) !== strtolower($sig_param))
             return $this->error_detail(1013, 'Parameter sig is not valid.');
@@ -145,6 +144,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
+        //dd($str_sig);
         return hash('sha256', $str_sig);
     }
 
