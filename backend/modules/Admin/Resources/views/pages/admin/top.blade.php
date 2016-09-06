@@ -1,6 +1,6 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Top')
+@section('title', 'トップ')
 
 @section('content')
 	<div class="content">
@@ -8,10 +8,10 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">Top</h1>
+					<h1 class="title">トップ</h1>
 				</div>
 				<div class="right-topbar">
-					<a href="#" class="btn-me btn-topbar">スタの新</a>
+					<a href="#" class="btn-me btn-topbar">保存</a>
 				</div>
 			</div>
 		</div>
@@ -64,22 +64,22 @@
 						<div class="wrapper-content">
 							<form action="" method="" class="formCommon">
 								<div class="form-group margin-bottom">
-									<label for="">スタの新</label>
+									<label for="">メインジュアル</label>
 									<select name="" class="select1" >
-										<option value="">スタの新 1</option>
-										<option value="">スタの新 2</option>
+										<option value="" >スタの新 1</option>
+										<option value="" >スタの新 2</option>
 									</select>
-									<a href="javascript:avoid()" class="note">+ スタの新スタの新</a>
+									<a href="javascript:avoid()" class="note">+ ファイルを追加する</a>
 								</div>
 								<div class="form-group clearfix">
-									<label for="">スタの新 スタの新</label>
+									<label for="">トップページ表示項目</label>
 									<div class="wrap-table">
 										<div class="wrap-transfer col">
-											<p class="title-form">スタの新</p>
+											<p class="title-form">表示</p>
 											<ul class="nav-left from-nav">
-												<li>TEST 1</li>
-												<li>TEST 2</li>
-												<li>TEST 3</li>
+												@foreach ($app_components as $key => $value)
+												<li>{{$value}}</li>
+												@endforeach
 											</ul>
 										</div>
 										<div class="wrap-btn-control col">
@@ -87,8 +87,11 @@
 											<a href="javascript:moveTo('to-nav','from-nav')" ><span class="glyphicon glyphicon-triangle-left"></span></a>
 										</div>
 										<div class="wrap-transfer col">
-											<p class="title-form">スタの新</p>
+											<p class="title-form">非表示</p>
 											<ul class="nav-right to-nav">
+												@foreach ($available_components as $key => $value)
+												<li>{{$value}}</li>
+												@endforeach
 											</ul>
 										</div>
 									</div>

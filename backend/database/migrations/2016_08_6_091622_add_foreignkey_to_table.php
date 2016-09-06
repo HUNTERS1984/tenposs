@@ -96,7 +96,7 @@ class AddForeignkeyToTable extends Migration
         });
 
         Schema::table('rel_app_settings_sidemenus', function (Blueprint $table) {
-            $table->foreign('sidemenu_id')->references('id')->on('sidemenus');
+            $table->foreign('sidemenu_id')->references('id')->on('components');
             $table->foreign('app_setting_id')->references('id')->on('app_settings');
         });
 

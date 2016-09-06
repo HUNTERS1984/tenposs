@@ -30,7 +30,7 @@ class App extends Model
 
     public function top_components()
     {
-        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')->select(array('id', 'name'));
+        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')->select(array('id', 'top'))->orderBy('order', 'asc')->whereNotNull('top');
     }
 
     public function side_menu()

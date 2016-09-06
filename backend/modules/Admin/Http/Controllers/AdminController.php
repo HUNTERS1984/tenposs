@@ -6,9 +6,14 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Analytics;
+use App\Models\Component;
 
 class AdminController extends Controller
 {
+    public function __construct(Request $request){
+        $this->request = $request;
+    }
+
     public function welcome(){
     	return view('admin::pages.welcome');
     }
@@ -38,7 +43,10 @@ class AdminController extends Controller
     }
 
     public function top(){
-    	return view('admin::pages.admin.top');
+        $all = Component::whereNotNull('top')->pluck('name', 'id');
+        $app_components =  $this->request->app->app_setting()->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
+        $available_components = array_diff($all->toArray(),$app_components);
+    	return view('admin::pages.admin.top', compact('app_components', 'available_components'));
     }
 
     public function getAnalytic(){
