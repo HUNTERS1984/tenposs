@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Repositories\Eloquents\NotificationRepository;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Predis\Connection\ConnectionException;
-use Symfony\Component\Debug\Exception\FatalErrorException;
-use Zend\Http\Client\Adapter\Exception\TimeoutException;
 
 class NotificationMobile extends Command
 {
@@ -43,23 +43,24 @@ class NotificationMobile extends Command
      */
     public function handle()
     {
-        $this->info("send successfully!");
         $isloop = true;
         while ($isloop) {
             try {
                 $isloop = false;
-                $this->info("send start!");
-                Redis::subscribe(['channel'], function ($message) {
-                    Log::info("thís is " . $message . " log " . Carbon::now());
-                    $this->info("thís is " . $message . " log " . Carbon::now());
+                $this->info("Start subscribe");
+                Redis::subscribe([Config::get('api.redis_chanel_notification')], function ($message) {
+                    try {
+                        $process = new NotificationRepository();
+                        $process->process_notify($message);
+                        $this->info("this is " . $message . " log " . Carbon::now());
+                    } catch (\RuntimeException $e) {
+                        Log::error($e->getMessage());
+                    }
                 });
-                $this->info("send end!");
             } catch (\RedisException $e) {
-                $this->info("send end!" . $e->getMessage());
                 $isloop = true;
                 Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $e->getMessage();
             } catch (ConnectionException $ex) {
-                $this->info("send timeout end!" . $ex->getMessage());
                 $isloop = true;
                 Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $ex->getMessage();
             }

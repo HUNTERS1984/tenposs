@@ -43,7 +43,7 @@ Route::group(array('prefix' => 'api/v1'), function()
         Route::get('profile','AppUserController@profile');
         Route::post('update_profile','AppUserController@update_profile');
     });
-
+    Route::post('notification','TopController@notification');
 });
 
 Route::get('user1','UserController@index');
@@ -97,3 +97,11 @@ Route::group(array('prefix' => 'admin',
 
 
 });
+
+//Route::get('/test', function() {
+//    echo '<pre>';
+////    dd(\App\Models\AppUser::with('userpushs')->where('id', 1)->get()->toArray());
+////    echo \App\Models\AppUser::find(1)->userpushs()->get();
+////    $_topRepository = \App\Repositories\Contracts\NotificationRepositoryInterface::class
+////    print_r(\App\Repositories\El)
+//});

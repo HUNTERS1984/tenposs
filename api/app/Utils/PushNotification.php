@@ -14,10 +14,12 @@ class PushNotification
 {
     private $gooole_url;
     private $apple_url;
+    protected static $_instance = null;
+
     public function __construct()
     {
-        $this->gooole_url = Config::get('noti_google_url');
-        $this->apple_url = Config::get('noti_apple_url');
+        $this->gooole_url = Config::get('api.noti_google_url');
+        $this->apple_url = Config::get('api.noti_apple_url');
     }
 
     public static function getInstance()
@@ -33,9 +35,9 @@ class PushNotification
     {
         $message = array(
             'title' => $data['title'],
-            'message' => $data['message'],
-            'subtitle' => $data['subtitle'],
-            'tickerText' => $data['tickertext'],
+            'message' => $data['desc'],
+            'subtitle' => '',
+            'tickerText' => '',
             'msgcnt' => 1,
             'vibrate' => 1
         );
@@ -51,18 +53,16 @@ class PushNotification
         );
 
         $result = $this->useCurl($this->gooole_url, $headers, json_encode($fields));
-        if ($this->isJson($result))
-        {
-            return $result;
-        }
-        else
-        {
-            print_r("fail");
+
+        if ($this->isJson($result)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     // Sends Push notification for iOS users
-    public function iOS($data, $device_token,$path_pem_file,$pass_cer)
+    public function iOS($data, $device_token, $path_pem_file, $pass_cer)
     {
         $ctx = stream_context_create();
         // ck.pem is your certificate file
@@ -92,9 +92,9 @@ class PushNotification
         // Close the connection to the server
         fclose($fp);
         if (!$result)
-            return 'Message not delivered' . PHP_EOL;
+            return false;//'Message not delivered' . PHP_EOL;
         else
-            return 'Message successfully delivered' . PHP_EOL;
+            return true;//'Message successfully delivered' . PHP_EOL;
     }
 
     // Curl
@@ -128,7 +128,8 @@ class PushNotification
         }
     }
 
-    function isJson($string) {
+    function isJson($string)
+    {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
     }

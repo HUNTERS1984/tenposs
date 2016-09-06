@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Repositories\Eloquents\NotificationRepository;
 use App\Utils\RedisUtil;
 use App\Utils\ValidateUtil;
 use Illuminate\Support\Facades\Config;
@@ -10,9 +11,12 @@ use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Models\Photo;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Mail;
 use App\Address;
 use DB;
+use Predis\PredisException;
 use Twitter;
 
 class TopController extends Controller
@@ -220,6 +224,31 @@ class TopController extends Controller
         }
 
         $this->body['data'] = $arr;
+        return $this->output($this->body);
+    }
+
+    public function notification()
+    {
+        $check_items = Config::get('api.items_notification');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+//        $check_items = Config::get('api.sig_notification');
+//        //validate sig
+//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+//        if ($ret_sig)
+//            return $ret_sig;
+        try
+        {
+            Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
+//            $process = new NotificationRepository();
+//            $process->process_notify(json_encode(Input::all()));
+        }
+        catch (PredisException $e)
+        {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
         return $this->output($this->body);
     }
 }

@@ -27,6 +27,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('noti:mobile')->cron('* * * * *');
+//        $schedule->command('noti:mobile')->cron('* * * * *');
     }
 }
