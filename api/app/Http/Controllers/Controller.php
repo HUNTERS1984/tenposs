@@ -100,10 +100,13 @@ class Controller extends BaseController
 
     protected function validate_time_expire($time)
     {
+        return true;
+        /*
         $currentMilliseconds = ValidateUtil::getDateMilisecondGMT0();//round(microtime(true) * 1000);
         if (($currentMilliseconds - $time) < Config::get('api.time_expire') && ($currentMilliseconds - $time) >= 0)
             return true;
         return false;
+        */
     }
 
     protected function validate_sig($params, $private_key, $data = null)
