@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
 
-    {{Html::style(env('ASSETS_BACKEND').'/css/bootstrap.min.css')}}
-    {{Html::style(env('ASSETS_BACKEND').'/css/style.css')}}
+    {{Html::style('assets/backend/css/bootstrap.min.css')}}
+    {{Html::style('assets/backend/css/style.css')}}
 
 	<title>@yield('title','TenPoss')</title>
 

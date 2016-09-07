@@ -7,7 +7,7 @@
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<meta content="noindex, nofollow" name="robots">
-	{{Html::style(env('ASSETS_BACKEND').'/css/bootstrap.min.css')}}
+	{{Html::style('assets/backend/css/bootstrap.min.css')}}
 
 	 <!-- Font Awesome -->
 	{{Html::style('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css')}}
@@ -15,7 +15,7 @@
 	<!-- Ionicons -->
 	{{Html::style('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}
 	<!-- Theme style -->
-	{{Html::style(env('ASSETS_BACKEND').'/css/AdminLTE.min.css')}}
+	{{Html::style(env('assets/backend/css/AdminLTE.min.css')}}
 	<!-- iCheck -->
 	<!--{{Html::style('public/assets/backend/plugins/iCheck/square/blue.css')}}-->
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
