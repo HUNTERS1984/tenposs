@@ -7,28 +7,14 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\User;
 use App\Models\UserSession;
 use App\Models\AppUser;
-use App\Models\App;
-use App\Models\AppSetting;
-use App\Models\Store;
-use App\Models\Menu;
-use App\Models\News;
-use App\Models\Item;
-use App\Models\PhotoCat;
-use App\Models\Photo;
-use App\Models\Reserve;
 use App\Models\UserProfile;
 use App\Models\UserPush;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
-use DB;
-use Mockery\CountValidator\Exception;
+use DB; 
 use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
@@ -211,7 +197,7 @@ class AppUserController extends Controller
             $user = new AppUser();
             $user->email = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
-            $user->app_id = $app->id;
+            $user->app_id = $app['id'];
             $user->save();
 
             $profile = new UserProfile();

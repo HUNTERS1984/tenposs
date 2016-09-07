@@ -23,4 +23,9 @@ class AppUser extends Model {
     {
         return $this->belongsToMany(Coupon::class, 'rel_app_users_coupons', 'app_user_id', 'coupon_id');
     }
+
+    public function userpushs()
+    {
+        return $this->hasMany(UserPush::class, 'app_user_id', 'id');
+    }
 }

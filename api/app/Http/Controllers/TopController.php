@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Repositories\Eloquents\NotificationRepository;
 use App\Utils\RedisUtil;
 use App\Utils\ValidateUtil;
 use Illuminate\Support\Facades\Config;
@@ -10,9 +11,12 @@ use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Models\Photo;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Mail;
 use App\Address;
 use DB;
+use Predis\PredisException;
 use Twitter;
 
 class TopController extends Controller
@@ -58,12 +62,13 @@ class TopController extends Controller
         $this->body['data']['images']['data'] = $images;
         $this->body['data']['items']['top_id'] = 2;
         $this->body['data']['items']['data'] = $items;
-        $this->body['data']['photos']['top_id'] = 3;
-        $this->body['data']['photos']['data'] = $photos;
-        $this->body['data']['news']['top_id'] = 4;
+        $this->body['data']['news']['top_id'] = 3;
         $this->body['data']['news']['data'] = $news;
-        $this->body['data']['contact']['top_id'] = 5;
+        $this->body['data']['contact']['top_id'] = 4;
         $this->body['data']['contact']['data'] = $contacts;
+        $this->body['data']['photos']['top_id'] = 5;
+        $this->body['data']['photos']['data'] = $photos;
+
 
 
         return $this->output($this->body);
@@ -89,6 +94,7 @@ class TopController extends Controller
             $key = sprintf(Config::get('api.cache_app_info'), Input::get('app_id'));
             //get data from redis
             $data = RedisUtil::getInstance()->get_cache($key);
+
             //check data and return data
             if ($data != null) {
                 $this->body = $data;
@@ -190,6 +196,18 @@ class TopController extends Controller
                     $str_sig = $this->get_sig($str_hash, $secret_key, $time);
                     break;
                 }
+                case 'sig_staff_category': {
+                    $str_hash = Config::get('api.sig_staff_category');
+                    $str_param = $this->validate_param_test($str_hash);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
+                    break;
+                }
+                case 'sig_staffs': {
+                    $str_hash = Config::get('api.sig_staffs');
+                    $str_param = $this->validate_param_test($str_hash);
+                    $str_sig = $this->get_sig($str_hash, $secret_key, $time);
+                    break;
+                }
                 default:
                     break;
             }
@@ -220,6 +238,31 @@ class TopController extends Controller
         }
 
         $this->body['data'] = $arr;
+        return $this->output($this->body);
+    }
+
+    public function notification()
+    {
+        $check_items = Config::get('api.items_notification');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+//        $check_items = Config::get('api.sig_notification');
+//        //validate sig
+//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+//        if ($ret_sig)
+//            return $ret_sig;
+        try
+        {
+            Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
+//            $process = new NotificationRepository();
+//            $process->process_notify(json_encode(Input::all()));
+        }
+        catch (PredisException $e)
+        {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
         return $this->output($this->body);
     }
 }
