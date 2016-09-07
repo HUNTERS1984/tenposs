@@ -25,7 +25,7 @@ class AdminServiceProvider extends ServiceProvider
 
 		Lang::addNamespace('admin', realpath(__DIR__.'/../Resources/Lang'));
 		View::addNamespace('admin', base_path('resources/views/vendor/admin'));
-		View::addNamespace('admin', realpath(__DIR__.'/../Resources/Views'));
+		View::addNamespace('admin', realpath(__DIR__.'/../Resources/views'));
 	}
 
 	/**

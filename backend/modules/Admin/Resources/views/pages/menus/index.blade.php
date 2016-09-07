@@ -10,10 +10,15 @@
 				<div class="left-topbar">
 					<h1 class="title">メニュー</h1>
 				</div>
-				<div class="right-topbar">
+				<!-- <div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
+<<<<<<< HEAD
+					<a href="javascript:avoid()" class="btn-me btn-topbar">Add New</a>
+				</div> -->
+=======
 					<a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
 				</div>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 			</div>
 		</div>
 		<!-- END -->
@@ -27,7 +32,11 @@
 							<div class="wrap-content-prview">
 								<div class="header-preview">
 									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+<<<<<<< HEAD
+									<h2 class="title-prview">Menus</h2>
+=======
 									<h2 class="title-prview">Menu</h2>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 								</div>
 								<div class="control-nav-preview">
 									<!-- Slider main container -->
@@ -47,6 +56,15 @@
 								</div>
 								<div class="content-preview clearfix">
 									<div class="row-me fixHeight">
+<<<<<<< HEAD
+										@if($item_thumbs->isEmpty())
+											<p>No data</p>
+										@else
+											@foreach($item_thumbs as $item_thumb)
+												<div class="col-xs-4 padding-me">
+													<div class="each-staff">
+														<img src="{{asset($item_thumb->image_url)}}" class="img-responsive" alt="">
+=======
 										@if($list_item->isEmpty())
 											<p>No data</p>
 										@else
@@ -56,11 +74,11 @@
 														<img src="{{asset($item_thumb->image_url)}}" class="img-responsive img-item-prview" alt="Item Photo">
 														<p style="font-size:11px">{{$item_thumb->title}}</p>
 														<p style="font-size:11px">¥{{$item_thumb->price}}</p>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 													</div>
 												</div>
 											@endforeach
 										@endif
-										
 									</div>
 								</div>
 							</div>
@@ -71,8 +89,13 @@
 							<div class="container-fluid">
 								<div class="row">
 									<div class="col-xs-12">
+<<<<<<< HEAD
+										<a href="#" class="btn-me btn-hong" data-toggle="modal" data-target="#myModal">Create Menu</a>
+										<a href="{{route('admin.menus.create')}}" class="btn-me btn-xanhduongnhat">Create Item</a>
+=======
 										<a href="javascript:avoid()" class="btn-me btn-hong"  data-toggle="modal" data-target="#AddMenu">メニュー追加</a>
 										<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"  data-toggle="modal" data-target="#AddItem">項目追加</a>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 									</div>
 								</div>
 							</div>
@@ -81,6 +104,41 @@
 						<div class="wrapper-content clearfix">
 							<div class="container-fluid">
 								<div class="row">
+<<<<<<< HEAD
+									@if($items->isEmpty())
+										<p>No data</p>
+									@else
+										@foreach($items as $item)
+											<div class="col-xs-4">
+												<div class="each-menu each-common-pr">
+													<a href="{{route('admin.menus.edit',$item->id)}}" class="tooltip-menu" data-tooltip-content="#tooltip_content_{{$item->id}}">
+														<img  src="{{asset($item->image_url)}}" class="img-responsive" alt="">
+														<p class="title-menu" >{{$item->title}}</p>
+														<p class="title-menu">{{number_format($item->price,2)}}</p>
+													</a>
+													{{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
+														{{Form::submit('Delete',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
+													{{Form::close()}}
+												</div>
+												<div class="tooltip_templates">
+												    <span id="tooltip_content_{{$item->id}}">
+												        <h2 class="title-tooltip">Coupon</h2>
+												        <p class="text-tooltip"><b>Coupon name: </b>{{$item->coupons->title}}</p>
+												        <p class="text-tooltip"><b>Start date: </b>{{$item->coupons->start_date}}</p>
+												        <p class="text-tooltip"><b>End date: </b>{{$item->coupons->end_date}}</p>
+												        <p class="text-tooltip"><b>Limit: </b>{{$item->coupons->limit}}</p>
+
+												    </span>
+												</div>
+											</div>
+										@endforeach
+									@endif
+								</div>
+								<div class="row">
+									<div class="text-right">
+										{{$items->links()}}
+									</div>
+=======
 									@if($list_item->isEmpty())
 										<p>No data</p>
 									@else
@@ -98,6 +156,7 @@
 										@endforeach
 										<button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
 									@endif
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 								</div>
 								
 							</div>
@@ -112,11 +171,15 @@
 	<!-- Modal -->
 	<div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
 	  <div class="modal-dialog" role="document">
-	    {{Form::open(array('route'=>'admin.menus.store'))}}
+	    {{Form::open(array('route'=>'admin.menus.storeMenu'))}}
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+<<<<<<< HEAD
+	        <h4 class="modal-title" id="myModalLabel">Add More Menus</h4>
+=======
 	        <h4 class="modal-title" id="AddMenuLabel">メニュー追加</h4>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 	      </div>
 	      <div class="modal-body">
 	      	<div class="form-group">
@@ -197,6 +260,10 @@
 	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
 	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
 
+	<!-- TOOL TIPs -->
+	{{Html::script(env('ASSETS_BACKEND').'/js/tooltip/tooltipster.bundle.min.js')}}
+	{{Html::style(env('ASSETS_BACKEND').'/js/tooltip/tooltipster.bundle.min.css')}}
+
 	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -254,6 +321,11 @@
 	           $('.btn_upload_ipt.create').click();
 	        });
 
+<<<<<<< HEAD
+	        $('.tooltip-menu').tooltipster({
+	        	side: ['right','left','top']
+			});
+=======
 
 			function readURL(input) {
 			    if (input.files && input.files[0]) {
@@ -280,6 +352,7 @@
 		            $('.wrapper-content').append(data);
 		        });
 		    });
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 		})
 	</script>
 @stop

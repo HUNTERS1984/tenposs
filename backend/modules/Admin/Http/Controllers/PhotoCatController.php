@@ -12,19 +12,23 @@ use App\Models\Photo;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
 
+
 define('REQUEST_PHOTO_ITEMS',  3);
 class PhotoCatController extends Controller
 {
     protected $request;
     protected $entity;
+    protected $photo;
 
-    public function __construct(Request $request, PhotoCat $photocat){
+    public function __construct(Request $request, PhotoCat $photocat, Photo $photo){
         $this->request = $request;
         $this->entity = $photocat;
+        $this->photo = $photo;
     }
 
-    public function index(Store $store)
+    public function index()
     {
+
         $stores = $this->request->stores;
         $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
         $list_store = $stores->lists('name','id');
@@ -113,6 +117,7 @@ class PhotoCatController extends Controller
     public function store()
     {
 
+        return redirect()->back();
         $this->entity = new PhotoCat();
         $this->entity->name = $this->request->input('name');
         $this->entity->store_id = $this->request->input('store_id');
