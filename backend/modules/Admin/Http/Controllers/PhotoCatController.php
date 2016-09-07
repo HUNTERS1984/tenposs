@@ -8,22 +8,23 @@ use Illuminate\Http\Request;
 
 use App\Models\Store;
 use App\Models\PhotoCat;
+use App\Models\Photo;
 
 class PhotoCatController extends Controller
 {
     protected $request;
     protected $entity;
+    protected $photo;
 
-    public function __construct(Request $request, PhotoCat $photocat){
+    public function __construct(Request $request, PhotoCat $photocat, Photo $photo){
         $this->request = $request;
         $this->entity = $photocat;
+        $this->photo = $photo;
     }
 
-    public function index(Store $store)
+    public function index()
     {
-        $photocat = $this->entity->all();
-        $list_store = $store->lists('name','id');
-        return view('admin::pages.photocats.index',compact('photocat','list_store'));
+
     }
 
     public function create()
@@ -39,7 +40,7 @@ class PhotoCatController extends Controller
         ];
         $this->entity->create($data);
 
-        return redirect()->route('admin.photo-cate.index');
+        return redirect()->back();
     }
 
     public function show($id)

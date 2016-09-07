@@ -10,10 +10,10 @@
 				<div class="left-topbar">
 					<h1 class="title">Photo Gallery</h1>
 				</div>
-				<div class="right-topbar">
+				<!-- <div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
-					<a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal" data-target="#myModal">Add New</a>
-				</div>
+					<a href="javascript:avoid()" class="btn-me btn-topbar">スタの新着情報</a>
+				</div> -->
 			</div>
 		</div>
 		<!-- END -->
@@ -45,13 +45,13 @@
 								</div>
 								<div class="content-preview clearfix">
 									<div class="row-me fixHeight">
-										@if($photocat->isEmpty())
+										@if($photo->isEmpty())
 											No Data
 										@else
-											@foreach($photocat as $item_thumb)
+											@foreach($photo as $item_thumb)
 											<div class="col-xs-4 padding-me">
 												<div class="each-staff">
-													<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+													<img src="{{asset($item_thumb->image_url)}}" class="img-responsive" alt="Product">
 												</div>
 											</div>
 											@endforeach
@@ -65,27 +65,34 @@
 
 					<div class="col-lg-8">
 						<div class="wrap-btn-content">
-							<a href="#" class="btn-me btn-hong">スタの新着情報</a>
-							<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
+							<a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal" data-target="#myModal">Add new Category</a>
+							<a href="{{route('admin.photo.create')}}" class="btn-me btn-xanhduongnhat">Add new Photo</a>
 						</div>	<!-- end wrap-btn-content-->
 						<div class="wrapper-content clearfix">
 							<div class="container-fluid">
 								<div class="row">
-									@if($photocat->isEmpty())
+									@if($photo->isEmpty())
 										No Data
 									@else
-										@foreach($photocat as $item)
+										@foreach($photo as $item)
 											<div class="col-xs-4">
 												<div class="each-menu each-common-pr">
-													<!-- <img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="Product"> -->
-													<p class="title-menu"><a href="{{route('admin.photo-cate.edit',$item->id)}}">{{$item->name}}</a></p>
-													{{Form::open(array('route'=>['admin.photo-cate.destroy',$item->id],'method'=>'DELETE'))}}
+													<a href="{{route('admin.photo.edit',$item->id)}}"><img src="{{asset($item->image_url)}}" class="img-responsive" alt="Product"></a>
+													{{Form::open(array('route'=>['admin.photo.destroy',$item->id],'method'=>'DELETE'))}}
 														{{Form::submit('Delete',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
 													{{Form::close()}}
 												</div>
 											</div>
 										@endforeach
 									@endif
+								</div>
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="text-right">
+											{{$photo->links()}}
+										</div>
+										
+									</div>
 								</div>
 							</div>
 
@@ -111,7 +118,7 @@
 	      <div class="modal-body">
 	      	<div class="form-group">
 	      		{{Form::label('Select Store')}}
-	      		{{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
+	      		{{Form::select('store_id',$store_list,old('store_id'),['class'=>'form-control'])}}
 
 	      	</div>
 	      	<div class="form-group">

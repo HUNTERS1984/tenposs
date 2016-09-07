@@ -1,15 +1,15 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Edit Item')
+@section('title', 'Photo Gallery')
 
 @section('content')
 <div class="content">
-		{{Form::model($item,array('route'=>array('admin.menus.update',$item->id),'files'=>true,'method'=>'PUT') )}}
+		{{Form::open(array('route'=>'admin.photo.store', 'files'=>true))}}
 		<div class="topbar-content">
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">Edit Item</h1>
+					<h1 class="title">Photo Gallery</h1>
 				</div>
 				<div class="right-topbar">
 					 <!-- <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span> -->
@@ -27,7 +27,7 @@
 							<div class="wrap-content-prview">
 								<div class="header-preview">
 									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
-									<h2 class="title-prview">Items</h2>
+									<h2 class="title-prview">Photography</h2>
 								</div>
 								<div class="control-nav-preview">
 									<!-- Slider main container -->
@@ -46,10 +46,10 @@
 								</div>
 								<div class="content-preview clearfix">
 									<div class="row-me fixHeight">
-										@if($item_thumbs->isEmpty())
+										@if($photo->isEmpty())
 											No Data
 										@else
-											@foreach($item_thumbs as $item_thumb)
+											@foreach($photo as $item_thumb)
 											<div class="col-xs-4 padding-me">
 												<div class="each-staff">
 													<img src="{{asset($item_thumb->image_url)}}" class="img-responsive" alt="Product">
@@ -65,50 +65,25 @@
 					</div>
 
 					<div class="col-lg-8">
+						<div class="wrap-btn-content">
+							<a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal" data-target="#myModal">Add new Category</a>
+							<!-- <a href="{{route('admin.photo.create')}}" class="btn-me btn-xanhduongnhat">Add new Photo</a> -->
+						</div>	<!-- end wrap-btn-content-->
 						<div class="wrapper-content clearfix">
 							<div class="container-fluid">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="form-group">
-											{{Form::hidden('img_bk',$item->image_url)}}
-												<div class="wrap-img-preview">
-													<img src="{{asset($item->image_url)}}" class="img-responsive" alt="">
-												</div>
+											{{Form::select('photo_category_id',[null =>'Select Category..']+$photocate_list,null,array('class'=>'form-control')) }}
+										</div>
+										<div class="form-group">
 											{{Form::file('img')}}
-											@include('admin::errors.listError')
 										</div>
-										<div class="form-group">
-											<label for="coupon_id">Coupon</label>
-											{{Form::select('coupon_id',$list_coupons,$item->coupon_id,array('class'=>'form-control') )}}
-										</div>
-										<div class="form-group">
-											<label for="title">Title</label>
-											{{Form::text('title',$item->title, array('class'=>'form-control') )}}
-										</div>
-										<div class="form-group">
-											<label for="price">Price</label>
-											{{Form::text('price',$item->price, array('class'=>'form-control') )}}
-										</div>
-										<div class="form-group">
-											<label for="description">Description</label>
-											{{Form::textarea('description',$item->description,array('class'=>'form-control'))}}
-										</div>
-										<div class="form-group">
-											<label for="menu">Select menu</label>
-											<div class="container-fluid">
-													<div class="row">
-													@foreach($menus as $menu)
-														<div class="col-xs-4">
-															<p>{{Form::checkbox('menu_id[]',$menu->id,in_array($menu->id,$data_menu)? true : false )}} {{$menu->name}}</p>
-														</div>
-													@endforeach
-											</div>
-												</div>
-										</div>
-										
 									</div>
 								</div>
 							</div>
+
+
 						</div>	<!-- wrap-content-->
 					</div>
 				</div>
@@ -117,6 +92,35 @@
 		</div>
 		{{Form::close()}}
 </div>
+
+<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    {{Form::open(array('route'=>'admin.photo-cate.store'))}}
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Add More Photo Gallery</h4>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="form-group">
+		      		{{Form::label('Select Store')}}
+		      		{{Form::select('store_id',$store_list,old('store_id'),['class'=>'form-control'])}}
+
+		      	</div>
+		      	<div class="form-group">
+		      		{{Form::label('Name')}}
+		      		{{Form::text('name',old('name'),['class'=>'form-control'])}}
+		      	</div>
+		      </div>
+		      <div class="modal-footer">
+		      {{Form::submit('Save',['class'=>'btn btn-primary'])}}
+		      </div>
+		    </div>
+		    {{Form::close()}}
+		  </div>
+		</div>
+
 @stop
 
 @section('script')

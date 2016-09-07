@@ -8,5 +8,5 @@ class PhotoGalleries extends Model
 {
     protected $table = "photo_categories";
 
-    protected $fillable =['name','app_id'];
+    protected $fillable =['name','store_id'];
 }

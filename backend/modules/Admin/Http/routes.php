@@ -18,8 +18,8 @@ Route::group(['prefix' => 'admin'], function() {
     $this->get('logout',['middleware'=>'auth'],'Auth\AuthController@logout');
 
     // Registration Routes...
-    $this->get('register',['middleware'=>'isLogin','as'=>'admin.register','uses'=>'Auth\AuthController@showRegistrationForm'] );
-    $this->post('register',['middleware'=>'isLogin','as'=>'admin.postRegister','uses'=>'Auth\AuthController@register']);
+    $this->get('register',['middleware'=>'IsLogin','as'=>'admin.register','uses'=>'Auth\AuthController@showRegistrationForm'] );
+    $this->post('register',['middleware'=>'IsLogin','as'=>'admin.postRegister','uses'=>'Auth\AuthController@register']);
 
     // Password Reset Routes...
     $this->get('password/reset/{token?}',['middleware'=>'auth','as'=>'admin.resetPassword','uses'=>'Auth\PasswordController@showResetForm']);
@@ -31,9 +31,12 @@ Route::group(['prefix' => 'admin'], function() {
         // NEWS
         Route::resource('news','NewsController');
         // MENUS
+        Route::post('menus/storeMenu',['as'=>'admin.menus.storeMenu','uses'=>'MenusController@storeMenu']);
         Route::resource('menus','MenusController');
         // PHOTO CATS
         Route::resource('photo-cate','PhotoCatController');
+        // PHOTO
+        Route::resource('photo','PhotoController');
         // STAFF
         Route::resource('staff','StaffController');
     });

@@ -40,10 +40,10 @@
 		                            </div>
 								</div>
 								<div class="content-preview">
-									@if($all_photocate->isEmpty())
+									@if($photo_all->isEmpty())
 										No data
 									@else
-										@foreach($all_photocate as $item_thumb)
+										@foreach($photo_all as $item_thumb)
 											<div class="each-coupon clearfix">
 												<!-- <img src="{{asset($item_thumb->image_url)}}" class="img-responsive img-prview"> -->
 												<div class="inner-preview">
@@ -57,14 +57,17 @@
 						</div>
 					</div>
 					<div class="col-lg-8">
-						
 						<div class="wrapper-content">
-							{{Form::model($photocate,array('route'=>array('admin.photo-cate.update',$photocate->id),'method'=>'PUT','files'=>true))}}
+							{{Form::model($photo,array('route'=>array('admin.photo.update',$photo->id),'method'=>'PUT','files'=>true))}}
 								<div class="form-group">
-									{{Form::select('store_id',$list_store,$photocate->store_id,array('class'=>'form-control'))}}
+									{{Form::select('photo_category_id',array(''=>'Select Photo Category...')+$photocate_list,$photo->photo_category_id,array('class'=>'form-control'))}}
 								</div>
 								<div class="form-group">
-									{{Form::text('name',old('name'),array('class'=>'form-control', 'placeholder'=>'Type the title'))}}
+									{{Form::hidden('img_bk',$photo->image_url)}}
+									<div class="wrap-img-preview">
+										<img src="{{asset($photo->image_url)}}" class="img-responsive" alt="">
+									</div>
+									{{Form::file('img')}}
 								</div>
 								<div class="form-group">
 									{{Form::submit('Save changes',array('class'=>'btn btn-primary'))}}
@@ -78,7 +81,7 @@
 		</div>
 		<!-- END -->
 
-		
+
 	</div>	<!-- end main-content-->
 @stop
 

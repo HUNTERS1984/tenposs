@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model {
 
-    protected $table = 'items';
-    protected $fillable = ['price','image_url','description', 'title'];
+    public $table = 'items';
+    protected $fillable = ['price','image_url','description', 'title','coupon_id'];
 
     public function menus()
     {
@@ -22,5 +22,9 @@ class Item extends Model {
     public function store()
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function coupons(){
+        return $this->belongsTo(Coupon::class,'coupon_id');
     }
 }

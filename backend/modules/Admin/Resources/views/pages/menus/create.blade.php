@@ -1,15 +1,15 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Edit Item')
+@section('title', 'Add Item')
 
 @section('content')
 <div class="content">
-		{{Form::model($item,array('route'=>array('admin.menus.update',$item->id),'files'=>true,'method'=>'PUT') )}}
+		{{Form::open(array('route'=>'admin.menus.store', 'files'=>true))}}
 		<div class="topbar-content">
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">Edit Item</h1>
+					<h1 class="title">Add Item</h1>
 				</div>
 				<div class="right-topbar">
 					 <!-- <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span> -->
@@ -70,28 +70,20 @@
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="form-group">
-											{{Form::hidden('img_bk',$item->image_url)}}
-												<div class="wrap-img-preview">
-													<img src="{{asset($item->image_url)}}" class="img-responsive" alt="">
-												</div>
-											{{Form::file('img')}}
-											@include('admin::errors.listError')
-										</div>
-										<div class="form-group">
 											<label for="coupon_id">Coupon</label>
-											{{Form::select('coupon_id',$list_coupons,$item->coupon_id,array('class'=>'form-control') )}}
+											{{Form::select('coupon_id',$list_coupons,old('coupon_id'),array('class'=>'form-control') )}}
 										</div>
 										<div class="form-group">
 											<label for="title">Title</label>
-											{{Form::text('title',$item->title, array('class'=>'form-control') )}}
+											{{Form::text('title',old('title'), array('class'=>'form-control') )}}
 										</div>
 										<div class="form-group">
 											<label for="price">Price</label>
-											{{Form::text('price',$item->price, array('class'=>'form-control') )}}
+											{{Form::text('price',old('price'), array('class'=>'form-control') )}}
 										</div>
 										<div class="form-group">
 											<label for="description">Description</label>
-											{{Form::textarea('description',$item->description,array('class'=>'form-control'))}}
+											{{Form::textarea('description',old('description'),array('class'=>'form-control'))}}
 										</div>
 										<div class="form-group">
 											<label for="menu">Select menu</label>
@@ -99,13 +91,15 @@
 													<div class="row">
 													@foreach($menus as $menu)
 														<div class="col-xs-4">
-															<p>{{Form::checkbox('menu_id[]',$menu->id,in_array($menu->id,$data_menu)? true : false )}} {{$menu->name}}</p>
+															<p>{{Form::checkbox('menu_id[]',$menu->id)}} {{$menu->name}}</p>
 														</div>
 													@endforeach
 											</div>
 												</div>
 										</div>
-										
+										<div class="form-group">
+											{{Form::file('img')}}
+										</div>
 									</div>
 								</div>
 							</div>

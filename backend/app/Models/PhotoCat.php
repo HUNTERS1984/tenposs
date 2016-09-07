@@ -10,4 +10,8 @@ class PhotoCat extends Model {
     protected $fillable = ['id', 'name','store_id'];
 
     public $timestamps = false;
+
+     public function photo(){
+    	 return $this->hasMany(Photo::class,'photo_category_id');
+    }
 }

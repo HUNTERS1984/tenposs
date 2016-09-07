@@ -53,7 +53,7 @@
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">{{$item_thumb->title}}</p>
 													<!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
-													<p class="text-inner" style="font-size:9px;">{{$item_thumb->description}}</p>
+													<p class="text-inner" style="font-size:9px;">{{Str::words($item_thumb->description,20)}}</p>
 												</div>
 											</div>
 										@endforeach
@@ -79,7 +79,7 @@
 										<div class="main-title">
 											<h2><a href="{{route('admin.news.edit',$item->id)}}">{{$item->title}}</a></h2>
 											{{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
-												<input type="submit" class="btn-me btn-each-item" value="Delete">
+												<input type="submit" class="btn-me btn-each-item btn-delete" value="Delete">
 											{{Form::close()}}
 										</div>
 										<div class="container-content">

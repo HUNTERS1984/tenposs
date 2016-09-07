@@ -10,10 +10,10 @@
 				<div class="left-topbar">
 					<h1 class="title">Menus</h1>
 				</div>
-				<div class="right-topbar">
+				<!-- <div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
-					<a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal" data-target="#myModal">Add New</a>
-				</div>
+					<a href="javascript:avoid()" class="btn-me btn-topbar">Add New</a>
+				</div> -->
 			</div>
 		</div>
 		<!-- END -->
@@ -26,7 +26,7 @@
 							<div class="wrap-content-prview">
 								<div class="header-preview">
 									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
-									<h2 class="title-prview">Staff</h2>
+									<h2 class="title-prview">Menus</h2>
 								</div>
 								<div class="control-nav-preview">
 									<!-- Slider main container -->
@@ -45,19 +45,17 @@
 								</div>
 								<div class="content-preview clearfix">
 									<div class="row-me fixHeight">
-										@if($menus->isEmpty())
+										@if($item_thumbs->isEmpty())
 											<p>No data</p>
 										@else
-											@foreach($menus as $item_thumb)
+											@foreach($item_thumbs as $item_thumb)
 												<div class="col-xs-4 padding-me">
 													<div class="each-staff">
-														<!-- <img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt=""> -->
-														<p>{{$item_thumb->name}}</p>
+														<img src="{{asset($item_thumb->image_url)}}" class="img-responsive" alt="">
 													</div>
 												</div>
 											@endforeach
 										@endif
-										
 									</div>
 								</div>
 							</div>
@@ -68,8 +66,8 @@
 							<div class="container-fluid">
 								<div class="row">
 									<div class="col-xs-12">
-										<a href="#" class="btn-me btn-hong">スタの新着情報</a>
-										<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
+										<a href="#" class="btn-me btn-hong" data-toggle="modal" data-target="#myModal">Create Menu</a>
+										<a href="{{route('admin.menus.create')}}" class="btn-me btn-xanhduongnhat">Create Item</a>
 									</div>
 								</div>
 							</div>
@@ -78,21 +76,39 @@
 						<div class="wrapper-content clearfix">
 							<div class="container-fluid">
 								<div class="row">
-									@if($menus->isEmpty())
-											<p>No data</p>
-										@else
-											@foreach($menus as $item)
-												<div class="col-xs-4">
-													<div class="each-menu each-common-pr">
-														<p class="title-menu"><a href="{{route('admin.menus.edit',$item->id)}}">{{$item->name}}</a></p>
-														{{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
-															{{Form::submit('Delete',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
-														{{Form::close()}}
-													</div>
+									@if($items->isEmpty())
+										<p>No data</p>
+									@else
+										@foreach($items as $item)
+											<div class="col-xs-4">
+												<div class="each-menu each-common-pr">
+													<a href="{{route('admin.menus.edit',$item->id)}}" class="tooltip-menu" data-tooltip-content="#tooltip_content_{{$item->id}}">
+														<img  src="{{asset($item->image_url)}}" class="img-responsive" alt="">
+														<p class="title-menu" >{{$item->title}}</p>
+														<p class="title-menu">{{number_format($item->price,2)}}</p>
+													</a>
+													{{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
+														{{Form::submit('Delete',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
+													{{Form::close()}}
 												</div>
-											@endforeach
-										@endif
-									
+												<div class="tooltip_templates">
+												    <span id="tooltip_content_{{$item->id}}">
+												        <h2 class="title-tooltip">Coupon</h2>
+												        <p class="text-tooltip"><b>Coupon name: </b>{{$item->coupons->title}}</p>
+												        <p class="text-tooltip"><b>Start date: </b>{{$item->coupons->start_date}}</p>
+												        <p class="text-tooltip"><b>End date: </b>{{$item->coupons->end_date}}</p>
+												        <p class="text-tooltip"><b>Limit: </b>{{$item->coupons->limit}}</p>
+
+												    </span>
+												</div>
+											</div>
+										@endforeach
+									@endif
+								</div>
+								<div class="row">
+									<div class="text-right">
+										{{$items->links()}}
+									</div>
 								</div>
 							</div>
 						</div>	<!-- wrap-content-->
@@ -106,11 +122,11 @@
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
-	    {{Form::open(array('route'=>'admin.menus.store'))}}
+	    {{Form::open(array('route'=>'admin.menus.storeMenu'))}}
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Add More Menu</h4>
+	        <h4 class="modal-title" id="myModalLabel">Add More Menus</h4>
 	      </div>
 	      <div class="modal-body">
 	      	<div class="form-group">
@@ -142,6 +158,10 @@
 	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
 	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
 
+	<!-- TOOL TIPs -->
+	{{Html::script(env('ASSETS_BACKEND').'/js/tooltip/tooltipster.bundle.min.js')}}
+	{{Html::style(env('ASSETS_BACKEND').'/js/tooltip/tooltipster.bundle.min.css')}}
+
 	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -154,6 +174,10 @@
 	            nextButton: '.control-nav-preview .swiper-button-next',
 	            prevButton: '.control-nav-preview .swiper-button-prev'
 	        });
+
+	        $('.tooltip-menu').tooltipster({
+	        	side: ['right','left','top']
+			});
 		})
 	</script>
 @stop

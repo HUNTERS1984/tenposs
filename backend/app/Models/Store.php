@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {	
     protected $table = 'stores';
-    protected $fillable = ['id', 'name']; 
+    protected $fillable = ['id', 'name','app_id']; 
     public function app(){
     	 return $this->belongsTo(App::class);
     }
