@@ -9,17 +9,14 @@ use Illuminate\Http\Request;
 use App\Models\Store;
 use App\Models\Menus;
 use App\Models\Item;
-<<<<<<< HEAD
 use App\Models\Coupon;
 
 use Modules\Admin\Http\Requests\ImageRequest;
-=======
 use Validator;
 use Session;
-use Modules\Admin\Http\Requests\ImageRequest;
+
 
 define('REQUEST_MENU_ITEMS',  3);
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 
 class MenusController extends Controller
 {
@@ -38,12 +35,10 @@ class MenusController extends Controller
     }
     public function index()
     {
-<<<<<<< HEAD
         $item_thumbs = $this->item->select('image_url')->orderBy('id','DESC')->take(8)->get();
         $items = $this->item->with(['coupons'=>function($query){$query->select('id','title','start_date','end_date');}])->orderBy('id','DESC')->paginate(12);
         $list_store = $this->store->lists('name','id')->toArray();
         return view('admin::pages.menus.index',compact('item_thumbs','list_store','items'));
-=======
         $stores = $this->request->stores;
         $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
         $list_store = $stores->lists('name','id');
@@ -162,7 +157,6 @@ class MenusController extends Controller
 
         $returnHTML = view('admin::pages.menus.element_item_preview')->with(compact('list_item'))->render();
         return $returnHTML;
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
     }
 
     public function create()
@@ -176,7 +170,6 @@ class MenusController extends Controller
 
     public function store(ImageRequest $imgrequest)
     {
-<<<<<<< HEAD
         if($imgrequest->hasFile('img')){
             $file = $imgrequest->file('img');
             $destinationPath = env('UPLOAD_PATH');
@@ -215,7 +208,6 @@ class MenusController extends Controller
         $all = $this->request->all();
         $this->menu->create($all);
         return redirect()->back();
-=======
         $rules = [
             'name' => 'required|Max:255',
         ];
@@ -288,7 +280,6 @@ class MenusController extends Controller
             Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add item fail') );
             return back();
         }
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
     }
 
     public function show($id)
@@ -298,7 +289,6 @@ class MenusController extends Controller
 
     public function edit($id)
     {
-<<<<<<< HEAD
         $item_thumbs = $this->item->select('image_url')->orderBy('id','DESC')->take(8)->get();
         $menus = $this->menu->select('name','id')->get();
         $list_coupons = $this->coupon->lists('title','id')->toArray();
@@ -311,48 +301,7 @@ class MenusController extends Controller
         return view('admin::pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu'));
     }
 
-    public function update(ImageRequest $imgrequest,$id)
-    {
-        if($imgrequest->hasFile('img')){
-            $file = $imgrequest->file('img');
-            $destinationPath = env('UPLOAD_PATH');
-            $filename = time().'.'.$file->getClientOriginalName();
-
-            $size = getimagesize($file);
-            if($size[0] > 300){
-                \Image::make($file->getRealPath())->resize(300,null,function($constraint){$constraint->aspectRatio();})->save($destinationPath.'/'.$filename);
-            }else{
-                $file->move($destinationPath,$filename);
-            }
-            $img_url = $destinationPath.'/'.$filename;
-        }else{
-            $img_url = $this->request->input('img_bk');
-        }
-
-        $item = $this->item->find($id);
-        $item->title =$this->request->input('title');
-        $item->price =$this->request->input('price');
-        $item->description =$this->request->input('description');
-        $item->image_url =$img_url;
-        $item->coupon_id =$this->request->input('coupon_id');
-
-        $item->save();
-
-        if($this->request->has('menu_id')){
-            $menu = $this->request->input('menu_id');
-            $item->menus()->sync($menu);
-            return redirect()->route('admin.menus.index');
-        }else{
-            return redirect()->route('admin.menus.index');
-=======
-        $stores = $this->request->stores;
-        $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
-        $list_store = $stores->lists('name','id');
-
-        $item = Item::find($id);
-
-        return view('admin::pages.menus.edit',compact('menus','list_store','item'));
-    }
+   
 
     public function update(ImageRequest $imgrequest, $id)
     {
@@ -405,7 +354,6 @@ class MenusController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update item fail') );
             return back();
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
         }
     }
 

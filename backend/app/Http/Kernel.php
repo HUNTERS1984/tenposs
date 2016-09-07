@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\ForceHttps::class,
     ];
 
     /**
@@ -29,6 +30,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
+            
         ],
 
         'api' => [
@@ -51,6 +53,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'IsLogin' => \Modules\Admin\Http\Middleware\IsLoginMiddleware::class,
         'IsAccess' => \Modules\Admin\Http\Middleware\IsAccessMiddleware::class,
-        'isAdmin'=> \Modules\Admin\Http\Middleware\IsAdminMiddleware::class
+        'isAdmin'=> \Modules\Admin\Http\Middleware\IsAdminMiddleware::class,
+        //'ForceHttps'=> \App\Http\Middleware\ForceHttps::class
     ];
 }
