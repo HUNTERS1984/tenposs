@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
+Route::any('/', function () {
     return view('welcome');
 });
 
@@ -26,6 +26,8 @@ Route::group(array('prefix' => 'api/v1'), function()
     Route::get('appinfo','TopController@appinfo');
     Route::get('menu','ItemController@menu');
     Route::get('items','ItemController@items');
+    Route::get('staff_categories','StaffController@staff_categories');
+    Route::get('staffs','StaffController@staffs');
     Route::get('news','NewsController@index');
     Route::get('photo_cat','PhotoController@photo_cat');
     Route::get('photo','PhotoController@index');
@@ -43,11 +45,29 @@ Route::group(array('prefix' => 'api/v1'), function()
         Route::get('profile','AppUserController@profile');
         Route::post('update_profile','AppUserController@update_profile');
     });
-
+    Route::post('notification','TopController@notification');
 });
 
 Route::get('user1','UserController@index');
 Route::get('test','TestController@index');
+
+
+/*
+ * Chat routing clients
+ */
+
+Route::group(array('prefix' => 'chat'), function() {
+    
+    Route::get('app/{app_id}',array('as'=>'admin.clients.chat','uses'=> 'ChatLineController@chatAdmin'));
+    
+    Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
+    Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
+    Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
+    Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
+    Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
+
+    
+});
 
 /*
  * Admin routing
@@ -70,10 +90,22 @@ Route::group(array('prefix' => 'admin',
 
     Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
     Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
+    // Clients
     Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
     Route::post('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.store','uses' => 'Admin\AppsController@store' ));
     Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.edit','uses' => 'Admin\AppsController@edit' ));
+    Route::post('/clients/{user_id}/apps/{app_id}/edit', array('as'=>'admin.clients.apps.update','uses' => 'Admin\AppsController@update' ));
     Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as'=>'admin.clients.apps.delete','uses' => 'Admin\AppsController@delete' ));
 
+    Route::get('/clients/{user_id}/apps/{app_id}/setting', array('as'=>'admin.clients.apps.setting','uses' => 'Admin\AppsController@setting' ));
+    Route::post('/clients/{user_id}/apps/{app_id}/upload', array('as'=>'admin.clients.apps.upload','uses' => 'Admin\AppsController@upload' ));
 
 });
+
+//Route::get('/test', function() {
+//    echo '<pre>';
+//    dd(\App\Models\AppUser::with('userpushs')->where('id', 1)->get()->toArray());
+////    echo \App\Models\AppUser::find(1)->userpushs()->get();
+////    $_topRepository = \App\Repositories\Contracts\NotificationRepositoryInterface::class
+////    print_r(\App\Repositories\El)
+//});

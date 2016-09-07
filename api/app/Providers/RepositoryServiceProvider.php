@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Providers;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
+use App\Repositories\Eloquents\NotificationRepository;
+use App\Repositories\Redis\RedisNewsRepository;
 use Illuminate\Support\ServiceProvider;
 
 use App\Repositories\Contracts\ItemsRepositoryInterface;
@@ -58,6 +61,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->singleton(ItemsRepositoryInterface::class, ItemsRepository::class);
         $this->app->singleton(NewsRepositoryInterface::class, NewsRepository::class);
         $this->app->singleton(ReservesRepositoryInterface::class, ReservesRepository::class);
+        $this->app->singleton(NewsRepositoryInterface::class, RedisNewsRepository::class);
+        $this->app->singleton(NotificationRepositoryInterface::class, NotificationRepository::class);
     }
 
     /**
@@ -76,6 +81,7 @@ class RepositoryServiceProvider extends ServiceProvider
             ItemsRepositoryInterface::class,
             NewsRepositoryInterface::class,
             ReservesRepositoryInterface::class,
+            NotificationRepositoryInterface::class,
         ];
     }
 }

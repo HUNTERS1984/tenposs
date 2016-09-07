@@ -7,9 +7,14 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "linecorp/line-bot-sdk": "^0.1.0",
         "thujohn/twitter": "^2.2",
-        "spatie/laravel-permission": "^1.4"
+        "spatie/laravel-permission": "^1.4",
+        "predis/predis": "^1.1",
+        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "vinkla/instagram": "^4.0",
+        "linecorp/line-bot-sdk": "^0.0.1",
+        "cosenary/instagram": "^2.3",
+        "anlutro/curl": "^1.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

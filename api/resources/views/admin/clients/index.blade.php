@@ -33,6 +33,7 @@
 					<th>address</th>
 					<th>tel</th>
 					<th>apps</th>
+					<th>Group</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -51,7 +52,7 @@
 					<td>{{ $user->tel }}</td>
 					<td>
 					<a href="{{ route('admin.clients.apps',['id' => $user->id]) }}">View apps ({{ $user->apps()->count() }})</a>
-					
+
 					</td>
 				</tr>
 				@endforeach

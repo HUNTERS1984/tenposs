@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 
+use App\Utils\ValidateUtil;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
@@ -98,10 +100,13 @@ class Controller extends BaseController
 
     protected function validate_time_expire($time)
     {
-        $currentMilliseconds = round(microtime(true) * 1000);
-        if (($currentMilliseconds - $time) < 5000000 && ($currentMilliseconds - $time) >= 0)
+        return true;
+        /*
+        $currentMilliseconds = ValidateUtil::getDateMilisecondGMT0();//round(microtime(true) * 1000);
+        if (($currentMilliseconds - $time) < Config::get('api.time_expire') && ($currentMilliseconds - $time) >= 0)
             return true;
         return false;
+        */
     }
 
     protected function validate_sig($params, $private_key, $data = null)
@@ -120,7 +125,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
-//        print_r($str_sig);die;
+        //dd($str_sig);die;
         $str_sig = hash('sha256', $str_sig);
         if (strtolower($str_sig) !== strtolower($sig_param))
             return $this->error_detail(1013, 'Parameter sig is not valid.');
@@ -132,7 +137,6 @@ class Controller extends BaseController
         $str_sig = '';
         if (!$data)
             $data = Input::all();
-        print_r($params);
         foreach ($params as $key => $param) {
             if (!is_array($param)) {
                 if ($param == 'time')
@@ -143,6 +147,7 @@ class Controller extends BaseController
             }
         }
         $str_sig .= $private_key;
+        //dd($str_sig);
         return hash('sha256', $str_sig);
     }
 

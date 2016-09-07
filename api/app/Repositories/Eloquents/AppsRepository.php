@@ -22,6 +22,10 @@ class AppsRepository implements AppsRepositoryInterface
         return $user->apps()->save($app);
     }
 
+    public function updateApp($user,$app_id, $arrayApp)
+    {
+        return $user->apps()->findOrFail($app_id)->update($arrayApp);
+    }
 
     public function fetchAppsByUser(AppsFilters $filters, $user_id, $limit = 20)
     {
@@ -30,9 +34,23 @@ class AppsRepository implements AppsRepositoryInterface
         return $app;
     }
 
+    public function show($user, $app_id){
+        return $user->apps()->findOrFail($app_id);
+    }
+
     public function remove($user_id, $app_id)
     {
         $app = App::where('id', $app_id)->where('user_id', $user_id)->first();
         return $app->delete();
+    }
+
+    public function updateNotifyInfo($app_id, $arrayInfo)
+    {
+       return App::where('id',$app_id)->update($arrayInfo);
+    }
+
+    public function getAppInfoById($app_id)
+    {
+        return App::where('id',$app_id)->get()->toArray();
     }
 }

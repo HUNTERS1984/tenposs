@@ -8,17 +8,23 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
-					<h1 class="title">News</h1>
+					<h1 class="title">ニュース</h1>
 				</div>
 				<div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
-					<a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal" data-target="#myModal">Add New</a>
+					<a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal" data-target="#myModal">保存</a>
 				</div>
 			</div>
 		</div>
 		<!-- END -->
 
 		<div class="main-content news">
+			@if (Session::has('success'))
+			    <div class="alert alert-info">{{ Session::get( 'success' ) }}</div>
+			@endif
+			@if (Session::has('error'))
+			    <div class="alert alert-danger">{{ Session::get( 'error' ) }}</div>
+			@endif
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-lg-4">
@@ -28,21 +34,17 @@
 									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">NEWS</h2>
 								</div>
-								<div class="control-nav-preview">
-									<!-- Slider main container -->
+<!-- 								<div class="control-nav-preview">
 		                            <div class="swiper-container">
-		                                <!-- Additional required wrapper -->
 		                                <div class="swiper-wrapper">
-		                                    <!-- Slides -->
 		                                    <div class="swiper-slide">Spring</div>
 		                                    <div class="swiper-slide">Summer</div>
 		                                </div>
 
-		                                <!-- If we need navigation buttons -->
 		                                <div class="swiper-button-prev"></div>
 		                                <div class="swiper-button-next"></div>
 		                            </div>
-								</div>
+								</div> -->
 								<div class="content-preview">
 									@if(empty($news))
 										No data
@@ -64,8 +66,7 @@
 					</div>
 					<div class="col-lg-8">
 						<div class="wrap-btn-content">
-							<a href="#" class="btn-me btn-hong">スタの新着情報</a>
-							<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
+							<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal" data-target="#myModal">追加</a>
 						</div>	<!-- end wrap-btn-content-->
 						<div class="wrapper-content">
 							<div class="grip">
@@ -79,7 +80,11 @@
 										<div class="main-title">
 											<h2><a href="{{route('admin.news.edit',$item->id)}}">{{$item->title}}</a></h2>
 											{{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
+<<<<<<< HEAD
 												<input type="submit" class="btn-me btn-each-item btn-delete" value="Delete">
+=======
+												<input type="submit" class="btn-me btn-each-item" value="削除"  onclick="return confirm('Are you sure you want to delete this item?');">
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 											{{Form::close()}}
 										</div>
 										<div class="container-content">
@@ -88,9 +93,13 @@
 									</div>
 									
 								</div>
-
+								
+				
 								@endforeach
 							@endif
+							</div>
+							<div class="clearfix">
+								{{ $news->render() }}
 							</div>
 						</div>	<!-- wrap-content-->
 					</div>
@@ -108,31 +117,33 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Add More News</h4>
+	        <h4 class="modal-title" id="myModalLabel">ニュース追加</h4>
 	      </div>
 	      <div class="modal-body">
-	      	<div class="form-group">
-	      		{{Form::label('Select Store')}}
-	      		{{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
+	      	<div class="col-md-4" align="left">
+                <img class="new_img" src="{{url('/')}}/assets/backend/images/wall.jpg" width="100%">
+                <button class="btn_upload_img create" type="button"><i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード</button>
+                {!! Form::file('image_create',['class'=>'btn_upload_ipt create', 'hidden', 'type' => 'button', 'id' => 'image_create']) !!}
+            </div>
+            <div class="col-md-8" align="left">
+		      	<div class="form-group">
+		      		{{Form::label('store','ストア')}}
+		      		{{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
 
-	      	</div>
-	      	<div class="form-group">
-	      		{{Form::label('Title')}}
-	      		{{Form::text('title',old('title'),['class'=>'form-control'])}}
+		      	</div>
+		      	<div class="form-group">
+		      		{{Form::label('title','タイトル')}}
+		      		{{Form::text('title',old('title'),['class'=>'form-control'])}}
 
-	      	</div>
-	      	<div class="form-group">
-	      		{{Form::label('Description')}}
-	      		{{Form::text('description',old('description'),['class'=>'form-control'])}}
-	      	</div>
-	      	<div class="form-group">
-	      		{{Form::label('Upload Images')}}
-	      		{{Form::file('img')}}
-	      	</div>
-
+		      	</div>
+		      	<div class="form-group">
+		      		{{Form::label('description','説明')}}
+		      		{{Form::textarea('description',old('description'),['class'=>'form-control'])}}
+		      	</div>
+		    </div>
 	      </div>
 	      <div class="modal-footer">
-	      {{Form::submit('Save',['class'=>'btn btn-primary'])}}
+	      {{Form::submit('保存',['class'=>'btn btn-primary'])}}
 	      </div>
 	    </div>
 	    {{Form::close()}}
@@ -165,7 +176,25 @@
 	            prevButton: '.control-nav-preview .swiper-button-prev'
 	        });
 
-	        
+	        $('.btn_upload_img.create').click(function(){
+	           $('.btn_upload_ipt.create').click();
+	        });
+
+	        function readURL(input) {
+			    if (input.files && input.files[0]) {
+			        var reader = new FileReader();
+
+			        reader.onload = function (e) {
+			            $('.new_img').attr('src', e.target.result);
+			        }
+
+			        reader.readAsDataURL(input.files[0]);
+			    }
+			}
+
+			$("#image_create").change(function(){
+			    readURL(this);
+			});
 		})
 	</script>
 @stop

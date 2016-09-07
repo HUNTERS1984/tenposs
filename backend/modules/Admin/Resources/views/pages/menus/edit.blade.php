@@ -1,6 +1,10 @@
 @extends('admin::layouts.default')
 
+<<<<<<< HEAD
 @section('title', 'Edit Item')
+=======
+@section('title', 'メニュー')
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 
 @section('content')
 <div class="content">
@@ -9,16 +13,21 @@
 			<div class="wrap-topbar clearfix">
 				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
 				<div class="left-topbar">
+<<<<<<< HEAD
 					<h1 class="title">Edit Item</h1>
 				</div>
 				<div class="right-topbar">
 					 <!-- <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span> -->
 					<!-- <a href="javascript:avoid()" class="btn-me btn-topbar">スタの新着情報</a> -->
 					<input type="submit" class="btn-me btn-topbar" value="Save">
+=======
+					<h1 class="title">メニュー</h1>
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 				</div>
 			</div>
 		</div>
 
+<<<<<<< HEAD
 		<div class="main-content photography">
 			<div class="container-fluid">
 				<div class="row">
@@ -107,6 +116,47 @@
 										</div>
 										
 									</div>
+=======
+		<div class="main-content news">
+			@include('admin::layouts.message')
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-8">
+						
+						<div class="wrapper-content">
+							{{Form::model($item,array('route'=>array('admin.menus.update',$item->id),'method'=>'PUT','files'=>true))}}
+								<div class="form-group">
+									<img class="edit_img" src="{{asset($item->image_url)}}" width="100%">
+									<button class="btn_upload_img edit " type="button"><i class="fa fa-picture-o" aria-hidden="true"></i>画像アップロード</button>
+                					{!! Form::file('image_edit',['class'=>'btn_upload_ipt edit', 'hidden', 'type' => 'button', 'id' => 'image_edit']) !!}
+								</div>
+								<div class="form-group">
+						      		{{Form::label('menu','メニュー')}}
+						      		{{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('title','タイトル')}}
+						      		{{Form::text('title',old('title'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('description','説明')}}
+						      		{{Form::textarea('description',old('description'),['class'=>'form-control'])}}
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('price','価格')}}
+						      		{{Form::text('price',old('price'),['class'=>'form-control'])}}
+
+						      	</div>
+						      	<div class="form-group">
+						      		{{Form::label('item_link','URL')}}
+						      		{{Form::text('item_link',old('item_link'),['class'=>'form-control'])}}
+
+						      	</div>
+								<div class="form-group">
+									{{Form::submit('保存',array('class'=>'btn btn-primary'))}}
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 								</div>
 							</div>
 						</div>	<!-- wrap-content-->
@@ -141,6 +191,26 @@
 	            nextButton: '.control-nav-preview .swiper-button-next',
 	            prevButton: '.control-nav-preview .swiper-button-prev'
 	        });
+
+	        $('.btn_upload_img.edit').click(function(){
+	           $('.btn_upload_ipt.edit').click();
+	        });
+
+			function readURL(input) {
+			    if (input.files && input.files[0]) {
+			        var reader = new FileReader();
+
+			        reader.onload = function (e) {
+			            $('.edit_img').attr('src', e.target.result);
+			        }
+
+			        reader.readAsDataURL(input.files[0]);
+			    }
+			}
+
+			$("#image_edit").change(function(){
+			    readURL(this);
+			});
 		})
 	</script>
 @stop

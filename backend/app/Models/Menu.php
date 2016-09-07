@@ -9,9 +9,13 @@ class Menu extends Model
 	// protected $dates = ['deleted_at'];
     protected $table = 'menus';
     protected $fillable = ['id', 'name'];
-
+    public $timestamps = false;
     public function items()
     {
         return $this->belongsToMany(Item::class, 'rel_menus_items', 'menu_id', 'item_id');
+    }
+
+    public function store(){
+    	 return $this->belongsTo(Store::class);
     }
 }

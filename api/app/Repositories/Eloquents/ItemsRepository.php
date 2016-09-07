@@ -1,9 +1,8 @@
 <?php
 namespace App\Repositories\Eloquents;
 
-
-use App\Item;
-use App\Menu;
+use App\Models\Item;
+use App\Models\Menu;
 use App\Repositories\Contracts\ItemsRepositoryInterface;
 use DB;
 
@@ -13,6 +12,7 @@ class ItemsRepository implements ItemsRepositoryInterface
     public function getList($menu_id, $pageindex, $pagesize)
     {
         $arrResult = array();
+        return $arrResult;
         try {
             $items = [];
             $page = ($pageindex - 1) * $pagesize;

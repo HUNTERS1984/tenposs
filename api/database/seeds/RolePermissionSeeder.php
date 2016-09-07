@@ -13,7 +13,9 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-
+        $rules = array(
+            
+        );
         $roleAdmin = Role::create(['name' => 'admin']);
         $roleClient = Role::create(['name' => 'client']);
         $user = \App\Models\User::where('email','client@tenposs.com')->first();

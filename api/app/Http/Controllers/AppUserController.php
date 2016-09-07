@@ -7,30 +7,18 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Redirect;
-use App\Models\User;
 use App\Models\UserSession;
 use App\Models\AppUser;
-use App\Models\App;
-use App\Models\AppSetting;
-use App\Models\Store;
-use App\Models\Menu;
-use App\Models\News;
-use App\Models\Item;
-use App\Models\PhotoCat;
-use App\Models\Photo;
-use App\Models\Reserve;
 use App\Models\UserProfile;
 use App\Models\UserPush;
+use App\Utils\RedisUtil;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
-use DB;
-use Mockery\CountValidator\Exception;
+use DB; 
 use Twitter;
 use Illuminate\Support\Facades\Config;
+use App\Jobs\InstagramHashtagJob;
 
 class AppUserController extends Controller
 {
@@ -110,7 +98,7 @@ class AppUserController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_social_login');//array('app_id', 'time', 'social_type', 'social_id');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if (!$app)
             return $this->error(1004);
         //validate sig
@@ -131,7 +119,7 @@ class AppUserController extends Controller
                 DB::beginTransaction();
 
                 $user = new AppUser();
-                $user->app_id = $app->id;
+                $user->app_id = $app['id'];
                 $user->social_type = Input::get('social_type');
                 $user->social_id = Input::get('social_id');
                 $user->save();
@@ -188,7 +176,7 @@ class AppUserController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_signup');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if (!$app)
             return $this->error(1004);
         //validate sig
@@ -210,7 +198,7 @@ class AppUserController extends Controller
             $user = new AppUser();
             $user->email = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
-            $user->app_id = $app->id;
+            $user->app_id = $app['id'];
             $user->save();
 
             $profile = new UserProfile();
@@ -263,7 +251,7 @@ class AppUserController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_signin');
         // check app_id in database
-        $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if (!$app)
             return $this->error(1004);
         //validate sig
@@ -383,10 +371,7 @@ class AppUserController extends Controller
 
     public function profile(Request $request)
     {
-
-
         $check_items = array('token', 'time', 'sig');
-
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -394,8 +379,29 @@ class AppUserController extends Controller
         if (!$request->user || !$request->user->profile)
             return $this->error(1004);
 
+        //validate sig
+        $check_sig_items = Config::get('api.sig_profile');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //creare key redis
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id']);
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
         $request->user->profile->avatar_url = url('/') . $request->user->profile->avatar_url;
         $this->body['data']['user'] = $request->user;
+
+        if ($request->user != null && count($request->user) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
 
         return $this->output($this->body);
     }
@@ -404,7 +410,7 @@ class AppUserController extends Controller
     public function update_profile(Request $request)
     {
 
-        $check_items = array('token', 'username', 'gender', 'address');
+        $check_items = array('token', 'username', 'gender', 'address', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -419,7 +425,7 @@ class AppUserController extends Controller
             $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
             $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
-            $request->user->profile->avatar_url = '/' . $destinationPath . '/' . $fileName;
+            $request->user->profile->avatar_url = $destinationPath . '/' . $fileName;
         } else {
             return $this->error(1004);
         }
