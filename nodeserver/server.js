@@ -5,6 +5,7 @@ var app     = require('express')(),
     Redis   = require('ioredis'),
     redis   = new Redis(8082),// Start redis on port 8082
     request = require('request');
+    
 // Models
 const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
 
@@ -23,10 +24,10 @@ http.listen(port, function() {
 
 io.on('connection', function (socket_client) {
 
-
     socket_client.on('join', function(user) {
-        LineAccounts.checkExistAccounts( user, function( exits ){
-            if( !exits ){
+        // Check user connect exist
+        LineAccounts.checkExistAccounts( user, function( exitsUser ){
+            if( !exitsUser ){
                 console.log('LineAccounts not exits'); return;
             }else{
                 
@@ -35,16 +36,21 @@ io.on('connection', function (socket_client) {
                 socket_client.room = user.channel;
                 socket_client.user = user;
                 socket_client.join(user.channel);
+                socket_client.to = exitsUser;
                 
                 var packageConnected = {
                     user: user,
                     message: user.profile.displayName +' connected!'
                 };
-                if( user.from == 'enduser' ){
-                    io.sockets.in(socket_client.room).emit('receive.admin.connected', packageConnected);
+                if( user.from === 'enduser' ){
+                    console.log('1.Found client');
+                    // Find client in room are online
                     findIsClientInRoom(socket_client.room, function( foundClient ){
+                        console.log('2.Found client result:'+ JSON.stringify(foundClient) );
+                        
                         if( foundClient ){
-                            console.log('Found client');
+                            // Send connected message to client
+                            io.sockets.in(socket_client.room).emit('receive.admin.connected', packageConnected);
                             Messages.getMessageHistory( foundClient.user.profile.mid, socket_client.user.profile.mid, 10, function( messages ){
                                 var package = {
                                     messages: messages,
@@ -53,11 +59,24 @@ io.on('connection', function (socket_client) {
                                 socket_client.emit('history', package);
                             })
                         }else{
-                            
+                            console.log('3. Not found client emit history: not client online');
+                            Messages.getMessageHistory( exitsUser.bot_mid, socket_client.user.profile.mid, 10, function( messages ){
+                                var package = {
+                                    messages: messages,
+                                    to: exitsUser
+                                };
+                                socket_client.emit('history', package);
+                            })
                         }
                     });
+                    
+                    
                 }else{
+                    
+                    
                     io.sockets.in(socket_client.room).emit('receive.user.connected', packageConnected);
+                    
+                    
                 }
                 
                 //subscribe connected user to a specific channel, 
@@ -174,13 +193,24 @@ function findClientInRoomByMid( room_id, mid , _callback){
 
 function findIsClientInRoom( room_id, _callback ){
      io.in(room_id).clients(function (error, clients) {
-            if (error) { _callback(false) }
+            if (error) { 
+                console.log(error);
+                return _callback(false) ;
+            }
             if( clients ){
+                
+                var count = 0;
                 for( var i in clients){
+                    count++;
                     var client = io.sockets.sockets[clients[i]];
                     if( 'client' === client.user.from ){
-                        _callback(client);
+                        return _callback(client);
                         break;
+                    }else{
+                         
+                        if( count === clients.length ){
+                            return _callback(false);
+                        }
                     }
                 }
             }
