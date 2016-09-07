@@ -11,4 +11,8 @@ class Menus extends Model
     protected $fillable =['name','store_id'];
 
     public $timestamps = false;
+
+    public function items(){
+    	return $this->belongsToMany(Item::class,'rel_menus_items','item_id','menu_id');
+    }
 }

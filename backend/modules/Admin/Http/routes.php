@@ -18,8 +18,8 @@ Route::group(['prefix' => 'admin'], function() {
     $this->get('logout',['middleware'=>'auth'],'Auth\AuthController@logout');
 
     // Registration Routes...
-    $this->get('register',['middleware'=>'isLogin','as'=>'admin.register','uses'=>'Auth\AuthController@showRegistrationForm'] );
-    $this->post('register',['middleware'=>'isLogin','as'=>'admin.postRegister','uses'=>'Auth\AuthController@register']);
+    $this->get('register',['middleware'=>'IsLogin','as'=>'admin.register','uses'=>'Auth\AuthController@showRegistrationForm'] );
+    $this->post('register',['middleware'=>'IsLogin','as'=>'admin.postRegister','uses'=>'Auth\AuthController@register']);
 
     // Password Reset Routes...
     $this->get('password/reset/{token?}',['middleware'=>'auth','as'=>'admin.resetPassword','uses'=>'Auth\PasswordController@showResetForm']);
@@ -33,10 +33,14 @@ Route::group(['prefix' => 'admin'], function() {
         // NEWS
         Route::resource('news','NewsController');
         // MENUS
+<<<<<<< HEAD
+        Route::post('menus/storeMenu',['as'=>'admin.menus.storeMenu','uses'=>'MenusController@storeMenu']);
+=======
         Route::get('menus/view_more',['as'=>'admin.menus.view_more','uses'=>'MenusController@view_more'] );
         Route::get('menus/nextcat',['as'=>'admin.menus.nextcat','uses'=>'MenusController@nextcat'] );
         Route::get('menus/nextpreview',['as'=>'admin.menus.nextpreview','uses'=>'MenusController@nextpreview'] );
         Route::post('menus/storeitem',['as'=>'admin.menus.storeitem','uses'=>'MenusController@storeitem'] );
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
         Route::resource('menus','MenusController');
         // PHOTO CATS
         Route::get('photo-cate/view_more',['as'=>'admin.photo-cate.view_more','uses'=>'PhotoCatController@view_more'] );
@@ -44,6 +48,8 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('photo-cate/nextcat',['as'=>'admin.photo-cate.nextcat','uses'=>'PhotoCatController@nextcat'] );
         Route::get('photo-cate/nextpreview',['as'=>'admin.photo-cate.nextpreview','uses'=>'PhotoCatController@nextpreview'] );
         Route::resource('photo-cate','PhotoCatController');
+        // PHOTO
+        Route::resource('photo','PhotoController');
         // STAFF
         Route::resource('staff','StaffController');
 

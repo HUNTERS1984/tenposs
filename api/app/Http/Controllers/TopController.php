@@ -241,9 +241,9 @@ class TopController extends Controller
         return $this->output($this->body);
     }
 
-    public function notification()
+    public function notification(Request $request)
     {
-        $check_items = Config::get('api.items_notification');
+        $check_items = array('app_user_id', 'type','created_by');//Config::get('api.items_notification');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;

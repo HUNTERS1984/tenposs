@@ -9,22 +9,30 @@ use Illuminate\Http\Request;
 use App\Models\Store;
 use App\Models\PhotoCat;
 use App\Models\Photo;
+<<<<<<< HEAD
+=======
 use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 
 define('REQUEST_PHOTO_ITEMS',  3);
 class PhotoCatController extends Controller
 {
     protected $request;
     protected $entity;
+    protected $photo;
 
-    public function __construct(Request $request, PhotoCat $photocat){
+    public function __construct(Request $request, PhotoCat $photocat, Photo $photo){
         $this->request = $request;
         $this->entity = $photocat;
+        $this->photo = $photo;
     }
 
-    public function index(Store $store)
+    public function index()
     {
+<<<<<<< HEAD
+
+=======
         $stores = $this->request->stores;
         $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
         $list_store = $stores->lists('name','id');
@@ -103,6 +111,7 @@ class PhotoCatController extends Controller
 
         $returnHTML = view('admin::pages.photocats.element_photo_preview')->with(compact('list_photo'))->render();
         return $returnHTML;
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
     }
 
     public function create()
@@ -113,6 +122,9 @@ class PhotoCatController extends Controller
     public function store()
     {
 
+<<<<<<< HEAD
+        return redirect()->back();
+=======
         $this->entity = new PhotoCat();
         $this->entity->name = $this->request->input('name');
         $this->entity->store_id = $this->request->input('store_id');
@@ -148,6 +160,7 @@ class PhotoCatController extends Controller
         $photo->save();
 
         return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo successfully');
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
     }
 
     public function show($id)

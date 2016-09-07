@@ -139,7 +139,6 @@ class NotificationRepository implements NotificationRepositoryInterface
                         switch ($obj->type) {
                             case "news":
                                 $news = News::where('id', $obj->data_id)->get()->toArray();
-                                print_r($news);
                                 if (count($news) > 0) {
                                     $data_notify = array('title' => $news[0]['title'],
                                         'desc' => $news[0]['description'],
@@ -154,6 +153,13 @@ class NotificationRepository implements NotificationRepositoryInterface
                             case "chat":
                                 break;
                             case "custom":
+                                if (!empty($obj->data_value))
+                                {
+                                    $data_notify = array('title' => $obj->data_value,
+                                        'desc' => $obj->data_value,
+                                        'subtitle' => '',
+                                        'tickertext' => '');
+                                }
                                 break;
                             default:
                                 break;

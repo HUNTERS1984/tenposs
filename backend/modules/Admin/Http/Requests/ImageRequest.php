@@ -25,7 +25,13 @@ class ImageRequest extends Request
     public function rules()
     {
         return [
-            'img' =>'image|mimes:jpeg,bmp,png'
+            'img' =>'mimes:jpeg,bmp,png'
+        ];
+    }
+
+    public function messages(){
+        return [
+            'img.mimes' => 'Please choose the image type'
         ];
     }
 }

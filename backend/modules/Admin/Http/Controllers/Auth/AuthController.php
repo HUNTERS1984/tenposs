@@ -21,8 +21,8 @@ class AuthController extends Controller
 
 
 	protected $validator;
-	protected $redirectTo = '/admin/top';
-	protected $redirectPath = "admin/top";
+	protected $redirectTo = '/admin/news';
+	protected $redirectPath = "admin/news";
 
 	protected function validator(array $data)
     {

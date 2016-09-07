@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model {
 
-    protected $table = 'items';
-    protected $fillable = ['price','image_url','description', 'title'];
+    public $table = 'items';
+    protected $fillable = ['price','image_url','description', 'title','coupon_id'];
 
     public function menus()
     {
@@ -19,4 +19,15 @@ class Item extends Model {
         return $this->belongsToMany(Item::class, 'rel_items', 'item_id', 'related_id')->select(['id', 'price','image_url','description', 'title'])->take(8);
     }
 
+<<<<<<< HEAD
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function coupons(){
+        return $this->belongsTo(Coupon::class,'coupon_id');
+    }
+=======
+>>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 }

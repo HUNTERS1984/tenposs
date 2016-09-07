@@ -11,6 +11,7 @@ use App\Models\UserSession;
 use App\Models\AppUser;
 use App\Models\UserProfile;
 use App\Models\UserPush;
+use App\Utils\RedisUtil;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
@@ -118,7 +119,7 @@ class AppUserController extends Controller
                 DB::beginTransaction();
 
                 $user = new AppUser();
-                $user->app_id = $app->id;
+                $user->app_id = $app['id'];
                 $user->social_type = Input::get('social_type');
                 $user->social_id = Input::get('social_id');
                 $user->save();
