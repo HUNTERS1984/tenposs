@@ -1,7 +1,6 @@
 {
 	"name": "Admin",
 	"slug": "admin",
-	"namespace": "Admin",
 	"version": "1.0",
 	"author": "LiemPhan",
 	"license": "MIT",
