@@ -242,7 +242,7 @@ class TopController extends Controller
     }
 
     public function notification()
-    {
+    { 
         $check_items = Config::get('api.items_notification');
         $ret = $this->validate_param($check_items);
         if ($ret)
