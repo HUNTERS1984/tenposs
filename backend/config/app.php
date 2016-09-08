@@ -211,7 +211,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Analytics' => Spatie\LaravelAnalytics\LaravelAnalyticsFacade::class,
         'Module' => Caffeinated\Modules\Facades\Module::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Str'   => Illuminate\Support\Str::class,
 
     ],
 
