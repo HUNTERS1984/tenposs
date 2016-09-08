@@ -80,11 +80,7 @@
 										<div class="main-title">
 											<h2><a href="{{route('admin.news.edit',$item->id)}}">{{$item->title}}</a></h2>
 											{{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
-<<<<<<< HEAD
-												<input type="submit" class="btn-me btn-each-item btn-delete" value="Delete">
-=======
 												<input type="submit" class="btn-me btn-each-item" value="削除"  onclick="return confirm('Are you sure you want to delete this item?');">
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 											{{Form::close()}}
 										</div>
 										<div class="container-content">
