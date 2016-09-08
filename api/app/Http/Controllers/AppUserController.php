@@ -306,7 +306,7 @@ class AppUserController extends Controller
         //start validate app_id and sig
         $check_sig_items = Config::get('api.sig_signin');
         // check app_id in database
-        $app = $this->_topRepository->get_user_session(Input::get('token'));
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
         if (!$app)
             return $this->error(9998);
         //validate sig

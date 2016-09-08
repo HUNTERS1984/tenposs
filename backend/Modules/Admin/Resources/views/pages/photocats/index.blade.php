@@ -12,13 +12,8 @@
 				</div>
 				<!-- <div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
-<<<<<<< HEAD
-					<a href="javascript:avoid()" class="btn-me btn-topbar">スタの新着情報</a>
-				</div> -->
-=======
 					<a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
 				</div>
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 			</div>
 		</div>
 		<!-- END -->
@@ -57,15 +52,6 @@
 								</div>
 								<div class="content-preview clearfix">
 									<div class="row-me fixHeight">
-<<<<<<< HEAD
-										@if($photo->isEmpty())
-											No Data
-										@else
-											@foreach($photo as $item_thumb)
-											<div class="col-xs-4 padding-me">
-												<div class="each-staff">
-													<img src="{{asset($item_thumb->image_url)}}" class="img-responsive" alt="Product">
-=======
 										@if($list_photo->isEmpty())
 											No Data
 										@else
@@ -73,7 +59,6 @@
 											<div class="col-xs-4 padding-me">
 												<div class="each-staff">
 													<img src="{{asset($item_thumb->image_url)}}" class="img-responsive  img-prview" alt="Photo">
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 												</div>
 											</div>
 											@endforeach
@@ -87,28 +72,12 @@
 
 					<div class="col-lg-8">
 						<div class="wrap-btn-content">
-<<<<<<< HEAD
-							<a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal" data-target="#myModal">Add new Category</a>
-							<a href="{{route('admin.photo.create')}}" class="btn-me btn-xanhduongnhat">Add new Photo</a>
-=======
 							<a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal" data-target="#AddCat">カテゴリー追加</a>
 							<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"  data-toggle="modal" data-target="#AddImage">写真追加</a>
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 						</div>	<!-- end wrap-btn-content-->
 						<div class="wrapper-content clearfix">
 							<div class="container-fluid">
 								<div class="row">
-<<<<<<< HEAD
-									@if($photo->isEmpty())
-										No Data
-									@else
-										@foreach($photo as $item)
-											<div class="col-xs-4">
-												<div class="each-menu each-common-pr">
-													<a href="{{route('admin.photo.edit',$item->id)}}"><img src="{{asset($item->image_url)}}" class="img-responsive" alt="Product"></a>
-													{{Form::open(array('route'=>['admin.photo.destroy',$item->id],'method'=>'DELETE'))}}
-														{{Form::submit('Delete',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
-=======
 									@if($list_photo->isEmpty())
 										No Data
 									@else
@@ -118,7 +87,6 @@
 													<p class="title-menu"><a href="{{route('admin.photo-cate.edit',$item->id)}}"><img src="{{asset($item->image_url)}}" class="img-responsive img-prview" alt="Photo"></a></p>
 													{{Form::open(array('route'=>['admin.photo-cate.destroy',$item->id],'method'=>'DELETE'))}}
 														{{Form::submit('削除',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 													{{Form::close()}}
 												</div>
 											</div>
@@ -158,13 +126,8 @@
 	      </div>
 	      <div class="modal-body">
 	      	<div class="form-group">
-<<<<<<< HEAD
-	      		{{Form::label('Select Store')}}
-	      		{{Form::select('store_id',$store_list,old('store_id'),['class'=>'form-control'])}}
-=======
 	      		{{Form::label('store','ストア')}}
 	      		{{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 
 	      	</div>
 	      	<div class="form-group">
