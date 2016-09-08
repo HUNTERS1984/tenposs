@@ -93,8 +93,10 @@ class CouponController extends Controller
                         } else {
                             $coupons[$i]['can_use'] = false;
                         }
+                        $coupons[$i]['image_url'] = Config::get('api.media_base_url').$coupons[$i]['image_url'];
                          
                     }
+
                 }
                     
             }

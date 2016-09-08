@@ -106,6 +106,10 @@ class ItemController extends Controller
             if ($total_items > 0)
                 $items = Menu::find(Input::get('menu_id'))->items()->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
 
+            for ($i = 0; $i < count($items); $i++) {
+                $items[$i]['image_url'] = Config::get('api.media_base_url').$items[$i]['image_url'];
+            }
+
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }

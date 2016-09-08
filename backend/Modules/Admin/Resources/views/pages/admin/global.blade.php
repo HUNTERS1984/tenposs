@@ -38,7 +38,7 @@
 					                        <div class="h_side">
 					                            <div class="imageleft">
 					                                <div class="image">
-					                                    <img class="img-circle" src="{{asset(env('ASSETS_BACKEND'))}}/images/icon-user.png" height="35" width="35" alt="Thư kỳ"/>
+					                                    <img class="img-circle" src="/assets/backend/images/icon-user.png" height="35" width="35" alt="Thư kỳ"/>
 					                                </div>
 					                                <p class="font32">User name</p>
 					                            </div>
@@ -70,7 +70,7 @@
 									</div>
 									<div class="form-group">
 										<label for="">タイトルカラー</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
 										<label for="">フォントタイプ・フォントファミリ</label>
@@ -86,11 +86,11 @@
 									</div>
 									<div class="form-group">
 										<label for="">ヘッダーカラー</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
 										<label for="">メニューイコンカラー</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 
 								{{Form::close()}}
@@ -100,11 +100,11 @@
 								{{Form::open(array('route'=>'admin.menus.store', 'class' => 'formCommon'))}}
 									<div class="form-group">
 										<label for="">バックグラウンドカラー</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
 										<label for="">フォントカラー</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
 										<label for="">フォントタイプ・フォントファミリ</label>
@@ -146,11 +146,11 @@
 								{{Form::open(array('route'=>'admin.menus.store', 'class' => 'formCommon'))}}
 									<div class="form-group">
 										<label for="">アプリアイコン</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 									<div class="form-group">
 										<label for="">Store用画像</label>
-										<span><input class="jscolor" value="#ffffff"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/draw.jpg" height="21" width="20" class="draw" ></span>
+										<span><input class="jscolor" value="#ffffff"><img src="/assets/backend/images/draw.jpg" height="21" width="20" class="draw" ></span>
 									</div>
 								</form>
 								{{Form::close()}}
@@ -167,10 +167,10 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/jscolor.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jscolor.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 
 	<script type="text/javascript">
 		$(document).ready(function(){

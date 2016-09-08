@@ -48,7 +48,7 @@ class TopsRepository implements TopsRepositoryInterface
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
                 where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
             for ($i = 0; $i < count($items); $i++) {
-                $items[$i]->image_url = url('/') . '/' . $items[$i]->image_url;
+                $items[$i]->image_url = Config::get('api.media_base_url').$items[$i]->image_url;
             }
         }
         if ($items != null && count($items) > 0)//set cache redis
@@ -88,7 +88,7 @@ class TopsRepository implements TopsRepositoryInterface
 
             $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($photos); $i++) {
-                $photos[$i]['image_url'] = url('/') . '/' . $photos[$i]['image_url'];
+                $photos[$i]['image_url'] = Config::get('api.media_base_url').$photos[$i]['image_url'];
             }
         }
         if ($photos != null && count($photos) > 0)//set cache redis
@@ -114,7 +114,7 @@ class TopsRepository implements TopsRepositoryInterface
                 $query->whereIn('store_id', $stores);
             })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
             for ($i = 0; $i < count($news); $i++) {
-                $news[$i]['image_url'] = url('/') . '/' . $news[$i]['image_url'];
+                $news[$i]['image_url'] = Config::get('api.media_base_url').$news[$i]['image_url'];
             }
         }
         if ($news != null && count($news) > 0)//set cache redis
@@ -137,7 +137,7 @@ class TopsRepository implements TopsRepositoryInterface
         if ($app_setting) {
             $images = $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($images); $i++) {
-                $images[$i]['image_url'] = url('/') . '/' . $images[$i]['image_url'];
+                $images[$i]['image_url'] = Config::get('api.media_base_url').$images[$i]['image_url'];
             }
         }
 

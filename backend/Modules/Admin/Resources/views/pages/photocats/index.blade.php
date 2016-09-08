@@ -10,7 +10,7 @@
 				<div class="left-topbar">
 					<h1 class="title">フォトギャラリー</h1>
 				</div>
-				<!-- <div class="right-topbar">
+				<div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
 					<a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
 				</div>
@@ -31,7 +31,7 @@
 						<div class="wrap-preview">
 							<div class="wrap-content-prview">
 								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">Photography</h2>
 								</div>
 								<div class="control-nav-preview">
@@ -95,14 +95,6 @@
 							            <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
 							            	
 									@endif
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="text-right">
-											{{$photo->links()}}
-										</div>
-										
-									</div>
 								</div>
 							</div>
 
@@ -176,16 +168,16 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/switch/lc_switch.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/switch/lc_switch.css')}}
+	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
+	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
+	{{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+	{{Html::style('assets/backend/js/swiper/swiper.min.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('input.lcs_check').lc_switch();

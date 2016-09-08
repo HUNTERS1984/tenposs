@@ -24,7 +24,7 @@
 						<div class="wrap-preview">
 							<div class="wrap-content-prview">
 								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">Photography</h2>
 								</div>
 								<div class="control-nav-preview">
@@ -46,22 +46,22 @@
 									<div class="row-me fixHeight">
 										<div class="col-xs-4 padding-me">
 											<div class="each-staff">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 											</div>
 										</div>
 										<div class="col-xs-4 padding-me">
 											<div class="each-staff">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 											</div>
 										</div>
 										<div class="col-xs-4 padding-me">
 											<div class="each-staff">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 											</div>
 										</div>
 										<div class="col-xs-4 padding-me">
 											<div class="each-staff">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 											</div>
 										</div>
 									</div>
@@ -81,25 +81,25 @@
 								<div class="row">
 									<div class="col-xs-4">
 										<div class="each-menu each-common-pr">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="Product">
 											<a href="#" class="btn-me btn-menu">スタの</a>
 										</div>
 									</div>
 									<div class="col-xs-4">
 										<div class="each-menu each-common-pr">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="Product">
 											<a href="#" class="btn-me btn-menu">スタの</a>
 										</div>
 									</div>
 									<div class="col-xs-4">
 										<div class="each-menu each-common-pr">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="Product">
 											<a href="#" class="btn-me btn-menu">スタの</a>
 										</div>
 									</div>
 									<div class="col-xs-4">
 										<div class="each-menu each-common-pr">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="Product">
+											<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="Product">
 											<a href="#" class="btn-me btn-menu">スタの</a>
 										</div>
 									</div>
@@ -118,16 +118,16 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/switch/lc_switch.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/switch/lc_switch.css')}}
+	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
+	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
+	{{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+	{{Html::style('assets/backend/js/swiper/swiper.min.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('input.lcs_check').lc_switch();

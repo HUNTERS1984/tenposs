@@ -46,8 +46,6 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('photo-cate/nextcat',['as'=>'admin.photo-cate.nextcat','uses'=>'PhotoCatController@nextcat'] );
         Route::get('photo-cate/nextpreview',['as'=>'admin.photo-cate.nextpreview','uses'=>'PhotoCatController@nextpreview'] );
         Route::resource('photo-cate','PhotoCatController');
-        // PHOTO
-        Route::resource('photo','PhotoController');
         // STAFF
         Route::resource('staff','StaffController');
 
@@ -58,7 +56,20 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('coupon/store_type',['as'=>'admin.coupon.store_type','uses'=>'CouponController@store_type'] );
         Route::resource('coupon','CouponController');
         
+        
+       
+        
     });
 });
 
 
+// CHAT
+
+Route::group(array('prefix' => 'chat'), function() {
+    Route::get('line',array('as'=>'admin.clients.chat','uses'=> 'ChatLineController@chatAdmin'));
+    Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
+    Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
+    Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
+    Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
+    Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
+});

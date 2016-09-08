@@ -31,7 +31,7 @@
 						<div class="wrap-preview">
 							<div class="wrap-content-prview">
 								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">NEWS</h2>
 								</div>
 <!-- 								<div class="control-nav-preview">
@@ -80,11 +80,7 @@
 										<div class="main-title">
 											<h2><a href="{{route('admin.news.edit',$item->id)}}">{{$item->title}}</a></h2>
 											{{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
-<<<<<<< HEAD
-												<input type="submit" class="btn-me btn-each-item btn-delete" value="Delete">
-=======
 												<input type="submit" class="btn-me btn-each-item" value="削除"  onclick="return confirm('Are you sure you want to delete this item?');">
->>>>>>> 889e1ea40fdd0229517b26ca4105375d9e23ffbe
 											{{Form::close()}}
 										</div>
 										<div class="container-content">
@@ -152,18 +148,18 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/switch/lc_switch.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/switch/lc_switch.css')}}
+	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
+	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
+	{{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+	{{Html::style('assets/backend/js/swiper/swiper.min.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/Masonry.js')}}
+	{{Html::script('assets/backend/js/Masonry.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('input.lcs_check').lc_switch();

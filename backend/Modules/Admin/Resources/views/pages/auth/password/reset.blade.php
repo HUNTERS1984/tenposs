@@ -8,7 +8,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
     
-    {{Html::style((env('ASSETS_BACKEND').'/css/bootstrap.min.css')}}
+    {{Html::style(('assets/backend/css/bootstrap.min.css')}}
 
          <!-- Font Awesome -->
     {{Html::style('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css')}}

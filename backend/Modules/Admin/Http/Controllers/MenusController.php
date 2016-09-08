@@ -35,12 +35,8 @@ class MenusController extends Controller
     }
     public function index()
     {
-        $item_thumbs = $this->item->select('image_url')->orderBy('id','DESC')->take(8)->get();
-        $items = $this->item->with(['coupons'=>function($query){$query->select('id','title','start_date','end_date');}])->orderBy('id','DESC')->paginate(12);
-        $list_store = $this->store->lists('name','id')->toArray();
-        return view('admin::pages.menus.index',compact('item_thumbs','list_store','items'));
         $stores = $this->request->stores;
-        $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -71,7 +67,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -103,7 +99,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -134,7 +130,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -221,7 +217,7 @@ class MenusController extends Controller
                 'name' => $this->request->input('name'),
                 'store_id' => $this->request->input('store_id'),
             ];
-            $this->entity->create($data);
+            $this->menu->create($data);
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add menu successfully') );
             return redirect()->route('admin.menus.index');
         } catch (\Illuminate\Database\QueryException $e) {
