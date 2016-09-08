@@ -16,7 +16,7 @@ class ConvertUtils
 {
     public static function convert_p12_to_pem($path_file, $pass_file, $dest_folder = '')
     {
-        $is_valid = false;
+//        $is_valid = false;
         try {
             $p12worked = openssl_pkcs12_read(file_get_contents($path_file), $p12, $pass_file);
             if ($p12worked) {
@@ -40,6 +40,6 @@ class ConvertUtils
         } catch (\RuntimeException $e) {
             Log::error("convert_p12_to_pem: " . $e->getMessage());
         }
-        return $is_valid;
+        return $filename;
     }
 }

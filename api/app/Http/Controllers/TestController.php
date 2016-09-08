@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Hash;
 
 class TestController extends Controller
 {
@@ -24,6 +25,7 @@ class TestController extends Controller
     //
     public function index()
     {
+        return Hash::make(123456);
 //        echo '1';die;
         $value = $this->_testRepository->get_info_nofication(1,"chat");
         return $value;
