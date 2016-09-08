@@ -25,7 +25,7 @@
 								<div class="wrap-preview">
 									<div class="wrap-content-prview">
 										<div class="header-preview">
-											<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+											<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 											<h2 class="title-prview">NEWS</h2>
 										</div>
 										<div class="control-nav-preview">
@@ -45,7 +45,7 @@
 										</div>
 										<div class="content-preview">
 											<div class="each-coupon clearfix">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive img-prview">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive img-prview">
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">スタの新着情報</p>
 													<p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p>
@@ -54,7 +54,7 @@
 											</div>
 
 											<div class="each-coupon clearfix">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive img-prview">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive img-prview">
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">スタの新着情報</p>
 													<p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p>
@@ -62,7 +62,7 @@
 												</div>
 											</div>
 											<div class="each-coupon clearfix">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive img-prview">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive img-prview">
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">スタの新着情報</p>
 													<p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p>
@@ -70,7 +70,7 @@
 												</div>
 											</div>
 											<div class="each-coupon clearfix">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive img-prview">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive img-prview">
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">スタの新着情報</p>
 													<p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p>
@@ -78,7 +78,7 @@
 												</div>
 											</div>
 											<div class="each-coupon clearfix">
-												<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive img-prview">
+												<img src="/assets/backend/images/wall.jpg" class="img-responsive img-prview">
 												<div class="inner-preview">
 													<p class="title-inner" style="font-size:9px; color:#14b4d2">スタの新着情報</p>
 													<p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p>
@@ -96,7 +96,7 @@
 								</div>	<!-- end wrap-btn-content-->
 								<div class="wrapper-content">
 									<div class="each-coupon each-item clearfix">
-										<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+										<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 										<div class="main-title">
 											<h2>Lorem ipsum dolor sit amet,</h2>
 											<p>Lorem ipsum dolor </p>
@@ -108,7 +108,7 @@
 									</div>
 
 									<div class="each-coupon each-item clearfix">
-										<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+										<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 										<div class="main-title">
 											<h2>Lorem ipsum dolor sit amet,</h2>
 											<p>Lorem ipsum dolor </p>
@@ -120,7 +120,7 @@
 									</div>
 
 									<div class="each-coupon each-item clearfix">
-										<img src="{{asset(env('ASSETS_BACKEND'))}}/images/wall.jpg" class="img-responsive" alt="">
+										<img src="/assets/backend/images/wall.jpg" class="img-responsive" alt="">
 										<div class="main-title">
 											<h2>Lorem ipsum dolor sit amet,</h2>
 											<p>Lorem ipsum dolor </p>

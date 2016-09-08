@@ -24,11 +24,11 @@
 						<div class="wrap-preview">
 							<div class="wrap-content-prview">
 								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">Global Work</h2>
 								</div>
 								<div class="banner-preview">
-									<img src="{{asset(env('ASSETS_BACKEND'))}}/images/banner-prview.jpg" class="img-responsive" alt="">
+									<img src="/assets/backend/images/banner-prview.jpg" class="img-responsive" alt="">
 								</div>
 								<div class="content-preview">
 									<p class="title-top-preview">
@@ -36,22 +36,22 @@
 									</p>
 									<div class="row-me clearfix">
 										<div class="each-top">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/h1.jpg" class="img-responsive " alt="">
+											<img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
 											<p class="name">Product 1</p>
 											<p class="price">10$</p>
 										</div>
 										<div class="each-top">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/h1.jpg" class="img-responsive " alt="">
+											<img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
 											<p class="name">Product 1</p>
 											<p class="price">10$</p>
 										</div>
 										<div class="each-top">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/h1.jpg" class="img-responsive " alt="">
+											<img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
 											<p class="name">Product 1</p>
 											<p class="price">10$</p>
 										</div>
 										<div class="each-top">
-											<img src="{{asset(env('ASSETS_BACKEND'))}}/images/h1.jpg" class="img-responsive " alt="">
+											<img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
 											<p class="name">Product 1</p>
 											<p class="price">10$</p>
 										</div>

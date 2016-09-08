@@ -26,7 +26,7 @@
 						<div class="wrap-preview">
 							<div class="wrap-content-prview">
 								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="{{asset(env('ASSETS_BACKEND'))}}/images/nav-icon.png"  alt=""></a>
+									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
 									<h2 class="title-prview">Coupon</h2>
 								</div>
 								<div class="content-preview">
