@@ -11,7 +11,7 @@
     <div class="container">
       <p>&nbsp;</p>  
       <div class="panel panel-info">
-        <div class="panel-heading">Tenposs</div>
+        <div class="panel-heading">Tenposs <span id="status" style="color:red"></span></div>
         <div class="panel-body">
           <div id="" class="">
               <ul class="messages scrollbar-macosx"></ul>
@@ -58,7 +58,7 @@ var channel = '{{ $channel }}';
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect('tenposs-end-phanvannhien.c9users.io:8081', {
+    socket = new io.connect('{{ env('CHAT_SERVER') }}', {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
@@ -97,10 +97,12 @@ function connectToChat() {
     });
     
     socket.on('receive.user.connected',function(package){
+      $('span#status').text('Online');
       drawSystemMessage(package.message);
     });
     
     socket.on('receive.user.disconnect',function(package){
+      $('span#status').text('Offline');
       drawSystemMessage(package.message);
     });
     
@@ -117,7 +119,7 @@ function drawMessage(side, profile, message){
     $message = $($('.message_template').clone().html());
     $message.addClass(side).find('.text').html(message);
     $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(d.getTime()/1000);
+    $message.find('.timestamp').text( converTimestamp(d.getTime()/1000));
     $messages.append($message);
     setTimeout(function () {
         return $message.addClass('appeared');
@@ -158,6 +160,11 @@ function sendMessage(text) {
 function getMessageText() {
    return $('.message_input').val();
 };
+
+function converTimestamp(timestamp){
+  var d = new Date(timestamp);
+  return d.getHours()+'h:'+d.getMinutes()+'m:'+d.getSeconds()+'s '+d.getDay()+'-'+d.getMonth()+'-'+d.getUTCFullYear();
+}
 
 $(document).ready(function(){
     connectToChat();

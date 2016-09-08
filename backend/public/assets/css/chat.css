@@ -1,3 +1,8 @@
+.timestamp{
+    font-size: 11px;
+    color: #aaa;
+    float: right;
+}
 .messages {
   position: relative;
   list-style: none;

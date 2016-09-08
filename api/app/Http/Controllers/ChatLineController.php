@@ -50,8 +50,7 @@ class ChatLineController extends Controller
     * Handle BOT Server callback
     */
     public function index(Request $request){
-        
-
+      
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
@@ -59,39 +58,32 @@ class ChatLineController extends Controller
         }
  
         $data = $data->result[0];
-        Log::info(print_r($data, true));
+        
         //“138311609000106303”	Received message (example: text, images)
         //“138311609100106403”	Received operation (example: added as friend)
         if ( $data->eventType == '138311609000106303' ){
             // Get BOT Info
-
+            //1	Text message
+            //2	Image message
+            //3	Video message
+            //4	Audio message
+            //7	Location message
+            //8	Sticker message
+            //10 Contact message
             
-            if( $data->toChannel == $this->user->channelId  && $data->to[0] == $this->user->channelMid){
-                //1	Text message
-                //2	Image message
-                //3	Video message
-                //4	Audio message
-                //7	Location message
-                //8	Sticker message
-                //10 Contact message
+            switch ($data->content->contentType) {
                 
+                case 1: // Text Message
+                    Log::info(print_r($data, true));
+                    $redis = L5Redis::connection();
+                    $redis->publish('message.bot', json_encode($data->content));
+                    break;
                 
-                
-                switch ($data->content->contentType) {
-                    
-                    case 1: // Text Message
-                        
-                    
-                        $redis = L5Redis::connection();
-                        $redis->publish('line.message', json_encode($data->content));
-                        break;
-                    
-                    default:
-                        // code...
-                        break;
-                }
-                
+                default:
+                    // code...
+                    break;
             }
+            
         }
     }
     
@@ -239,7 +231,7 @@ class ChatLineController extends Controller
                         'app_user_id' => $appuser->id,
                         'displayName' => $profile->displayName,
                         'pictureUrl' => $profile->pictureUrl,
-                        'statusMessage' => $profile->statusMessage,
+                        'statusMessage' => (isset($profile->statusMessage)) ? $profile->statusMessage : '',
                         'access_token' => $dataToken->access_token,
                         'token_type' => $dataToken->token_type,
                         'expires_in' => $dataToken->expires_in,

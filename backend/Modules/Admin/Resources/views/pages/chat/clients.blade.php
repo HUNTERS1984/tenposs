@@ -103,7 +103,7 @@ function drawMessage(package){
     $message = $($('.message_template').clone().html());
     $message.addClass(side).find('.text').html(package.message.message);
     $message.find('.avatar img').attr('src',package.user.profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(package.message.timestamp);
+    $message.find('.timestamp').text( converTimestamp(package.message.timestamp));
     
     $messages.append($message);
     
@@ -135,7 +135,7 @@ function sendMessage(target) {
     $message = $($('.message_template').clone().html());
     $message.addClass('right').find('.text').html($(closest).find('input').val() );
     $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(d.getTime()/1000);
+    $message.find('.timestamp').text(converTimestamp(d.getTime()/1000));
     $messages.append($message);
     setTimeout(function () {
         return $message.addClass('appeared');
@@ -144,7 +144,7 @@ function sendMessage(target) {
     var d = new Date();
     var params = {
         'to': $(closest).attr('data-id'),
-        'message': $(target).val(),
+        'message': $(closest).find('input').val(),
         'timestamp': d.getTime()/1000
     };
     socket.emit('send.admin.message',params);
@@ -154,7 +154,7 @@ function sendMessage(target) {
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect('tenposs-end-phanvannhien.c9users.io:8081', {
+    socket = new io.connect('{{ env('CHAT_SERVER') }}', {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
@@ -177,6 +177,43 @@ function connectToChat() {
         console.log(package);
     })
 
+    socket.on('history',function(package){
+        console.log('history');
+        console.log(package);
+        if( package.length > 0 ){
+            $(package).each(function(index, item) {
+                $(item.history).each(function(index1, item1){
+                    var where = (function(){
+                        if(item1.from_mid === profile.mid)
+                            return item1.from_mid
+                        else{
+                            return item1.to_mid
+                        }
+                    })();
+                    console.log('where'+where);
+                    var temp = {
+                        message:{
+                            message: item1.message,
+                            timestamp: item1.created_at
+                        },
+                        user: {
+                            channel: item1.room_id,
+                            profile: {
+                                displayName: item1.displayName,
+                                mid: where,
+                                pictureUrl: item1.pictureUrl,
+                            }
+                        }
+                        
+                    };
+                    drawMessage(temp);
+                })
+              
+            });
+        }
+        
+    })
+    
     socket.on('receive.admin.connected',function(package){
       drawSystemMessage(package);
     })
@@ -239,7 +276,10 @@ function renderChatBox(profile,callback){
     callback(true);
 }
 
-
+function converTimestamp(timestamp){
+  var d = new Date(timestamp);
+  return d.getHours()+'h:'+d.getMinutes()+'m:'+d.getSeconds()+'s '+d.getDay()+'-'+d.getMonth()+'-'+d.getUTCFullYear();
+}
 
 $(document).ready(function(){
     $('.scrollbar-macosx').scrollbar();

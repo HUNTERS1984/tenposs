@@ -184,7 +184,7 @@ class ChatLineController extends Controller
    
             return view('admin::pages.chat.message',[ 
                 'profile' => json_encode($profile), 
-                'channel' => $app_user[0]->id.'-'.env('LINE_CHANEL_ID') ]);
+                'channel' => $app_user[0]->id.'-'.env('BOT_CHANEL_ID') ]);
         }
        
     }
