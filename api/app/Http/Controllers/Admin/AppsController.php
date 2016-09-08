@@ -167,8 +167,9 @@ class AppsController extends Controller
             $path = base_path() . $pathAppend;
             $request->file('file')->move($path, $imageName);
             $extension = pathinfo($imageName, PATHINFO_EXTENSION);
+            $filename = '';
             if ($extension == 'p12')
-                ConvertUtils::convert_p12_to_pem($path . $imageName, $request->input('apikey'),$pathAppend);
+                $filename = ConvertUtils::convert_p12_to_pem($path . $imageName, $request->input('apikey'),$pathAppend);
             $flatform = $request->input('flatform');
             $dataUpdate = null;
             switch ($flatform) {
@@ -181,7 +182,7 @@ class AppsController extends Controller
                 case 'ios':
                     $dataUpdate = [
                         'apple_push_cer_password' => $request->input('apikey'),
-                        'apple_push_cer_file' => $pathAppend . $imageName
+                        'apple_push_cer_file' => $pathAppend . $filename
                     ];
                     break;
                 default:
