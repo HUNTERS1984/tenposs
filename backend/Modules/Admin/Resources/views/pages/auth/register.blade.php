@@ -74,8 +74,8 @@
 	</div>
 	<!-- /.register-box -->
 	<!-- jQuery 2.1.4 -->
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
 	 <!-- CORE JQUERY SCRIPTS -->
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 </body>
 </html>

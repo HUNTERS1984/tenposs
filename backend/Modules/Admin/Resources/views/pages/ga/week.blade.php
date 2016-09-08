@@ -22,8 +22,8 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
  	<script type="text/javascript">

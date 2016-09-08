@@ -160,21 +160,21 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/switch/lc_switch.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/switch/lc_switch.css')}}
+	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
+	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/swiper/swiper.jquery.min.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/swiper/swiper.min.css')}}
+	{{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+	{{Html::style('assets/backend/js/swiper/swiper.min.css')}}
 
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/Masonry.js')}}
+	{{Html::script('assets/backend/js/Masonry.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('input.lcs_check').lc_switch();

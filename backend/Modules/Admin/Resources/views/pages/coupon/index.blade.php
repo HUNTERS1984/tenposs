@@ -207,13 +207,13 @@
 @stop
 
 @section('script')
-	{{Html::script(env('ASSETS_BACKEND').'/js/jquery-1.11.2.min.js')}}
-	{{Html::script(env('ASSETS_BACKEND').'/js/bootstrap.min.js')}}
+	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+	{{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/switch/lc_switch.js')}}
-	{{Html::style(env('ASSETS_BACKEND').'/js/switch/lc_switch.css')}}
+	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
+	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script(env('ASSETS_BACKEND').'/js/script.js')}}
+	{{Html::script('assets/backend/js/script.js')}}
 	<script type="text/javascript">
 		var page_num = 0;
 		$(document).ready(function(){
