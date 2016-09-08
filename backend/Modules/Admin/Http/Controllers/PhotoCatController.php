@@ -28,7 +28,6 @@ class PhotoCatController extends Controller
 
     public function index()
     {
-
         $stores = $this->request->stores;
         $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
         $list_store = $stores->lists('name','id');
@@ -117,7 +116,6 @@ class PhotoCatController extends Controller
     public function store()
     {
 
-        return redirect()->back();
         $this->entity = new PhotoCat();
         $this->entity->name = $this->request->input('name');
         $this->entity->store_id = $this->request->input('store_id');

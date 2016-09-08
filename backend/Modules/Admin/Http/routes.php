@@ -46,8 +46,6 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('photo-cate/nextcat',['as'=>'admin.photo-cate.nextcat','uses'=>'PhotoCatController@nextcat'] );
         Route::get('photo-cate/nextpreview',['as'=>'admin.photo-cate.nextpreview','uses'=>'PhotoCatController@nextpreview'] );
         Route::resource('photo-cate','PhotoCatController');
-        // PHOTO
-        Route::resource('photo','PhotoController');
         // STAFF
         Route::resource('staff','StaffController');
 
