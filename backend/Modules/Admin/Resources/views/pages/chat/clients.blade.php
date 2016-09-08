@@ -12,19 +12,24 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="{{ secure_asset('assets/css/chat.css') }} "/>
 	<div class="content">
+	    
     	<div class="rows">
+    	    <!--
     		<div class="col-lg-3 col-md-3">
     			<div id="" style="margin-top:5px;">
     				<div id ="enduser-chat-list" class="list-group"></div>
     			</div>
-    		</div>
+    		</div>-->
     		<div id="message-wrapper" class="col-lg-9 col-md-9"></div>
     	</div>
         
         <div id="room-template" class="hide">
         	<div id="" class="rooms">
     	        <div class="panel panel-default">
-    	            <div class="panel-heading"></div>
+    	            <div class="panel-heading">
+    	                <span class="name"></span>
+    	                <span class="status" style="color:red">Online</span>
+    	            </div>
     	            <div class="panel-body">
     	                <ul class="messages scrollbar-macosx"></ul>
     	            </div>
@@ -67,6 +72,11 @@
                   </div>
               </li>
           </div>
+          <div class="message_template_system" style="display:none">
+              <li class="text-center">
+                  <p class="text-muted"></p>
+              </li>
+          </div>
     </div>	<!-- end main-content-->
     <div class="clearfix"></div>
 @stop
@@ -83,40 +93,50 @@ var channel = '{{ $channel }}';
 
 
 function drawMessage(package){
-	var $message;
+	var $message,$messages;
 	var side = 'left';
 	if( package.user.profile.mid == profile.mid ){
 	    side = 'right';
 	}
 	
-  
- 
-    if( checkExistBoxItems(package.user.profile) ){
-        renderChatLists(package.user.profile);
-        renderChatBox(package.user.profile,function(valid){
-            if( valid ){}
-        });
+	checkExistBoxItems(package.user.profile,function( $box ){
+
+        $message = $($('.message_template').clone().html());
+        $message.addClass(side).find('.text').html(package.message.message);
+        $message.find('.avatar img').attr('src',package.user.profile.pictureUrl+'/small')
+        $message.find('.timestamp').text( converTimestamp(package.message.timestamp));
+        $box.find('ul.messages').append($message);
+            
+        setTimeout(function () {
+            return $message.addClass('appeared');
+        }, 0);
         
-    }
-    
-    $messages = $('div#box-'+ package.user.profile.mid +' ul.messages');
-    $message = $($('.message_template').clone().html());
-    $message.addClass(side).find('.text').html(package.message.message);
-    $message.find('.avatar img').attr('src',package.user.profile.pictureUrl+'/small')
-    $message.find('.timestamp').text( converTimestamp(package.message.timestamp));
-    
-    $messages.append($message);
-    
-    
-    setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
-    
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-  
+        return $box.find('ul.messages').animate({ scrollTop: $box.find('ul.messages').prop('scrollHeight') }, 300);
+	     
+	 })
+
 };
+function checkExistBoxItems(profile, _callback){
+    var $box = $('#message-wrapper #'+profile.boxid);
+    if( $box != typeof undefined && $box.length > 0 ){
+        return _callback( $box );
+    }else{
+        renderChatBox(profile,function( $box ){
+             return _callback($box);
+        })
+    }
+}
 
-
+function renderChatBox(profile,_callback){
+    
+    var $template;
+    $template = $($('#room-template .rooms').clone().html());
+    $template.attr('id',profile.boxid).attr('data-id',profile.boxid)
+        .find('.panel-heading span.name').html(profile.displayName);
+    $('#message-wrapper').append($template);
+    _callback($template);
+    
+}
 
 // Send message text enduser typing   
 function sendMessage(target) {
@@ -130,7 +150,6 @@ function sendMessage(target) {
     
     $messages = $(closest).find('ul.messages');
     
-
     var d = new Date();
     $message = $($('.message_template').clone().html());
     $message.addClass('right').find('.text').html($(closest).find('input').val() );
@@ -172,6 +191,7 @@ function connectToChat() {
     });
     
     socket.on('receive.admin.message',function( package ){
+        package.user.profile.boxid = package.user.profile.mid;
         drawMessage(package);
         console.log('Client send');
         console.log(package);
@@ -183,14 +203,24 @@ function connectToChat() {
         if( package.length > 0 ){
             $(package).each(function(index, item) {
                 $(item.history).each(function(index1, item1){
-                    var where = (function(){
+                    var profileTemp = (function(){
                         if(item1.from_mid === profile.mid)
-                            return item1.from_mid
+                            return {
+                                displayName: profile.displayName,
+                                mid: profile.mid,
+                                pictureUrl: profile.pictureUrl,
+                                boxid: item1.mid
+                            }
                         else{
-                            return item1.to_mid
+                            return {
+                                displayName: item1.displayName,
+                                mid: item1.mid,
+                                pictureUrl: item1.pictureUrl,
+                                boxid: item1.mid
+                            }
                         }
                     })();
-                    console.log('where'+where);
+                
                     var temp = {
                         message:{
                             message: item1.message,
@@ -198,11 +228,7 @@ function connectToChat() {
                         },
                         user: {
                             channel: item1.room_id,
-                            profile: {
-                                displayName: item1.displayName,
-                                mid: where,
-                                pictureUrl: item1.pictureUrl,
-                            }
+                            profile: profileTemp
                         }
                         
                     };
@@ -215,38 +241,32 @@ function connectToChat() {
     })
     
     socket.on('receive.admin.connected',function(package){
-      drawSystemMessage(package);
+        package.status = 'Online';
+        drawSystemMessage(package);
     })
     
     socket.on('receive.admin.disconnect',function(package){
-      drawSystemMessage(package);
+        package.status = 'Offline';
+        drawSystemMessage(package);
     })
 }
 
 
 function drawSystemMessage(package){
-    
-}
-
-function displayListEndUsers(endUsers){
-    $(endUsers).each(function(index,item){
-        if( item.mid !== item.roomid ){
-            if( checkExistBoxItems(item) )
-                renderChatLists(item);
-                renderChatBox(item);
-        }
-    });
-}
-
-function checkExistBoxItems(profile){
-    if(  
-        $('#enduser-chat-list #'+profile.mid) != typeof undefined &&
-        $('#enduser-chat-list #'+profile.mid).length > 0 ){
-        return false;
-    }else{
-        return true;
-    }
-
+    console.log('system mesage'+ JSON.stringify(package) );
+    package.user.profile.boxid = package.user.profile.mid;
+    checkExistBoxItems(package.user.profile, function($box) {
+        $box.find('span.status').text(package.status);
+        var $messages = $box.find('ul.messages');
+        var $message = $($('.message_template_system').clone().html());
+        $message.find('p').text(package.message);
+        $messages.append($message);
+        setTimeout(function () {
+          return $messages.addClass('appeared');
+        }, 0);
+        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    } );
+   
     
 }
 
@@ -266,15 +286,6 @@ function renderChatLists(profile){
 }
 
 
-function renderChatBox(profile,callback){
-    
-    var $template;
-    $template = $($('#room-template .rooms').clone().html());
-    $template.attr('id','box-'+profile.mid).attr('data-id',profile.mid)
-        .find('.panel-heading').html(profile.displayName);
-    $('#message-wrapper').append($template);
-    callback(true);
-}
 
 function converTimestamp(timestamp){
   var d = new Date(timestamp);

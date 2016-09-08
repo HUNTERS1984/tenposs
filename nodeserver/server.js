@@ -8,7 +8,7 @@ var app     = require('express')(),
     
 // Models
 const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
-
+var BOT_MID="uaa357d613605ebf36f6366a7ce896180";
 
 var Messages          = require("./models/Messages");
 var LineAccounts      = require("./models/LineAccounts"); 
@@ -26,6 +26,8 @@ http.listen(port, function() {
 io.on('connection', function (socket) {
 
     socket.on('join', function(user) {
+
+        
         // Check user type connect is exist
         if( userType.indexOf(user.from) === -1 ){
             console.log('Error: Not found user type connect');
@@ -97,7 +99,7 @@ io.on('connection', function (socket) {
                         for( var i in arrMids ){
                             if( arrMids[i] !== socket.user.profile.mid ){
                                 count++;
-                                Messages.getMessageClientHistory('uaa357d613605ebf36f6366a7ce896180',socket.user.profile.mid,arrMids[i],20, function(data){
+                                Messages.getMessageClientHistory(socket.room,socket.user.profile.mid,arrMids[i],20, function(data){
                                     console.log('return data history: '+arrMids[i]);
                                     var temp = {
                                         mid: arrMids[i],
@@ -114,12 +116,8 @@ io.on('connection', function (socket) {
                                     
                                 } );
                                 
-                               
                             }
-                            
                         }
-                        
-                        
                     }
                     
                 } );
@@ -154,6 +152,13 @@ io.on('connection', function (socket) {
         };
         console.log("send package to admin ");
         console.log( packageMessages );
+        
+        // Find client inroom
+        Messages.saveMessage(socket.room, socket.user.profile.mid, BOT_MID, package.message, function(inserID){
+           console.log('Save message success');
+        });
+        
+   
         io.sockets.in(socket.room).emit('receive.admin.message', packageMessages);
         
         Bot.sendTextMessage(
@@ -171,6 +176,11 @@ io.on('connection', function (socket) {
             user: socket.user,
             message: package
         };
+        
+         // Find client inroom
+        Messages.saveMessage(socket.room, BOT_MID, package.to, package.message, function(inserID){
+           console.log('Save admin message success');
+        });
         
         findClientInRoomByMid( socket.room, package.to, function( client ){
             if( client ){
