@@ -10,7 +10,7 @@
 				<div class="left-topbar">
 					<h1 class="title">フォトギャラリー</h1>
 				</div>
-				<!-- <div class="right-topbar">
+				<div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
 					<a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
 				</div>
@@ -95,14 +95,6 @@
 							            <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
 							            	
 									@endif
-								</div>
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="text-right">
-											{{$photo->links()}}
-										</div>
-										
-									</div>
 								</div>
 							</div>
 
