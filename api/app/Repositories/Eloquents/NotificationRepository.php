@@ -90,8 +90,10 @@ class NotificationRepository implements NotificationRepositoryInterface
     public function get_info_nofication($app_id, $type)
     {
         $rs = $this->get_app_push_from_app_id($app_id);
+        Log::info("get_app_push_from_app_id: ".json_encode($rs));
         if (count($rs) > 0) {
             $isPerNoti = $this->check_permission_notify_from_data($rs['userpushs'], $type);
+            Log::info("check_permission_notify_from_data: ".json_encode($rs));
             if ($isPerNoti) {
                 return array("android_push_key" => $rs['user']['android_push_key'],
                     "apple_push_key" => $rs['user']['apple_push_key'],
@@ -120,20 +122,12 @@ class NotificationRepository implements NotificationRepositoryInterface
 
     public function process_notify($message)
     {
-//        $message = '
-//{
-//  "app_user_id":1,
-//  "type":"news",
-//  "data_id":1,
-//  "data_value":"",
-//  "created_by":"bangnk"
-//}';
         if (!empty($message)) {
             $obj = json_decode($message);
             if (count($obj) > 0) {
                 if (property_exists($obj, "app_user_id") && property_exists($obj, "type")) {
                     $notify_info = $this->get_info_nofication($obj->app_user_id, $obj->type);
-
+                    Log::info("get_info_nofication: ".json_encode($notify_info));
                     $data_notify = null;
                     if (count($notify_info) > 0) {
                         switch ($obj->type) {
@@ -164,6 +158,7 @@ class NotificationRepository implements NotificationRepositoryInterface
                             default:
                                 break;
                         }
+                        Log::info("data_notify: ".json_encode($data_notify));
                         //process notify
                         if (count($data_notify) > 0) {
                             if (!empty($notify_info['android_push_key']) && !empty($notify_info['android_push_api_key'])) {

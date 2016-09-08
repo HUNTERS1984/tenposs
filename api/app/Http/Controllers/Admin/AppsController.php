@@ -167,7 +167,6 @@ class AppsController extends Controller
             $path = base_path() . $pathAppend;
             $request->file('file')->move($path, $imageName);
             $extension = pathinfo($imageName, PATHINFO_EXTENSION);
-            print_r($extension);
             if ($extension == 'p12')
                 ConvertUtils::convert_p12_to_pem($path . $imageName, $request->input('apikey'),$pathAppend);
             $flatform = $request->input('flatform');
