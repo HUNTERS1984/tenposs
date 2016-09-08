@@ -62,6 +62,10 @@ class NewsController extends Controller
             if ($total_news > 0)
                 $news = News::where('store_id', Input::get('store_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
 
+            for ($i = 0; $i < count($news); $i++) {
+                $news[$i]->image_url = url('/') . '/' . $news[$i]->image_url;
+            }
+
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
