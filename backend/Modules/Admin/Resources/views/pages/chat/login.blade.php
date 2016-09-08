@@ -22,7 +22,7 @@
 </head>
 <body >
     <div style="position: relative">
-        <a  href="https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id={{ env('LINE_CHANEL_ID') }}&redirect_uri={{env('LINE_LOGIN_CALLBACK_URL')}}&state=">
+        <a  href="https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id={{ Config::get('line.LINE_CHANEL_ID') }}&redirect_uri={{Config::get('line.LINE_LOGIN_CALLBACK_URL')}}&state=">
             <img class="center-block" src="{{ url('assets/images/btn_login_base.png') }}" alt="">
         </a>
     </div>
