@@ -104,7 +104,9 @@ class StaffController extends Controller
             $staffs = [];
             if ($total_staffs > 0)
                 $staffs = StaffCategory::find(Input::get('category_id'))->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-
+            for ($i = 0; $i < count($staffs); $i++) {
+                $staffs[$i]['image_url'] = Config::get('api.media_base_url').$staffs[$i]['image_url'];
+            }
         } catch (\Illuminate\Database\QueryException $e) {
             dd($e);
             return $this->error(9999);
