@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'media_base_url' => 'https://ten-po.com/',
+
     'time_expire' => 5000000,
 
     //items
