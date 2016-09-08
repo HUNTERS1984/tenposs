@@ -49,7 +49,9 @@
 					<td>{{ $app->created_at }}</td>
 					<td>
 						<a href="{{route('admin.clients.apps.edit',['user_id'=>$user_id,'app_id' => $app->id])}}">Edit</a>
+						<br />
 						<a href="{{route('admin.clients.apps.delete',['user_id'=>$user_id,'app_id' => $app->id])}}">Remove</a>
+						<br />
 						<a href="{{route('admin.clients.apps.setting',['user_id'=>$user_id,'app_id' => $app->id])}}">AppSetting</a>
 					</td>
 				</tr>
