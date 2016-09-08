@@ -25,7 +25,7 @@ use App\Models\App as AppClient;
 use DB;
 use Auth;
 
-
+use Config;
 use L5Redis;
 
 class ChatLineController extends Controller
@@ -53,7 +53,7 @@ class ChatLineController extends Controller
     * Handle BOT Server callback
     */
     public function index(Request $request){
-      
+        return response('ok',200);
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
@@ -101,22 +101,22 @@ class ChatLineController extends Controller
             
         // Get profile BOT
         $config = [
-            'channelId' =>  env('BOT_CHANEL_ID'),
-            'channelSecret' => env('BOT_CHANEL_SECRET'),
-            'channelMid' => env('BOT_MID'),
+            'channelId' =>  Config::get('line.BOT_CHANEL_ID'),
+            'channelSecret' => Config::get('line.BOT_CHANEL_SECRET'),
+            'channelMid' => Config::get('line.BOT_MID'),
         ];
         $bot = new LINEBot($config, new GuzzleHTTPClient($config));
         
-        $profile = $bot->getUserProfile([  env('BOT_MID') ]);
+        $profile = $bot->getUserProfile([  Config::get('line.BOT_MID') ]);
        
-        $request = $this->curl->newRequest('get',self::API_BOT_PROFILE,['mids' => env('BOT_MID')])
+        $request = $this->curl->newRequest('get',self::API_BOT_PROFILE,['mids' => Config::get('line.BOT_MID')])
             ->setHeader('Accept-Charset', 'utf-8')
-            ->setHeader('X-Line-ChannelID', env('BOT_CHANEL_ID') )
-            ->setHeader('X-Line-ChannelSecret', env('BOT_CHANEL_SECRET') )
-            ->setHeader('X-Line-Trusted-User-With-ACL', env('BOT_MID') );
+            ->setHeader('X-Line-ChannelID', Config::get('line.BOT_CHANEL_ID') )
+            ->setHeader('X-Line-ChannelSecret', Config::get('line.BOT_CHANEL_SECRET') )
+            ->setHeader('X-Line-Trusted-User-With-ACL', Config::get('line.BOT_MID') );
              
         return view('admin::pages.chat.clients',[
-            'channel' =>  Auth::user()->id.'-'.env('BOT_CHANEL_ID'),
+            'channel' =>  Auth::user()->id.'-'.Config::get('line.BOT_CHANEL_ID'),
             'profile' => json_encode($profile['contacts'][0])]);
     }
     
@@ -184,7 +184,7 @@ class ChatLineController extends Controller
    
             return view('admin::pages.chat.message',[ 
                 'profile' => json_encode($profile), 
-                'channel' => $app_user[0]->id.'-'.env('BOT_CHANEL_ID') ]);
+                'channel' => $app_user[0]->id.'-'.Config::get('line.BOT_CHANEL_ID') ]);
         }
        
     }
@@ -204,8 +204,8 @@ class ChatLineController extends Controller
             
             $paramsRequestToken = array(
                 'grant_type' => 'authorization_code', 
-                'client_id' => env('LINE_CHANEL_ID'),
-                'client_secret' => env('LINE_CHANEL_SECRET'),
+                'client_id' => Config::get('line.LINE_CHANEL_ID'),
+                'client_secret' => Config::get('line.LINE_CHANEL_SECRET'),
                 'code' => $request->input('code'),
                 'redirect_uri' => url('chat/verifined')
             );
@@ -263,7 +263,7 @@ class ChatLineController extends Controller
    
                 return view('admin::pages.chat.message',[ 
                     'profile' => json_encode($profile), 
-                    'channel' => $app_user[0]->id.'-'.env('LINE_CHANEL_ID') ]);
+                    'channel' => $app_user[0]->id.'-'.Config::get('line.LINE_CHANEL_ID') ]);
     
             }
             
