@@ -1,8 +1,8 @@
 exports.database = {
     host     : 'localhost',
-    user     : 'phanvannhien',
-    password : '',
-    database : 'c9'
+    user     : 'root',
+    password : 'Tenposs@123',
+    database : 'tenposs'
 }
 
 
