@@ -197,6 +197,11 @@ class ChatLineController extends Controller
     public function verifined(Request $request){
        
         if( $request->has('code') ){
+            
+            if( !Session::has('appuser') ){
+                abort(503);
+            }
+            
             $curl = new \anlutro\cURL\cURL;
            
             $appuser = Session::get('appuser');
@@ -263,7 +268,7 @@ class ChatLineController extends Controller
    
                 return view('admin::pages.chat.message',[ 
                     'profile' => json_encode($profile), 
-                    'channel' => $app_user[0]->id.'-'.Config::get('line.LINE_CHANEL_ID') ]);
+                    'channel' => $app_user[0]->id.'-'.Config::get('line.BOT_CHANEL_ID') ]);
     
             }
             
