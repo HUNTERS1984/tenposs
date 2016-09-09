@@ -19,10 +19,11 @@ exports.checkExistAccounts = function(user, _callback){
                 	" WHERE line_accounts.mid = ?"+
                 	" LIMIT 1";
       	
-        connection.query({
+        var query = connection.query({
             sql: sql,
                 values: [user.profile.mid]
             }, function (error, results, fields) {
+                console.log(query.sql);
                 if(error) return _callback(false);
                 console.log(results[0]);
                 if( results[0])
