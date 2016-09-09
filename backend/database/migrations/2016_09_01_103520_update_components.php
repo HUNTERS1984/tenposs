@@ -16,6 +16,7 @@ class UpdateComponents extends Migration
             $table->string('top')->after('name')->nullable();;
             $table->string('sidemenu')->after('top')->nullable();;
             $table->smallInteger('viewmore')->after('sidemenu');
+            $table->string('sidemenu_icon')->after('viewmore');
         });
     }
 
@@ -30,6 +31,7 @@ class UpdateComponents extends Migration
             $table->dropColumn('top');
             $table->dropColumn('sidemenu');
             $table->dropColumn('viewmore');
+            $table->dropColumn('sidemenu_icon');
         });
     }
 }

@@ -39,7 +39,7 @@ class App extends Model
     // }
     public function side_menu()
     {
-        return $this->belongsToMany(Component::class, 'rel_app_settings_sidemenus', 'app_setting_id', 'sidemenu_id')->orderBy('order', 'asc')->whereNotNull('sidemenu')->select(array('id', 'sidemenu AS name'));
+        return $this->belongsToMany(Component::class, 'rel_app_settings_sidemenus', 'app_setting_id', 'sidemenu_id')->orderBy('order', 'asc')->whereNotNull('sidemenu')->select(array('id', 'sidemenu AS name', 'sidemenu_icon AS icon'));
     }
 
     public function stores()
