@@ -1,27 +1,43 @@
-// Start redis: sudo service redis-server start
-var app     = require('express')(),
-    http    = require('http').Server(app),
-    io      = require('socket.io')(http),
+var https   = require('https'),     
+    fs      = require('fs'),
+    express = require('express'),
+    app     = express();
+
+var options = {
+    key:    fs.readFileSync('/etc/apache2/ssl/ten-po.key'),
+    cert:   fs.readFileSync('/etc/apache2/ssl/ten-po.crt'),
+    ca:     fs.readFileSync('/etc/apache2/ssl/ten-po-ca.crt')
+};
+
+var server  = https.createServer(options, app),
+    io      = require('socket.io')(server),
     Redis   = require('ioredis'),
-    redis   = new Redis(8082),// Start redis on port 8082
+    redis   = new Redis(6379),// Start redis on port 8082
     request = require('request'),
     config  = require("./config");
+    
+    
+server.listen(3000, function(){
+    console.log('Server up and running at: 3000');
+});
+
 // Models
 const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
 var BOT_MID="uaa357d613605ebf36f6366a7ce896180";
-
 var Messages          = require("./models/Messages");
 var LineAccounts      = require("./models/LineAccounts"); 
 var Apps              = require("./models/Apps"); 
 var Bot               = require("./line/Bot"); 
 
-var port = 8081; // Start socket io port 8081
 
 var userType = ['client','enduser'];
-   
-http.listen(port, function() {
-    console.log('Listening on *:' + port);
-});
+var toUser = {
+    bot_mid:        config.bot.BOT_MID,
+    pictureUrl:     config.bot.BOT_PICTURE_URL,
+    statusMessage:  config.bot.BOT_STATUS_MESSAGE,
+    displayName:    config.bot.BOT_DISPLAY_NAME
+};
+
 
 io.on('connection', function (socket) {
 
@@ -49,7 +65,7 @@ io.on('connection', function (socket) {
                         socket.room = user.channel;
                         socket.user = user;
                         socket.join(user.channel);
-                        socket.to = exitsUser;
+                        socket.to = toUser;
                          // Find client in room are online
                         findIsClientInRoom(socket.room, function( foundClient ){
                            
@@ -70,10 +86,10 @@ io.on('connection', function (socket) {
                                 })
                             }else{
                                 console.log('Info: Not found client emit history: not client online');
-                                Messages.getMessageHistory( exitsUser.bot_mid, socket.user.profile.mid, 10, function( messages ){
+                                Messages.getMessageHistory( toUser.bot_mid, socket.user.profile.mid, 10, function( messages ){
                                     var package = {
                                         messages: messages,
-                                        to: exitsUser
+                                        to: toUser
                                     };
                                     socket.emit('history', package);
                                 })
