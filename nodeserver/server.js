@@ -4,8 +4,8 @@ var app     = require('express')(),
     io      = require('socket.io')(http),
     Redis   = require('ioredis'),
     redis   = new Redis(8082),// Start redis on port 8082
-    request = require('request');
-    
+    request = require('request'),
+    config  = require("./config");
 // Models
 const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
 var BOT_MID="uaa357d613605ebf36f6366a7ce896180";
@@ -139,7 +139,17 @@ io.on('connection', function (socket) {
             
         }
         
-
+        socket.on('disconnect', function() {
+            var package = {
+                user: socket.user,
+                message: socket.user.profile.displayName +' disconnected!'
+            };
+            if( socket.user.from == 'enduser' )
+                io.sockets.in(socket.room).emit('receive.admin.disconnect',package );
+            else{
+                io.sockets.in(socket.room).emit('receive.user.disconnect', package );
+            }
+        });
 
     });
     
@@ -199,17 +209,7 @@ io.on('connection', function (socket) {
  
     });
     
-    socket.on('disconnect', function() {
-        var package = {
-            user: socket.user,
-            message: socket.user.profile.displayName +' disconnected!'
-        };
-        if( socket.user.from == 'enduser' )
-            io.sockets.in(socket.room).emit('receive.admin.disconnect',package );
-        else{
-            io.sockets.in(socket.room).emit('receive.user.disconnect', package );
-        }
-    });
+    
     
 });
 
