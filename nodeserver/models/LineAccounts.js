@@ -14,8 +14,8 @@ var connection = mysql.createConnection({
 
 exports.checkExistAccounts = function(user, _callback){
         if( user.from == 'client' ) _callback(true);
-        var sql =   " line_accounts.mid, line_accounts.pictureUrl, line_accounts.statusMessage, line_accounts.displayName "+
-                	" from line_accounts"+
+        var sql =   " SELECT line_accounts.mid, line_accounts.pictureUrl, line_accounts.statusMessage, line_accounts.displayName "+
+                	" FROM line_accounts"+
                 	" WHERE line_accounts.mid = ?"+
                 	" LIMIT 1";
       	
