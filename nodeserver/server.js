@@ -111,29 +111,36 @@ io.on('connection', function (socket) {
                     console.log('Array enduser connect'+ JSON.stringify(arrMids) );
                     
                     if( arrMids.length > 0 ){
-                        var count = 0;
-                        for( var i in arrMids ){
-                            if( arrMids[i] !== socket.user.profile.mid ){
-                                count++;
-                                Messages.getMessageClientHistory(socket.room,socket.user.profile.mid,arrMids[i],20, function(data){
-                                    console.log('return data history: '+arrMids[i]);
-                                    var temp = {
-                                        mid: arrMids[i],
-                                        history: data
-                                    }
-                                   
-                                    packageHistory.push(temp);
-                                    console.log(packageHistory);
-                                    console.log( 'i:'+(arrMids.length - 1)+'count:'+count );
+                       
+                        removeItemArray(arrMids,socket.user.profile.mid, function(newArr){
+                            var count = 0;
+                            for( var i in newArr ){
+                                if( arrMids[i] !== socket.user.profile.mid ){
+                                    count++;
+                                    Messages.getMessageClientHistory(socket.room,socket.user.profile.mid,arrMids[i],20, function(data){
+                                        console.log('return data history: '+arrMids[i]);
+                                        var temp = {
+                                            mid: arrMids[i],
+                                            history: data
+                                        }
+                                       
+                                        packageHistory.push(temp);
+                                        console.log(packageHistory);
+                                        console.log( 'i:'+(arrMids.length - 1)+'count:'+count );
+                                        
+                                        if( count == (arrMids.length) ){
+                                            socket.emit('history',packageHistory);
+                                        }
+                                        
+                                    } );
                                     
-                                    if( count == (arrMids.length - 1) ){
-                                        socket.emit('history',packageHistory);
-                                    }
+                                }else{
                                     
-                                } );
-                                
+                                }
                             }
-                        }
+                        });
+                        
+                       
                     }
                     
                 } );
@@ -286,4 +293,16 @@ function getEnduserMidsOnlineInRoom(room_id, _callback){
             }
         }
     });
+}
+
+
+function removeItemArray(arr, val,_callback) {
+  var j = 0;
+  for (var i = 0, l = arr.length; i < l; i++) {
+    if (arr[i] !== val) {
+      arr[j++] = arr[i];
+    }
+  }
+  arr.length = j;
+  _callback(arr);
 }
