@@ -29,7 +29,7 @@ return [
     'cache_items' => 'items_%s_%s_%s_%s', // app_id,menu_id,pageindex,pagesize
     'cache_menus' => 'menus_%s_%s', // app_id,menu_id
     'cache_photo_cat' => 'photo_cat_%s_%s', // app_id,store_id
-    'cache_photos' => 'photos_%s_%s_%s_%s', // app_id,menu_id,pageindex,pagesize
+    'cache_photos' => 'photos_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
     'cache_reserve' => 'reserve_%s_%s', // app_id,store_id
     'cache_app_detail' => 'app_detail_%s', // app_id
     'cache_app_detail_token' => 'app_detail_token_%s', // token
