@@ -93,7 +93,7 @@ class PhotoController extends Controller
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key redis
-        $key = sprintf(Config::get('api.cache_photos'), Input::get('app_id'), Input::get('store_id'), Input::get('pageindex'),Input::get('pagesize'));
+        $key = sprintf(Config::get('api.cache_photos'), Input::get('app_id'), Input::get('category_id'), Input::get('pageindex'),Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
