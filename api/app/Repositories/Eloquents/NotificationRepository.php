@@ -180,7 +180,7 @@ class NotificationRepository implements NotificationRepositoryInterface
                                 //notification to apple
                                 $rs_ios = PushNotification::getInstance()->iOS($data_notify, $notify_info['apple_push_key'], base_path() . $notify_info['apple_push_cer_file'], $notify_info['apple_push_cer_password']);
                                 $obj->platform = 'ios';
-                                if ($rs_android)
+                                if ($rs_ios)
                                     $obj->notify_status = 1;//success
                                 else
                                     $obj->notify_status = 0;//fail
