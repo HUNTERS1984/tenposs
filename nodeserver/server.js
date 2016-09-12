@@ -50,13 +50,13 @@ io.on('connection', function (socket) {
         console.log('--------------------- Redisss ---------------');
         console.log('Receive message %s from system in channel %s', message, channel);
         
-        findClientInRoomByMid(message.channel,message.content.from, function( foundClient ){
+        findClientInRoomByMid(message.channel,message.data.content.from, function( foundClient ){
             if( foundClient ){
                 var packageMessages = {
                     user: foundClient.user,
                     message: {
-                        message: message.content.text,
-                        timestamp: message.content.createdTime
+                        message: message.data.content.text,
+                        timestamp: message.data.content.createdTime
                     }
                 };
                 
@@ -65,7 +65,7 @@ io.on('connection', function (socket) {
             }
             
         })
-        Messages.saveMessage(message.channel, message.content.from, BOT_MID, message.content.text, function(inserID){
+        Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
             console.log('Save message BOT success');
         });
   
