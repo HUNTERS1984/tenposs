@@ -79,7 +79,7 @@ class ChatLineController extends Controller
                 case 1: // Text Message
                     Log::info(print_r($data, true));
                     $redis = LRedis::connection();
-                    $redis->publish('message_bot', json_encode($data->content));
+                    $redis->publish('message', json_encode($data->content));
                     break;
                 
                 default:
