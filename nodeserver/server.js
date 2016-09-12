@@ -39,6 +39,19 @@ var toUser = {
 
 
 io.on('connection', function (socket) {
+    
+    var redisClient = redis.createClient();
+    //subscribe connected user to a specific channel, 
+    //later he can receive message directly from our ChatController
+    redisClient.subscribe('message.bot');
+    
+    // get messages send by ChatController
+    redisClient.on("message.bot", function (channel, message) {
+        console.log('--------------------- Rediss ---------------');
+        console.log('Receive message %s from system in channel %s', message, channel);
+        socket.emit(channel, message);
+    });
+    
 
     socket.on('join', function(user) {
 
@@ -147,23 +160,6 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.connected', packageConnected);
             }
                 
-            var redisClient = redis.createClient();
-
-            //subscribe connected user to a specific channel, 
-            //later he can receive message directly from our ChatController
-            redisClient.subscribe('message.bot');
-            
-            // get messages send by ChatController
-            redisClient.on("message.bot", function (channel, message) {
-                console.log('--------------------- Rediss ---------------');
-                console.log('Receive message %s from system in channel %s', message, channel);
-                socket.emit(channel, message);
-            });
-            
-            
-            
-            
-            
         }
         
         socket.on('disconnect', function() {
@@ -177,6 +173,9 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.disconnect', package );
             }
         });
+        
+        
+        
 
     });
     
