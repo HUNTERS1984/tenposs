@@ -26,7 +26,7 @@ use DB;
 use Auth;
 
 use Config;
-use L5Redis;
+use LRedis;
 
 class ChatLineController extends Controller
 {
@@ -78,7 +78,7 @@ class ChatLineController extends Controller
                 
                 case 1: // Text Message
                     Log::info(print_r($data, true));
-                    $redis = L5Redis::connection();
+                    $redis = LRedis::connection();
                     $redis->publish('message.bot', json_encode($data->content));
                     break;
                 
