@@ -11,8 +11,7 @@ var options = {
 
 var server  = https.createServer(options, app),
     io      = require('socket.io')(server),
-    Redis   = require('ioredis'),
-    redis   = new Redis(6379),// Start redis on port 8082
+    redis   = require('ioredis'),
     request = require('request'),
     config  = require("./config");
     
@@ -148,17 +147,22 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.connected', packageConnected);
             }
                 
+            var redisClient = redis.createClient();
+
             //subscribe connected user to a specific channel, 
             //later he can receive message directly from our ChatController
-            redis.subscribe(['message.bot'], function (err, count) {
-                console.log(count);
-            });
+            redisClient.subscribe('message.bot');
             
             // get messages send by ChatController
-            redis.on("message.bot", function (channel, message) {
+            redisClient.on("message.bot", function (channel, message) {
+                console.log('--------------------- Rediss ---------------');
                 console.log('Receive message %s from system in channel %s', message, channel);
                 socket.emit(channel, message);
             });
+            
+            
+            
+            
             
         }
         
