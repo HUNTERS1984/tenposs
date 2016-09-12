@@ -47,9 +47,28 @@ io.on('connection', function (socket) {
     
     // get messages send by ChatController
     redisClient.on("message", function (channel, message) {
-        console.log('--------------------- Rediss ---------------');
+        console.log('--------------------- Redisss ---------------');
         console.log('Receive message %s from system in channel %s', message, channel);
-        socket.emit(channel, message);
+        
+        findClientInRoomByMid(message.channel,message.content.from, function( foundClient ){
+            if( foundClient ){
+                var packageMessages = {
+                    user: foundClient.user,
+                    message: {
+                        message: message.content.text,
+                        timestamp: message.content.createdTime
+                    }
+                };
+                
+                foundClient.emit('receive.user.message',packageMessages);
+                io.sockets.in(message.channel).emit('receive.admin.message', packageMessages);
+            }
+            
+        })
+        Messages.saveMessage(message.channel, message.content.from, BOT_MID, message.content.text, function(inserID){
+            console.log('Save message BOT success');
+        });
+  
     });
     
 
@@ -234,7 +253,6 @@ io.on('connection', function (socket) {
         
  
     });
-    
     
     
 });
