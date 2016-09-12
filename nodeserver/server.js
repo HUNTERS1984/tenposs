@@ -41,47 +41,59 @@ var redisClient = redis.createClient();
 redisClient.subscribe('message');
 // get messages send by ChatController
 redisClient.on("message", function (channel, message) {
-    console.log('--------------------- Redisss ---------------');
+    console.log('--------------------- Redisss -------------------------------');
     console.log('Receive message %s from system in channel %s', message, channel);
     message = JSON.parse(message);
-    findClientInRoomByMid(message.channel,message.data.content.from, function( foundClient ){
-        if( foundClient ){
+    // Find from is online
+    findClientInRoomByMid(message.channel,message.data.content.from, function( fromUser ){
+        if( fromUser ){
             var packageMessages = {
-                user: foundClient.user,
+                user: fromUser.user,
                 message: {
                     message: message.data.content.text,
                     timestamp: message.data.content.createdTime
                 }
             };
-            //foundClient.emit('receive.admin.message', packageMessages);
-            foundClient.emit('receive.bot.message',packageMessages);
-        }else{
+            fromUser.emit('receive.bot.message',packageMessages);
+            
+            // Find to is online
+            findClientInRoomByMid(message.channel,message.data.content.to, function( toUser ){
+                 if( toUser ){
+                     toUser.emit('receive.admin.message', packageMessages);
+                 }
+            });
+            
+        }else{// From User not Online
             var findUserInfo = {
-                user:{
-                    profile:{
-                        mid: message.data.content.from
-                    }
+                profile:{
+                    mid: message.data.content.from
                 }
             };
             LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
                 if( !exitsUser ){
                     console.log('Error: Enduser LineAccounts not exits'); return;
                 }else{
-                    foundClient.emit('receive.admin.message', {
-                        user: {
-                            profile:{
-                                mid: exitsUser.mid,
-                                pictureUrl: exitsUser.pictureUrl,
-                                displayName: exitsUser.displayName,
-                                statusMessage: exitsUser.statusMessage
-                            }
-                        },
-                        message: {
-                            message: message.data.content.text,
-                            timestamp: message.data.content.createdTime
+                    // check to User is online
+                    findClientInRoomByMid(message.channel,message.data.content.to, function( toUser ){
+                        if(toUser){
+                            toUser.emit('receive.admin.message', {
+                                user: {
+                                    profile:{
+                                        mid: exitsUser.mid,
+                                        pictureUrl: exitsUser.pictureUrl,
+                                        displayName: exitsUser.displayName,
+                                        statusMessage: exitsUser.statusMessage
+                                    }
+                                },
+                                message: {
+                                    message: message.data.content.text,
+                                    timestamp: message.data.content.createdTime
+                                }
+                            });
                         }
+                        
                     });
-                         
+      
                 }
             });
         }
@@ -92,7 +104,6 @@ redisClient.on("message", function (channel, message) {
     });
     
 
-
 });
 
 
@@ -101,11 +112,8 @@ redisClient.on("message", function (channel, message) {
 
 
 io.on('connection', function (socket) {
-    
-    
+      
     socket.on('join', function(user) {
-
-        
         // Check user type connect is exist
         if( userType.indexOf(user.from) === -1 ){
             console.log('Error: Not found user type connect');
