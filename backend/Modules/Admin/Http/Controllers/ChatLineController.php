@@ -81,7 +81,7 @@ class ChatLineController extends Controller
                     $user = DB::table('line_accounts')
                         ->join('apps','line_accounts.app_user_id','=','apps.id')
                         ->join('users','users.id','=','apps.user_id')
-                        ->select('user.id')
+                        ->select('users.id')
                         ->get();
                        
                         
