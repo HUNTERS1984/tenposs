@@ -49,7 +49,7 @@ io.on('connection', function (socket) {
     redisClient.on("message", function (channel, message) {
         console.log('--------------------- Redisss ---------------');
         console.log('Receive message %s from system in channel %s', message, channel);
-        
+        message = JSON.parse(message);
         findClientInRoomByMid(message.channel,message.data.content.from, function( foundClient ){
             if( foundClient ){
                 var packageMessages = {
@@ -61,13 +61,33 @@ io.on('connection', function (socket) {
                 };
                 
                 foundClient.emit('receive.user.message',packageMessages);
-                io.sockets.in(message.channel).emit('receive.admin.message', packageMessages);
             }
+            Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
+                console.log('Save message BOT success');
+            });
             
-        })
-        Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
-            console.log('Save message BOT success');
         });
+        
+        findClientInRoomByMid(message.channel,message.data.content.to, function( foundClient ){
+            if( foundClient ){
+                var packageMessages = {
+                    user: foundClient.user,
+                    message: {
+                        message: message.data.content.text,
+                        timestamp: message.data.content.createdTime
+                    }
+                };
+                
+                foundClient.emit('receive.admin.message', packageMessages);
+            }
+            Messages.saveMessage(message.channel, BOT_MID, message.data.content.from, message.data.content.text, function(inserID){
+                console.log('Save message BOT success');
+            });
+            
+        });
+        
+        
+        
   
     });
     
