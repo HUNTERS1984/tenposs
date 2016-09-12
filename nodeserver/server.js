@@ -301,11 +301,17 @@ function findClientInRoomByMid( room_id, mid , _callback){
     io.in(room_id).clients(function (error, clients) {
             if (error) { _callback(false) }
             if( clients ){
+                var count = 0;
                 for( var i in clients){
+                    count++;
                     var client = io.sockets.sockets[clients[i]];
                     if( mid == client.user.profile.mid ){
                         _callback(client);
                         break;
+                    }else{
+                        if( count === clients.length ){
+                            return _callback(false);
+                        }
                     }
                 }
             }
