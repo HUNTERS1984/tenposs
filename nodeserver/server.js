@@ -43,7 +43,7 @@ io.on('connection', function (socket) {
     var redisClient = redis.createClient();
     //subscribe connected user to a specific channel, 
     //later he can receive message directly from our ChatController
-    redisClient.subscribe('message.bot');
+    redisClient.subscribe('message_bot');
     
     // get messages send by ChatController
     redisClient.on("message.bot", function (channel, message) {
