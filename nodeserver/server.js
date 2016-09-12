@@ -279,17 +279,15 @@ io.on('connection', function (socket) {
         findClientInRoomByMid( socket.room, package.to, function( client ){
             if( client ){
                 client.emit('receive.user.message', packageMessages);
-                
-                Bot.sendTextMessage(
-                     client.user.profile.mid.split(),
-                     package.message,function(result){
-                        console.log(result);
-                    }
-                );
-                    
             }
         } );
         
+        Bot.sendTextMessage(
+             package.to.split(),
+             package.message,function(result){
+                console.log(result);
+            }
+        );
  
     });
     
