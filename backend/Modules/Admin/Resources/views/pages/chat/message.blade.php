@@ -96,6 +96,12 @@ function connectToChat() {
       drawMessage('left',package.user.profile,package.message.message);
     });
     
+    socket.on('receive.bot.message',function(package){
+      console.log('receive bot message');
+      console.log(package);
+      drawMessage('right',profile,package.message.message);
+    });
+    
     socket.on('receive.user.connected',function(package){
       $('span#status').text('Online');
       drawSystemMessage(package.message);

@@ -59,8 +59,37 @@ io.on('connection', function (socket) {
                         timestamp: message.data.content.createdTime
                     }
                 };
-                
-                foundClient.emit('receive.user.message',packageMessages);
+                foundClient.emit('receive.admin.message', packageMessages);
+                foundClient.emit('receive.bot.message',packageMessages);
+            }else{
+                var findUserInfo = {
+                    user:{
+                        profile:{
+                            mid: message.data.content.from
+                        }
+                    }
+                };
+                LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
+                    if( !exitsUser ){
+                        console.log('Error: Enduser LineAccounts not exits'); return;
+                    }else{
+                        foundClient.emit('receive.admin.message', {
+                            user: {
+                                profile:{
+                                    mid: exitsUser.mid,
+                                    pictureUrl: exitsUser.pictureUrl,
+                                    displayName: exitsUser.displayName,
+                                    statusMessage: exitsUser.statusMessage
+                                }
+                            },
+                            message: {
+                                message: message.data.content.text,
+                                timestamp: message.data.content.createdTime
+                            }
+                        });
+                             
+                    }
+                });
             }
             Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
                 console.log('Save message BOT success');
@@ -68,26 +97,7 @@ io.on('connection', function (socket) {
             
         });
         
-        findClientInRoomByMid(message.channel,message.data.content.to, function( foundClient ){
-            if( foundClient ){
-                var packageMessages = {
-                    user: foundClient.user,
-                    message: {
-                        message: message.data.content.text,
-                        timestamp: message.data.content.createdTime
-                    }
-                };
-                
-                foundClient.emit('receive.admin.message', packageMessages);
-            }
-            Messages.saveMessage(message.channel, BOT_MID, message.data.content.from, message.data.content.text, function(inserID){
-                console.log('Save message BOT success');
-            });
-            
-        });
-        
-        
-        
+
   
     });
     
