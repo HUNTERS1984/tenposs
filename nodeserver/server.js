@@ -37,71 +37,72 @@ var toUser = {
     displayName:    config.bot.BOT_DISPLAY_NAME
 };
 
-
-io.on('connection', function (socket) {
-    
-    var redisClient = redis.createClient();
-    //subscribe connected user to a specific channel, 
-    //later he can receive message directly from our ChatController
-    redisClient.subscribe('message');
-    
-    // get messages send by ChatController
-    redisClient.on("message", function (channel, message) {
-        console.log('--------------------- Redisss ---------------');
-        console.log('Receive message %s from system in channel %s', message, channel);
-        message = JSON.parse(message);
-        findClientInRoomByMid(message.channel,message.data.content.from, function( foundClient ){
-            if( foundClient ){
-                var packageMessages = {
-                    user: foundClient.user,
-                    message: {
-                        message: message.data.content.text,
-                        timestamp: message.data.content.createdTime
+var redisClient = redis.createClient();
+redisClient.subscribe('message');
+// get messages send by ChatController
+redisClient.on("message", function (channel, message) {
+    console.log('--------------------- Redisss ---------------');
+    console.log('Receive message %s from system in channel %s', message, channel);
+    message = JSON.parse(message);
+    findClientInRoomByMid(message.channel,message.data.content.from, function( foundClient ){
+        if( foundClient ){
+            var packageMessages = {
+                user: foundClient.user,
+                message: {
+                    message: message.data.content.text,
+                    timestamp: message.data.content.createdTime
+                }
+            };
+            //foundClient.emit('receive.admin.message', packageMessages);
+            foundClient.emit('receive.bot.message',packageMessages);
+        }else{
+            var findUserInfo = {
+                user:{
+                    profile:{
+                        mid: message.data.content.from
                     }
-                };
-                foundClient.emit('receive.admin.message', packageMessages);
-                foundClient.emit('receive.bot.message',packageMessages);
-            }else{
-                var findUserInfo = {
-                    user:{
-                        profile:{
-                            mid: message.data.content.from
-                        }
-                    }
-                };
-                LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
-                    if( !exitsUser ){
-                        console.log('Error: Enduser LineAccounts not exits'); return;
-                    }else{
-                        foundClient.emit('receive.admin.message', {
-                            user: {
-                                profile:{
-                                    mid: exitsUser.mid,
-                                    pictureUrl: exitsUser.pictureUrl,
-                                    displayName: exitsUser.displayName,
-                                    statusMessage: exitsUser.statusMessage
-                                }
-                            },
-                            message: {
-                                message: message.data.content.text,
-                                timestamp: message.data.content.createdTime
+                }
+            };
+            LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
+                if( !exitsUser ){
+                    console.log('Error: Enduser LineAccounts not exits'); return;
+                }else{
+                    foundClient.emit('receive.admin.message', {
+                        user: {
+                            profile:{
+                                mid: exitsUser.mid,
+                                pictureUrl: exitsUser.pictureUrl,
+                                displayName: exitsUser.displayName,
+                                statusMessage: exitsUser.statusMessage
                             }
-                        });
-                             
-                    }
-                });
-            }
-            Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
-                console.log('Save message BOT success');
+                        },
+                        message: {
+                            message: message.data.content.text,
+                            timestamp: message.data.content.createdTime
+                        }
+                    });
+                         
+                }
             });
-            
+        }
+        Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
+            console.log('Save message BOT success');
         });
         
-
-  
     });
     
 
+
+});
+
+
+
+
+
+
+io.on('connection', function (socket) {
+    
+    
     socket.on('join', function(user) {
 
         
