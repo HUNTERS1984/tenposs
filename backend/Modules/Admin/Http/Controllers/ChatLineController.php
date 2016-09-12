@@ -53,7 +53,7 @@ class ChatLineController extends Controller
     * Handle BOT Server callback
     */
     public function index(Request $request){
-        return response('ok',200);
+        
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
