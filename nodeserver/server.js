@@ -97,12 +97,12 @@ redisClient.on("message", function (channel, message) {
                 }
             });
         }
-        Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
-            console.log('Save message BOT success');
-        });
+        
         
     });
-    
+    Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
+        console.log('Save message BOT success');
+    });
 
 });
 
