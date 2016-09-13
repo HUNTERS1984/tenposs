@@ -22,6 +22,7 @@ return [
     'sig_reserve' => array('app_id','time','store_id'),
     'sig_coupon' => array('app_id','time','store_id'),
     'sig_profile' => array('token','time'),
+    'sig_social_profile' => array('token','social_type', 'social_id', 'social_token', 'social_secret', 'nickname', 'time'),
     'sig_staff_category' => array('app_id','time','store_id'),
     'sig_staffs' => array('app_id','time','category_id'),
 
