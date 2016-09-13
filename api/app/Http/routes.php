@@ -54,23 +54,6 @@ Route::get('test','TestController@index');
 
 
 /*
- * Chat routing clients
- */
-
-Route::group(array('prefix' => 'chat'), function() {
-    
-    Route::get('app/{app_id}',array('as'=>'admin.clients.chat','uses'=> 'ChatLineController@chatAdmin'));
-    
-    Route::any('bot', array('as'=>'line.bot','uses' => 'ChatLineController@index' ));
-    Route::get('line/verifined/token/{mid}', array('as'=>'line.verifined.token','uses' => 'ChatLineController@verifinedToken' ));
-    Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
-    Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
-    Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
-
-    
-});
-
-/*
  * Admin routing
  */
 
@@ -84,12 +67,13 @@ Route::group(array('prefix' => 'admin',
     'middleware' => ['role:admin,access_backend']), function()
 {
 
-     Route::get('/', array('as'=>'admin.home', function(){
+    Route::get('/', array('as'=>'admin.home', function(){
         return view('admin.dashboard');
-     } ));
+    }));
     Route::get('/logout', array('as'=>'admin.logout','uses' => 'Admin\ClientsController@logout' ));
 
     Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
+    Route::get('/clients/user_id/{user_id}', array('as'=>'admin.clients.show','uses' => 'Admin\ClientsController@show' ));
     Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
     // Clients
     Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
@@ -100,7 +84,9 @@ Route::group(array('prefix' => 'admin',
 
     Route::get('/clients/{user_id}/apps/{app_id}/setting', array('as'=>'admin.clients.apps.setting','uses' => 'Admin\AppsController@setting' ));
     Route::post('/clients/{user_id}/apps/{app_id}/upload', array('as'=>'admin.clients.apps.upload','uses' => 'Admin\AppsController@upload' ));
-
+    
+    Route::get('/clients/approved/list', array( 'as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers' ));
+    Route::post('/clients/approved/process', array( 'as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess' ));
 });
 
 //Route::get('/test', function() {
