@@ -12,7 +12,7 @@ use App\Models\AppUser;
 use App\Models\UserProfile;
 use App\Models\UserPush;
 use App\Utils\RedisUtil;
-use App\Utils\SocialProfile;
+use App\Models\SocialProfile;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
