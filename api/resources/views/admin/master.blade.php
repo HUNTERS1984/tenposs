@@ -4,9 +4,11 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>Tenposs</title>
 	<link rel="stylesheet" href="{{ url('adcp/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ url('adcp/css/style.css') }}">
+	<link rel="stylesheet" href="{{ url('adcp/css/custom.css') }}">
 	<link rel="stylesheet" href="{{ url('adcp/js/switch/lc_switch.css') }}">
 	@yield('header')
 </head>
@@ -26,6 +28,11 @@
 	</div>
 	<script type="text/javascript" src="{{ url('adcp/js/jquery-1.11.2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url('adcp/js/bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url('adcp/js/script.js') }}"></script>
 	@yield('footer')
+	
+	<div id="loading" style="display: none">
+	    <img src="{{url('adcp/images/loading.gif')}}" alt="">
+	</div>
 </body>
 </html>

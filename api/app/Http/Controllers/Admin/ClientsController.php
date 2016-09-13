@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\UsersRepositoryInterface;
 use Validator;
 use Auth;
+use DB;
 use Session;
 class ClientsController extends Controller
 {
@@ -53,5 +54,20 @@ class ClientsController extends Controller
         return redirect()->route('admin.login');
     }
 
+    public function show($user_id){
+        return view('admin.clients.show',['user' => \App\Models\User::findOrFail($user_id)]);
+    }
 
+    public function approvedUsers(){
+        if( !Auth::check() ) abort(503);
+        $users = DB::table('users')
+            ->where('status',2)
+            ->where('role','')
+            ->get();
+        return view('admin.clients.approved', ['users' => $users ]);    
+    }
+    
+    public function approvedUsersProcess(Request $request){
+        return response()->json($request->all());
+    }
 }
