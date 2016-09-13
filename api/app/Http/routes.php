@@ -44,6 +44,7 @@ Route::group(array('prefix' => 'api/v1'), function()
         Route::post('set_push_setting','AppUserController@set_push_setting');
         Route::get('profile','AppUserController@profile');
         Route::post('update_profile','AppUserController@update_profile');
+        Route::post('social_profile','AppUserController@social_profile');
     });
     Route::post('notification','TopController@notification');
 });
