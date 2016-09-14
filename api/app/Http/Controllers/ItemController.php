@@ -57,7 +57,7 @@ class ItemController extends Controller
             return $this->output($this->body);
         }
         try {
-            $menus = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
+            $menus = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->orderBy('id', 'desc')->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
@@ -104,7 +104,7 @@ class ItemController extends Controller
             $total_items = Menu::find(Input::get('menu_id'))->items()->count();
             $items = [];
             if ($total_items > 0)
-                $items = Menu::find(Input::get('menu_id'))->items()->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
+                $items = Menu::find(Input::get('menu_id'))->items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
 
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]['image_url'] = Config::get('api.media_base_url').$items[$i]['image_url'];

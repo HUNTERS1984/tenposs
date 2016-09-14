@@ -11,8 +11,7 @@ var options = {
 
 var server  = https.createServer(options, app),
     io      = require('socket.io')(server),
-    Redis   = require('ioredis'),
-    redis   = new Redis(6379),// Start redis on port 8082
+    redis   = require('ioredis'),
     request = require('request'),
     config  = require("./config");
     
@@ -38,12 +37,83 @@ var toUser = {
     displayName:    config.bot.BOT_DISPLAY_NAME
 };
 
+var redisClient = redis.createClient();
+redisClient.subscribe('message');
+// get messages send by ChatController
+redisClient.on("message", function (channel, message) {
+    console.log('--------------------- Redisss -------------------------------');
+    console.log('Receive message %s from system in channel %s', message, channel);
+    message = JSON.parse(message);
+    // Find from is online
+    findClientInRoomByMid(message.channel,message.data.content.from, function( fromUser ){
+        if( fromUser ){
+            var packageMessages = {
+                user: fromUser.user,
+                message: {
+                    message: message.data.content.text,
+                    timestamp: message.data.content.createdTime
+                }
+            };
+            fromUser.emit('receive.bot.message',packageMessages);
+            
+            // Find to is online
+            findClientInRoomByMid(message.channel,message.data.content.to, function( toUser ){
+                 if( toUser ){
+                     toUser.emit('receive.admin.message', packageMessages);
+                 }
+            });
+            
+        }else{// From User not Online
+            var findUserInfo = {
+                profile:{
+                    mid: message.data.content.from
+                }
+            };
+            LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
+                if( !exitsUser ){
+                    console.log('Error: Enduser LineAccounts not exits'); return;
+                }else{
+                    // check to User is online
+                    findClientInRoomByMid(message.channel,message.data.content.to, function( toUser ){
+                        if(toUser){
+                            toUser.emit('receive.admin.message', {
+                                user: {
+                                    profile:{
+                                        mid: exitsUser.mid,
+                                        pictureUrl: exitsUser.pictureUrl,
+                                        displayName: exitsUser.displayName,
+                                        statusMessage: exitsUser.statusMessage
+                                    }
+                                },
+                                message: {
+                                    message: message.data.content.text,
+                                    timestamp: message.data.content.createdTime
+                                }
+                            });
+                        }
+                        
+                    });
+      
+                }
+            });
+        }
+        
+        
+    });
+    Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
+        console.log('Save message BOT success');
+    });
+
+});
+
+
+
+
+
 
 io.on('connection', function (socket) {
-
+      
     socket.on('join', function(user) {
-
-        
         // Check user type connect is exist
         if( userType.indexOf(user.from) === -1 ){
             console.log('Error: Not found user type connect');
@@ -148,18 +218,6 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.connected', packageConnected);
             }
                 
-            //subscribe connected user to a specific channel, 
-            //later he can receive message directly from our ChatController
-            redis.subscribe(['message.bot'], function (err, count) {
-                console.log(count);
-            });
-            
-            // get messages send by ChatController
-            redis.on("message.bot", function (channel, message) {
-                console.log('Receive message %s from system in channel %s', message, channel);
-                socket.emit(channel, message);
-            });
-            
         }
         
         socket.on('disconnect', function() {
@@ -173,6 +231,9 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.disconnect', package );
             }
         });
+        
+        
+        
 
     });
     
@@ -218,20 +279,17 @@ io.on('connection', function (socket) {
         findClientInRoomByMid( socket.room, package.to, function( client ){
             if( client ){
                 client.emit('receive.user.message', packageMessages);
-                
-                Bot.sendTextMessage(
-                     client.user.profile.mid.split(),
-                     package.message,function(result){
-                        console.log(result);
-                    }
-                );
-                    
             }
         } );
         
+        Bot.sendTextMessage(
+             package.to.split(),
+             package.message,function(result){
+                console.log(result);
+            }
+        );
  
     });
-    
     
     
 });
@@ -241,11 +299,17 @@ function findClientInRoomByMid( room_id, mid , _callback){
     io.in(room_id).clients(function (error, clients) {
             if (error) { _callback(false) }
             if( clients ){
+                var count = 0;
                 for( var i in clients){
+                    count++;
                     var client = io.sockets.sockets[clients[i]];
                     if( mid == client.user.profile.mid ){
                         _callback(client);
                         break;
+                    }else{
+                        if( count === clients.length ){
+                            return _callback(false);
+                        }
                     }
                 }
             }

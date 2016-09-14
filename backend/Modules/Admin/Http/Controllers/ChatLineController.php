@@ -26,7 +26,7 @@ use DB;
 use Auth;
 
 use Config;
-use L5Redis;
+use LRedis;
 
 class ChatLineController extends Controller
 {
@@ -53,7 +53,7 @@ class ChatLineController extends Controller
     * Handle BOT Server callback
     */
     public function index(Request $request){
-        return response('ok',200);
+        
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
@@ -77,11 +77,26 @@ class ChatLineController extends Controller
             switch ($data->content->contentType) {
                 
                 case 1: // Text Message
-                    Log::info(print_r($data, true));
-                    $redis = L5Redis::connection();
-                    $redis->publish('message.bot', json_encode($data->content));
-                    break;
-                
+                    // create room chanel
+                    $user = DB::table('line_accounts')
+                        ->join('apps','line_accounts.app_user_id','=','apps.id')
+                        ->join('users','users.id','=','apps.user_id')
+                        ->select('users.id')
+                        ->get();
+                       
+                        
+                    if( $user ){
+                        $arrPackage = array(
+                            'channel' => $user[0]->id.'-'.Config::get('line.BOT_CHANEL_ID'),
+                            'data' => $data
+                        ); 
+                        Log::info(print_r($data, true));
+                        $redis = LRedis::connection();
+                        $redis->publish('message', json_encode($arrPackage));
+                        break;
+                    }
+                        
+
                 default:
                     // code...
                     break;

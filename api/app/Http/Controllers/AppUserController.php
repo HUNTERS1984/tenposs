@@ -12,6 +12,7 @@ use App\Models\AppUser;
 use App\Models\UserProfile;
 use App\Models\UserPush;
 use App\Utils\RedisUtil;
+use App\Models\SocialProfile;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
@@ -435,6 +436,43 @@ class AppUserController extends Controller
             $request->user->profile->gender = Input::get('gender');
             $request->user->profile->address = Input::get('address');
             $request->user->profile->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
+
+    public function social_profile(Request $request)
+    {
+
+        $check_items = array('token', 'social_type', 'social_id', 'social_token', 'social_secret',  'nickname', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        if (!$request->user || !$request->user->profile)
+            return $this->error(1004);
+
+        //validate sig
+        $check_sig_items = Config::get('api.sig_social_profile');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+
+        try {
+            $social_profile = new SocialProfile();
+            $social_profile->app_user_id = $request->user->id;
+            $social_profile->social_type = Input::get('social_type');
+            $social_profile->social_id = Input::get('social_id');
+            $social_profile->social_token = Input::get('social_token');
+            $social_profile->social_secret = Input::get('social_secret');
+            $social_profile->nickname = Input::get('nickname');
+            $social_profile->save();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
