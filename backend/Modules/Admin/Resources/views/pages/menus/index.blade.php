@@ -10,7 +10,7 @@
 				<div class="left-topbar">
 					<h1 class="title">メニュー</h1>
 				</div>
-				<!-- <div class="right-topbar">
+				<<div class="right-topbar">
 					 <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
 					<a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
 				</div>
