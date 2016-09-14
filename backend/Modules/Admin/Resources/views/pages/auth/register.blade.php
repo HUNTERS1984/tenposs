@@ -33,86 +33,86 @@
     <div class="register-box-body">
         @include('admin::errors.listError')
         <div style="text-align: center">
-            <h2>Business user registration</h2>
+            <h2>ビジネスユーザー登録</h2>
         </div>
         {{ Form::open(array('route'=>'admin.postRegister', 'class'=>'form-horizontal','id'=>'register_form')) }}
         <div class="panel panel-default" style="border-radius: 0;margin-bottom: 0px;">
-            <div class="panel-heading">User information</div>
+            <div class="panel-heading">ユーザー情報</div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Your name</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">あなたの名前</label>
                     <div class="col-sm-9">
-                        {{Form::text('name',old('name'), array('class'=>'form-control', 'placeholder'=>'type for here...'))}}
+                        {{Form::text('name',old('name'), array('class'=>'form-control', 'placeholder'=>'ここのために入力し...'))}}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">Eメール</label>
                     <div class="col-sm-9">
-                        <input type="email" class="form-control" placeholder="type for here..." name="email"
+                        <input type="email" class="form-control" placeholder="ここのために入力し..." name="email"
                                value="{{old('email')}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Password</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">パスワード</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="type for here..." name="password" id="password">
+                        <input type="password" class="form-control" placeholder="ここのために入力し..." name="password" id="password">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Password confirmation</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">パスワードの確認</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control" placeholder="type for here..."
+                        <input type="password" class="form-control" placeholder="ここのために入力し..."
                                name="password_confirmation" id="password_confirmation">
                     </div>
                 </div>
             </div>
         </div>
         <div class="panel panel-default" style="border-radius: 0">
-            <div class="panel-heading">Business information</div>
+            <div class="panel-heading">ビジネス情報</div>
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Company name</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">会社名</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="company" name="company" value="{{old('company')}}"
-                               placeholder="type for here...">
+                               placeholder="ここのために入力し...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Business type</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">事業の種類</label>
                     <div class="col-sm-9">
                         <select name="business_type" class="form-control">
-                            <option value="">Select Role</option>
-                            <option value="business">Business</option>
-                            <option value="other">Other</option>
+                            <option value="">選択します</option>
+                            <option value="business">ビジネス</option>
+                            <option value="other">他の</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">App name</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">アプリ名</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="app_name_register" name="app_name_register"  value="{{old('app_name_register')}}"
-                               placeholder="type for here...">
+                               placeholder="ここのために入力し...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Domain</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">ドメイン</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="domain" name="domain" value="{{old('domain')}}"
-                               placeholder="type for here...">
+                               placeholder="ここのために入力し...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Tel</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">電話番号</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="tel" name="tel" value="{{old('tel')}}"
-                               placeholder="type for here...">
+                               placeholder="ここのために入力し...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-3 control-label">Fax</label>
+                    <label for="inputEmail3" class="col-sm-3 control-label">ファックス</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="fax" name="fax" value="{{old('fax')}}"
-                               placeholder="type for here...">
+                               placeholder="ここのために入力し...">
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
 				<a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using
 				Google+</a>
 			</div> -->
-        <a href="{{url('/admin/login')}}" class="text-center">I already have the account</a>
+        <a href="{{url('/admin/login')}}" class="text-center">私はすでにアカウントを持っています</a>
     </div>
     <!-- /.form-box -->
 </div>
