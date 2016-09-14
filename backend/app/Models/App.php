@@ -15,7 +15,7 @@ class App extends Model
         'app_app_id',
         'app_app_secret',
         'description',
-        'status'
+        'status','user_id'
     ];
 
     public function scopeFilter($query, QueryFilter $filters)

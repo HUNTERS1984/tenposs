@@ -36,27 +36,30 @@ class MenusController extends Controller
     public function index()
     {
         $stores = $this->request->stores;
-        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
-        $list_store = $stores->lists('name','id');
-        //dd($menus->pluck('id')->toArray());
-        $list_item = [];
-        if (count($menus) > 0) {
-            $list_menu = $menus->pluck('id')->toArray();
-            if (count ($list_menu) > 0) {
-                
-                $list_item = Item::whereHas('menus', function ($query) use ($list_menu) {
-                    $query->where('menu_id', '=', $list_menu[0]);
-                })->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->get();
-                //dd($list_item->toArray());
-                for($i = 0; $i < count($list_item); $i++)
-                {
-                    if ($list_item[$i]->image_url == null)
-                        $list_item[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
-                }
-            }
-            
-        }
+        $menus = array();
+        $list_item = array();
+        $list_store = array();
+        if (count($stores) > 0) {
+            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+            $list_store = $stores->lists('name', 'id');
+            //dd($menus->pluck('id')->toArray());
+            $list_item = [];
+            if (count($menus) > 0) {
+                $list_menu = $menus->pluck('id')->toArray();
+                if (count($list_menu) > 0) {
 
+                    $list_item = Item::whereHas('menus', function ($query) use ($list_menu) {
+                        $query->where('menu_id', '=', $list_menu[0]);
+                    })->orderBy('updated_at', 'desc')->take(REQUEST_MENU_ITEMS)->get();
+                    //dd($list_item->toArray());
+                    for ($i = 0; $i < count($list_item); $i++) {
+                        if ($list_item[$i]->image_url == null)
+                            $list_item[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    }
+                }
+
+            }
+        }
         //dd($list_store);
         return view('admin::pages.menus.index',compact('menus','list_item', 'list_store'));
     }

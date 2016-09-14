@@ -7,7 +7,14 @@
 
     {{Html::style('assets/backend/css/bootstrap.min.css')}}
     {{Html::style('assets/backend/css/style.css')}}
-
+	{{Html::style('assets/backend/css/jquery.fileupload.css')}}
+	{{Html::style('assets/backend/css/jquery.fileupload-ui.css')}}
+	<noscript>
+		<link rel="stylesheet" href="{{URL::to('assets/backend/css/jquery.fileupload-noscript.css')}}">
+	</noscript>
+	<noscript>
+		<link rel="stylesheet" href="{{URL::to('assets/backend/css/jquery.fileupload-ui-noscript.css')}}">
+	</noscript>
 	<title>@yield('title','TenPoss')</title>
 
 </head>

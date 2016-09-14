@@ -29,18 +29,21 @@ class PhotoCatController extends Controller
     public function index()
     {
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
-        $list_store = $stores->lists('name','id');
-        $list_photo = [];
-        if (count($photocat) > 0) {
-            $list_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->orderBy('updated_at','desc')->take(REQUEST_PHOTO_ITEMS)->get();
-            for($i = 0; $i < count($list_photo); $i++)
-            {
-                if ($list_photo[$i]->image_url == null)
-                    $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+        $photocat = array();
+        $list_store = array();
+        $list_photo = array();
+        if (count($stores) > 0) {
+            $photocat = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+            $list_store = $stores->lists('name', 'id');
+            $list_photo = [];
+            if (count($photocat) > 0) {
+                $list_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->get();
+                for ($i = 0; $i < count($list_photo); $i++) {
+                    if ($list_photo[$i]->image_url == null)
+                        $list_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                }
             }
         }
-            
         //dd($list_photo);
         return view('admin::pages.photocats.index',compact('photocat','list_store', 'list_photo'));
     }
