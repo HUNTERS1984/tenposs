@@ -13,7 +13,7 @@ use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
 
 
-define('REQUEST_PHOTO_ITEMS',  3);
+define('REQUEST_PHOTO_ITEMS',  10);
 class PhotoCatController extends Controller
 {
     protected $request;

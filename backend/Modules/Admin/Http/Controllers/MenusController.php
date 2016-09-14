@@ -16,7 +16,7 @@ use Validator;
 use Session;
 
 
-define('REQUEST_MENU_ITEMS',  3);
+define('REQUEST_MENU_ITEMS',  10);
 
 class MenusController extends Controller
 {
