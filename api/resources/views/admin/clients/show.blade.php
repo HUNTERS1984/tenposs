@@ -26,7 +26,8 @@
                 <div class="panel panel-info">
                     <div class="panel-heading">User informations</div>
                     <div class="panel-body">
-                        <table class="table">
+                        <table class="table table-tripped">
+                            <tbody>
                             <tr>
                                 <td>Name</td>
                                 <td>{{ $user->name }}</td>
@@ -59,6 +60,7 @@
                                 <td>Tel</td>
                                 <td>{{ $user->tel }}</td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>   
@@ -110,6 +112,8 @@
                 success: function(response){
                     if( response.success ){
                         window.location.reload();
+                    }else{
+                        $('#msg').text(response.msg);
                     }
                 }
             });
@@ -125,10 +129,12 @@
                 </div>
                 <div class="modal-body">
                     Are you sure?
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <button onclick="return approvedUser({{ $user->id }})" type="button" class="btn btn-primary">OK</button>
+                    <label class="text-danger" for="" id="msg"></label>
                 </div>
             </form>
         </div>
