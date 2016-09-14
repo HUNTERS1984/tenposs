@@ -11,10 +11,6 @@
 <!-- END -->
 
 <div class="main-content news">
-	<div class="wrap-btn-content">
-		<a href="#" class="btn-me btn-hong">スタの新着情報</a>
-		<a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
-	</div>	<!-- end wrap-btn-content-->
 	<div class="wrapper-content">
 		<div class="clearfix">
             <p style="margin-bottom:10px;" class="">Showing {{$users->firstItem()}}/{{$users->lastItem()}} of {{$users->total()}}results</p>

@@ -103,11 +103,14 @@
             $.ajax({
                 url: '{{ route("admin.approved.users.process") }}',
                 method: "POST",
+                dataType: 'json',
                 data: {
                     user_id: uid
                 },
                 success: function(response){
-                    console.log(response);
+                    if( response.success ){
+                        window.location.reload();
+                    }
                 }
             });
         }

@@ -10,11 +10,8 @@
     <!-- END -->
 
     <div class="main-content news">
-        <div class="wrap-btn-content">
-            <a href="#" class="btn-me btn-hong">スタの新着情報</a>
-            <a href="#" class="btn-me btn-xanhduongnhat">スタの新着情報 2</a>
-        </div>	<!-- end wrap-btn-content-->
         <div class="wrapper-content">
+            <p>&nbsp;</p>
             <div class="row">
                 <div class="col-md-3">
                     <div class="panel panel-success">

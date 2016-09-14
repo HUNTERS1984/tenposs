@@ -68,6 +68,31 @@ class ClientsController extends Controller
     }
     
     public function approvedUsersProcess(Request $request){
-        return response()->json($request->all());
+        $user = \App\Models\User::findOrFail( $request->input('user_id') );
+        $randPassword = str_random(8);
+        $link = url('http://ten-po/admin/login');
+    
+        $user->status = 1;
+        $user->password = bcrypt($randPassword);
+        $user->save();
+        
+    
+        
+         try{
+			$to = $user->email ;
+			 Mail::send('admin.emails.user_approved',
+				 array('user' => $user, 'link' => $link, 'password' => $randPassword)
+				 ,function($message) use ( $user,$to ) {
+					 $message->from( env('MAIL_USERNAME','Lifeforce') );
+					 $message->to( $to )
+						 //->cc()
+						 ->subject('Tenpo - Approved user');
+				 });
+		 }
+		 catch(Exception $e){
+			// fail
+		 }
+
+        return response()->json(['success' => true]);
     }
 }

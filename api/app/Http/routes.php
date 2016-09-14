@@ -64,7 +64,8 @@ Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function(
 
 Route::group(array('prefix' => 'admin',
     'middlewareGroups' => ['web','auth'],
-    'middleware' => ['role:admin,access_backend']), function()
+   // 'middleware' => ['role:admin,access_backend']
+   ), function()
 {
 
     Route::get('/', array('as'=>'admin.home', function(){
