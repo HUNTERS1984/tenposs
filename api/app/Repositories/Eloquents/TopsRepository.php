@@ -43,7 +43,7 @@ class TopsRepository implements TopsRepositoryInterface
 
             $menus_id = '(' . implode(',', $menus) . ')';
 
-            $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.created_at, items.updated_at, items.deleted_at 
+            $items = DB::select(DB::raw('SELECT items.id, items.title, items.price, items.image_url, items.created_at, items.updated_at, items.deleted_at, menus.name AS menu 
                 from rel_menus_items 
                 INNER JOIN items on rel_menus_items.item_id=items.id 
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
