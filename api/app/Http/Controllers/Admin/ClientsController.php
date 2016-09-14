@@ -72,21 +72,20 @@ class ClientsController extends Controller
     public function approvedUsersProcess(Request $request){
         $user = \App\Models\User::findOrFail( $request->input('user_id') );
         $randPassword = str_random(8);
-        $link = url('http://ten-po/admin/login');
+        $link = url('https://ten-po.com/admin/login');
         // Update user
         $user->status = 1;
         $user->password = bcrypt($randPassword);
         $user->save();
         // Assign role
-        $user->assignRole('client');
-    
-        
-         try{
+        $user->syncRoles(['client']);
+      
+        try{
 			$to = $user->email ;
-			 Mail::send('admin.emails.user_approved',
+			Mail::send('admin.emails.user_approved',
 				 array('user' => $user, 'link' => $link, 'password' => $randPassword)
 				 ,function($message) use ( $user,$to ) {
-					 $message->from( env('MAIL_USERNAME','Tenpo') );
+					 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
 					 $message->to( $to )
 						 //->cc()
 						 ->subject('Tenpo - Approved user');
