@@ -18,7 +18,7 @@ use App\Jobs\InstagramHashtagJob;
 use DB;
 use Validator;
 
-define('REQUEST_COUPON_ITEMS',  5);
+define('REQUEST_COUPON_ITEMS',  10);
 
 class CouponController extends Controller
 {
