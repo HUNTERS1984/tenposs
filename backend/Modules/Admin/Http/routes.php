@@ -29,7 +29,12 @@ Route::group(['prefix' => 'admin'], function() {
 
     Route::group(['middleware'=>['auth']],function(){
         Route::get('top',['as'=>'admin.top','uses'=>'AdminController@top']);
+        Route::post('top/store',['as'=>'admin.top.store','uses'=>'AdminController@topstore']);
+        Route::post('upload',['as'=>'admin.upload','uses'=>'AdminController@upload']);
+        Route::get('upload',['as'=>'admin.upload','uses'=>'AdminController@upload']);
+        Route::post('upload/delete/{id}',['as'=>'admin.upload.delete','uses'=>'AdminController@uploadelete']);
         Route::get('global',['as'=>'admin.global','uses'=>'AdminController@globalpage']);
+        Route::post('global/store',['as'=>'admin.global.store','uses'=>'AdminController@globalstore']);
         Route::get('test-ga',['as'=>'admin.ga','uses'=>'AdminController@getAnalytic']);
         // NEWS
         Route::resource('news','NewsController');

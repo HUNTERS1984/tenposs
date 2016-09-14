@@ -401,7 +401,7 @@ html, body {
         border-radius: 3px;
         border: 1px solid #c8d2d6;
         background: #f3f4f5;
-        width: 80px;
+        width: 150px;
         font-size: 12px;
         text-align: center;
         cursor: pointer;
@@ -513,7 +513,7 @@ html, body {
           border-radius: 3px;
           border: 1px solid #c8d2d6;
           background: #f3f4f5;
-          width: 80px;
+          width: 150px;
           font-size: 12px;
           text-align: center;
           cursor: pointer;

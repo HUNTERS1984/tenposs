@@ -15,7 +15,7 @@
 	<!-- Ionicons -->
 	{{Html::style('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css')}}
 	<!-- Theme style -->
-	{{Html::style(env('assets/backend/css/AdminLTE.min.css')}}
+	{{Html::style('public/assets/backend/css/AdminLTE.min.css')}}
 	<!-- iCheck -->
 	<!--{{Html::style('public/assets/backend/plugins/iCheck/square/blue.css')}}-->
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

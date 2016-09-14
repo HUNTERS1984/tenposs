@@ -24,9 +24,14 @@ class NewsController extends Controller
         $this->store = $store;
 	}
     public function index(){
+
         $stores = $this->request->stores;
-        $news = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(10);
-        $list_store = $stores->lists('name','id');
+        $news = array();
+        $list_store = array();
+        if ($stores != null) {
+            $news = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(10);
+            $list_store = $stores->lists('name', 'id');
+        }
         //dd($list_store);
     	return view('admin::pages.news.index',compact('news','list_store'));
     }

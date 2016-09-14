@@ -34,8 +34,13 @@ class CouponController extends Controller
     public function index()
     {
         $list_store = $this->request->stores;
-        $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->get();
-        $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
+        $coupons = array();
+        $list_store = array();
+        $list_coupon_type = array();
+        if (count($list_store) > 0) {
+            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->get();
+            $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
+        }
         return view('admin::pages.coupon.index',compact('coupons', 'list_store', 'list_coupon_type'));
     }
 
