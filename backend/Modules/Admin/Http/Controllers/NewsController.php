@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use App\Models\News;
 use App\Models\Store;
 
+define('REQUEST_NEWS_ITEMS',  10);
+
 class NewsController extends Controller
 {
     protected $entity;
@@ -29,9 +31,10 @@ class NewsController extends Controller
         $news = array();
         $list_store = array();
         if ($stores != null) {
-            $news = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(10);
+            $news = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(REQUEST_NEWS_ITEMS);
             $list_store = $stores->lists('name', 'id');
         }
+
         //dd($list_store);
     	return view('admin::pages.news.index',compact('news','list_store'));
     }
