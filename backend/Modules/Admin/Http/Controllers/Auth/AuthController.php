@@ -9,8 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
-use Illuminate\Http\Request;
-use Modules\Admin\Http\Requests\AdminLoginRequest;
 
 use App\Http\Requests;
 
@@ -29,8 +27,11 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'role'=>'required',
+//            'password' => 'required|min:6|confirmed',
+			'password' => 'required|min:3|confirmed',
+			'password_confirmation' => 'required|min:3',
+            'business_type'=>'required',
+            'app_name_register'=>'required'
         ]);
     }
 
@@ -40,7 +41,14 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role'=>$data['role'],
+            'business_type'=>$data['business_type'],
+            'business_type'=>$data['business_type'],
+            'app_name_register'=>$data['app_name_register'],
+            'domain'=>$data['domain'],
+            'company'=>$data['company'],
+            'tel'=>$data['tel'],
+            'fax'=>$data['fax'],
+			'status' => 2
         ]);
     }
 
