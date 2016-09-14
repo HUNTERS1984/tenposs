@@ -18,7 +18,8 @@ use DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Config;
 
-define("TOP_MAX_ITEM", 8);
+define("TOP_MAX_ITEM", 4);
+define("TOP_MAX_PHOTO", 10);
 
 class TopsRepository implements TopsRepositoryInterface
 {
@@ -86,7 +87,7 @@ class TopsRepository implements TopsRepositoryInterface
                 $query->whereIn('store_id', $stores);
             })->lists('id')->toArray();
 
-            $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
+            $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_PHOTO)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($photos); $i++) {
                 $photos[$i]['image_url'] = Config::get('api.media_base_url').$photos[$i]['image_url'];
             }
