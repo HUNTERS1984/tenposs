@@ -7,8 +7,7 @@
 		<li><a href="{{route('admin.coupon.index')}}">クーポン</a></li>	
 		<li><a href="{{route('admin.photo-cate.index')}}">フォトギャラリー</a></li>
 		<li><a href="{{route('admin.staff.index')}}">スタッフ</a></li>
-		<li><a href="{{URL::to('admin/test-ga')}}">Google Analytic</a></li>
-		<li><a href="{{ route('admin.clients.chat') }}">Chat</a></li>
-		
+		<li><a href="{{ route('admin.clients.chat') }}">チャット</a></li>
+		<li><a href="{{URL::to('admin/test-ga')}}">Google分析</a></li>	
 	</ul>
 </div>	<!-- end sidebar -->
