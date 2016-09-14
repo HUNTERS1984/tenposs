@@ -60,6 +60,16 @@
                                 <td>Tel</td>
                                 <td>{{ $user->tel }}</td>
                             </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>
+                                    @if( $user->status == 2 )
+                                    <span class="label label-danger">Not approved</span>
+                                    @else
+                                    <span class="label label-success">Active</span>
+                                    @endif
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -78,7 +78,8 @@ class ClientsController extends Controller
         $user->password = bcrypt($randPassword);
         $user->save();
         // Assign role
-        $user->syncRoles(['client']);
+        if( !$user->hasRole('client') )
+            $user->assignRole('client');
       
         try{
 			$to = $user->email ;
