@@ -49,7 +49,7 @@ class TopsRepository implements TopsRepositoryInterface
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
                 where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
             for ($i = 0; $i < count($items); $i++) {
-                $items[$i]->image_url = Config::get('api.media_base_url').$items[$i]->image_url;
+                $items[$i]->image_url = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
             }
         }
         if ($items != null && count($items) > 0)//set cache redis
@@ -89,7 +89,7 @@ class TopsRepository implements TopsRepositoryInterface
 
             $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_PHOTO)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($photos); $i++) {
-                $photos[$i]['image_url'] = Config::get('api.media_base_url').$photos[$i]['image_url'];
+                $photos[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
             }
         }
         if ($photos != null && count($photos) > 0)//set cache redis
@@ -115,7 +115,7 @@ class TopsRepository implements TopsRepositoryInterface
                 $query->whereIn('store_id', $stores);
             })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
             for ($i = 0; $i < count($news); $i++) {
-                $news[$i]['image_url'] = Config::get('api.media_base_url').$news[$i]['image_url'];
+                $news[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }
         }
         if ($news != null && count($news) > 0)//set cache redis
@@ -138,7 +138,7 @@ class TopsRepository implements TopsRepositoryInterface
         if ($app_setting) {
             $images = $app_setting->images()->take(TOP_MAX_ITEM)->select('image_url')->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($images); $i++) {
-                $images[$i]['image_url'] = Config::get('api.media_base_url').$images[$i]['image_url'];
+                $images[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $images[$i]['image_url']);
             }
         }
 
@@ -231,4 +231,51 @@ class TopsRepository implements TopsRepositoryInterface
             RedisUtil::getInstance()->set_cache($key, $app_info);
         return $app_info;
     }
+
+    function convertRelativeToAbsoluteURL($baseAbsoluteURL, $relativeURL)  
+    {  
+       $relativeURL = trim($relativeURL);  
+       if (substr($relativeURL, 0, 7) !== 'http://' && substr($relativeURL, 0, 8) !== 'https://')  
+       {  
+            while (strpos($relativeURL, '/./') !== false)  
+            {  
+               $relativeURL=str_replace('/./','/',$relativeURL);  
+            }  
+            if (substr($relativeURL, 0, 2) === './') $relativeURL = substr($relativeURL, 2);  
+            $urlInfo = parse_url($baseAbsoluteURL);  
+            if ($urlInfo == false) return false;  
+            $urlBasePath = substr($urlInfo['path'], 0, strrpos($urlInfo['path'],"/"));  
+            $dirDepth = substr_count($urlInfo['path'], '/')-1;  
+          
+            $dirDepthRel = substr_count(preg_filter('\'^((\\.\\./)+)(.*)\'', '$1', $relativeURL), '../');  
+            $relativeURL = preg_replace('\'^((\\.\\./)+)(.*)\'', '$3', $relativeURL);      
+          
+            for ($i=0; $i<$dirDepthRel; $i++)  
+            {  
+               $urlBasePath = substr($urlBasePath, 0, strrpos($urlBasePath,"/"));  
+            }  
+            $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].$urlBasePath;  
+          
+            do  
+            {  
+               $tempContent = $relativeURL;  
+               $relativeURL = preg_replace('\'^(.*?)(([^/]*)/\\.\\./)(.*?)$\'', '$1$4', $relativeURL);  
+            }  
+            while ($tempContent != $relativeURL);  
+          
+            if(substr($relativeURL, 0, 2) === "//")  
+            {  
+               $relativeURL=$urlInfo['scheme'].':'.$relativeURL;  
+            }  
+            else if(substr($relativeURL, 0, 1) === "/")  
+            {  
+               $relativeURL=$urlInfo['scheme'].'://'.$urlInfo['host'].$relativeURL;  
+            }  
+            else  
+            {  
+               $relativeURL=$urlBase.'/'.$relativeURL;  
+            }  
+       }  
+       return $relativeURL;  
+    } 
 }
