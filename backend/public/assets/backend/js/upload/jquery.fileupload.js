@@ -455,6 +455,7 @@
                 options.headers['Content-Disposition'] = 'attachment; filename="' +
                     encodeURI(file.name) + '"';
             }
+
             if (!multipart) {
                 options.contentType = file.type || 'application/octet-stream';
                 options.data = options.blob || file;

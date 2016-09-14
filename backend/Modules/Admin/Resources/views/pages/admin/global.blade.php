@@ -260,7 +260,7 @@
         }
 
         $('#btn_submit_form').click(function () {
-            $('ul.nav-right li').each(function(){
+            $('ul.nav-left li').each(function(){
                 var tmp = '<input type="hidden" value="' + $(this).data('value') +'"  name="data_component[]">';
                 $('.main-content').append(tmp);
             });
