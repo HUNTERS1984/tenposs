@@ -96,8 +96,16 @@
                                         <label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
 											<select name="font_size" class="font-size">
-												<option value="12">12px</option>
-												<option value="14">14px</option>
+			                                    <option value="12">12px</option>
+                                                <option value="14">14px</option>
+                                                <option value="16">16px</option>
+                                                <option value="18">18px</option>
+                                                <option value="20">20px</option>
+                                                <option value="22">22px</option>
+                                                <option value="24">24px</option>
+                                                <option value="26">26px</option>
+                                                <option value="28">28px</option>
+                                                <option value="30">30px</option>
 											</select>
 											<select name="font_family" id="">
 												<option value="">スタの新スタの新</option>
@@ -151,7 +159,15 @@
 										<span class="inline">
 											<select name="menu_font_size" class="font-size">
 												<option value="12">12px</option>
-												<option value="14">14px</option>
+                                                <option value="14">14px</option>
+                                                <option value="16">16px</option>
+                                                <option value="18">18px</option>
+                                                <option value="20">20px</option>
+                                                <option value="22">22px</option>
+                                                <option value="24">24px</option>
+                                                <option value="26">26px</option>
+                                                <option value="28">28px</option>
+                                                <option value="30">30px</option>
 											</select>
 											<select name="menu_font_family" id="">
 												<option value="">スタの新スタの新</option>
