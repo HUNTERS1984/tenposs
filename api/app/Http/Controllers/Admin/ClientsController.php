@@ -73,8 +73,6 @@ class ClientsController extends Controller
     
     public function approvedUsersProcess(Request $request){
         $user = \App\Models\User::findOrFail( $request->input('user_id') );
-        // Generate config for App
-        $user->createAppSettingDefault();
 
         // Assign role
         if( !$user->hasRole('client') )
@@ -83,7 +81,7 @@ class ClientsController extends Controller
         try{
 			$to = $user->email ;
 			$link = route('clients.verifined.registration', [ 'hascode' => $user->temporary_hash ] );
-			Mail::send(['text' => 'admin.emails.user_approved'],
+			Mail::send('admin.emails.user_approved',
 				 array('user' => $user, 'link' => $link)
 				 ,function($message) use ( $user, $to ) {
 					 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
@@ -111,7 +109,8 @@ class ClientsController extends Controller
             $user->status = 1;
             $user->temporary_hash = '';
             $user->save();
-            return redirect('https://ten-po.com/admin/login');
+            $user->createAppSettingDefault();
+	    return redirect('https://ten-po.com/admin/login');
         }
         abort(503);
     }
