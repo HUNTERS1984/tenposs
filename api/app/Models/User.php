@@ -107,7 +107,7 @@ class User extends Authenticatable
         $appSetting->menu_font_family = 'Tahoma';
         $appSetting->template_id = $templateDefaultID;
         $appSetting->top_main_image_url = 'uploads/1.jpg';
-        $appSetting->app_top_main_images_image_url = 'uploads/1.jpg';
+        $appSetting->app_top_main_images = 'uploads/1.jpg';
         $appSetting->save();
        
         
