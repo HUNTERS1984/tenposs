@@ -125,7 +125,7 @@
                                             @endif
                                             
                                         @endforeach
-                                        <input type="checkbox" {{ $checked }}  name="roles" value="{{ $id }}" > {{ $role->name }} 
+                                        <input type="checkbox" {{ $checked }}  name="roles" value="{{ $role->id }}" > {{ $role->name }} 
                                     @endforeach
                                 </td>
                             </tr>
@@ -139,7 +139,7 @@
                                                 <?php $checked = 'checked' ?>
                                             @endif
                                         @endforeach
-                                        <input type="checkbox" {{ $checked }} name="permissions" value="{{ $id }}" > {{ $pers->name }} 
+                                        <input type="checkbox" {{ $checked }} name="permissions" value="{{ $pers->id }}" > {{ $pers->name }} 
                                     @endforeach
                                 </td>
                             </tr>
