@@ -41,7 +41,7 @@ class UrlHelper
             {  
                $urlBasePath = substr($urlBasePath, 0, strrpos($urlBasePath,"/"));  
             }  
-            if (!isset($urlInfo['port']))
+            if (isset($urlInfo['port']))
                 $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].':'.$urlInfo['port'].$urlBasePath;  
             else 
                 $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].$urlBasePath;
