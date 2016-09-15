@@ -49,14 +49,13 @@ class AdminController extends Controller
                 $data_component_dest = DB::table('components')
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
-                    ->pluck('name','id');
+                    ->pluck('name', 'id');
 //               dd($data_component_dest);
                 if (count($data_component_dest) > 0) {
                     $data_component_source = array_diff($component_all->toArray(), $data_component_dest);
 //                    $data_component_source = Component::all()->whereNotIn('id',$list_id)->get();
 //                    $data_component_source = DB::table('components')->whereNotIn('id', [])->get();
-                }
-                else
+                } else
                     $data_component_source = $component_all->toArray();
             }
         }
@@ -98,8 +97,7 @@ class AdminController extends Controller
                 $app_components = $app->first()->components()->pluck('name', 'id')->toArray();
                 if (count($app_components) > 0) {
                     $available_components = array_diff($all->toArray(), $app_components);
-                }
-                else {
+                } else {
                     $available_components = $all->toArray();
                 }
 
@@ -250,4 +248,10 @@ class AdminController extends Controller
             return back();
         }
     }
+
+    public function waiting()
+    {
+        return view('admin::pages.auth.waiting');
+    }
+
 }

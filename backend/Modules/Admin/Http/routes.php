@@ -17,6 +17,7 @@ Route::group(['prefix' => 'admin'], function() {
     $this->get('login',['middleware'=>'IsLogin','uses'=> 'Auth\AuthController@showLoginForm']);
     $this->post('login', 'Auth\AuthController@login');
     $this->get('logout','Auth\AuthController@logout');
+    $this->get('waiting','AdminController@waiting');
 
     // Registration Routes...
     $this->get('register',['middleware'=>'IsLogin','as'=>'admin.register','uses'=>'Auth\AuthController@showRegistrationForm'] );
