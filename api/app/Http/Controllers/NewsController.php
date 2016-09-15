@@ -60,10 +60,10 @@ class NewsController extends Controller
             $total_news = News::where('store_id', Input::get('store_id'))->count();
             $news = [];
             if ($total_news > 0)
-                $news = News::where('store_id', Input::get('store_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                $news = News::where('store_id', Input::get('store_id'))->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
 
             for ($i = 0; $i < count($news); $i++) {
-                $news[$i]['image_url'] = Config::get('api.media_base_url').$news[$i]['image_url'];
+                $news[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }
 
         } catch (\Illuminate\Database\QueryException $e) {
