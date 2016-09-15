@@ -32,7 +32,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('top/store',['as'=>'admin.top.store','uses'=>'AdminController@topstore']);
         Route::post('upload',['as'=>'admin.upload','uses'=>'AdminController@upload']);
         Route::get('upload',['as'=>'admin.upload','uses'=>'AdminController@upload']);
-        Route::post('upload/delete/{id}',['as'=>'admin.upload.delete','uses'=>'AdminController@uploadelete']);
+        Route::delete('upload/delete',['as'=>'admin.upload.delete','uses'=>'AdminController@uploaddelete']);
         Route::get('global',['as'=>'admin.global','uses'=>'AdminController@globalpage']);
         Route::post('global/store',['as'=>'admin.global.store','uses'=>'AdminController@globalstore']);
         Route::get('test-ga',['as'=>'admin.ga','uses'=>'AdminController@getAnalytic']);

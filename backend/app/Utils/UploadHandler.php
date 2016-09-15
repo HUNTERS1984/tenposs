@@ -11,6 +11,8 @@
  */
 namespace App\Utils;
 
+use App\Models\AppTopMainImage;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 class UploadHandler
@@ -43,13 +45,14 @@ class UploadHandler
 
     protected $image_objects = array();
 
-    public function __construct($app_setting_id = null,$options = null, $initialize = true, $error_messages = null)
+    public function __construct($app_id = null,$app_setting_id = null, $options = null, $initialize = true, $error_messages = null)
     {
         $this->response = array();
         $this->options = array(
-            'script_url' => $this->get_full_url() . '/toioi/' . $this->basename($this->get_server_var('SCRIPT_NAME')),
-            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')) . '/files/',
-            'upload_url' => $this->get_full_url() . '/files/',
+            'script_url' => $this->get_full_url() . '/admin/upload/delete?app_setting_id=' . $app_setting_id . '&file',//. $this->get_server_var('SCRIPT_NAME'),
+            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')) . '/uploads/' . $app_id . '/',
+            'upload_folder' =>'/uploads/' . $app_id . '/',
+            'upload_url' => $this->get_full_url() . '/uploads/' . $app_id . '/',
             'input_stream' => 'php://input',
             'user_dirs' => false,
             'mkdir_mode' => 0755,
@@ -190,7 +193,7 @@ class UploadHandler
             case 'PATCH':
             case 'PUT':
             case 'POST':
-                $this->post($this->options['print_response'],$app_setting_id);
+                $this->post($this->options['print_response'], $app_setting_id);
                 break;
             case 'DELETE':
                 $this->delete($this->options['print_response']);
@@ -274,12 +277,13 @@ class UploadHandler
         . $version_path . rawurlencode($file_name);
     }
 
-    protected function set_additional_file_properties($file)
+    protected function set_additional_file_properties($file, $top_image_id)
     {
         $file->deleteUrl = $this->options['script_url']
-            . $this->get_query_separator($this->options['script_url'])
-            . $this->get_singular_param_name()
-            . '=' . rawurlencode($file->name);
+//            . $this->get_query_separator($this->options['script_url'])
+//            . $this->get_singular_param_name()
+            . '=' . rawurlencode($file->name)
+            . '&top_image_id=' . $top_image_id;
         $file->deleteType = $this->options['delete_type'];
         if ($file->deleteType !== 'DELETE') {
             $file->deleteUrl .= '&_method=DELETE';
@@ -339,7 +343,7 @@ class UploadHandler
                     }
                 }
             }
-            $this->set_additional_file_properties($file);
+            $this->set_additional_file_properties($file,0);
             return $file;
         }
         return null;
@@ -1107,56 +1111,63 @@ class UploadHandler
         $this->destroy_image_object($file_path);
     }
 
-    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
+    protected function handle_file_upload($app_setting_id, $uploaded_file, $name, $size, $type, $error,
                                           $index = null, $content_range = null)
     {
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
-        $file->size = $this->fix_integer_overflow((int)$size);
-        $file->type = $type;
-        if ($this->validate($uploaded_file, $file, $error, $index)) {
-            $this->handle_form_data($file, $index);
-            $upload_dir = $this->get_upload_path();
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, $this->options['mkdir_mode'], true);
-            }
-            $file_path = $this->get_upload_path($file->name);
-            $append_file = $content_range && is_file($file_path) &&
-                $file->size > $this->get_file_size($file_path);
-            if ($uploaded_file && is_uploaded_file($uploaded_file)) {
-                // multipart/formdata uploads (POST method uploads)
-                if ($append_file) {
+        $top_image_id = 0;
+        if (!empty($file->name)) {
+            //insert database
+            $top_image_id = $this->saveTopImage($this->options['upload_folder'].$file->name, $app_setting_id);
+        }
+        if ($top_image_id > 0) {
+            $file->size = $this->fix_integer_overflow((int)$size);
+            $file->type = $type;
+            if ($this->validate($uploaded_file, $file, $error, $index)) {
+                $this->handle_form_data($file, $index);
+                $upload_dir = $this->get_upload_path();
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, $this->options['mkdir_mode'], true);
+                }
+                $file_path = $this->get_upload_path($file->name);
+                $append_file = $content_range && is_file($file_path) &&
+                    $file->size > $this->get_file_size($file_path);
+                if ($uploaded_file && is_uploaded_file($uploaded_file)) {
+                    // multipart/formdata uploads (POST method uploads)
+                    if ($append_file) {
+                        file_put_contents(
+                            $file_path,
+                            fopen($uploaded_file, 'r'),
+                            FILE_APPEND
+                        );
+                    } else {
+                        move_uploaded_file($uploaded_file, $file_path);
+                    }
+                } else {
+                    // Non-multipart uploads (PUT method support)
                     file_put_contents(
                         $file_path,
-                        fopen($uploaded_file, 'r'),
-                        FILE_APPEND
+                        fopen($this->options['input_stream'], 'r'),
+                        $append_file ? FILE_APPEND : 0
                     );
+                }
+                $file_size = $this->get_file_size($file_path, $append_file);
+                if ($file_size === $file->size) {
+                    $file->url = $this->get_download_url($file->name);
+                    if ($this->is_valid_image_file($file_path)) {
+                        $this->handle_image_file($file_path, $file);
+                    }
                 } else {
-                    move_uploaded_file($uploaded_file, $file_path);
+                    $file->size = $file_size;
+                    if (!$content_range && $this->options['discard_aborted_uploads']) {
+                        unlink($file_path);
+                        $file->error = $this->get_error_message('abort');
+                    }
                 }
-            } else {
-                // Non-multipart uploads (PUT method support)
-                file_put_contents(
-                    $file_path,
-                    fopen($this->options['input_stream'], 'r'),
-                    $append_file ? FILE_APPEND : 0
-                );
+                $this->set_additional_file_properties($file, $top_image_id);
             }
-            $file_size = $this->get_file_size($file_path, $append_file);
-            if ($file_size === $file->size) {
-                $file->url = $this->get_download_url($file->name);
-                if ($this->is_valid_image_file($file_path)) {
-                    $this->handle_image_file($file_path, $file);
-                }
-            } else {
-                $file->size = $file_size;
-                if (!$content_range && $this->options['discard_aborted_uploads']) {
-                    unlink($file_path);
-                    $file->error = $this->get_error_message('abort');
-                }
-            }
-            $this->set_additional_file_properties($file);
         }
         return $file;
     }
@@ -1372,16 +1383,20 @@ class UploadHandler
         if ($file_name) {
             $response = array(
                 $this->get_singular_param_name() => $this->get_file_object($file_name)
+
             );
+            Log::info('one file: '.  $this->get_singular_param_name() );
         } else {
             $response = array(
                 $this->options['param_name'] => $this->get_file_objects()
+
             );
+            Log::info('multi file: '.   json_encode($this->options['param_name']) );
         }
         return $this->generate_response($response, $print_response);
     }
 
-    public function post($print_response = true,$app_setting_id)
+    public function post($print_response = true, $app_setting_id)
     {
         if ($this->get_query_param('_method') === 'DELETE') {
             return $this->delete($print_response);
@@ -1410,7 +1425,7 @@ class UploadHandler
                 // $upload is a multi-dimensional array:
                 foreach ($upload['tmp_name'] as $index => $value) {
 
-                    $files[] = $this->handle_file_upload(
+                    $files[] = $this->handle_file_upload($app_setting_id,
                         $upload['tmp_name'][$index],
                         $file_name ? $file_name : $upload['name'][$index],
                         $size ? $size : $upload['size'][$index],
@@ -1424,7 +1439,7 @@ class UploadHandler
             } else {
                 // param_name is a single object identifier like "file",
                 // $upload is a one-dimensional array:
-                $files[] = $this->handle_file_upload(
+                $files[] = $this->handle_file_upload($app_setting_id,
                     isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
                     $file_name ? $file_name : (isset($upload['name']) ?
                         $upload['name'] : null),
@@ -1470,7 +1485,26 @@ class UploadHandler
 
     protected function basename($filepath, $suffix = null)
     {
+        Log::info($filepath);
         $splited = preg_split('/\//', rtrim($filepath, '/ '));
         return substr(basename('X' . $splited[count($splited) - 1], $suffix), 1);
+    }
+
+    public function saveTopImage($filename, $app_setting_id)
+    {
+        $id = 0;
+        try {
+            $data = new AppTopMainImage();
+            $data->image_url = $filename;
+            $data->app_setting_id = $app_setting_id;
+            $data->created_at = date("Y-m-d H:i:s");
+            $data->updated_at = date("Y-m-d H:i:s");
+            if ($data->save()) {
+                $id = $data->id;
+            }
+        } catch (QueryException $e) {
+            Log::error('saveTopImage:' . $e->getMessage());
+        }
+        return $id;
     }
 }
