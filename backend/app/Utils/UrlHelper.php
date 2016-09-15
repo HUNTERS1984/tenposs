@@ -42,9 +42,10 @@ class UrlHelper
                $urlBasePath = substr($urlBasePath, 0, strrpos($urlBasePath,"/"));  
             }  
             if (!isset($urlInfo['port']))
-                $urlInfo['port'] = 80;
-            $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].':'.$urlInfo['port'].$urlBasePath;  
-          
+                $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].':'.$urlInfo['port'].$urlBasePath;  
+            else 
+                $urlBase = $urlInfo['scheme'].'://'.$urlInfo['host'].$urlBasePath;
+
             do  
             {  
                $tempContent = $relativeURL;  
