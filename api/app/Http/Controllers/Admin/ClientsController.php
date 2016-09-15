@@ -73,23 +73,8 @@ class ClientsController extends Controller
     
     public function approvedUsersProcess(Request $request){
         $user = \App\Models\User::findOrFail( $request->input('user_id') );
-        $link = url('https://ten-po.com/admin/login');
-        // Update user
-        $user->status = 1;
-        $user->save();
-
-
-        $created = $this->appRepo->storeApp($user, [
-            'name' => $user->app_name_register,
-            'domain' => $user->domain,
-            'app_app_id' => md5(uniqid(rand(), true)),
-            'app_app_secret' => md5(uniqid(rand(), true)),
-            'description' => 'なし',
-            'status' => 1
-        ]);
-        if ($created) {
-            return response()->json(['success' => 'false', 'msg' => 'Try again!' ]);
-        }
+        // Generate config for App
+        $user->createAppSettingDefault();
 
         // Assign role
         if( !$user->hasRole('client') )
@@ -97,9 +82,10 @@ class ClientsController extends Controller
       
         try{
 			$to = $user->email ;
-			Mail::send('admin.emails.user_approved',
-				 array('user' => $user, 'link' => $link, 'password' => $randPassword)
-				 ,function($message) use ( $user,$to ) {
+			$link = route('clients.verifined.registration', [ 'hascode' => $user->temporary_hash ] );
+			Mail::send(['text' => 'admin.emails.user_approved'],
+				 array('user' => $user, 'link' => $link)
+				 ,function($message) use ( $user, $to ) {
 					 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
 					 $message->to( $to )
 						 //->cc()
@@ -114,4 +100,20 @@ class ClientsController extends Controller
 
         return response()->json(['success' => 'false', 'msg' => 'Try again!' ]);
     }
+    
+    public function verifinedApprovedUser(Request $request, $hascode ){
+        if( $request->has('hascode') ){
+            abort(503);
+        }
+        
+        $user = \App\Models\User::where('temporary_hash', $hascode)->firstOrFail();
+        if( $user ){
+            $user->status = 1;
+            $user->temporary_hash = '';
+            $user->save();
+            return redirect('https://ten-po.com/admin/login');
+        }
+        abort(503);
+    }
+    
 }

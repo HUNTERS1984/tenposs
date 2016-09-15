@@ -63,8 +63,8 @@ Route::group(array('prefix' => 'admin','middlewareGroups' => ['web']), function(
 });
 
 Route::group(array('prefix' => 'admin',
-    'middlewareGroups' => ['web','auth'],
-   // 'middleware' => ['role:admin,access_backend']
+    'middlewareGroups' => ['web'],
+    'middleware' => ['auth','role:admin']
    ), function()
 {
 
@@ -89,6 +89,15 @@ Route::group(array('prefix' => 'admin',
     Route::get('/clients/approved/list', array( 'as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers' ));
     Route::post('/clients/approved/process', array( 'as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess' ));
 });
+
+Route::group(array('prefix' => 'admin',
+    'middlewareGroups' => ['web']
+   ), function(){
+
+    Route::get('verifined/client/{hascode}', array('as'=>'clients.verifined.registration','uses' => 'Admin\ClientsController@verifinedApprovedUser' ));
+    
+});    
+
 
 //Route::get('/test', function() {
 //    echo '<pre>';
