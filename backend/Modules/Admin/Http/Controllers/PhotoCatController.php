@@ -41,6 +41,8 @@ class PhotoCatController extends Controller
                 for ($i = 0; $i < count($list_photo); $i++) {
                     if ($list_photo[$i]->image_url == null)
                         $list_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    else 
+                        $list_photo[$i]->image_url = $this->convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
                 }
             }
         }
