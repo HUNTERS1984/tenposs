@@ -35,7 +35,6 @@ class CouponController extends Controller
     {
         $list_store = $this->request->stores;
         $coupons = array();
-        $list_store = array();
         $list_coupon_type = array();
         if (count($list_store) > 0) {
             $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->get();
