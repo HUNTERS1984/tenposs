@@ -110,7 +110,8 @@ class ClientsController extends Controller
             $user->temporary_hash = '';
             $user->save();
             $user->createAppSettingDefault();
-	    return redirect('https://ten-po.com/admin/login');
+            return redirect('https://ten-po.com/admin/login');
+
         }
         abort(503);
     }
