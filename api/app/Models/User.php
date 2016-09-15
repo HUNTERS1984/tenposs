@@ -111,7 +111,7 @@ class User extends Authenticatable
        
         
         \App\Models\Component::all()
-            ->each( function( $component ){
+            ->each( function( $component ) use ($appSetting){
                 DB::table('rel_app_settings_components')->insert(
                     [
                         'app_setting_id' => $appSetting->id,
@@ -121,7 +121,7 @@ class User extends Authenticatable
             } );
             
         \App\Models\SideMenu::all()
-            ->each( function( $menu ){
+            ->each( function( $menu ) use ($appSetting) {
                 DB::table('rel_app_settings_sidemenus')->insert([
                     'app_setting_id' => $appSetting->id,
                     'sidemenu_id' => $menu->id,
