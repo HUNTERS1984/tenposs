@@ -3,7 +3,7 @@
 namespace App\Models;
 use Carbon\Carbon;
 use Hash;
-
+use DB;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
