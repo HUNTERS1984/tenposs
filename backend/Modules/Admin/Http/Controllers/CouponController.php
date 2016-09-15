@@ -188,7 +188,7 @@ class CouponController extends Controller
         //$posts = Post::with('tags')->paginate(10);
         $posts = Post::whereHas('tags', function ($q) use ($hashtag) {
             $q->whereIn('id', $hashtag);  
-        })->with('tags')->paginate(2); 
+        })->with('tags')->paginate(20); 
         for ($i = 0; $i < count($posts); $i++)
         {
 
