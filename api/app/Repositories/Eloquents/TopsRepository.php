@@ -19,7 +19,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Config;
 
 define("TOP_MAX_ITEM", 4);
-define("TOP_MAX_PHOTO", 10);
+define("TOP_MAX_PHOTO", 9);
 
 class TopsRepository implements TopsRepositoryInterface
 {
