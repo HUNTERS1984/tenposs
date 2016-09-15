@@ -2,6 +2,7 @@
 namespace Modules\Admin\Http\Controllers\Auth;
 
 use App\Models\Users;
+use Illuminate\Http\Request;
 use Validator;
 use Auth;
 
@@ -20,7 +21,7 @@ class AuthController extends Controller
 
 	protected $validator;
 	protected $redirectTo = '/admin/news';
-	protected $redirectPath = "admin/news";
+	protected $redirectPath = "/admin/news";
 
 	protected function validator(array $data)
     {
@@ -50,7 +51,22 @@ class AuthController extends Controller
             'fax'=>$data['fax'],
 			'status' => 2
         ]);
+//		Auth::logout();
+//		return view('admin::pages.auth.waiting');
     }
+
+	public function postRegister(Request $request)
+	{
+		$validator = $this->registrar->validator($request->all());
+		if ($validator->fails())
+		{
+			$this->throwValidationException(
+				$request, $validator
+			);
+		}
+		$this->auth->login($this->registrar->create($request->all()));
+		return redirect('/admin/waiting');
+	}
 
 	public function showLoginForm()
 	{
@@ -79,6 +95,22 @@ class AuthController extends Controller
 	public function logout(){
 		Auth::logout();
 		return redirect('/admin/login');
+	}
+
+	public function register(Request $request)
+	{
+		$validator = $this->validator($request->all());
+
+		if ($validator->fails()) {
+			$this->throwValidationException(
+				$request, $validator
+			);
+		}
+
+		Auth::guard($this->getGuard())->login($this->create($request->all()));
+		Auth::logout();
+//        return redirect($this->redirectPath());
+		return redirect('admin/waiting');
 	}
 
 }
