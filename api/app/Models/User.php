@@ -77,6 +77,65 @@ class User extends Authenticatable
     public function apps(){
         return $this->hasMany(App::class);
     }
+    
+    public function createAppSettingDefault(){
+        
+
+        $app = new \App\Models\App;
+        $app->name = $this->app_name_register;
+        $app->app_app_id = str_random(50);
+        $app->app_app_secret = str_random(50);
+        $app->description = "App description";
+        $app->status = 1;
+        $app->business_type = $this->business_type;
+        $app->user_id = $this->id;
+        $app->save();
+          
+        $templateDefaultID = 1;
+    
+        $appSetting = new \App\Models\AppSetting;
+        $appSetting->app_id = $app->id;
+        $appSetting->title = 'Default';
+        $appSetting->title_color = '#b2d5ef';
+        $appSetting->font_size = '12';
+        $appSetting->font_family = 'Arial';
+        $appSetting->header_color = '#aee30d';
+        $appSetting->menu_icon_color = '#eb836f';
+        $appSetting->menu_background_color = '#5a15ee';
+        $appSetting->menu_font_color = '#5ad29f';
+        $appSetting->menu_font_size = '12';
+        $appSetting->menu_font_family = 'Tahoma';
+        $appSetting->template_id = $templateDefaultID;
+        $appSetting->top_main_image_url = 'uploads/1.jpg';
+        $appSetting->app_top_main_images_image_url = 'uploads/1.jpg';
+        $appSetting->save();
+       
+        
+        \App\Models\Component::all()
+            ->each( function( $component ){
+                DB::table('rel_app_settings_components')->insert(
+                    [
+                        'app_setting_id' => $appSetting->id,
+                        'component_id' => $component->id
+                    ]
+                );
+            } );
+            
+        \App\Models\SideMenu::all()
+            ->each( function( $menu ){
+                DB::table('rel_app_settings_sidemenus')->insert([
+                    'app_setting_id' => $appSetting->id,
+                    'sidemenu_id' => $menu->id,
+                    'order' => 1
+                ]);
+            } );    
+        
+        DB::table('app_top_main_images')->insert([
+            'app_setting_id' => $appSetting->id,
+            'image_url' =>  'uploads/1.jpg',
+        ]);
+ 
+    }
 
 
 }

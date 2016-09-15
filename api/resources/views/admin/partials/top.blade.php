@@ -3,7 +3,9 @@
 		<img src="{{ url('adcp/images/logo.jpg') }}" class="img-responsive" alt="TenPoss">
 	</a>
 	<p class="pull-right">
-		Welcome: {{ Auth::user()->email }}
-		<a href="{{route('admin.logout')}}">Logout</a>
+		@if( Auth::check() ) 
+			{{ Auth::user()->email }}
+			<a href="{{route('admin.logout')}}">出口</a>
+		@endif
 	</p>
 </div>
