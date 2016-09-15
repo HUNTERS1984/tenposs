@@ -12,43 +12,42 @@
 
 <div class="main-content news">
 	<div class="wrapper-content">
+		<p>&nbsp;</p>
 		<div class="clearfix">
             <p style="margin-bottom:10px;" class="">Showing {{$users->firstItem()}}/{{$users->lastItem()}} of {{$users->total()}}results</p>
+			<p>
+				<span class="noted-color bg-red block-20">User not approved</span>
+			</p>
+			<p>&nbsp;</p>
 		</div>
-		<table class="table table-bordered" >
+		
+		<div class="panel panel-info">
+			<div class="panel-heading">Clients </div>
+			<div class="panel-body">
+				<table class="table table-responsive" >
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Email</th>
 					<th>Fullname</th>
-					<th>Sex</th>
-					<th>birthday</th>
-					<th>locale</th>
-					<th>status</th>
-					<th>company</th>
-					<th>address</th>
-					<th>tel</th>
-					<th>apps</th>
-					<th>Group</th>
+					<th>Status</th>
+					<th>Tel</th>
+					<th>Function</th>
 				</tr>
 			</thead>
 			<tbody>
 				@if (count($users) > 0)
 				@foreach($users as $user)
-				<tr>
-					<td>{{ $user->name }}</td>
+				<?php $class = ( $user->status == 2 ) ? 'bg-red' : '' ?>
+				<tr class="{{ $class }}">
+					<td><a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">{{ $user->name }}</a></td>
 					<td>{{ $user->email }}</td>
 					<td>{{ $user->fullname }}</td>
-					<td>{{ $user->sex }}</td>
-					<td>{{ $user->birthday }}</td>
-					<td>{{ $user->locale }}</td>
 					<td>{{ $user->status }}</td>
-					<td>{{ $user->company }}</td>
-					<td>{{ $user->address }}</td>
 					<td>{{ $user->tel }}</td>
 					<td>
-					<a href="{{ route('admin.clients.apps',['id' => $user->id]) }}">View apps ({{ $user->apps()->count() }})</a>
-
+						<a href="{{ route('admin.clients.apps',['id' => $user->id]) }}">Apps ({{ $user->apps()->count() }})</a><br>
+						<a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">View</a>
 					</td>
 				</tr>
 				@endforeach
@@ -60,6 +59,9 @@
 			</tbody>
 
 		</table>
+			</div>
+		</div>
+		
 		<div class="pagination pull-right">
 			<div class="clearfix">
 				{{ $users->render() }}

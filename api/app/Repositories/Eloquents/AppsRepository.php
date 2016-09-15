@@ -6,6 +6,7 @@ use App\Models\App;
 use App\Models\User;
 use App\Repositories\Contracts\AppsRepositoryInterface;
 use App\Filters\EntityFilters\AppsFilters;
+use DB;
 
 class AppsRepository implements AppsRepositoryInterface
 {

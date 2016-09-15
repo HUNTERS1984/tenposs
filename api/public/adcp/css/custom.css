@@ -13,3 +13,12 @@
     left: 50%;
     margin-left: -20px;
 }
+.bg-red{
+    background-color: #ffebf2;
+}
+
+.noted-color.bg-red{
+   
+    display: inline-block;
+    padding: 5px;
+}

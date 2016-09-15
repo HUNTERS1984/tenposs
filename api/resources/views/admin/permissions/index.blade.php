@@ -4,7 +4,7 @@
     <div class="topbar-content">
         <div class="wrap-topbar clearfix">
             <div class="left-topbar">
-                <h1 class="title">Roles</h1>
+                <h1 class="title">Permissions</h1>
             </div>
         </div>
     </div>
@@ -14,11 +14,11 @@
         @include('admin.partials.message')
         <div class="wrapper-content">
 		    <div class="wrap-btn-content">
-        	    <a href="{{ route('admin.roles.create') }}" class="btn-me btn-hong">Create new</a>
+        	    <a href="{{ route('admin.permissions.create') }}" class="btn-me btn-hong">Create new</a>
         	</div>	<!-- end wrap-btn-content-->
 		    
 		    <div class="panel panel-info">
-    			<div class="panel-heading">Roles </div>
+    			<div class="panel-heading">Permissions </div>
     			<div class="panel-body">
     				<table class="table table-responsive" >
             			<thead>
@@ -29,11 +29,11 @@
             			</thead>
             			
             			<tbody>
-            			    @foreach( $roles as $role )
+            			    @foreach( $pers as $item )
             			    <tr>
-            			        <td>{{ $role->name }}</td>
+            			        <td>{{ $item->name }}</td>
             			        <td>
-            			             <a class="btn btn-info" href="{{ route('admin.roles.edit',$role->id) }}">Edit</a>
+            			             <a class="btn btn-info" href="{{ route('admin.permissions.edit',$item->id) }}">Edit</a>
             			        </td>
             			    </tr>
             			    @endforeach

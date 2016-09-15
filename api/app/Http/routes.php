@@ -74,7 +74,7 @@ Route::group(array('prefix' => 'admin',
     Route::get('/logout', array('as'=>'admin.logout','uses' => 'Admin\ClientsController@logout' ));
 
     Route::get('/clients', array('as'=>'admin.clients','uses' => 'Admin\ClientsController@index' ));
-    Route::get('/clients/user_id/{user_id}', array('as'=>'admin.clients.show','uses' => 'Admin\ClientsController@show' ));
+    Route::get('/clients/{user_id}', array('as'=>'admin.clients.show','uses' => 'Admin\ClientsController@show' ));
     Route::get('/clients/{user_id}/apps', array('as'=>'admin.clients.apps','uses' => 'Admin\AppsController@index' ));
     // Clients
     Route::get('/clients/{user_id}/apps/create', array('as'=>'admin.clients.apps.create','uses' => 'Admin\AppsController@create' ));
@@ -88,6 +88,10 @@ Route::group(array('prefix' => 'admin',
     
     Route::get('/clients/approved/list', array( 'as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers' ));
     Route::post('/clients/approved/process', array( 'as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess' ));
+
+    Route::resource('roles','Admin\RolesController'); 
+    Route::resource('permissions','Admin\PermissionsController'); 
+    
 });
 
 Route::group(array('prefix' => 'admin',
@@ -97,6 +101,8 @@ Route::group(array('prefix' => 'admin',
     Route::get('verifined/client/{hascode}', array('as'=>'clients.verifined.registration','uses' => 'Admin\ClientsController@verifinedApprovedUser' ));
     
 });    
+
+
 
 
 //Route::get('/test', function() {

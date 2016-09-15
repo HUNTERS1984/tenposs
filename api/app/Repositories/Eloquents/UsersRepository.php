@@ -5,17 +5,18 @@ namespace App\Repositories\Eloquents;
 
 use App\Models\User;
 use App\Repositories\Contracts\UsersRepositoryInterface;
-
+use DB;
 
 class UsersRepository implements UsersRepositoryInterface
 {
     public function all()
     {
-        return User::all();
+
+        return User::orderByRaw(DB::raw("FIELD(status, 2)"))->get()->all();
     }
 
     public function paginate($limit){
-    	return User::paginate($limit);
+    	return User::orderByRaw(DB::raw("FIELD(status, 2) DESC"))->paginate($limit);
     }
 
     public function find($id)
