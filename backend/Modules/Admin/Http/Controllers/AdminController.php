@@ -133,6 +133,7 @@ class AdminController extends Controller
                 $app_setting->menu_font_size = $this->request->input('menu_font_size');
                 $app_setting->menu_font_family = $this->request->input('menu_font_family');
                 $data_component = $this->request->input('data_component');
+                $app_setting->save();
                 $list_id = [];
                 $list_insert = [];
                 if (count($data_component) > 0) {
@@ -155,7 +156,7 @@ class AdminController extends Controller
 
 //        $app_setting->app_icon_color = $this->request->input('app_icon_color');
 //        $app_setting->store_user_color = $this->request->input('store_user_color');
-                $app_setting->save();
+
 
                 //
                 Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add App Setting successfully'));
