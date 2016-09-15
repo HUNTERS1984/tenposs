@@ -64,6 +64,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = $this->convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 
@@ -85,6 +87,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = $this->convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 
@@ -106,6 +110,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = $this->convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 

@@ -1,7 +1,7 @@
 @if(count($coupons) > 0)
     @foreach ($coupons as $coupon)
         <div class="each-coupon each-item clearfix">
-            <a href="{{ URL::route('admin.coupon.show', $coupon->id) }}"><img src="{{url('/').'/'.$coupon->image_url}}"
+            <a href="{{ URL::route('admin.coupon.show', $coupon->id) }}"><img src="{{$coupon->image_url}}"
                                                                               class="img-responsive img-prview" alt=""></a>
             <div class="main-title">
                 <h2><a href="{{ URL::route('admin.coupon.show', $coupon->id) }}">{{$coupon->coupon_type->name}}</a></h2>
