@@ -109,7 +109,7 @@ class AppUserController extends Controller
         //end validate app_id and sig
         $user = null;
         try {
-            $user = AppUser::where('social_id', Input::get('social_id'))->first();
+            $user = AppUser::where('social_id', Input::get('social_id'))->where('app_id', $app['id'])->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
@@ -186,7 +186,7 @@ class AppUserController extends Controller
             return $ret_sig;
         //end validate app_id and sig
         try {
-            $user = AppUser::where('email', Input::get('email'))->first();
+            $user = AppUser::where('email', Input::get('email'))->where('app_id', $app['id'])->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
