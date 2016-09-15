@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\UsersRepositoryInterface;
+use App\Repositories\Contracts\AppsRepositoryInterface;
 use Validator;
 use Auth;
 use DB;
@@ -18,9 +19,10 @@ class ClientsController extends Controller
     
 	protected $userRespository;
     
-    public function __construct(UsersRepositoryInterface $ur)
+    public function __construct(UsersRepositoryInterface $ur,AppsRepositoryInterface $appRepoInterface)
     {
         $this->userRespository = $ur;
+        $this->appRepo = $appRepoInterface;
     }
     public function index(){
   
@@ -71,12 +73,24 @@ class ClientsController extends Controller
     
     public function approvedUsersProcess(Request $request){
         $user = \App\Models\User::findOrFail( $request->input('user_id') );
-        $randPassword = str_random(8);
         $link = url('https://ten-po.com/admin/login');
         // Update user
         $user->status = 1;
-        $user->password = bcrypt($randPassword);
         $user->save();
+
+
+        $created = $this->appRepo->storeApp($user, [
+            'name' => $user->app_name_register,
+            'domain' => $user->domain,
+            'app_app_id' => md5(uniqid(rand(), true)),
+            'app_app_secret' => md5(uniqid(rand(), true)),
+            'description' => 'なし',
+            'status' => 1
+        ]);
+        if ($created) {
+            return response()->json(['success' => 'false', 'msg' => 'Try again!' ]);
+        }
+
         // Assign role
         if( !$user->hasRole('client') )
             $user->assignRole('client');
@@ -89,7 +103,7 @@ class ClientsController extends Controller
 					 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
 					 $message->to( $to )
 						 //->cc()
-						 ->subject('Tenpo - Approved user');
+						 ->subject('お申し込み受付のお知らせ【TENPOSS】');
 				 });
 			return response()->json(['success' => true]);	 
 		 }
