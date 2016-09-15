@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\UsersRepositoryInterface;
+use App\Repositories\Contracts\AppsRepositoryInterface;
 use Validator;
 use Auth;
 use DB;
@@ -18,9 +19,10 @@ class ClientsController extends Controller
     
 	protected $userRespository;
     
-    public function __construct(UsersRepositoryInterface $ur)
+    public function __construct(UsersRepositoryInterface $ur,AppsRepositoryInterface $appRepoInterface)
     {
         $this->userRespository = $ur;
+        $this->appRepo = $appRepoInterface;
     }
     public function index(){
   
@@ -87,7 +89,7 @@ class ClientsController extends Controller
 					 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
 					 $message->to( $to )
 						 //->cc()
-						 ->subject('Tenpo - Approved user');
+						 ->subject('お申し込み受付のお知らせ【TENPOSS】');
 				 });
 			return response()->json(['success' => true]);	 
 		 }

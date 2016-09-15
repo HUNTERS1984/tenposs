@@ -36,7 +36,7 @@
                                     @if(count($coupons) > 0)
                                         @foreach ($coupons as $coupon)
                                             <div class="each-coupon clearfix">
-                                                <img src="{{url('/').'/'.$coupon->image_url}}"
+                                                <img src="{{$coupon->image_url}}"
                                                      class="img-responsive img-prview">
                                                 <div class="inner-preview">
                                                     <p class="title-inner"

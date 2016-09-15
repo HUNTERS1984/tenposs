@@ -83,9 +83,9 @@ class User extends Authenticatable
 
         $app = new \App\Models\App;
         $app->name = $this->app_name_register;
-        $app->app_app_id = str_random(50);
-        $app->app_app_secret = str_random(50);
-        $app->description = "App description";
+        $app->app_app_id = md5(uniqid(rand(), true));
+        $app->app_app_secret = md5(uniqid(rand(), true));
+        $app->description =  'なし';
         $app->status = 1;
         $app->business_type = $this->business_type;
         $app->user_id = $this->id;

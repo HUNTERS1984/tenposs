@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\UrlHelper;
 
 use App\Models\Store;
 use App\Models\App;
@@ -35,11 +36,16 @@ class CouponController extends Controller
     {
         $list_store = $this->request->stores;
         $coupons = array();
-        $list_store = array();
         $list_coupon_type = array();
         if (count($list_store) > 0) {
             $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->get();
             $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
+            for ($i = 0; $i < count($coupons); $i++) {
+                if ($coupons[$i]->image_url == null)
+                    $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else 
+                    $coupons[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$coupons[$i]->image_url);
+            }
         }
         return view('admin::pages.coupon.index',compact('coupons', 'list_store', 'list_coupon_type'));
     }
@@ -182,7 +188,7 @@ class CouponController extends Controller
         //$posts = Post::with('tags')->paginate(10);
         $posts = Post::whereHas('tags', function ($q) use ($hashtag) {
             $q->whereIn('id', $hashtag);  
-        })->with('tags')->paginate(2); 
+        })->with('tags')->paginate(20); 
         for ($i = 0; $i < count($posts); $i++)
         {
 

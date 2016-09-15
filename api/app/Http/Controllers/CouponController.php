@@ -72,9 +72,15 @@ class CouponController extends Controller
                 $total_coupon = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->orderBy('updated_at', 'desc')->count();
                 
                 if ($total_coupon > 0) {
+                    $currentDate = date('Y-m-d');
+                    $currentDate=date('Y-m-d', strtotime($currentDate));
+
                     $coupons = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get();
                     for ($i = 0; $i < count($coupons); $i++)
                     {   
+                        $dateBegin = date('Y-m-d', strtotime($coupons[$i]['start_date']));
+                        $dateEnd = date('Y-m-d', strtotime($coupons[$i]['end_date']));
+
                         $coupons[$i]['taglist'] = Coupon::find($coupons[$i]->id)->tags()->lists('tag')->toArray();
                         if (Input::get('token')) { // in case login
                             $session = UserSession::where('token', Input::get('token'))->first();
@@ -84,7 +90,7 @@ class CouponController extends Controller
                                 $coupons[$i]['can_use'] = DB::table('rel_app_users_coupons')
                                                     ->whereAppUserId($user->id)
                                                     ->whereCouponId($coupons[$i]->id)
-                                                    ->count() > 0;
+                                                    ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                             } else {
                                 $coupons[$i]['can_use'] = false;
                             }

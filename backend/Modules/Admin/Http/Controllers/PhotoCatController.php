@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\UrlHelper;
 
 use App\Models\Store;
 use App\Models\PhotoCat;
@@ -41,6 +42,8 @@ class PhotoCatController extends Controller
                 for ($i = 0; $i < count($list_photo); $i++) {
                     if ($list_photo[$i]->image_url == null)
                         $list_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    else 
+                        $list_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
                 }
             }
         }
@@ -62,6 +65,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 
@@ -83,6 +88,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 
@@ -104,6 +111,8 @@ class PhotoCatController extends Controller
             {
                 if ($list_photo[$i]->image_url == null)
                     $list_photo[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                else 
+                    $list_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
             }
         }
 
