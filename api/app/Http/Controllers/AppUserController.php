@@ -160,7 +160,10 @@ class AppUserController extends Controller
 
         $this->body['data']['token'] = $token;
         $this->body['data']['app_id'] = $user->app_id;
-        $this->body['data']['app_user_id'] = $user->id;
+        $this->body['data']['id'] = $user->id;
+        $this->body['data']['email'] = NULL;
+        $this->body['data']['social_type'] = Input::get('social_type');
+        $this->body['data']['social_id'] = Input::get('social_id');
         $this->body['data']['profile'] = $profile;
         return $this->output($this->body);
 
@@ -234,7 +237,10 @@ class AppUserController extends Controller
 
         $this->body['data']['token'] = $token;
         $this->body['data']['app_id'] = $user->app_id;
-        $this->body['data']['app_user_id'] = $user->id;
+        $this->body['data']['id'] = $user->id;
+        $this->body['data']['email'] = Input::get('email');
+        $this->body['data']['social_type'] = NULL;
+        $this->body['data']['social_id'] = NULL;
         $this->body['data']['profile'] = $profile;
 
 
@@ -285,7 +291,10 @@ class AppUserController extends Controller
 
             $this->body['data']['token'] = $token;
             $this->body['data']['app_id'] = $user->app_id;
-            $this->body['data']['app_user_id'] = $user->id;
+            $this->body['data']['id'] = $user->id;
+            $this->body['data']['email'] = Input::get('email');
+            $this->body['data']['social_type'] = NULL;
+            $this->body['data']['social_id'] = NULL;
             $this->body['data']['profile'] = $profile;
             return $this->output($this->body);
         } else {
