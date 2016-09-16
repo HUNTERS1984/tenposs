@@ -42,7 +42,7 @@ class AdminController extends Controller
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
 
-        $component_all = Component::pluck('name', 'id');
+        $component_all = Component::whereNotNull('sidemenu')->pluck('name', 'id');
         $data_component_source = array();
         $data_component_dest = array();
         if (count($app_data) > 0) {
@@ -53,6 +53,7 @@ class AdminController extends Controller
                 $data_component_dest = DB::table('components')
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
+                    ->whereNotNull('components.sidemenu')
                     ->pluck('name', 'id');
 //               dd($data_component_dest);
                 if (count($data_component_dest) > 0) {
@@ -104,7 +105,7 @@ class AdminController extends Controller
             $app_settings = $app->first();
 
             if ($app_settings != null) {
-                $app_components = $app->first()->components()->pluck('name', 'id')->toArray();
+                $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
                 if (count($app_components) > 0) {
                     $available_components = array_diff($all->toArray(), $app_components);
                 } else {
