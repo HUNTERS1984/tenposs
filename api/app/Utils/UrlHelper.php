@@ -67,6 +67,7 @@ class UrlHelper
                $relativeURL=$urlBase.'/'.$relativeURL;  
             }  
        }  
+       str_replace(' ', '%20', $relativeURL);
        return $relativeURL;  
     }
 }
