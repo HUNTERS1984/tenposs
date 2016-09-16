@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class RedisControl
 {
-    public static function delete_cache_delete_redis($cache_delete_type, $store_id = 0,$category_id = 0)
+    public static function delete_cache_redis($cache_delete_type, $store_id = 0,$category_id = 0)
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
         $prefix_cache = '';
