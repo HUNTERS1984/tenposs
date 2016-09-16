@@ -95,21 +95,13 @@
                                     <div class="form-group">
                                         <label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
-											<select name="font_size" class="font-size">
-			                                    <option value="12">12px</option>
-                                                <option value="14">14px</option>
-                                                <option value="16">16px</option>
-                                                <option value="18">18px</option>
-                                                <option value="20">20px</option>
-                                                <option value="22">22px</option>
-                                                <option value="24">24px</option>
-                                                <option value="26">26px</option>
-                                                <option value="28">28px</option>
-                                                <option value="30">30px</option>
-											</select>
-											<select name="font_family" id="">
-												<option value="">スタの新スタの新</option>
-											</select>
+                                            @if(count($list_font_size) > 0)
+                                                {{Form::select('font_size',$list_font_size,old('font_size'),['class'=>'font-size'])}}
+                                            @endif
+                                            @if(count($list_font_family) > 0)
+                                                {{Form::select('font_family',$list_font_family,old('font_family'),['class'=>'font-size'])}}
+                                            @endif
+
 										</span>
                                     </div>
                                     <div class="form-group">
@@ -157,21 +149,12 @@
                                     <div class="form-group">
                                         <label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
-											<select name="menu_font_size" class="font-size">
-												<option value="12">12px</option>
-                                                <option value="14">14px</option>
-                                                <option value="16">16px</option>
-                                                <option value="18">18px</option>
-                                                <option value="20">20px</option>
-                                                <option value="22">22px</option>
-                                                <option value="24">24px</option>
-                                                <option value="26">26px</option>
-                                                <option value="28">28px</option>
-                                                <option value="30">30px</option>
-											</select>
-											<select name="menu_font_family" id="">
-												<option value="">スタの新スタの新</option>
-											</select>
+                                              @if(count($list_font_size) > 0)
+                                                {{Form::select('menu_font_size',$list_font_size,old('menu_font_size'),['class'=>'font-size'])}}
+                                            @endif
+                                            @if(count($list_font_family) > 0)
+                                                {{Form::select('menu_font_family',$list_font_family,old('menu_font_family'),['class'=>'font-size'])}}
+                                            @endif
 										</span>
                                     </div>
                                     <div class="form-group clearfix">
@@ -276,8 +259,8 @@
         }
 
         $('#btn_submit_form').click(function () {
-            $('ul.nav-left li').each(function(){
-                var tmp = '<input type="hidden" value="' + $(this).data('value') +'"  name="data_component[]">';
+            $('ul.nav-left li').each(function () {
+                var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_component[]">';
                 $('.main-content').append(tmp);
             });
             $('#form_app_setting').submit();

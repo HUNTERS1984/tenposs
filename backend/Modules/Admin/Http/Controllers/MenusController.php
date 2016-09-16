@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Utils\RedisControl;
 use Illuminate\Http\Request;
 
 use App\Models\Store;
@@ -194,6 +195,8 @@ class MenusController extends Controller
             'coupon_id'=> $this->request->input('coupon_id'),
         ];
         $item = $this->item->create($data);
+        //delete cache redis
+        RedisControl::delete_cache_redis('items');
         if($this->request->has('menu_id')){
             $menu = $this->request->input('menu_id');
             $item->menus()->sync($menu);
@@ -221,6 +224,8 @@ class MenusController extends Controller
                 'store_id' => $this->request->input('store_id'),
             ];
             $this->menu->create($data);
+            //delete cache redis
+            RedisControl::delete_cache_redis('menus');
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add menu successfully') );
             return redirect()->route('admin.menus.index');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -272,7 +277,10 @@ class MenusController extends Controller
 
             $item->save();
             $item->menus()->attach($this->request->input('menu_id'));
-
+            //delete cache redis
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add item successfully') );
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
@@ -347,7 +355,10 @@ class MenusController extends Controller
 
             $item->menus()->detach();
             $item->menus()->attach($this->request->input('menu_id'));
-
+            //delete cache redis
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Update item successfully') );
             return redirect()->route('admin.menus.index');
         } catch (\Illuminate\Database\QueryException $e) {
