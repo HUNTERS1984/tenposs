@@ -11,7 +11,7 @@
 
     <div class="main-content news">
         <div class="wrapper-content">
-
+            @include('admin.partials.message')
             @if( $user )
                 <div class="wrap-btn-content">
                     @if( $user->status == 2)
@@ -91,6 +91,7 @@
                                 <tr>
                                     <th>App Name</th>
                                     <th>Status</th>
+                                    <th>Functions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,12 +100,22 @@
                 				<tr>
                 					<td>{{ $app->name }}</td>
                 					<td>{{ $app->status }}</td>
+                					<td>
+                					    <a href="{{route('admin.clients.apps.delete',['user_id'=>$user->id,'app_id' => $app->id])}}">
+                					        <i class="fa fa-remove"></i> Remove</a>
+                						<br />
+                						<a href="{{route('admin.clients.apps.setting',['user_id'=>$user->id,'app_id' => $app->id])}}">
+                						    <i class="fa fa-cog"></i> AppSetting</a>
+                					</td>
                 				</tr>
                 				
                 				@endforeach
             				</tbody>
             			 </table>	
                         @endif
+                        
+                        <a href="{{ route('admin.clients.apps.create',['user_id' => $user->id ]) }}" class="btn-me btn-hong">Add App</a>
+                        
                     </div>
                 </div>  
                 

@@ -15,7 +15,7 @@
         <div class="wrap-btn-content">
             {{--<a href="{{ route('admin.clients.apps.create',['user_id' => $user_id]) }}" class="btn-me btn-hong">Create--}}
             {{--App</a>--}}
-            <a href="{{ route('admin.clients') }}" class="btn-me btn-xanhduongnhat">Back</a>
+            <a href="{{ route('admin.clients.show',['user_id' => $user_id]) }}" class="btn-me btn-xanhduongnhat">Back</a>
         </div>    <!-- end wrap-btn-content-->
         <div class="wrapper-content">
 

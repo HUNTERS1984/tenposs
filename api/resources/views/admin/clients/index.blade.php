@@ -46,8 +46,9 @@
 					<td>{{ $user->status }}</td>
 					<td>{{ $user->tel }}</td>
 					<td>
-						<a href="{{ route('admin.clients.apps',['id' => $user->id]) }}">Apps ({{ $user->apps()->count() }})</a><br>
-						<a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">View</a>
+						<a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">
+							<i class="fa fa-search"></i>
+							View</a>
 					</td>
 				</tr>
 				@endforeach

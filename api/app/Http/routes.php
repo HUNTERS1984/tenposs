@@ -90,6 +90,7 @@ Route::group(array('prefix' => 'admin',
     Route::post('/clients/approved/process', array( 'as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess' ));
 
     Route::resource('roles','Admin\RolesController'); 
+    Route::resource('roles.permission','Admin\RolePermissionsController');
     Route::resource('permissions','Admin\PermissionsController'); 
     
 });
