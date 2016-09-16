@@ -19,7 +19,7 @@
             <input type="hidden" name="mode" value="_create_new">
             <div class="wrap-btn-content">
                 <button class="btn btn-primary" type="submit"><i class=""></i> Save</button>
-                <a href="{{ route('admin.clients.apps',['user_id' => $user_id]) }}" class="btn-me btn-xanhduongnhat">Back</a>
+                <a href="{{ route('admin.clients.show',['user_id' => $user_id]) }}" class="btn-me btn-xanhduongnhat">Back</a>
             </div>	<!-- end wrap-btn-content-->
             <div class="wrapper-content">
                 <div class="form-group">

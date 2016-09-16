@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="{{ url('adcp/css/style.css') }}">
 	<link rel="stylesheet" href="{{ url('adcp/css/custom.css') }}">
 	<link rel="stylesheet" href="{{ url('adcp/js/switch/lc_switch.css') }}">
+	<link rel="stylesheet" href="{{ url('assets/fonts/font-awesome-4.6.3/css/font-awesome.min.css') }}">
 	@yield('header')
 </head>
 <body>

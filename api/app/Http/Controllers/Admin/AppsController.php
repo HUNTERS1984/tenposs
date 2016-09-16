@@ -67,7 +67,7 @@ class AppsController extends Controller
                 ]);
                 if ($created) {
                     Session::flash('message', array('class' => 'alert-success', 'detail' => 'Insert successful!'));
-                    return redirect()->route('admin.clients.apps', ['user_id' => $user_id]);
+                    return redirect()->route('admin.clients.show', ['user_id' => $user_id]);
                 }
 
                 Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Insert fail!'));
