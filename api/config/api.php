@@ -41,7 +41,7 @@ return [
     'cache_top_photos' => 'top_photos_%s', // app_id
     'cache_top_items' => 'top_items_%s', // app_id
     'cache_top_contacts' => 'top_contacts_%s', // app_id
-    'cache_profile' => 'profile_%s', // app_id
+    'cache_profile' => 'profile_%s_%s', // app_id,user_id
     'cache_app_user_push' => 'app_user_push_%s', // app_id
 
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
