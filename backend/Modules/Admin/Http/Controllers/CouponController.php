@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Utils\RedisControl;
 use Illuminate\Http\Request;
 use App\Utils\UrlHelper;
 
@@ -167,7 +168,8 @@ class CouponController extends Controller
             }
 
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
-
+            //delete cache redis
+            RedisControl::delete_cache_delete_redis('coupons');
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully') );
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
@@ -275,6 +277,8 @@ class CouponController extends Controller
             }
 
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
+            //delete cache redis
+            RedisControl::delete_cache_delete_redis('coupons');
             Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully') );
             return back();
         } catch (\Illuminate\Database\QueryException $e) {

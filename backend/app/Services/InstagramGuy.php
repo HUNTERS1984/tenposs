@@ -25,7 +25,7 @@ class InstagramGuy
         $this->instagram = new Instagram(array(
             'apiKey' => 'cd9f614f85f44238ace18045a51c44d1',
             'apiSecret' => 'd839149848c04447bd379ce8bff4d890',
-            'apiCallback' => 'http://localhost:8000/test' // must point to success.php
+            'apiCallback' => 'https://ten-po.com/test' // must point to success.php
         ));
         $this->instagram->setAccessToken("3532720007.cd9f614.f085ab9cf7dc456891b8359a175ef443");
     }
@@ -41,7 +41,6 @@ class InstagramGuy
         //dd($users); die();
         foreach ($users as $user) {
             if ($user) {
-
                 $response = $this->instagram->getUserMedia($user['social']['social_id'], self::IMAGES_PER_REQUEST);
                 //dd($response); die();
 

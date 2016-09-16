@@ -7,12 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Models\App;
 use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
+use App\Utils\RedisControl;
+use App\Utils\RedisUtil;
 use App\Utils\UploadHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Analytics;
 use App\Models\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +41,7 @@ class AdminController extends Controller
     public function globalpage()
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
+
         $component_all = Component::pluck('name', 'id');
         $data_component_source = array();
         $data_component_dest = array();
@@ -59,7 +63,13 @@ class AdminController extends Controller
                     $data_component_source = $component_all->toArray();
             }
         }
-        return view('admin::pages.admin.global')->with(array('app_settings' => $app_settings, 'data_component_dest' => $data_component_dest, 'data_component_source' => $data_component_source));
+        $list_font_size = Config::get('font.size');
+        $list_font_family = Config::get('font.family');
+        return view('admin::pages.admin.global')->with(array('app_settings' => $app_settings,
+            'data_component_dest' => $data_component_dest,
+            'data_component_source' => $data_component_source,
+            'list_font_size' => $list_font_size,
+            'list_font_family' => $list_font_family));
     }
 
     public function menu()
@@ -100,7 +110,6 @@ class AdminController extends Controller
                 } else {
                     $available_components = $all->toArray();
                 }
-
             }
         }
         return view('admin::pages.admin.top', compact('app_components', 'available_components'));
@@ -133,6 +142,7 @@ class AdminController extends Controller
                 $app_setting->menu_font_size = $this->request->input('menu_font_size');
                 $app_setting->menu_font_family = $this->request->input('menu_font_family');
                 $data_component = $this->request->input('data_component');
+
                 $app_setting->save();
                 $list_id = [];
                 $list_insert = [];
@@ -156,7 +166,8 @@ class AdminController extends Controller
 
 //        $app_setting->app_icon_color = $this->request->input('app_icon_color');
 //        $app_setting->store_user_color = $this->request->input('store_user_color');
-
+                //delete cache redis
+                RedisControl::delete_cache_redis('app_info');
 
                 //
                 Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add App Setting successfully'));
@@ -172,7 +183,8 @@ class AdminController extends Controller
     public function upload()
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
-
+        //delete cache redis
+        RedisControl::delete_cache_redis('top_images');
         if (count($app_data) > 0) {
             $app_setting = AppSetting::where('id', $app_data->id)->first();
             if (count($app_setting) > 0) {
@@ -187,7 +199,8 @@ class AdminController extends Controller
     public function uploaddelete()
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
-
+        //delete cache redis
+        RedisControl::delete_cache_redis('top_images');
         if (count($app_data) > 0) {
             $app_setting = AppSetting::where('id', $app_data->id)->first();
             if (count($app_setting) > 0) {
@@ -240,7 +253,8 @@ class AdminController extends Controller
                 DB::table('rel_app_settings_components')->whereIn('app_setting_id', $list_id)->delete();
             if (count($list_insert) > 0)
                 DB::table('rel_app_settings_components')->insert($list_insert);
-
+            //delete cache redis
+            RedisControl::delete_cache_redis('app_info');
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add Side Menu successfully'));
             return back();
         } catch (QueryException $e) {

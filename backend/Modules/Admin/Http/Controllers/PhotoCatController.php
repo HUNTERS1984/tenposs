@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Utils\RedisControl;
 use Illuminate\Http\Request;
 use App\Utils\UrlHelper;
 
@@ -131,6 +132,8 @@ class PhotoCatController extends Controller
         $this->entity = new PhotoCat();
         $this->entity->name = $this->request->input('name');
         $this->entity->store_id = $this->request->input('store_id');
+        //delete cache
+        RedisControl::delete_cache_delete_redis('photo_cat',$this->request->input('store_id'));
         $this->entity->save();
 
         return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo category successfully');
@@ -161,7 +164,9 @@ class PhotoCatController extends Controller
         $photo->image_url = $image_create;
         $photo->photo_category_id = $this->request->input('photo_category_id');
         $photo->save();
-
+        //delete cache
+        RedisControl::delete_cache_delete_redis('photos',0,$this->request->input('photo_category_id'));
+        RedisControl::delete_cache_delete_redis('top_photos');
         return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo successfully');
     }
 
@@ -205,7 +210,9 @@ class PhotoCatController extends Controller
             if ($image_edit)
                 $photo->image_url = $image_edit;
             $photo->save();
-
+            //delete cache
+            RedisControl::delete_cache_delete_redis('photos',0,$this->request->input('photo_category_id'));
+            RedisControl::delete_cache_delete_redis('top_photos');
             return redirect()->route('admin.photo-cate.index')->withSuccess('Update photo successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update photo fail') );
