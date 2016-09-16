@@ -15,6 +15,7 @@ use DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redis;
 use Predis\Connection\ConnectionException;
+use App\Utils\UrlHelper;
 
 class ItemController extends Controller
 {
@@ -107,7 +108,7 @@ class ItemController extends Controller
                 $items = Menu::find(Input::get('menu_id'))->items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
 
             for ($i = 0; $i < count($items); $i++) {
-                $items[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
+                $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
             }
 
         } catch (\Illuminate\Database\QueryException $e) {

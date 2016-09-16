@@ -13,6 +13,7 @@ use Mail;
 use App\Address;
 use DB;
 use Illuminate\Support\Facades\Config;
+use App\Utils\UrlHelper;
 
 class NewsController extends Controller
 {
@@ -63,7 +64,7 @@ class NewsController extends Controller
                 $news = News::where('store_id', Input::get('store_id'))->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
 
             for ($i = 0; $i < count($news); $i++) {
-                $news[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
+                $news[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }
 
         } catch (\Illuminate\Database\QueryException $e) {

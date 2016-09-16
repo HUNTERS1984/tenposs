@@ -20,6 +20,7 @@ use DB;
 use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
+use App\Utils\UrlHelper;
 
 class AppUserController extends Controller
 {
@@ -406,7 +407,7 @@ class AppUserController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
-        $request->user->profile->avatar_url = $this->convertRelativeToAbsoluteURL(url('/'),$request->user->profile->avatar_url);
+        $request->user->profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$request->user->profile->avatar_url);
         $this->body['data']['user'] = $request->user;
 
         if ($request->user != null && count($request->user) > 0) { // set cache
@@ -434,7 +435,7 @@ class AppUserController extends Controller
         $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
-        
+
 
         if (Input::get('gender') != '0' && Input::get('gender') != '1')
             return $this->error(1004);

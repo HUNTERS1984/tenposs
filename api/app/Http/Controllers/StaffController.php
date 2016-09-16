@@ -15,6 +15,7 @@ use DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redis;
 use Predis\Connection\ConnectionException;
+use App\Utils\UrlHelper;
 
 class StaffController extends Controller
 {
@@ -105,7 +106,7 @@ class StaffController extends Controller
             if ($total_staffs > 0)
                 $staffs = StaffCategory::find(Input::get('category_id'))->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
             for ($i = 0; $i < count($staffs); $i++) {
-                $staffs[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
+                $staffs[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             dd($e);

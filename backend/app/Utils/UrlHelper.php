@@ -66,6 +66,6 @@ class UrlHelper
                $relativeURL=$urlBase.'/'.$relativeURL;  
             }  
        }  
-       return $relativeURL;  
+       return urlencode($relativeURL);  
     }
 }
