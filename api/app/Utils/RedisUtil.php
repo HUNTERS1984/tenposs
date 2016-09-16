@@ -58,4 +58,15 @@ class RedisUtil
         return null;
     }
 
+    public function clear_cache($key)
+    {
+        try {
+            $this->_redis->delete($key);
+        } catch (ConnectionException $e) {
+
+        } catch (\RedisException $e) {
+
+        }
+    }
+
 }

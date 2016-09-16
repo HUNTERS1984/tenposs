@@ -426,6 +426,16 @@ class AppUserController extends Controller
         if ($ret)
             return $ret;
 
+        //validate sig
+        $check_sig_items = Config::get('api.sig_profile');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        
+
         if (Input::get('gender') != '0' && Input::get('gender') != '1')
             return $this->error(1004);
 
@@ -445,6 +455,10 @@ class AppUserController extends Controller
             $request->user->profile->gender = Input::get('gender');
             $request->user->profile->address = Input::get('address');
             $request->user->profile->save();
+
+            $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
+
+            RedisUtil::getInstance()->clear_cache($key);
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
