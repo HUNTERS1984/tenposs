@@ -15,6 +15,7 @@ use Mail;
 use App\Address;
 use DB;
 use Illuminate\Support\Facades\Config;
+use App\Utils\UrlHelper;
 
 class PhotoController extends Controller
 {
@@ -107,7 +108,7 @@ class PhotoController extends Controller
             if ($total_photos > 0)
                 $photos = Photo::where('photo_category_id', Input::get('category_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
             for ($i = 0; $i < count($photos); $i++) {
-                $photos[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
+                $photos[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);

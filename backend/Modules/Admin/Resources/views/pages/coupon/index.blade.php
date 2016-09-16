@@ -262,7 +262,7 @@
                 modal.find("#edit_enddate").val(link.data("enddate"));
                 modal.find("#edit_id").val(link.data("id"));
                 modal.find("#delete_id").val(link.data("id"));
-                $('.edit_coupon_img').attr('src', '{{url("/")}}/' + link.data("image"));
+                $('.edit_coupon_img').attr('src', link.data("image"));
 
             });
 

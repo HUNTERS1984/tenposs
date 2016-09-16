@@ -8,6 +8,7 @@ use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Utils\UrlHelper;
 
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests;
@@ -99,7 +100,7 @@ class CouponController extends Controller
                         } else {
                             $coupons[$i]['can_use'] = false;
                         }
-                        $coupons[$i]['image_url'] = $this->convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons[$i]['image_url']);
+                        $coupons[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons[$i]['image_url']);
                          
                     }
 

@@ -218,7 +218,7 @@ class CouponController extends Controller
         $all_coupon = $this->entity->all();
         $list_store = $store->lists('name','id');
         $coupon = $this->entity->find($id);
-
+        $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$coupon->image_url);
         return view('admin::pages.coupon.edit',compact('coupon','list_store','all_coupon'));
     }
 
