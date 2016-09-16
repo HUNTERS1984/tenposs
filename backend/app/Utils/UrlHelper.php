@@ -19,7 +19,7 @@ class UrlHelper
     public static function convertRelativeToAbsoluteURL($baseAbsoluteURL, $relativeURL)  
     {  
 
-       $relativeURL = trim($relativeURL);  
+       $relativeURL = urlencode(trim($relativeURL));  
        if (substr($relativeURL, 0, 7) !== 'http://' && substr($relativeURL, 0, 8) !== 'https://')  
        {  
             while (strpos($relativeURL, '/./') !== false)  
@@ -66,6 +66,6 @@ class UrlHelper
                $relativeURL=$urlBase.'/'.$relativeURL;  
             }  
        }  
-       return urlencode($relativeURL);  
+       return $relativeURL;  
     }
 }
