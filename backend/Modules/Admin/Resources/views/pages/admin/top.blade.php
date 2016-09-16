@@ -308,13 +308,17 @@
     {{Html::script('assets/backend/js/upload/vendor/jquery.ui.widget.js')}}
 
     <!-- The Templates plugin is included to render the upload/download listings -->
-    <script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+    {{Html::script('assets/backend/js/upload/tmpl.min.js')}}
+    {{--<script src="http://blueimp.github.io/JavaScript-Templates/js/upload/tmpl.min.js"></script>--}}
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+    {{Html::script('assets/backend/js/upload/load-image.all.min.js')}}
+    {{--<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>--}}
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-    <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+    {{Html::script('assets/backend/js/upload/canvas-to-blob.min.js')}}
+    {{--<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>--}}
     <!-- blueimp Gallery script -->
-    <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+    {{Html::script('assets/backend/js/upload/jquery.blueimp-gallery.min.js')}}
+    {{--<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>--}}
     {{Html::script('assets/backend/js/upload/cors/jquery.postmessage-transport.js')}}
     {{Html::script('assets/backend/js/upload/jquery.iframe-transport.js')}}
     {{Html::script('assets/backend/js/upload/jquery.fileupload.js')}}
