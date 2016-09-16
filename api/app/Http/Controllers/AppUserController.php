@@ -406,7 +406,7 @@ class AppUserController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
-        $request->user->profile->avatar_url = url('/') . $request->user->profile->avatar_url;
+        $request->user->profile->avatar_url = $this->convertRelativeToAbsoluteURL(url('/'),$request->user->profile->avatar_url);
         $this->body['data']['user'] = $request->user;
 
         if ($request->user != null && count($request->user) > 0) { // set cache
