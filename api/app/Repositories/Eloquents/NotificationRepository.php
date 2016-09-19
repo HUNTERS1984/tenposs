@@ -162,6 +162,15 @@ class NotificationRepository implements NotificationRepositoryInterface
                                 }
                                 break;
                             case "chat":
+                                if (!empty($obj->data_value)) {
+                                    $data_notify = array('title' => $obj->title,
+                                        'desc' => $obj->data_value,
+                                        'subtitle' => '',
+                                        'tickertext' => '',
+                                        'id' => 0,
+                                        'type' => 'chat',
+                                        'image_url' => '');
+                                }
                                 break;
                             case "custom":
                                 if (!empty($obj->data_value)) {
