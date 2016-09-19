@@ -62,8 +62,9 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('coupon/store_type',['as'=>'admin.coupon.store_type','uses'=>'CouponController@store_type'] );
         Route::resource('coupon','CouponController');
         
+        // Categries
+        Route::resource('category','CategoriesController');
         
-       
         
     });
 });

@@ -115,11 +115,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!-- END -->
             </div>    <!-- end main-content-->
-            <!-- Modal -->
+
+        @stop
+        <!-- Modal -->
             <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
                 <div class="modal-dialog" role="document">
                     {{Form::open(array('route'=>'admin.menus.storeMenu'))}}
@@ -200,7 +201,6 @@
                     {{Form::close()}}
                 </div>
             </div>
-        @stop
 
         @section('script')
             {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}

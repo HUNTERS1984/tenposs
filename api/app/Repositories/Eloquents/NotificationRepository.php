@@ -11,6 +11,7 @@ namespace App\Repositories\Eloquents;
 
 use App\Models\Apps;
 use App\Models\AppUser;
+use App\Models\Coupon;
 use App\Models\News;
 use App\Models\UserPushLogTracking;
 use App\Repositories\Contracts\NotificationRepositoryInterface;
@@ -90,10 +91,10 @@ class NotificationRepository implements NotificationRepositoryInterface
     public function get_info_nofication($app_id, $type)
     {
         $rs = $this->get_app_push_from_app_id($app_id);
-        Log::info("get_app_push_from_app_id: ".json_encode($rs));
+        Log::info("get_app_push_from_app_id: " . json_encode($rs));
         if (count($rs) > 0) {
             $isPerNoti = $this->check_permission_notify_from_data($rs['userpushs'], $type);
-            Log::info("check_permission_notify_from_data: ".json_encode($rs));
+            Log::info("check_permission_notify_from_data: " . json_encode($rs));
             if ($isPerNoti) {
                 return array("android_push_key" => $rs['user']['android_push_key'],
                     "apple_push_key" => $rs['user']['apple_push_key'],
@@ -120,14 +121,17 @@ class NotificationRepository implements NotificationRepositoryInterface
         return $isValid;
     }
 
-    public function process_notify($message)
+    public function process_notify($message, $app_user_id)
     {
         if (!empty($message)) {
             $obj = json_decode($message);
             if (count($obj) > 0) {
+                if ($app_user_id > 0)
+                    $obj->app_user_id = $app_user_id;
                 if (property_exists($obj, "app_user_id") && property_exists($obj, "type")) {
+
                     $notify_info = $this->get_info_nofication($obj->app_user_id, $obj->type);
-                    Log::info("get_info_nofication: ".json_encode($notify_info));
+                    Log::info("get_info_nofication: " . json_encode($notify_info));
                     $data_notify = null;
                     if (count($notify_info) > 0) {
                         switch ($obj->type) {
@@ -137,28 +141,52 @@ class NotificationRepository implements NotificationRepositoryInterface
                                     $data_notify = array('title' => $news[0]['title'],
                                         'desc' => $news[0]['description'],
                                         'subtitle' => '',
-                                        'tickertext' => '');
+                                        'tickertext' => '',
+                                        'id' => $news[0]['id'],
+                                        'type' => 'news',
+                                        'image_url' => $news[0]['image_url']);
                                 }
                                 break;
                             case "ranking":
                                 break;
                             case "coupon":
+                                $coupons = Coupon::where('id', $obj->data_id)->get()->toArray();
+                                if (count($coupons) > 0) {
+                                    $data_notify = array('title' => $coupons[0]['title'],
+                                        'desc' => $coupons[0]['description'],
+                                        'subtitle' => '',
+                                        'tickertext' => '',
+                                        'id' => $coupons[0]['id'],
+                                        'type' => 'coupon',
+                                        'image_url' => $coupons[0]['image_url']);
+                                }
                                 break;
                             case "chat":
-                                break;
-                            case "custom":
-                                if (!empty($obj->data_value))
-                                {
-                                    $data_notify = array('title' => $obj->data_value,
+                                if (!empty($obj->data_value)) {
+                                    $data_notify = array('title' => $obj->title,
                                         'desc' => $obj->data_value,
                                         'subtitle' => '',
-                                        'tickertext' => '');
+                                        'tickertext' => '',
+                                        'id' => 0,
+                                        'type' => 'chat',
+                                        'image_url' => '');
+                                }
+                                break;
+                            case "custom":
+                                if (!empty($obj->data_value)) {
+                                    $data_notify = array('title' => $obj->title,
+                                        'desc' => $obj->data_value,
+                                        'subtitle' => '',
+                                        'tickertext' => '',
+                                        'id' => 0,
+                                        'type' => 'custom',
+                                        'image_url' => '');
                                 }
                                 break;
                             default:
                                 break;
                         }
-                        Log::info("data_notify: ".json_encode($data_notify));
+                        Log::info("data_notify: " . json_encode($data_notify));
                         //process notify
                         if (count($data_notify) > 0) {
                             if (!empty($notify_info['android_push_key']) && !empty($notify_info['android_push_api_key'])) {
@@ -215,6 +243,33 @@ class NotificationRepository implements NotificationRepositoryInterface
             $log->save();
         } catch (QueryException $e) {
             Log::error($e->getMessage());
+        }
+    }
+
+    public function receive_and_distribute($message)
+    {
+        if (!empty($message)) {
+            $obj = json_decode($message);
+            if (count($obj) > 0) {
+                if (property_exists($obj, "app_user_id") && $obj->app_user_id > 0) {
+                    //process notification app_user_id
+                    Log::info('send notify to one app_user_id: '.$obj->app_user_id);
+                    $this->process_notify($message, $obj->app_user_id);
+                } else if (property_exists($obj, "app_id") && $obj->app_id > 0) { // //process notification app_id
+                    Log::info('send notify to app_id: '.$obj->app_id);
+                    $app_user_info = AppUser::where('app_id',$obj->app_id)->get()->toArray();
+                    if (count($app_user_info) > 0)
+                    { //send notify to app_user_id
+                        foreach ($app_user_info as $item)
+                        {
+                            Log::info('send notify to  user: '.$item['email']);
+                            $this->process_notify($message,$item['id']);
+                        }
+                    }
+                } else {
+                    Log::info('message invalid: ' + $message);
+                }
+            }
         }
     }
 }

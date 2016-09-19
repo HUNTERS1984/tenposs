@@ -265,4 +265,29 @@ class TopController extends Controller
         }
         return $this->output($this->body);
     }
+
+    public function notification_with_app_id(Request $request)
+    {
+        $check_items = array('app_id', 'type','created_by');//Config::get('api.items_notification');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+//        $check_items = Config::get('api.sig_notification');
+//        //validate sig
+//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+//        if ($ret_sig)
+//            return $ret_sig;
+        try
+        {
+            Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
+//            $process = new NotificationRepository();
+//            $process->process_notify(json_encode(Input::all()));
+        }
+        catch (PredisException $e)
+        {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+    }
 }
