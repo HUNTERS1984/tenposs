@@ -1,15 +1,13 @@
 var mysql = require("mysql");
 var config= require("./../config");
-console.log( 'Config in lineacount' );
-console.log(config);
 
-var connection = mysql.createConnection({
+var mysqlConfig = {
   host     : config.database.host,
   user     : config.database.user,
   password : config.database.password,
   database : config.database.database
-});
-
+};
+var connection;
 
 
 exports.checkExistAccounts = function(user, _callback){
@@ -18,18 +16,27 @@ exports.checkExistAccounts = function(user, _callback){
                 	" FROM line_accounts"+
                 	" WHERE line_accounts.mid = ?"+
                 	" LIMIT 1";
-      	
+      	connection = mysql.createConnection(mysqlConfig);
+        connection.connect();   
+        
         var query = connection.query({
             sql: sql,
                 values: [user.profile.mid]
             }, function (error, results, fields) {
-                console.log(query.sql);
-                if(error) return _callback(false);
-                console.log(results[0]);
-                if( results[0])
-                    return _callback(results[0]);
-                else
+
+                if(error){
+                    connection.end();
                     return _callback(false);
+                } 
+         
+                if( results[0]){
+                    connection.end();
+                    return _callback(results[0]);
+                }else{
+                    connection.end();
+                    return _callback(false);
+                }
+                    
             });
         
     }
