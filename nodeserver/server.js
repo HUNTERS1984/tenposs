@@ -13,7 +13,8 @@ var server  = https.createServer(options, app),
     io      = require('socket.io')(server),
     redis   = require('ioredis'),
     request = require('request'),
-    config  = require("./config");
+    config  = require("./config"),
+    log4js  = require('log4js');
     
     
 server.listen(3000, function(){
@@ -37,11 +38,19 @@ var toUser = {
     displayName:    config.bot.BOT_DISPLAY_NAME
 };
 
+
+log4js.loadAppender('file');
+log4js.addAppender(log4js.appenders.file('logs/chat.log'), 'chat');
+var logger = log4js.getLogger('chat');
+logger.setLevel('ERROR');
+
+
+
 var redisClient = redis.createClient();
 redisClient.subscribe('message');
 // get messages send by ChatController
 redisClient.on("message", function (channel, message) {
-    console.log('--------------------- Redisss -------------------------------');
+    logger.trace('--------------------- Redisss -------------------------------');
     console.log('Receive message %s from system in channel %s', message, channel);
     message = JSON.parse(message);
     // Find from is online
