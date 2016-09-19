@@ -79,4 +79,5 @@ Route::group(array('prefix' => 'chat'), function() {
     Route::get('verifined', array('as'=>'chat.authentication','uses' => 'ChatLineController@verifined' ));
     Route::get('login',array('as'=>'chat.login','uses' =>'ChatLineController@login'));
     Route::get('screen/{app_user_id}','ChatLineController@chatScreen');
+    Route::post('contact/seacrch',array('as'=>'chat.seach.contact','uses'=> 'ChatLineController@searchContact'));
 });

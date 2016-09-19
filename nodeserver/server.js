@@ -215,7 +215,9 @@ io.on('connection', function (socket) {
                                     
                                 }
                             }
+                            socket.emit('receive.admin.getClientOnline',newArr);
                         });
+                        
                         
                        
                     }
