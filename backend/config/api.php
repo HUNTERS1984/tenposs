@@ -26,5 +26,6 @@ return [
     'cache_delete_staff' => 'staff_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
     'cache_delete_staff_categories' => 'staff_categories_%s_%s', // app_id,menu_id
 
-    'url_api_notification_app_id' => 'http://api.tenposs.local/api/v1/notification_app_id'
+    'url_api_notification_app_id' => 'https://api.ten-po.com/api/v1/notification_app_id',
+    'url_api_notification_app_user_id' => 'https://api.ten-po.com/api/v1/notification'
 ];

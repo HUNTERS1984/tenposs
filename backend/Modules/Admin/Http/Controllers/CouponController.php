@@ -17,6 +17,7 @@ use App\Models\Post;
 use App\Models\CouponType;
 use Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Session;
 use App\Jobs\InstagramHashtagJob;
 use DB;
@@ -71,17 +72,21 @@ class CouponController extends Controller
 
         $app_user->coupons()->attach($coupon_id);
         //push notify to all user on app
-        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
-        $data_push = array(
-            'app_id' => $app_data->id,
-            'type' => 'coupon',
-            'data_id' => $coupon_id,
-            'data_title' => '',
-            'data_value' => '',
-            'created_by' => \Illuminate\Support\Facades\Auth::user()->email
-        );
-        HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
-        //end push
+//        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+        if (count($app_user) > 0) {
+            $data_push = array(
+                'app_user_id' => $app_user->id,
+                'type' => 'coupon',
+                'data_id' => $coupon_id,
+                'data_title' => '',
+                'data_value' => '',
+                'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+            );
+            $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_user_id'), $data_push);
+            if (!$push)
+                Log::info('push fail: ' . json_decode($data_push));
+            //end push
+        }
 
         Session::flash('message', array('class' => 'alert-success', 'detail' => 'Approve coupon successfully'));
         return back();
@@ -186,6 +191,21 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_delete_redis('coupons');
+            //push notify to all user on app
+            $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+            $data_push = array(
+                'app_id' => $app_data->id,
+                'type' => 'coupon',
+                'data_id' => $this->entity->id,
+                'data_title' => '',
+                'data_value' => '',
+                'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+            );
+            $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+            if (!$push)
+                Log::info('push fail: '. json_decode($data_push));
+            //end push
+
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {

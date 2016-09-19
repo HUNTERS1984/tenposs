@@ -91,7 +91,9 @@ class NewsController extends Controller
             'data_value' => '',
             'created_by' => Auth::user()->email
         );
-        HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+        $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+        if (!$push)
+            Log::info('push fail: ' . json_decode($data_push));
         //end push
         return redirect()->route('admin.news.index')->withSuccess('Add a news successfully');
 
