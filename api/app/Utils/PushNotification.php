@@ -39,7 +39,10 @@ class PushNotification
             'subtitle' => '',
             'tickerText' => '',
             'msgcnt' => 1,
-            'vibrate' => 1
+            'vibrate' => 1,
+            'id' => $data['id'],
+            'type' => $data['type'],
+            'image_url' => $data['image_url']
         );
 
         $headers = array(
@@ -82,6 +85,8 @@ class PushNotification
             ),
             'sound' => 'default'
         );
+        $body['data'] = array('type' => $data['type'],
+            'id' => $data['id'], 'image_url' => $data['image_url']);
         // Encode the payload as JSON
         $payload = json_encode($body);
         // Build the binary notification

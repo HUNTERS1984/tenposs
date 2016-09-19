@@ -50,8 +50,9 @@ class NotificationMobile extends Command
                 $this->info("Start subscribe");
                 Redis::subscribe([Config::get('api.redis_chanel_notification')], function ($message) {
                     try {
+                        $this->info('receive message:'.$message);
                         $process = new NotificationRepository();
-                        $process->process_notify($message);
+                        $process->receive_and_distribute($message);
                         $this->info("this is " . $message . " log " . Carbon::now());
                     } catch (\RuntimeException $e) {
                         Log::error($e->getMessage());

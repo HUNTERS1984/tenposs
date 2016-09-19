@@ -4,6 +4,7 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Utils\HttpRequestUtil;
 use App\Utils\RedisControl;
 use Illuminate\Http\Request;
 use App\Utils\UrlHelper;
@@ -15,12 +16,13 @@ use App\Models\Tag;
 use App\Models\Post;
 use App\Models\CouponType;
 use Auth;
+use Illuminate\Support\Facades\Config;
 use Session;
 use App\Jobs\InstagramHashtagJob;
 use DB;
 use Validator;
 
-define('REQUEST_COUPON_ITEMS',  10);
+define('REQUEST_COUPON_ITEMS', 10);
 
 class CouponController extends Controller
 {
@@ -28,11 +30,13 @@ class CouponController extends Controller
     protected $entity;
     protected $type;
 
-    public function __construct(Request $request, Coupon $coupon, CouponType $type){
+    public function __construct(Request $request, Coupon $coupon, CouponType $type)
+    {
         $this->request = $request;
         $this->entity = $coupon;
         $this->type = $type;
     }
+
     public function index()
     {
         $list_store = $this->request->stores;
@@ -44,11 +48,11 @@ class CouponController extends Controller
             for ($i = 0; $i < count($coupons); $i++) {
                 if ($coupons[$i]->image_url == null)
                     $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
-                else 
-                    $coupons[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$coupons[$i]->image_url);
+                else
+                    $coupons[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupons[$i]->image_url);
             }
         }
-        return view('admin::pages.coupon.index',compact('coupons', 'list_store', 'list_coupon_type'));
+        return view('admin::pages.coupon.index', compact('coupons', 'list_store', 'list_coupon_type'));
     }
 
 
@@ -56,24 +60,37 @@ class CouponController extends Controller
     {
         $page_num = $this->request->page;
         $list_coupon_type = $this->type->whereIn('store_id', $this->request->stores->pluck('id')->toArray())->lists('id')->toArray();
-        $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type)->with('coupon_type')->skip($page_num*REQUEST_COUPON_ITEMS)->take(REQUEST_COUPON_ITEMS)->orderBy('updated_at', 'desc')->get();
+        $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type)->with('coupon_type')->skip($page_num * REQUEST_COUPON_ITEMS)->take(REQUEST_COUPON_ITEMS)->orderBy('updated_at', 'desc')->get();
         $returnHTML = view('admin::pages.coupon.element_coupon')->with(compact('coupons'))->render();
         return $returnHTML;
     }
 
     public function approve($coupon_id, $post_id)
     {
-        $app_user = Post::find($post_id)->app_user()->first(); 
-        
+        $app_user = Post::find($post_id)->app_user()->first();
+
         $app_user->coupons()->attach($coupon_id);
-        Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Approve coupon successfully') );
+        //push notify to all user on app
+        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+        $data_push = array(
+            'app_id' => $app_data->id,
+            'type' => 'coupon',
+            'data_id' => $coupon_id,
+            'data_title' => '',
+            'data_value' => '',
+            'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+        );
+        HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+        //end push
+
+        Session::flash('message', array('class' => 'alert-success', 'detail' => 'Approve coupon successfully'));
         return back();
     }
 
     public function unapprove($coupon_id, $post_id)
     {
-        $app_user = Post::find($post_id)->app_user()->first(); 
-        
+        $app_user = Post::find($post_id)->app_user()->first();
+
         $app_user->coupons()->detach($coupon_id);
         return redirect()->back();
     }
@@ -89,9 +106,8 @@ class CouponController extends Controller
         $rules = [
             'title' => 'required|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
-        if ($v->fails())
-        {
+        $v = Validator::make($this->request->all(), $rules);
+        if ($v->fails()) {
             return redirect()->back()->withInput()->withErrors($v);
         }
 
@@ -102,13 +118,13 @@ class CouponController extends Controller
 
         try {
             $this->type = $this->type->create($data);
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Approve coupon type successfully') );
+            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Approve coupon type successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Approve coupon type fail') );
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Approve coupon type fail'));
             return back();
         }
-            
+
     }
 
     public function store()
@@ -119,11 +135,11 @@ class CouponController extends Controller
             $destinationPath = 'uploads'; // upload path
             $extension = $this->request->image_create->getClientOriginalExtension(); // getting image extension
             $fileName = md5($this->request->image_create->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
-            $allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
+            $allowedMimeTypes = ['image/jpeg', 'image/gif', 'image/png', 'image/bmp', 'image/svg+xml'];
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
-            if(! in_array($contentType, $allowedMimeTypes) ){
-              return redirect()->back()->withError('The uploaded file is not an image');
+            if (!in_array($contentType, $allowedMimeTypes)) {
+                return redirect()->back()->withError('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
@@ -151,7 +167,7 @@ class CouponController extends Controller
             if ($this->request->hashtag !== null) {
                 preg_match_all('/#([^\s]+)/', $this->request->hashtag, $matches);
                 $tag_list = $matches[1];
-            }   
+            }
 
             foreach ($tag_list as $tagName) {
                 $tag = Tag::whereTag($tagName)
@@ -170,10 +186,10 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_delete_redis('coupons');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully') );
+            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add coupon fail') );
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Add coupon fail'));
         }
 
     }
@@ -189,53 +205,50 @@ class CouponController extends Controller
         //         where posts.deleted_at is null AND rel_posts_tags.tag_id IN ' . $hashtag_id . 'ORDER BY posts.created_at DESC LIMIT 20'));
         //$posts = Post::with('tags')->paginate(10);
         $posts = Post::whereHas('tags', function ($q) use ($hashtag) {
-            $q->whereIn('id', $hashtag);  
-        })->with('tags')->paginate(20); 
-        for ($i = 0; $i < count($posts); $i++)
-        {
+            $q->whereIn('id', $hashtag);
+        })->with('tags')->paginate(20);
+        for ($i = 0; $i < count($posts); $i++) {
 
-            $app_user = Post::find($posts[$i]->id)->app_user()->first(); 
+            $app_user = Post::find($posts[$i]->id)->app_user()->first();
             $exists = DB::table('rel_app_users_coupons')
-            ->whereAppUserId($app_user->id)
-            ->whereCouponId($id)
-            ->count() > 0;
-            if ($exists)
-            {
+                    ->whereAppUserId($app_user->id)
+                    ->whereCouponId($id)
+                    ->count() > 0;
+            if ($exists) {
                 $posts[$i]->status = 1;
-            } else 
-            {
+            } else {
                 $posts[$i]->status = 0;
             }
 
         }
-        
-        
-        return view('admin::pages.coupon.show',compact('coupon', 'posts'));
+
+
+        return view('admin::pages.coupon.show', compact('coupon', 'posts'));
     }
 
     public function edit(Store $store, $id)
     {
         $all_coupon = $this->entity->all();
-        $list_store = $store->lists('name','id');
+        $list_store = $store->lists('name', 'id');
         $coupon = $this->entity->find($id);
-        $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$coupon->image_url);
-        return view('admin::pages.coupon.edit',compact('coupon','list_store','all_coupon'));
+        $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
+        return view('admin::pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon'));
     }
 
     public function update($id)
     {
-       // dd($this->request); die();
+        // dd($this->request); die();
         $image_edit = null;
         if ($this->request->image_edit != null && $this->request->image_edit->isValid()) {
             $file = array('image_edit' => $this->request->image_edit);
             $destinationPath = 'uploads'; // upload path
             $extension = $this->request->image_edit->getClientOriginalExtension(); // getting image extension
             $fileName = md5($this->request->image_edit->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
-            $allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
+            $allowedMimeTypes = ['image/jpeg', 'image/gif', 'image/png', 'image/bmp', 'image/svg+xml'];
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
-            if(! in_array($contentType, $allowedMimeTypes) ){
-              return redirect()->back()->withError('The uploaded file is not an image');
+            if (!in_array($contentType, $allowedMimeTypes)) {
+                return redirect()->back()->withError('The uploaded file is not an image');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -250,17 +263,16 @@ class CouponController extends Controller
             $this->entity->end_date = $this->request->input('end_date');
             $this->entity->coupon_type_id = $this->request->input('coupon_type_id');
 
-            if ($image_edit)
-            {
+            if ($image_edit) {
                 $this->entity->image_url = $image_edit;
             }
-            
+
             $this->entity->save();
             $tag_list = [];
             if ($this->request->hashtag !== null) {
                 preg_match_all('/#([^\s]+)/', $this->request->hashtag, $matches);
                 $tag_list = $matches[1];
-            }   
+            }
 
             foreach ($tag_list as $tagName) {
                 $tag = Tag::whereTag($tagName)
@@ -279,10 +291,10 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_delete_redis('coupons');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully') );
+            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Edit coupon fail') );
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Edit coupon fail'));
             return back();
         }
 
@@ -299,11 +311,11 @@ class CouponController extends Controller
         try {
             $this->entity = $this->entity->find($this->request->input('id'));
             $this->entity->app_users()->detach();
-        	$this->entity->destroy($this->request->input('id'));
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Delete coupon successfully') );
+            $this->entity->destroy($this->request->input('id'));
+            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Delete coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Delete coupon fail') );
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Delete coupon fail'));
             return back();
         }
     }

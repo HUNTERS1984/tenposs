@@ -47,6 +47,7 @@ Route::group(array('prefix' => 'api/v1'), function()
         Route::post('social_profile','AppUserController@social_profile');
     });
     Route::post('notification','TopController@notification');
+    Route::post('notification_app_id','TopController@notification_with_app_id');
 });
 
 Route::get('user1','UserController@index');

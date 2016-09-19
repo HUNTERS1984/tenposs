@@ -4,8 +4,12 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\App;
+use App\Utils\HttpRequestUtil;
 use App\Utils\RedisControl;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Modules\Admin\Http\Requests\ImageRequest;
 
 
@@ -77,6 +81,18 @@ class NewsController extends Controller
         $this->entity->store_id = intval($this->request->input('store_id'));
         $this->entity->save();
         RedisControl::delete_cache_redis('news', intval($this->request->input('store_id')));
+        //push notify to all user on app
+        $app_data = App::where('user_id', Auth::user()->id)->first();
+        $data_push = array(
+            'app_id' => $app_data->id,
+            'type' => 'news',
+            'data_id' => $this->entity->id,
+            'data_title' => '',
+            'data_value' => '',
+            'created_by' => Auth::user()->email
+        );
+        HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+        //end push
         return redirect()->route('admin.news.index')->withSuccess('Add a news successfully');
 
     }

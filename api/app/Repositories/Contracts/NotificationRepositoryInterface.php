@@ -19,6 +19,8 @@ interface NotificationRepositoryInterface
 
     public function get_info_nofication($app_id, $type); //type:ranking,news,coupon,chat,custom
 
-    public function process_notify($message);
+    public function process_notify($message,$app_user_id);
+
+    public function receive_and_distribute($message);
 
 }
