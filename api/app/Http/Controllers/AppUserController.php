@@ -13,6 +13,7 @@ use App\Models\UserProfile;
 use App\Models\UserPush;
 use App\Utils\RedisUtil;
 use App\Models\SocialProfile;
+use Illuminate\Support\Facades\Log;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
@@ -399,7 +400,12 @@ class AppUserController extends Controller
         if ($ret_sig)
             return $ret_sig;
         //creare key redis
+        Log::info("config: ".Config::get('api.cache_profile'));
+        Log::info("app_app_id: ".$app['app_app_id']);
+        Log::info("user->profile->id: ".$request->user->profile->id);
+
         $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->profile->id);
+        Log::info("key: ".$key);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
