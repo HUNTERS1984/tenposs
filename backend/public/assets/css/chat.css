@@ -1,3 +1,24 @@
+#seach-wrapper{
+  margin-bottom: 10px;
+}
+.status{
+  float:right;
+}
+.status:after{
+  content: '';
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.status.on:after{
+  background: green;
+}
+
+.status.off:after{
+  background: #d1d1d1;
+}
 .timestamp{
     font-size: 11px;
     color: #aaa;

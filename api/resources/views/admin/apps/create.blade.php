@@ -28,11 +28,11 @@
                 </div>
                 <div class="form-group">
                     <label for="">App ID</label>
-                    <input type="text" class="form-control" name="app_app_id" value="{{ old('app_app_id') }}">
+                    <input type="text" class="form-control" readonly name="app_app_id" value="{{ md5(uniqid(rand(), true)) }}">
                 </div>
                 <div class="form-group">
                     <label for="">App Secret</label>
-                    <input type="text" class="form-control" name="app_app_secret" value="{{ old('app_app_secret') }}">
+                    <input type="text" class="form-control" readonly name="app_app_secret" value="{{ md5(uniqid(rand(), true)) }}">
                 </div>
                 <div class="form-group">
                     <label for="">App Description</label>

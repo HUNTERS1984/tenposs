@@ -12,7 +12,7 @@ var connection;
 
 exports.checkExistAccounts = function(user, _callback){
         if( user.from == 'client' ) _callback(true);
-        var sql =   " SELECT line_accounts.mid, line_accounts.pictureUrl, line_accounts.statusMessage, line_accounts.displayName "+
+        var sql =   " SELECT app_user_id,line_accounts.mid, line_accounts.pictureUrl, line_accounts.statusMessage, line_accounts.displayName "+
                 	" FROM line_accounts"+
                 	" WHERE line_accounts.mid = ?"+
                 	" LIMIT 1";
