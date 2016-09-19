@@ -399,7 +399,7 @@ class AppUserController extends Controller
         if ($ret_sig)
             return $ret_sig;
         //creare key redis
-        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->profile->id);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
