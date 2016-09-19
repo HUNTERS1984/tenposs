@@ -1,14 +1,13 @@
 var mysql = require("mysql");
 var config= require("./../config");
-var connection = mysql.createConnection({
+
+var mysqlConfig = {
   host     : config.database.host,
   user     : config.database.user,
   password : config.database.password,
   database : config.database.database
-});
-
-
-
+};
+var connection;
 
 exports.getMessageHistory = function(from, to, limit, _callback){
     
@@ -19,13 +18,19 @@ exports.getMessageHistory = function(from, to, limit, _callback){
                 	"	OR (m.to_mid = ?  AND m.from_mid = ?)"+
                 	" ORDER BY created_at DESC"+
                 	" LIMIT ?";
-                	
+        connection = mysql.createConnection(mysqlConfig);
+        connection.connect();       	
         connection.query({
             sql: sql,
                 values: [from,to,from,to,limit]
             }, function (error, results, fields) {
-                if(error) return false;
-                return _callback(results);
+                if(error){
+                    connection.end();
+                    return false;
+                }else{
+                    connection.end();
+                    return _callback(results);
+                }
             });
         
     }
@@ -47,15 +52,22 @@ exports.getMessageClientHistory = function(room_id, from,to, limit, _callback){
 	" ON h.from_mid = l.mid OR h.to_mid = l.mid"+
 	" LIMIT ?";
 
-
+        connection = mysql.createConnection(mysqlConfig);
+        connection.connect(); 
    	
         var query = connection.query({
             sql: sql,
                 values: [from,to,from,to,room_id,limit]
             }, function (error, results, fields) {
-                if(error) return false;
-                console.log(query.sql);
-                return _callback(results);
+                if(error) {
+                    connection.end();
+                    return false;
+                }else{
+                    connection.end();
+                    console.log(query.sql);
+                    return _callback(results);
+                }
+                
             });
         
     }
@@ -70,10 +82,18 @@ exports.saveMessage = function(room_id, from,to, message, _callback){
     	    message: message,
     	    created_at: (function(){ var date = new Date(); return date.getTime() })()
     	};
-
+        connection = mysql.createConnection(mysqlConfig);
+        connection.connect(); 
+        
    	    connection.query('INSERT INTO messages SET ?', data, function(err, result) {
-            if (err) throw err;
-            return result.insertId;
+            if (err){
+                connection.end();
+                return false;
+            }else{
+                connection.end();
+                return result.insertId;
+            }
+           
         });
 
     }
