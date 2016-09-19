@@ -17,10 +17,6 @@ var server  = https.createServer(options, app),
     log4js  = require('log4js');
     
     
-server.listen(3000, function(){
-    console.log('Server up and running at: 3000');
-});
-
 // Models
 const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
 var BOT_MID="uaa357d613605ebf36f6366a7ce896180";
@@ -42,16 +38,19 @@ var toUser = {
 log4js.loadAppender('file');
 log4js.addAppender(log4js.appenders.file('logs/chat.log'), 'chat');
 var logger = log4js.getLogger('chat');
-logger.setLevel('ERROR');
+logger.setLevel('TRACE');
 
+server.listen(3000, function(){
+    logger.trace('Server up and running at: 3000');
+});
 
 
 var redisClient = redis.createClient();
 redisClient.subscribe('message');
 // get messages send by ChatController
 redisClient.on("message", function (channel, message) {
-    logger.trace('--------------------- Redisss -------------------------------');
-    console.log('Receive message %s from system in channel %s', message, channel);
+    logger.trace('--------------------- Rediss -------------------------------');
+    logger.info('Receive message %s from system in channel %s', message, channel);
     message = JSON.parse(message);
     // Find from is online
     findClientInRoomByMid(message.channel,message.data.content.from, function( fromUser ){
@@ -80,7 +79,7 @@ redisClient.on("message", function (channel, message) {
             };
             LineAccounts.checkExistAccounts( findUserInfo, function( exitsUser ){
                 if( !exitsUser ){
-                    console.log('Error: Enduser LineAccounts not exits'); return;
+                    logger.warn('Enduser LineAccounts not exits'); return;
                 }else{
                     // check to User is online
                     findClientInRoomByMid(message.channel,message.data.content.to, function( toUser ){
@@ -110,7 +109,7 @@ redisClient.on("message", function (channel, message) {
         
     });
     Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
-        console.log('Save message BOT success');
+        logger.info('Save message BOT success');
     });
 
 });
@@ -125,19 +124,18 @@ io.on('connection', function (socket) {
     socket.on('join', function(user) {
         // Check user type connect is exist
         if( userType.indexOf(user.from) === -1 ){
-            console.log('Error: Not found user type connect');
+            logger.warn('Not found user type connect');
             return;
         }else{
             var packageConnected = {
                 user: user,
                 message: user.profile.displayName +' connected!'
             };
-            console.log('Info: User connected: '+ JSON.stringify(user));
-            console.log('----------------------------------------------------------');
+            logger.info('User connected: '+ JSON.stringify(user));
             if( user.from === 'enduser' ){// is enduser
                 LineAccounts.checkExistAccounts( user, function( exitsUser ){
                     if( !exitsUser ){
-                        console.log('Error: Enduser LineAccounts not exits'); return;
+                        logger.warn('Enduser LineAccounts not exits'); return;
                     }else{
                         
                         
@@ -164,7 +162,7 @@ io.on('connection', function (socket) {
                                     socket.emit('receive.user.connected', packageConnected);
                                 })
                             }else{
-                                console.log('Info: Not found client emit history: not client online');
+                                logger.info('Not found client emit history: not client online');
                                 Messages.getMessageHistory( toUser.bot_mid, socket.user.profile.mid, 10, function( messages ){
                                     var package = {
                                         messages: messages,
@@ -253,12 +251,12 @@ io.on('connection', function (socket) {
             user: socket.user,
             message: package
         };
-        console.log("send package to admin ");
-        console.log( packageMessages );
+        logger.info("send package to admin ");
+        logger.info( packageMessages );
         
         // Find client inroom
         Messages.saveMessage(socket.room, socket.user.profile.mid, BOT_MID, package.message, function(inserID){
-           console.log('Save message success');
+           logger.info('Save message success');
         });
         
    
@@ -267,7 +265,7 @@ io.on('connection', function (socket) {
         Bot.sendTextMessage(
              socket.user.profile.mid.split(),
              package.message,function(result){
-                console.log(result);
+                logger.info(result);
             }
         );
             
@@ -282,7 +280,7 @@ io.on('connection', function (socket) {
         
          // Find client inroom
         Messages.saveMessage(socket.room, BOT_MID, package.to, package.message, function(inserID){
-           console.log('Save admin message success');
+           logger.info('Save admin message success');
         });
         
         findClientInRoomByMid( socket.room, package.to, function( client ){
