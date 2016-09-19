@@ -204,9 +204,15 @@ function connectToChat() {
     
     socket.on('receive.admin.getClientOnline',function(users){
         console.log(users);
-        var onlines = $.grep(users, function(element) {
-            return $.inArray(element, contacts.data ) !== -1;
-        });
+        $( contactsData.data ).each(function(index, item) {
+            for( i in  users){
+                if( users[i] === item.mid ){
+                    $('#con'+item.mid).find('.media-heading').html('<span class="status on"></span>');
+                }
+            }
+            
+        })
+   
     })
     
     socket.on('receive.admin.message',function( package ){
