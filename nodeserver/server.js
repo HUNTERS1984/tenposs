@@ -249,7 +249,7 @@ io.on('connection', function (socket) {
     socket.on('admin.send.history',function(mid){
         Messages.getMessageHistory( mid, socket.user.profile.mid, 10, function( messages ){
             var package = {
-                messages: messages,
+                history: messages,
                 to: mid
             };
             socket.emit('receive.admin.history', package);
