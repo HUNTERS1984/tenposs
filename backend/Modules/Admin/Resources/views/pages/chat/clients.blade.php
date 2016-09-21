@@ -14,12 +14,20 @@
 	<div class="content">
 	    
     	<div class="rows">
-    	    <!--
     		<div class="col-lg-3 col-md-3">
     			<div id="" style="margin-top:5px;">
-    				<div id ="enduser-chat-list" class="list-group"></div>
+    				<div id ="enduser-chat-list" >
+    				    <div id="seach-wrapper" class="input-group">
+                            <input id="search_input" type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" type="button">OK</button>
+                            </span>
+                        </div><!-- /input-group -->
+                        <div id="contacts-list-wrapper" class="scrollbar-macosx">
+            			</div>
+    				</div>
     			</div>
-    		</div>-->
+    		</div>
     		<div id="message-wrapper" class="col-lg-9 col-md-9"></div>
     	</div>
         
@@ -46,7 +54,7 @@
         </div>
         
         <div id="members-template" class="hide">
-    	    <div class="list-group-item">
+
     			<div class="media">
     				<div class="media-left">
     					<a href="#">
@@ -54,11 +62,11 @@
     					</a>
     				</div>
     				<div class="media-body">
-    					<h4 class="media-heading"></h4>
+    					<h5 class="media-heading"></h5>
     					<p></p>
     				</div>
     			</div>
-    		</div>
+    
         </div>
         
         <div class="message_template" style="display:none">
@@ -90,6 +98,9 @@
 var socket;
 var profile = $.parseJSON('<?php echo ($profile) ?>');
 var channel = '{{ $channel }}';
+var noavatar = '{{url('assets/images/noavatar.png')}}';
+var contacts;
+var contactsData = $.parseJSON('<?php echo ($contacts) ?>');
 
 
 function drawMessage(package){
@@ -190,6 +201,20 @@ function connectToChat() {
         socket.emit('join', package);
     });
     
+    
+    socket.on('receive.admin.getClientOnline',function(users){
+        console.log(users);
+        $( contactsData.data ).each(function(index, item) {
+            for( i in  users){
+                if( users[i] === item.mid ){
+                    $('#con'+item.mid).find('.media-heading').html('<span class="status on"></span>');
+                }
+            }
+            
+        })
+   
+    })
+    
     socket.on('receive.admin.message',function( package ){
         package.user.profile.boxid = package.user.profile.mid;
         drawMessage(package);
@@ -271,18 +296,31 @@ function drawSystemMessage(package){
 }
 
 
-function renderChatLists(profile){
-    var $template;
-    $template = $($('#members-template').clone().html());
-    $template.attr('id',profile.mid).addClass('rendered');
-    $template.find('.media-object').attr('src',profile.pictureUrl+'/small');
-    $template.find('.media-heading').html(profile.displayName);
-    $template.find('.media-body p').text(profile.statusMessage);
-      
-    $('#enduser-chat-list').append($template);
-    return setTimeout(function () {
-        return $template.addClass('appeared');
-    }, 0);
+function renderChatLists(contacts){
+    
+    if( contacts.length > 0){
+        $('#contacts-list-wrapper').html('');
+    }
+    
+    $(contacts).each(function(index,item){
+        var $template;
+        $template = $($('#members-template').clone().html());
+        $template.attr('id','con'+item.mid).addClass('rendered');
+        if( item.pictureUrl === ''  ){
+            $template.find('.media-object').attr('src',noavatar);
+        }else{
+            $template.find('.media-object').attr('src',item.pictureUrl+'/small');
+        }
+        
+        $template.find('.media-heading').html(item.displayName);
+        $template.find('.media-body p').text(item.statusMessage);
+          
+        $('#contacts-list-wrapper').append($template);
+        return setTimeout(function () {
+            return $template.addClass('appeared');
+        }, 0);
+    });
+   
 }
 
 
@@ -292,21 +330,66 @@ function converTimestamp(timestamp){
   return d.getHours()+'h:'+d.getMinutes()+'m:'+d.getSeconds()+'s '+d.getDay()+'-'+d.getMonth()+'-'+d.getUTCFullYear();
 }
 
+
+
 $(document).ready(function(){
     $('.scrollbar-macosx').scrollbar();
     console.log('Connect to chat');
     connectToChat();
+    
+    contacts = $('#contacts-list-wrapper').clone();
+    renderChatLists(contactsData.data);
     
     $('#message-wrapper').on('keyup','.message_input',function (e) {
         if (e.which === 13) {
             return sendMessage(this);
         }
     });
+    $('#search_input').on('keyup',function (e) {
+        var s = $(this).val();
+        if (e.which === 13 && s.length > 0) {
+            $.ajax({
+               url: '{{ route('chat.seach.contact') }}',
+               type: 'post',
+               data:{
+                   s : s,
+               },
+               success: function(response){
+                   if ( response ){
+                       renderChatLists(response.data);
+                   }
+                   console.log(response);
+               }
+            });
+        }else if( s.length === 0 ){
+            $('#contacts-list-wrapper').html(contacts);
+        }
+    });
+    
+    
     
     $('#message-wrapper').on('click','.send_message',function(e){
         return sendMessage(this);
     	
     })
+    
+    $('#enduser-chat-list').on('click','.contact-item',function(e){
+        socket.emit('send.contact.render',params);
+        setTimeout(function(){
+            socket.on('receive.contact.render',function(user){
+                var temp = {
+                      boxid: $(this).attr('data-mid'),
+                      displayName: $(this).find('.media-heading').text(),
+                      mid:  $(this).attr('data-mid'),
+                      pictureUrl: $(this).find('img').attr('src'),
+                };
+                checkExistBoxItems(temp,function( $box ){
+                    
+                })
+            })
+        }), 1000
+    });
+    
 });
 </script>
 @stop

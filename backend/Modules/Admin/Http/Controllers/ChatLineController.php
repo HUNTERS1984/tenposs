@@ -129,8 +129,21 @@ class ChatLineController extends Controller
             ->setHeader('X-Line-ChannelID', Config::get('line.BOT_CHANEL_ID') )
             ->setHeader('X-Line-ChannelSecret', Config::get('line.BOT_CHANEL_SECRET') )
             ->setHeader('X-Line-Trusted-User-With-ACL', Config::get('line.BOT_MID') );
-             
+     
+            
+        $contacts = DB::table('app_users')
+            ->join('apps','app_users.app_id','=','apps.id')
+            ->join('users','users.id','=','apps.user_id')
+            ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
+            //->where('users.id',Auth::user()->id)
+            ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
+            ->orderBy('displayName')
+            ->paginate(20);
+            
+            //dd($contacts);
+               
         return view('admin::pages.chat.clients',[
+            'contacts' => json_encode($contacts),
             'channel' =>  Auth::user()->id.'-'.Config::get('line.BOT_CHANEL_ID'),
             'profile' => json_encode($profile['contacts'][0])]);
     }
@@ -295,7 +308,23 @@ class ChatLineController extends Controller
         
     }
 
-   
+    public function searchContact(Request $request){
+    
+        if( $request->ajax() ){
+            $contacts = DB::table('app_users')
+            ->join('apps','app_users.app_id','=','apps.id')
+            ->join('users','users.id','=','apps.user_id')
+            ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
+            ->where('users.id',Auth::user()->id)
+            ->where('displayName','like','%'.$request->input('s').'%')
+            ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
+            ->orderBy('displayName')
+            ->paginate(20);
+            
+            return response()->json($contacts);
+        }
+        
+    }
   
     
 }
