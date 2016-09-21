@@ -17,13 +17,11 @@
     		<div class="col-lg-3 col-md-3">
     			<div id="" style="margin-top:5px;">
     				<div id ="enduser-chat-list" >
-    				    <div id="seach-wrapper" class="input-group">
+    				    <div id="seach-wrapper" class="">
                             <input id="search_input" type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-success" type="button">OK</button>
-                            </span>
+                            
                         </div><!-- /input-group -->
-                        <div id="contacts-list-wrapper" class="scrollbar-macosx">
+                        <div id="contacts-list-wrapper" class="">
             			</div>
     				</div>
     			</div>
@@ -99,7 +97,6 @@ var socket;
 var profile = $.parseJSON('<?php echo ($profile) ?>');
 var channel = '{{ $channel }}';
 var noavatar = '{{url('assets/images/noavatar.png')}}';
-var contacts;
 var contactsData = $.parseJSON('<?php echo ($contacts) ?>');
 
 
@@ -274,8 +271,45 @@ function connectToChat() {
         package.status = 'Offline';
         drawSystemMessage(package);
     })
+    
+    socket.on('receive.admin.history', function( package ){
+        console.log(package);
+        //package.user.profile.boxid = package.to;
+        
+        $(package.history).each(function(index1, item1){
+            var profileTemp = (function(){
+                if(item1.from_mid === profile.mid)
+                    return {
+                        displayName: profile.displayName,
+                        mid: profile.mid,
+                        pictureUrl: profile.pictureUrl,
+                        boxid: item1.mid
+                    }
+                else{
+                    return {
+                        displayName: item1.displayName,
+                        mid: item1.mid,
+                        pictureUrl: item1.pictureUrl,
+                        boxid: item1.mid
+                    }
+                }
+            })();
+        
+            var temp = {
+                message:{
+                    message: item1.message,
+                    timestamp: item1.created_at
+                },
+                user: {
+                    channel: item1.room_id,
+                    profile: profileTemp
+                }
+                
+            };
+            drawMessage(temp);
+        })
+    });
 }
-
 
 function drawSystemMessage(package){
     console.log('system mesage'+ JSON.stringify(package) );
@@ -336,8 +370,6 @@ $(document).ready(function(){
     $('.scrollbar-macosx').scrollbar();
     console.log('Connect to chat');
     connectToChat();
-    
-    contacts = $('#contacts-list-wrapper').clone();
     renderChatLists(contactsData.data);
     
     $('#message-wrapper').on('keyup','.message_input',function (e) {
@@ -362,7 +394,7 @@ $(document).ready(function(){
                }
             });
         }else if( s.length === 0 ){
-            $('#contacts-list-wrapper').html(contacts);
+            renderChatLists(contactsData.data);
         }
     });
     
@@ -373,22 +405,13 @@ $(document).ready(function(){
     	
     })
     
-    $('#enduser-chat-list').on('click','.contact-item',function(e){
-        socket.emit('send.contact.render',params);
-        setTimeout(function(){
-            socket.on('receive.contact.render',function(user){
-                var temp = {
-                      boxid: $(this).attr('data-mid'),
-                      displayName: $(this).find('.media-heading').text(),
-                      mid:  $(this).attr('data-mid'),
-                      pictureUrl: $(this).find('img').attr('src'),
-                };
-                checkExistBoxItems(temp,function( $box ){
-                    
-                })
-            })
-        }), 1000
-    });
+    $('.contacts-list-wrapper').on('click','.media',function(e){
+ 
+        socket.emit('admin.send.history', mid);
+    	
+    })
+    
+ 
     
 });
 </script>
