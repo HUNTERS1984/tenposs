@@ -246,6 +246,16 @@ io.on('connection', function (socket) {
 
     });
     
+    socket.on('admin.send.history',function(mid){
+        Messages.getMessageHistory( mid, socket.user.profile.mid, 10, function( messages ){
+            var package = {
+                messages: messages,
+                to: mid
+            };
+            socket.emit('receive.admin.history', package);
+        })
+    });
+    
     // get user sent message and broadcast to all connected users
     socket.on('send.user.message', function (package) {
        // console.log('Receive message ' + package.message + ' from user: ' + JSON.stringify(socket.user));
