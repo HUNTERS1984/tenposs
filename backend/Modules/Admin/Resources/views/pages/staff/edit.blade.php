@@ -1,154 +1,124 @@
 @extends('admin::layouts.default')
 
-@section('title', 'Staff')
 
+@section('title', 'スタッフ')
 @section('content')
-	<div class="content">
-		<div class="topbar-content">
-			<div class="wrap-topbar clearfix">
-				<span class="visible-xs visible-sm trigger"><span class="glyphicon glyphicon-align-justify"></span></span>
-				<div class="left-topbar">
-					<h1 class="title">Staff</h1>
-				</div>
-			</div>
-		</div>
-		<!-- END -->
+    <div class="content">
+        {{Form::model($item,array('route'=>array('admin.staff.update',$item->id),'files'=>true,'method'=>'PUT') )}}
+        <div class="topbar-content">
+            <div class="wrap-topbar clearfix">
+                <span class="visible-xs visible-sm trigger"><span
+                            class="glyphicon glyphicon-align-justify"></span></span>
+                <div class="left-topbar">
+                    <h1 class="title">スタッフ</h1>
+                </div>
+            </div>
+        </div>
 
-		<div class="main-content news">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-lg-4">
-						<div class="wrap-preview">
-							<div class="wrap-content-prview">
-								<div class="header-preview">
-									<a href="javascript:avoid()" class="trigger-preview"><img src="/assets/backend/images/nav-icon.png"  alt=""></a>
-									<h2 class="title-prview">MENU</h2>
-								</div>
-								<div class="control-nav-preview">
-									<!-- Slider main container -->
-		                            <div class="swiper-container">
-		                                <!-- Additional required wrapper -->
-		                                <div class="swiper-wrapper">
-		                                    <!-- Slides -->
-		                                    <div class="swiper-slide">Spring</div>
-		                                    <div class="swiper-slide">Summer</div>
-		                                </div>
+        <div class="main-content news">
+            @include('admin::layouts.message')
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
 
-		                                <!-- If we need navigation buttons -->
-		                                <div class="swiper-button-prev"></div>
-		                                <div class="swiper-button-next"></div>
-		                            </div>
-								</div>
-								<div class="content-preview">
-									@if($all_user->isEmpty())
-										No data
-									@else
-										@foreach($all_user as $item_thumb)
-											<div class="each-coupon clearfix">
-												<img src="{{asset($item_thumb->image_user)}}" class="img-responsive img-prview">
-												<div class="inner-preview">
-													<p class="title-inner" style="font-size:9px; color:#14b4d2">{{$item_thumb->name}}</p>
-												</div>
-											</div>
-										@endforeach
-									@endif
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-8">
-						
-						<div class="wrapper-content">
-							{{Form::model($user,array('route'=>array('admin.staff.update',$user->id),'method'=>'PUT','files'=>true))}}
-								<div class="form-group">
-									{{Form::hidden('img_bk',$user->image_url)}}
-									<div class="wrap-img-preview">
-										<img src="{{asset($user->image_user)}}" class="img-responsive" alt="">
-									</div>
-									{{Form::file('img')}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Role')}}
-									{{Form::select('role',$list_role,$user->role,array('class'=>'form-control'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Name')}}
-									{{Form::text('name',old('name'),array('class'=>'form-control', 'placeholder'=>'Type your Name'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Email')}}
-									{{Form::text('email',old('email'),array('class'=>'form-control', 'placeholder'=>'Type your Email'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Fullname')}}
-									{{Form::text('fullname',old('fullname'),array('class'=>'form-control', 'placeholder'=>'Type your Fullname'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Birthday')}}
-									{{Form::text('birthday',old('birthday'),array('class'=>'form-control','id'=>'datepicker', 'readonly'=>true, 'placeholder'=>'Select your birthday'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Company')}}
-									{{Form::text('company',old('company'),array('class'=>'form-control', 'placeholder'=>'Type your title'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Address')}}
-									{{Form::text('address',old('address'),array('class'=>'form-control', 'placeholder'=>'Type your address'))}}
-								</div>
-								<div class="form-group">
-									{{Form::label('Phone')}}
-									{{Form::text('tel',old('tel'),array('class'=>'form-control', 'placeholder'=>'Type your phone'))}}
-								</div>
+                        <div class="wrapper-content">
+                            {{Form::model($item,array('route'=>array('admin.staff.update',$item->id),'method'=>'PUT','files'=>true))}}
+                            <div class="form-group">
+                                <img class="edit_img" src="{{asset($item->image_url)}}" width="100%">
+                                <button class="btn_upload_img edit " type="button"><i class="fa fa-picture-o"
+                                                                                      aria-hidden="true"></i>画像アップロード
+                                </button>
+                                {!! Form::file('image_edit',['class'=>'btn_upload_ipt edit', 'hidden', 'type' => 'button', 'id' => 'image_edit']) !!}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('menu','名')}}
+                                {{Form::select('staff_category_id',$staff_cat->pluck('name', 'id'),old('staff_category_id'),['class'=>'form-control'])}}
 
-								<div class="form-group">
-									{{Form::submit('Save changes',array('class'=>'btn btn-primary'))}}
-								</div>
-							{{Form::close()}}
-						</div>	<!-- wrap-content-->
-					</div>
-				</div>
-			</div>
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('name','タイトル')}}
+                                {{Form::text('name',old('name'),['class'=>'form-control'])}}
 
-		</div>
-		<!-- END -->
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('introduction','導入')}}
+                                {{Form::textarea('introduction',old('introduction'),['class'=>'form-control'])}}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('gender','性別')}}
+                                {{--{{ Form::radio('genre', '1', old('gender') == 0, array('id'=>'male',--}}
+                                {{--'class'=>'radio')) }}--}}
+                                <input type="radio" id="gender" name="gender"
+                                       value="1" {{ old('gender')==1 ? 'checked='.'"'.'checked'.'"' : '' }} />男性
+                                <input type="radio" id="gender" name="gender"
+                                       value="0" {{ old('gender')==0 ? 'checked='.'"'.'checked'.'"' : '' }} />女性
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('tel','電話番号')}}
+                                {{Form::text('tel',old('tel'),['class'=>'form-control'])}}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('price','価格')}}
+                                {{Form::text('price',old('price'),['class'=>'form-control'])}}
 
-		
-	</div>	<!-- end main-content-->
+                            </div>
+
+                            <div class="form-group">
+                                {{Form::submit('保存',array('class'=>'btn btn-primary'))}}
+                            </div>
+                        </div>
+                    </div>    <!-- wrap-content-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{Form::close()}}
+    </div>
 @stop
 
 @section('script')
-	{{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
-	{{Html::script('assets/backend/js/bootstrap.min.js')}}
+    {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+    {{Html::script('assets/backend/js/bootstrap.min.js')}}
 
-	{{Html::script('assets/backend/js/switch/lc_switch.js')}}
-	{{Html::style('assets/backend/js/switch/lc_switch.css')}}
+    {{Html::script('assets/backend/js/switch/lc_switch.js')}}
+    {{Html::style('assets/backend/js/switch/lc_switch.css')}}
 
-	{{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
-	{{Html::style('assets/backend/js/swiper/swiper.min.css')}}
+    {{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+    {{Html::style('assets/backend/js/swiper/swiper.min.css')}}
 
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    {{Html::script('assets/backend/js/script.js')}}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input.lcs_check').lc_switch();
 
-	{{Html::script('assets/backend/js/script.js')}}
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('input.lcs_check').lc_switch();
+            var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
+                speed: 400,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                nextButton: '.control-nav-preview .swiper-button-next',
+                prevButton: '.control-nav-preview .swiper-button-prev'
+            });
 
-			var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
-	            speed: 400,
-	            spaceBetween: 0,
-	            slidesPerView: 1,
-	            nextButton: '.control-nav-preview .swiper-button-next',
-	            prevButton: '.control-nav-preview .swiper-button-prev'
-	        });
+            $('.btn_upload_img.edit').click(function () {
+                $('.btn_upload_ipt.edit').click();
+            });
 
-	        $('#datepicker').datepicker({
-	        	changeMonth: true,
-                yearRange: '1905:2016',
-                dateFormat: "yy-mm-dd",
-                showAnim: 'drop',
-                changeYear: true
-	        });
-		})
-	</script>
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('.edit_img').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#image_edit").change(function () {
+                readURL(this);
+            });
+        })
+    </script>
 @stop

@@ -89,7 +89,7 @@ class MenusController extends Controller
                         $list_item[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
                 }
             }
-            
+
         }
 
 
@@ -373,6 +373,11 @@ class MenusController extends Controller
         $item->menus()->detach();
     	$this->item->destroy($id);
         return redirect()->back();
+    }
+
+    public function demo()
+    {
+        print_r('demo');
     }
 }
 
