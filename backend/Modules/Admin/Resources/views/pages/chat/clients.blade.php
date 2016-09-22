@@ -12,18 +12,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="{{ secure_asset('assets/css/chat.css') }} "/>
 	<div class="content">
-	    
     	<div class="rows">
     		<div class="col-lg-3 col-md-3">
     			<div id="" style="margin-top:5px;">
     				<div id ="enduser-chat-list" >
-    				    <div id="seach-wrapper" class="input-group">
+    				    <div id="seach-wrapper" class="">
                             <input id="search_input" type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-success" type="button">OK</button>
-                            </span>
                         </div><!-- /input-group -->
-                        <div id="contacts-list-wrapper" class="scrollbar-macosx">
+                        <div id="contacts-list-wrapper" class="">
             			</div>
     				</div>
     			</div>
@@ -54,37 +50,35 @@
         </div>
         
         <div id="members-template" class="hide">
-
-    			<div class="media">
-    				<div class="media-left">
-    					<a href="#">
-    					  <img class="media-object" src="" alt="">
-    					</a>
-    				</div>
-    				<div class="media-body">
-    					<h5 class="media-heading"></h5>
-    					<p></p>
-    				</div>
-    			</div>
-    
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+					  <img class="media-object" src="" alt="">
+					</a>
+				</div>
+				<div class="media-body">
+					<h5 class="media-heading"></h5>
+					<p></p>
+				</div>
+			</div>
         </div>
         
         <div class="message_template" style="display:none">
-              <li class="message">
-                  <div class="avatar">
-                      <img src="">
-                  </div>
-                  <div class="text_wrapper">
-                      <div class="text"></div>
-                      <div class="timestamp"></div>
-                  </div>
-              </li>
-          </div>
-          <div class="message_template_system" style="display:none">
-              <li class="text-center">
-                  <p class="text-muted"></p>
-              </li>
-          </div>
+            <li class="message">
+                <div class="avatar">
+                    <img src="">
+                </div>
+                <div class="text_wrapper">
+                    <div class="text"></div>
+                    <div class="timestamp"></div>
+                </div>
+            </li>
+        </div>
+        <div class="message_template_system" style="display:none">
+            <li class="text-center">
+                <p class="text-muted"></p>
+            </li>
+        </div>
     </div>	<!-- end main-content-->
     <div class="clearfix"></div>
 @stop
@@ -98,18 +92,32 @@
 var socket;
 var profile = $.parseJSON('<?php echo ($profile) ?>');
 var channel = '{{ $channel }}';
-var noavatar = '{{url('assets/images/noavatar.png')}}';
-var contacts;
+var noavatar = '{{url("assets/images/noavatar.png")}}';
 var contactsData = $.parseJSON('<?php echo ($contacts) ?>');
 
-
+//var package = {
+//    message:{
+//        message: string,
+//        timestamp: string
+//    },
+//    user: {
+//        channel: string,
+//        profile: {
+//            displayName: string,
+//            mid: string,
+//            pictureUrl: string,
+//        }
+//    }
+//};
 function drawMessage(package){
-	var $message,$messages;
+	var $message,
+	    $messages;
+	    
 	var side = 'left';
 	if( package.user.profile.mid == profile.mid ){
 	    side = 'right';
 	}
-	
+	// Find windows chat
 	checkExistBoxItems(package.user.profile,function( $box ){
 
         $message = $($('.message_template').clone().html());
@@ -127,8 +135,9 @@ function drawMessage(package){
 	 })
 
 };
+
 function checkExistBoxItems(profile, _callback){
-    var $box = $('#message-wrapper #'+profile.boxid);
+    var $box = $('#message-wrapper #'+profile.mid);
     if( $box != typeof undefined && $box.length > 0 ){
         return _callback( $box );
     }else{
@@ -142,17 +151,16 @@ function renderChatBox(profile,_callback){
     
     var $template;
     $template = $($('#room-template .rooms').clone().html());
-    $template.attr('id',profile.boxid).attr('data-id',profile.boxid)
-        .find('.panel-heading span.name').html(profile.displayName);
-    $('#message-wrapper').append($template);
-    _callback($template);
+    $template.attr('id',profile.mid).attr( 'data-id',profile.mid )
+        .find('.panel-heading span.name').html( profile.displayName );
+    $('#message-wrapper').append( $template );
+    _callback( $template );
     
 }
 
 // Send message text enduser typing   
 function sendMessage(target) {
     // Draw message client
-    console.log(target);
     var closest = $(target).closest('.panel');
     var $messages, message;
     if ($(closest).find('input').val().trim() === '') {
@@ -160,7 +168,6 @@ function sendMessage(target) {
     }
     
     $messages = $(closest).find('ul.messages');
-    
     var d = new Date();
     $message = $($('.message_template').clone().html());
     $message.addClass('right').find('.text').html($(closest).find('input').val() );
@@ -171,7 +178,7 @@ function sendMessage(target) {
         return $message.addClass('appeared');
     }, 0);
     // Send message to server
-    var d = new Date();
+
     var params = {
         'to': $(closest).attr('data-id'),
         'message': $(closest).find('input').val(),
@@ -184,7 +191,7 @@ function sendMessage(target) {
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect('{{ env('CHAT_SERVER') }}', {
+    socket = new io.connect("{{ env('CHAT_SERVER') }}", {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
@@ -192,7 +199,7 @@ function connectToChat() {
     });
     
     socket.on('connect', function (user) {
-        console.log('Request connect');
+        console.log('Request connect to server');
         var package = {
             from: 'client',
             channel: channel,
@@ -201,11 +208,12 @@ function connectToChat() {
         socket.emit('join', package);
     });
     
-    
+    // Validate contacts list is online
     socket.on('receive.admin.getClientOnline',function(users){
+        console.log('List users online');
         console.log(users);
         $( contactsData.data ).each(function(index, item) {
-            for( i in  users){
+            for( i in users){
                 if( users[i] === item.mid ){
                     $('#con'+item.mid).find('.media-heading').html('<span class="status on"></span>');
                 }
@@ -215,15 +223,15 @@ function connectToChat() {
    
     })
     
+    // Receive messages from endusers
     socket.on('receive.admin.message',function( package ){
-        package.user.profile.boxid = package.user.profile.mid;
-        drawMessage(package);
-        console.log('Client send');
+        console.log('Receive messages from endusers');
         console.log(package);
+        drawMessage(package);
     })
 
     socket.on('history',function(package){
-        console.log('history');
+        console.log('Load history message');
         console.log(package);
         if( package.length > 0 ){
             $(package).each(function(index, item) {
@@ -234,14 +242,12 @@ function connectToChat() {
                                 displayName: profile.displayName,
                                 mid: profile.mid,
                                 pictureUrl: profile.pictureUrl,
-                                boxid: item1.mid
                             }
                         else{
                             return {
                                 displayName: item1.displayName,
                                 mid: item1.mid,
                                 pictureUrl: item1.pictureUrl,
-                                boxid: item1.mid
                             }
                         }
                     })();
@@ -274,12 +280,45 @@ function connectToChat() {
         package.status = 'Offline';
         drawSystemMessage(package);
     })
+    
+    socket.on('receive.admin.history', function( package ){
+        console.log(package);
+        $(package.history).each(function(index1, item1){
+            var profileTemp = (function(){
+                if(item1.from_mid === profile.mid)
+                    return {
+                        displayName: profile.displayName,
+                        mid: profile.mid,
+                        pictureUrl: profile.pictureUrl
+                    }
+                else{
+                    return {
+                        displayName: item1.displayName,
+                        mid: item1.mid,
+                        pictureUrl: item1.pictureUrl
+                    }
+                }
+            })();
+        
+            var temp = {
+                message:{
+                    message: item1.message,
+                    timestamp: item1.created_at
+                },
+                user: {
+                    channel: item1.room_id,
+                    profile: profileTemp
+                }
+                
+            };
+            drawMessage(temp);
+        })
+    });
 }
 
-
 function drawSystemMessage(package){
-    console.log('system mesage'+ JSON.stringify(package) );
-    package.user.profile.boxid = package.user.profile.mid;
+    console.log('System mesage'+ JSON.stringify(package) );
+
     checkExistBoxItems(package.user.profile, function($box) {
         $box.find('span.status').text(package.status);
         var $messages = $box.find('ul.messages');
@@ -334,22 +373,29 @@ function converTimestamp(timestamp){
 
 $(document).ready(function(){
     $('.scrollbar-macosx').scrollbar();
-    console.log('Connect to chat');
+    // Connect chat
     connectToChat();
-    
-    contacts = $('#contacts-list-wrapper').clone();
+    // Renders list chat
     renderChatLists(contactsData.data);
-    
+    // Enter send message
     $('#message-wrapper').on('keyup','.message_input',function (e) {
         if (e.which === 13) {
             return sendMessage(this);
         }
     });
+    // Click button send message
+    $('#message-wrapper').on('click','.send_message',function(e){
+        return sendMessage(this);
+    	
+    })
+    
+    
+    // Search contact
     $('#search_input').on('keyup',function (e) {
         var s = $(this).val();
         if (e.which === 13 && s.length > 0) {
             $.ajax({
-               url: '{{ route('chat.seach.contact') }}',
+               url: '{{ route("chat.seach.contact") }}',
                type: 'post',
                data:{
                    s : s,
@@ -362,33 +408,17 @@ $(document).ready(function(){
                }
             });
         }else if( s.length === 0 ){
-            $('#contacts-list-wrapper').html(contacts);
+            renderChatLists(contactsData.data);
         }
     });
     
+    // Open windows chat and load history 
     
-    
-    $('#message-wrapper').on('click','.send_message',function(e){
-        return sendMessage(this);
-    	
+    $('.contacts-list-wrapper').on('click','.media',function(e){
+        console.log('Open windows by contact: '+$(this).attr('id').substr(3));
+        socket.emit('admin.send.history', $(this).attr('id').substr(3) );
     })
     
-    $('#enduser-chat-list').on('click','.contact-item',function(e){
-        socket.emit('send.contact.render',params);
-        setTimeout(function(){
-            socket.on('receive.contact.render',function(user){
-                var temp = {
-                      boxid: $(this).attr('data-mid'),
-                      displayName: $(this).find('.media-heading').text(),
-                      mid:  $(this).attr('data-mid'),
-                      pictureUrl: $(this).find('img').attr('src'),
-                };
-                checkExistBoxItems(temp,function( $box ){
-                    
-                })
-            })
-        }), 1000
-    });
     
 });
 </script>

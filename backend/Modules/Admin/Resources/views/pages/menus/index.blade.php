@@ -3,6 +3,7 @@
 @section('title', 'メニュー')
 
 @section('content')
+
     <div class="content">
         <div class="topbar-content">
             <div class="wrap-topbar clearfix">
@@ -11,7 +12,7 @@
                 <div class="left-topbar">
                     <h1 class="title">メニュー</h1>
                 </div>
-                <!-- <div class="right-topbar">
+                 <div class="right-topbar">
                      <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
                     <a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
                 </div>
@@ -51,10 +52,10 @@
                                         </div>
                                         <div class="content-preview clearfix">
                                             <div class="row-me fixHeight">
-                                                @if(count($list_item) > 0)
+                                                @if(empty($list_preview_item))
                                                     <p>No data</p>
                                                 @else
-                                                    @foreach($list_item as $item_thumb)
+                                                    @foreach($list_preview_item as $item_thumb)
                                                         <div class="col-xs-6 padding-me">
                                                             <div class="each-menu">
                                                                 <img src="{{asset($item_thumb->image_url)}}"
@@ -85,10 +86,11 @@
                                     </div>
 
                                 </div>    <!-- end wrap-btn-content-->
+
                                 <div class="wrapper-content clearfix">
                                     <div class="container-fluid">
                                         <div class="row">
-                                            @if(count($list_item) > 0)
+                                            @if(empty($list_item))
                                                 <p>No data</p>
                                             @else
                                                 @foreach($list_item as $item)
@@ -106,10 +108,14 @@
 
                                                     </div>
                                                 @endforeach
-                                                <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
+
                                             @endif
                                         </div>
-
+                                        <div class="clearfix">
+                                            @if(!$list_item->isEmpty())
+                                                {{ $list_item->render() }}
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>    <!-- wrap-content-->
                             </div>
@@ -119,7 +125,7 @@
                 <!-- END -->
             </div>    <!-- end main-content-->
 
-        @stop
+        
         <!-- Modal -->
             <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
                 <div class="modal-dialog" role="document">
@@ -201,7 +207,7 @@
                     {{Form::close()}}
                 </div>
             </div>
-
+        @stop
         @section('script')
             {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
             {{Html::script('assets/backend/js/bootstrap.min.js')}}
@@ -231,14 +237,14 @@
                             onSlideNextStart: function (swiper) {
                                 ++category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/menus/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
+                                // $.ajax({
+                                //     url: "/admin/menus/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
 
-                                });
+                                // });
                                 $.ajax({
                                     url: "/admin/menus/nextpreview",
                                     data: {cat: category_idx, page: page}
@@ -251,13 +257,13 @@
                             onSlidePrevStart: function (swiper) {
                                 --category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/menus/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
-                                });
+                                // $.ajax({
+                                //     url: "/admin/menus/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
+                                // });
                                 $.ajax({
                                     url: "/admin/menus/nextpreview",
                                     data: {cat: category_idx, page: page}
@@ -293,16 +299,16 @@
                             readURL(this);
                         });
 
-                        $('.wrapper-content').on('click', '.view-more-btn', function (event) {
-                            $.ajax({
-                                url: "/admin/menus/view_more",
-                                data: {cat: category_idx, page: ++page}
-                            }).done(function (data) {
-                                console.log(data);
-                                $('.view-more-btn').remove();
-                                $('.wrapper-content').append(data);
-                            });
-                        });
+                        // $('.wrapper-content').on('click', '.view-more-btn', function (event) {
+                        //     $.ajax({
+                        //         url: "/admin/menus/view_more",
+                        //         data: {cat: category_idx, page: ++page}
+                        //     }).done(function (data) {
+                        //         console.log(data);
+                        //         $('.view-more-btn').remove();
+                        //         $('.wrapper-content').append(data);
+                        //     });
+                        // });
                     })
                 </script>
 @stop

@@ -17,7 +17,7 @@ use Validator;
 use Session;
 
 
-define('REQUEST_MENU_ITEMS',  10);
+define('REQUEST_MENU_ITEMS',  9);
 
 class MenusController extends Controller
 {
@@ -49,10 +49,20 @@ class MenusController extends Controller
                 $list_menu = $menus->pluck('id')->toArray();
                 if (count($list_menu) > 0) {
 
-                    $list_item = Item::whereHas('menus', function ($query) use ($list_menu) {
+                    $list_preview_item = Item::whereHas('menus', function ($query) use ($list_menu) {
                         $query->where('menu_id', '=', $list_menu[0]);
                     })->orderBy('updated_at', 'desc')->take(REQUEST_MENU_ITEMS)->get();
+
+                    $list_item = Item::whereHas('menus', function ($query) use ($list_menu) {
+                        $query->whereIn('menu_id',$list_menu);
+                    })->orderBy('updated_at', 'desc')->paginate(REQUEST_MENU_ITEMS);
+
                     //dd($list_item->toArray());
+                    for ($i = 0; $i < count($list_preview_item); $i++) {
+                        if ($list_preview_item[$i]->image_url == null)
+                            $list_preview_item[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    }
+
                     for ($i = 0; $i < count($list_item); $i++) {
                         if ($list_item[$i]->image_url == null)
                             $list_item[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
@@ -62,7 +72,7 @@ class MenusController extends Controller
             }
         }
         //dd($list_store);
-        return view('admin::pages.menus.index',compact('menus','list_item', 'list_store'));
+        return view('admin::pages.menus.index',compact('menus','list_item','list_preview_item', 'list_store'));
     }
 
     public function view_more()

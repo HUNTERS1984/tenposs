@@ -80,7 +80,7 @@ exports.saveMessage = function(room_id, from,to, message, _callback){
     	    from_mid: from,
     	    to_mid: to,
     	    message: message,
-    	    created_at: (function(){ var date = new Date(); return date.getTime() })()
+    	    created_at: ' NOW()'
     	};
         connection = mysql.createConnection(mysqlConfig);
         connection.connect(); 
