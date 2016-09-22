@@ -3,6 +3,7 @@
 @section('title', 'メニュー')
 
 @section('content')
+
     <div class="content">
         <div class="topbar-content">
             <div class="wrap-topbar clearfix">
@@ -11,7 +12,7 @@
                 <div class="left-topbar">
                     <h1 class="title">メニュー</h1>
                 </div>
-                <!-- <div class="right-topbar">
+                 <div class="right-topbar">
                      <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
                     <a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
                 </div>
@@ -51,7 +52,7 @@
                                         </div>
                                         <div class="content-preview clearfix">
                                             <div class="row-me fixHeight">
-                                                @if(count($list_item) > 0)
+                                                @if(empty($list_item))
                                                     <p>No data</p>
                                                 @else
                                                     @foreach($list_item as $item_thumb)
@@ -85,10 +86,29 @@
                                     </div>
 
                                 </div>    <!-- end wrap-btn-content-->
+
+                                <div class="control-nav-preview">
+                                    <!-- Slider main container -->
+                                    <div class="swiper-container">
+                                        <!-- Additional required wrapper -->
+                                        <div class="swiper-wrapper">
+                                            <!-- Slides -->
+                                            @if(count($menus) > 0)
+                                                @foreach($menus as $menu)
+                                                    <div class="swiper-slide">{{$menu->name}}</div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+
+                                        <!-- If we need navigation buttons -->
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                </div>
                                 <div class="wrapper-content clearfix">
                                     <div class="container-fluid">
                                         <div class="row">
-                                            @if(count($list_item) > 0)
+                                            @if(empty($list_item))
                                                 <p>No data</p>
                                             @else
                                                 @foreach($list_item as $item)
@@ -119,7 +139,7 @@
                 <!-- END -->
             </div>    <!-- end main-content-->
 
-        @stop
+        
         <!-- Modal -->
             <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
                 <div class="modal-dialog" role="document">
@@ -201,7 +221,7 @@
                     {{Form::close()}}
                 </div>
             </div>
-
+        @stop
         @section('script')
             {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
             {{Html::script('assets/backend/js/bootstrap.min.js')}}

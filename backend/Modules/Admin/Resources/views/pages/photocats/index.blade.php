@@ -21,12 +21,7 @@
         <!-- END -->
 
         <div class="main-content photography">
-            @if (Session::has('success'))
-                <div class="alert alert-info">{{ Session::get( 'success' ) }}</div>
-            @endif
-            @if (Session::has('error'))
-                <div class="alert alert-danger">{{ Session::get( 'error' ) }}</div>
-            @endif
+             @include('admin::layouts.message')
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-4">
@@ -57,7 +52,7 @@
                                 </div>
                                 <div class="content-preview clearfix">
                                     <div class="row-me fixHeight">
-                                        @if(count($list_photo)  > 0)
+                                        @if(empty($list_photo))
                                             No Data
                                         @else
                                             @foreach($list_photo as $item_thumb)
@@ -86,7 +81,7 @@
                         <div class="wrapper-content clearfix">
                             <div class="container-fluid">
                                 <div class="row">
-                                    @if(count($list_photo)  > 0)
+                                    @if(empty($list_photo))
                                         No Data
                                     @else
                                         @foreach($list_photo as $item)
