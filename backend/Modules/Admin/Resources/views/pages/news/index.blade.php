@@ -50,7 +50,7 @@
                                                                     </div>
                                                                 </div> -->
                                 <div class="content-preview">
-                                    @if(count($news) > 0)
+                                    @if(empty($news))
                                         No data
                                     @else
                                         @foreach($news as $item_thumb)
