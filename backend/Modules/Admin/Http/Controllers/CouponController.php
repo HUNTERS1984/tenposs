@@ -190,7 +190,7 @@ class CouponController extends Controller
 
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
-            RedisControl::delete_cache_delete_redis('coupons');
+            RedisControl::delete_cache_redis('coupons');
             //push notify to all user on app
             $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
             $data_push = array(
@@ -310,7 +310,7 @@ class CouponController extends Controller
 
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
-            RedisControl::delete_cache_delete_redis('coupons');
+            RedisControl::delete_cache_redis('coupons');
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {

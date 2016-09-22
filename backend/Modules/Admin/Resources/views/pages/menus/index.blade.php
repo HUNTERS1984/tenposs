@@ -52,10 +52,10 @@
                                         </div>
                                         <div class="content-preview clearfix">
                                             <div class="row-me fixHeight">
-                                                @if(empty($list_item))
+                                                @if(empty($list_preview_item))
                                                     <p>No data</p>
                                                 @else
-                                                    @foreach($list_item as $item_thumb)
+                                                    @foreach($list_preview_item as $item_thumb)
                                                         <div class="col-xs-6 padding-me">
                                                             <div class="each-menu">
                                                                 <img src="{{asset($item_thumb->image_url)}}"
@@ -87,24 +87,6 @@
 
                                 </div>    <!-- end wrap-btn-content-->
 
-                                <div class="control-nav-preview">
-                                    <!-- Slider main container -->
-                                    <div class="swiper-container">
-                                        <!-- Additional required wrapper -->
-                                        <div class="swiper-wrapper">
-                                            <!-- Slides -->
-                                            @if(count($menus) > 0)
-                                                @foreach($menus as $menu)
-                                                    <div class="swiper-slide">{{$menu->name}}</div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-
-                                        <!-- If we need navigation buttons -->
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                </div>
                                 <div class="wrapper-content clearfix">
                                     <div class="container-fluid">
                                         <div class="row">
@@ -126,10 +108,14 @@
 
                                                     </div>
                                                 @endforeach
-                                                <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
+
                                             @endif
                                         </div>
-
+                                        <div class="clearfix">
+                                            @if(!$list_item->isEmpty())
+                                                {{ $list_item->render() }}
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>    <!-- wrap-content-->
                             </div>
@@ -251,14 +237,14 @@
                             onSlideNextStart: function (swiper) {
                                 ++category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/menus/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
+                                // $.ajax({
+                                //     url: "/admin/menus/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
 
-                                });
+                                // });
                                 $.ajax({
                                     url: "/admin/menus/nextpreview",
                                     data: {cat: category_idx, page: page}
@@ -271,13 +257,13 @@
                             onSlidePrevStart: function (swiper) {
                                 --category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/menus/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
-                                });
+                                // $.ajax({
+                                //     url: "/admin/menus/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
+                                // });
                                 $.ajax({
                                     url: "/admin/menus/nextpreview",
                                     data: {cat: category_idx, page: page}
@@ -313,16 +299,16 @@
                             readURL(this);
                         });
 
-                        $('.wrapper-content').on('click', '.view-more-btn', function (event) {
-                            $.ajax({
-                                url: "/admin/menus/view_more",
-                                data: {cat: category_idx, page: ++page}
-                            }).done(function (data) {
-                                console.log(data);
-                                $('.view-more-btn').remove();
-                                $('.wrapper-content').append(data);
-                            });
-                        });
+                        // $('.wrapper-content').on('click', '.view-more-btn', function (event) {
+                        //     $.ajax({
+                        //         url: "/admin/menus/view_more",
+                        //         data: {cat: category_idx, page: ++page}
+                        //     }).done(function (data) {
+                        //         console.log(data);
+                        //         $('.view-more-btn').remove();
+                        //         $('.wrapper-content').append(data);
+                        //     });
+                        // });
                     })
                 </script>
 @stop
