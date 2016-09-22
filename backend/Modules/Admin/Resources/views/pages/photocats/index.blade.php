@@ -52,10 +52,10 @@
                                 </div>
                                 <div class="content-preview clearfix">
                                     <div class="row-me fixHeight">
-                                        @if(empty($list_photo))
+                                        @if(empty($list_preview_photo))
                                             No Data
                                         @else
-                                            @foreach($list_photo as $item_thumb)
+                                            @foreach($list_preview_photo as $item_thumb)
                                                 <div class="col-xs-4 padding-me">
                                                     <div class="each-staff">
                                                         <img src="{{asset($item_thumb->image_url)}}"
@@ -98,9 +98,11 @@
                                                 </div>
                                             </div>
                                         @endforeach
-
-                                        <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
-
+                                    @endif
+                                </div>
+                                <div class="clearfix">
+                                    @if(!$list_photo->isEmpty())
+                                        {{ $list_photo->render() }}
                                     @endif
                                 </div>
                             </div>
@@ -205,14 +207,14 @@
                 onSlideNextStart: function (swiper) {
                     ++category_idx;
                     page = 0;
-                    $.ajax({
-                        url: "/admin/photo-cate/nextcat",
-                        data: {cat: category_idx, page: page}
-                    }).done(function (data) {
-                        console.log(data);
-                        $('.wrapper-content').html(data);
+                    // $.ajax({
+                    //     url: "/admin/photo-cate/nextcat",
+                    //     data: {cat: category_idx, page: page}
+                    // }).done(function (data) {
+                    //     console.log(data);
+                    //     $('.wrapper-content').html(data);
 
-                    });
+                    // });
                     $.ajax({
                         url: "/admin/photo-cate/nextpreview",
                         data: {cat: category_idx, page: page}
@@ -225,13 +227,13 @@
                 onSlidePrevStart: function (swiper) {
                     --category_idx;
                     page = 0;
-                    $.ajax({
-                        url: "/admin/photo-cate/nextcat",
-                        data: {cat: category_idx, page: page}
-                    }).done(function (data) {
-                        console.log(data);
-                        $('.wrapper-content').html(data);
-                    });
+                    // $.ajax({
+                    //     url: "/admin/photo-cate/nextcat",
+                    //     data: {cat: category_idx, page: page}
+                    // }).done(function (data) {
+                    //     console.log(data);
+                    //     $('.wrapper-content').html(data);
+                    // });
                     $.ajax({
                         url: "/admin/photo-cate/nextpreview",
                         data: {cat: category_idx, page: page}
@@ -262,16 +264,16 @@
                 readURL(this);
             });
 
-            $('.wrapper-content').on('click', '.view-more-btn', function (event) {
-                $.ajax({
-                    url: "/admin/photo-cate/view_more",
-                    data: {cat: category_idx, page: ++page}
-                }).done(function (data) {
-                    console.log(data);
-                    $('.view-more-btn').remove();
-                    $('.wrapper-content').append(data);
-                });
-            });
+            // $('.wrapper-content').on('click', '.view-more-btn', function (event) {
+            //     $.ajax({
+            //         url: "/admin/photo-cate/view_more",
+            //         data: {cat: category_idx, page: ++page}
+            //     }).done(function (data) {
+            //         console.log(data);
+            //         $('.view-more-btn').remove();
+            //         $('.wrapper-content').append(data);
+            //     });
+            // });
 
 
         })

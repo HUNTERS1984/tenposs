@@ -15,7 +15,7 @@ use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
 
 
-define('REQUEST_PHOTO_ITEMS',  10);
+define('REQUEST_PHOTO_ITEMS',  9);
 class PhotoCatController extends Controller
 {
     protected $request;
@@ -33,23 +33,32 @@ class PhotoCatController extends Controller
         $stores = $this->request->stores;
         $photocat = array();
         $list_store = array();
+        $list_preview_photo = array();
         $list_photo = array();
         if (count($stores) > 0) {
             $photocat = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
             $list_store = $stores->lists('name', 'id');
-            $list_photo = [];
             if (count($photocat) > 0) {
-                $list_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->get();
+                $list_preview_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->get();
+                for ($i = 0; $i < count($list_preview_photo); $i++) {
+                    if ($list_preview_photo[$i]->image_url == null)
+                        $list_preview_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    else 
+                        $list_preview_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_preview_photo[$i]->image_url);
+                }
+               
+                $list_photo = Photo::whereIn('photo_category_id',$photocat->pluck('id'))->orderBy('updated_at', 'desc')->paginate(REQUEST_PHOTO_ITEMS);
                 for ($i = 0; $i < count($list_photo); $i++) {
                     if ($list_photo[$i]->image_url == null)
                         $list_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
                     else 
                         $list_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_photo[$i]->image_url);
                 }
+
             }
         }
         //dd($list_photo);
-        return view('admin::pages.photocats.index',compact('photocat','list_store', 'list_photo'));
+        return view('admin::pages.photocats.index',compact('photocat','list_store', 'list_photo', 'list_preview_photo'));
     }
 
     public function view_more()
@@ -133,7 +142,7 @@ class PhotoCatController extends Controller
         $this->entity->name = $this->request->input('name');
         $this->entity->store_id = $this->request->input('store_id');
         //delete cache
-        RedisControl::delete_cache_delete_redis('photo_cat',$this->request->input('store_id'));
+        RedisControl::delete_cache_redis('photo_cat',$this->request->input('store_id'));
         $this->entity->save();
 
         return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo category successfully');
@@ -165,8 +174,8 @@ class PhotoCatController extends Controller
         $photo->photo_category_id = $this->request->input('photo_category_id');
         $photo->save();
         //delete cache
-        RedisControl::delete_cache_delete_redis('photos',0,$this->request->input('photo_category_id'));
-        RedisControl::delete_cache_delete_redis('top_photos');
+        RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
+        RedisControl::delete_cache_redis('top_photos');
         return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo successfully');
     }
 
@@ -211,8 +220,8 @@ class PhotoCatController extends Controller
                 $photo->image_url = $image_edit;
             $photo->save();
             //delete cache
-            RedisControl::delete_cache_delete_redis('photos',0,$this->request->input('photo_category_id'));
-            RedisControl::delete_cache_delete_redis('top_photos');
+            RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
+            RedisControl::delete_cache_redis('top_photos');
             return redirect()->route('admin.photo-cate.index')->withSuccess('Update photo successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update photo fail') );
