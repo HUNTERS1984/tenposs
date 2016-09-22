@@ -78,6 +78,7 @@
                                             <div class="col-xs-12">
                                                 <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
                                                    data-target="#AddMenu">カテゴリを追加します</a>
+                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'staff')) }}" class="btn-me btn-hong">一覧カテゴリ</a>
                                                 <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"
                                                    data-toggle="modal" data-target="#AddItem">人手を増やします</a>
                                             </div>

@@ -69,6 +69,8 @@ Route::group(['prefix' => 'admin'], function() {
         
         // Categries
         Route::delete('category/deletetype/{id}/{type}',['as'=>'admin.category.deletetype','uses'=>'CategoriesController@destroy']);
+        Route::get('category/create',['as'=>'admin.category.create','uses'=>'CategoriesController@create']);
+        Route::get('category/store',['as'=>'admin.category.store','uses'=>'CategoriesController@store']);
         Route::resource('category','CategoriesController');
 
         

@@ -12,10 +12,10 @@
                     <h1 class="title">ニュース</h1>
                 </div>
                 <div class="right-topbar">
-                    <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check"
-                                                       autocomplete="disable"/></span>
-                    <a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal"
-                       data-target="#myModal">保存</a>
+                    {{--<span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check"--}}
+                                                       {{--autocomplete="disable"/></span>--}}
+                    {{--<a href="javascript:avoid()" class="btn-me btn-topbar" data-toggle="modal"--}}
+                       {{--data-target="#myModal">保存</a>--}}
                 </div>
             </div>
         </div>
@@ -32,8 +32,10 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="wrap-btn-content">
-                            <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"
-                               data-target="#myModal">追加</a>
+                            {{--<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"--}}
+                               {{--data-target="#myModal">追加</a>  --}}
+                            <a href="{{ route($back_url,array('type'=>$type)) }}" class="btn-me btn-hong">バック</a>
+                            <a href="{{ route('admin.category.create',array('type'=>$type)) }}" class="btn-me btn-xanhduongnhat">追加</a>
                         </div>    <!-- end wrap-btn-content-->
                         <div class="wrapper-content">
                             <div class="grip">
@@ -50,12 +52,12 @@
                                             @foreach($list_item as $item)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{route('admin.category.edit',$item->name)}}">{{$item->name}}</a>
+                                                        <a href="{{route('admin.category.edit',array('id'=> $item->id,'type'=>$type))}}">{{$item->name}}</a>
                                                     </td>
                                                     <td>
                                                         {{$list_store[$item->store_id]}}</a>
                                                     </td>
-                                                    <td>
+                                                    <td style="text-align: right;">
                                                         {{Form::open(array('route'=>array('admin.category.deletetype',$item->id,$type),'method'=>'DELETE'))}}
                                                         <input type="submit" class="btn-me btn-each-item" value="削除"
                                                                onclick="return confirm('Are you sure you want to delete this item?');">
@@ -66,7 +68,6 @@
                                         <p>{{$item->description}}</p>
                                     </div>
                                     </tr>
-
 
                                     @endforeach
                                     </table>
