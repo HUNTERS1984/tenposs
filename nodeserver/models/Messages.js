@@ -85,11 +85,12 @@ exports.saveMessage = function(room_id, from,to, message, _callback){
         connection = mysql.createConnection(mysqlConfig);
         connection.connect(); 
         
-   	    connection.query('INSERT INTO messages SET ?', data, function(err, result) {
+   	    var query = connection.query('INSERT INTO messages SET ?', data, function(err, result) {
             if (err){
                 connection.end();
                 return false;
             }else{
+                console.log(query.sql);
                 connection.end();
                 return result.insertId;
             }
