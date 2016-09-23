@@ -4,20 +4,19 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Item;
+use App\Models\Menu;
+use App\Models\Photo;
+use App\Models\PhotoCat;
 use App\Models\Staff;
 use App\Models\StaffCat;
-use App\Utils\RedisControl;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Modules\Admin\Http\Requests\ImageRequest;
 
 
 use Carbon\Carbon;
-use App\Models\News;
-use App\Models\Store;
-
 
 define('REQUEST_CATEGORY_ITEMS', 10);
 
@@ -25,12 +24,15 @@ class CategoriesController extends Controller
 {
     protected $request;
     protected $staff_cat;
+    protected $photo_cat;
+    protected $menus;
 
-
-    public function __construct(Request $request, StaffCat $staffCat)
+    public function __construct(Request $request, StaffCat $staffCat, PhotoCat $photoCat, Menu $menus)
     {
         $this->request = $request;
         $this->staff_cat = $staffCat;
+        $this->photo_cat = $photoCat;
+        $this->menus = $menus;
     }
 
     public function index()
@@ -48,12 +50,26 @@ class CategoriesController extends Controller
                     $list_store = $stores->lists('name', 'id');
                 }
                 break;
+            case 'photo-cate':
+                if ($stores != null) {
+                    $list_item = $this->photo_cat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+                        ->whereNull('deleted_at')->paginate(REQUEST_CATEGORY_ITEMS);
+                    $list_store = $stores->lists('name', 'id');
+                }
+                break;
+            case 'menus':
+                if ($stores != null) {
+                    $list_item = $this->menus->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+                        ->whereNull('deleted_at')->paginate(REQUEST_CATEGORY_ITEMS);
+                    $list_store = $stores->lists('name', 'id');
+                }
+                break;
             default:
                 break;
         }
 //        dd($list_item->toArray());
 
-        return view('admin::pages.category.index', compact('list_item', 'list_store', 'type','back_url'));
+        return view('admin::pages.category.index', compact('list_item', 'list_store', 'type', 'back_url'));
     }
 
     public function create()
@@ -88,6 +104,20 @@ class CategoriesController extends Controller
                     $item->store_id = $store_id;
                     $item->save();
                     break;
+                case 'photo-cate':
+                    $name = $this->request->input('name');
+                    $item = new PhotoCat();
+                    $item->name = $name;
+                    $item->store_id = $store_id;
+                    $item->save();
+                    break;
+                case 'menus':
+                    $name = $this->request->input('name');
+                    $item = new Menu();
+                    $item->name = $name;
+                    $item->store_id = $store_id;
+                    $item->save();
+                    break;
                 default:
                     break;
             }
@@ -112,6 +142,12 @@ class CategoriesController extends Controller
             switch ($type) {
                 case 'staff':
                     $item = StaffCat::find($id);
+                    break;
+                case 'photo-cate':
+                    $item = PhotoCat::find($id);
+                    break;
+                case 'menus':
+                    $item = Menu::find($id);
                     break;
                 default:
                     break;
@@ -139,7 +175,21 @@ class CategoriesController extends Controller
             switch ($type) {
                 case 'staff':
                     $name = $this->request->input('name');
-                    $item = new StaffCat();
+                    $item = StaffCat::find($id);
+                    $item->name = $name;
+                    $item->store_id = $store_id;
+                    $item->save();
+                    break;
+                case 'photo-cate':
+                    $name = $this->request->input('name');
+                    $item = PhotoCat::find($id);
+                    $item->name = $name;
+                    $item->store_id = $store_id;
+                    $item->save();
+                    break;
+                case 'menus':
+                    $name = $this->request->input('name');
+                    $item = Menu::find($id);
                     $item->name = $name;
                     $item->store_id = $store_id;
                     $item->save();
@@ -148,7 +198,7 @@ class CategoriesController extends Controller
                     break;
             }
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Update category successfully'));
-            return redirect()->route('admin.category.index', array('type' => $type))->withSuccess('Add category successfully');
+            return redirect()->route('admin.category.index', array('type' => $type))->withSuccess('Update category successfully');
 
         } catch (QueryException $e) {
             Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Update category fail'));
@@ -166,11 +216,25 @@ class CategoriesController extends Controller
 //                    $this->staff_cat->destroy($id);
                 }
                 break;
+            case 'photo-cate':
+                if ($id > 0) {
+                    PhotoCat::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                    Photo::where('photo_category_id', $id)->update(['deleted_at' => Carbon::now()]);
+//                    $this->staff_cat->destroy($id);
+                }
+                break;
+            case 'menus':
+                if ($id > 0) {
+                    Menu::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                    $list_id = Menu::find($id)->items()->get()->pluck('id')->toArray();
+                    Item::whereIn('id', $list_id)->update(['deleted_at' => Carbon::now()]);
+                }
+                break;
             default:
                 break;
         }
 
-        return redirect()->route('admin.category.index', array('type' => 'staff'))->withSuccess('Delete the category successfully');
+        return redirect()->route('admin.category.index', array('type' => $type))->withSuccess('Delete the category successfully');
     }
 
     private function get_back_url($type)

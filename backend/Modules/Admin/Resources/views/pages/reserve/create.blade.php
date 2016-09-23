@@ -1,17 +1,17 @@
 @extends('admin::layouts.default')
 
-@section('title', 'カテゴリー')
+@section('title', 'リザーブ')
 
 @section('content')
     <div class="content">
-        {{Form::open(array('route'=> array('admin.category.store',$type), 'files'=>true))}}
-        <input type="hidden" name="type" value="{{$type}}">
+        {{Form::open(array('route'=> array('admin.reserve.store'), 'files'=>true))}}
+
         <div class="topbar-content">
             <div class="wrap-topbar clearfix">
                 <span class="visible-xs visible-sm trigger"><span
                             class="glyphicon glyphicon-align-justify"></span></span>
                 <div class="left-topbar">
-                    <h1 class="title">カテゴリを追加</h1>
+                    <h1 class="title">リザーブ</h1>
                 </div>
                 <div class="right-topbar">
                     <!-- <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span> -->
@@ -36,8 +36,8 @@
                                             {{Form::select('store_id',$list_store,old('store_id'),array('class'=>'form-control') )}}
                                         </div>
                                         <div class="form-group">
-                                            <label for="title">名</label>
-                                            {{Form::text('name',old('name'), array('class'=>'form-control') )}}
+                                            <label for="title">リザーブリンク</label>
+                                            {{Form::text('reserve_url',old('reserve_url'), array('class'=>'form-control') )}}
                                         </div>
                                         {{--<div class="form-group">--}}
                                             {{--{!! Form::submit('新しいカテゴリを作成します', ['class' => 'btn btn-primary']) !!}--}}

@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Reserve extends Model
 {	
    protected $table = 'reserves';
-   protected $fillable = ['id', 'reserve_url']; 
-   public function products()
-   {
-   		return $this->belongsToMany(Product::class, 'rel_categories_products');
-   }
+   protected $fillable = ['id', 'reserve_url','store_id'];
+//   public function products()
+//   {
+//   		return $this->belongsToMany(Product::class, 'rel_categories_products');
+//   }
 }

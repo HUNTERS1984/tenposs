@@ -1,17 +1,16 @@
 @extends('admin::layouts.default')
 
 
-@section('title', 'カテゴリー')
+@section('title', 'リザーブ')
 @section('content')
     <div class="content">
-        {{Form::model($item,array('route'=>array('admin.category.update',$item->id),'files'=>true,'method'=>'PUT') )}}
-        <input type="hidden" name="type" value="{{$type}}">
+        {{Form::model($item,array('route'=>array('admin.reserve.update',$item->id),'files'=>true,'method'=>'PUT') )}}
         <div class="topbar-content">
             <div class="wrap-topbar clearfix">
                 <span class="visible-xs visible-sm trigger"><span
                             class="glyphicon glyphicon-align-justify"></span></span>
                 <div class="left-topbar">
-                    <h1 class="title">カテゴリー</h1>
+                    <h1 class="title">リザーブ</h1>
                 </div>
                 <div class="right-topbar">
                     <a href="{{ URL::previous() }}" class="btn-me btn-topbar">戻る</a>
@@ -27,7 +26,7 @@
                     <div class="col-lg-12">
 
                         <div class="wrapper-content">
-                            {{Form::model($item,array('route'=>array('admin.category.update',$item->id),'method'=>'PUT','files'=>true))}}
+                            {{Form::model($item,array('route'=>array('admin.reserve.update',$item->id),'method'=>'PUT','files'=>true))}}
 
                             <div class="form-group">
                                 <label for="coupon_id">格納</label>
@@ -35,8 +34,8 @@
 
                             </div>
                             <div class="form-group">
-                                {{Form::label('title','名')}}
-                                {{Form::text('name',old('name'),['class'=>'form-control'])}}
+                                {{Form::label('title','リザーブリンク')}}
+                                {{Form::text('reserve_url',old('reserve_url'),['class'=>'form-control'])}}
 
                             </div>
                             {{--<div class="form-group">--}}

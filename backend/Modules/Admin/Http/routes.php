@@ -72,6 +72,8 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('category/create',['as'=>'admin.category.create','uses'=>'CategoriesController@create']);
         Route::get('category/store',['as'=>'admin.category.store','uses'=>'CategoriesController@store']);
         Route::resource('category','CategoriesController');
+        //Reserves
+        Route::resource('reserve','ReservesController');
 
         
     });

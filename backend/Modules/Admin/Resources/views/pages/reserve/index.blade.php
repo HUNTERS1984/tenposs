@@ -1,6 +1,6 @@
 @extends('admin::layouts.default')
 
-@section('title', 'News')
+@section('title', 'リザーブ')
 
 @section('content')
     <div class="content">
@@ -9,7 +9,7 @@
                 <span class="visible-xs visible-sm trigger"><span
                             class="glyphicon glyphicon-align-justify"></span></span>
                 <div class="left-topbar">
-                    <h1 class="title">ニュース</h1>
+                    <h1 class="title">リザーブ</h1>
                 </div>
                 <div class="right-topbar">
                     {{--<span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check"--}}
@@ -34,9 +34,7 @@
                         <div class="wrap-btn-content">
                             {{--<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"--}}
                             {{--data-target="#myModal">追加</a>  --}}
-                            <a href="{{ route($back_url,array('type'=>$type)) }}" class="btn-me btn-hong">バック</a>
-                            <a href="{{ route('admin.category.create',array('type'=>$type)) }}"
-                               class="btn-me btn-xanhduongnhat">追加</a>
+                            <a href="{{ route('admin.reserve.create') }}" class="btn-me btn-xanhduongnhat">追加</a>
                         </div>    <!-- end wrap-btn-content-->
                         <div class="wrapper-content">
                             <div class="grip">
@@ -46,25 +44,28 @@
                                     <div class="table-responsive">
                                         <table class="table">
                                             <tr>
-                                                <th>カテゴリー名</th>
+                                                <th>リザーブリンク</th>
                                                 <th>店名</th>
                                                 <th></th>
                                             </tr>
                                             @foreach($list_item as $item)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{route('admin.category.edit',array('id'=> $item->id,'type'=>$type))}}">{{$item->name}}</a>
+                                                        <a href="{{route('admin.reserve.edit',array('id'=> $item->id))}}">{{$item->reserve_url}}</a>
                                                     </td>
                                                     <td>
                                                         {{$list_store[$item->store_id]}}</a>
                                                     </td>
                                                     <td style="text-align: right;">
-                                                        {{Form::open(array('route'=>array('admin.category.deletetype',$item->id,$type),'method'=>'DELETE'))}}
+                                                        {{Form::open(array('route'=>array('admin.reserve.destroy',$item->id),'method'=>'DELETE'))}}
                                                         <input type="submit" class="btn-me btn-each-item" value="削除"
                                                                onclick="return confirm('Are you sure you want to delete this item?');">
                                                         {{Form::close()}}
                                                     </td>
+
+
                                                 </tr>
+
                                             @endforeach
                                         </table>
                                     </div>
@@ -72,7 +73,7 @@
                             </div>
                             <div class="clearfix" style="float: right;">
                                 @if(count($list_item) > 0)
-                                    {{ $list_item->appends(['type' => $type])->render() }}
+                                    {{ $list_item->render() }}
                                 @endif
                             </div>
                         </div>    <!-- wrap-content-->
@@ -83,7 +84,6 @@
         </div>
         <!-- END -->
     </div>    <!-- end main-content-->
-
 
 @stop
 
