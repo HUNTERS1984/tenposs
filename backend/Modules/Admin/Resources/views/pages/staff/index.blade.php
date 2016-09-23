@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="content-preview clearfix">
                                             <div class="row-me fixHeight">
-                                                @if(count($list_staff) > 0)
+                                                @if(empty($list_staff))
                                                     <p>No data</p>
                                                 @else
                                                     @foreach($list_staff as $item_thumb)
@@ -77,10 +77,10 @@
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
-                                                   data-target="#AddMenu">カテゴリを追加します</a>
-                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'staff')) }}" class="btn-me btn-hong">一覧カテゴリ</a>
+                                                   data-target="#AddMenu">カテゴリ追加</a>
+                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'staff')) }}" class="btn-me btn-hong">カテゴリ一覧</a>
                                                 <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"
-                                                   data-toggle="modal" data-target="#AddItem">人手を増やします</a>
+                                                   data-toggle="modal" data-target="#AddItem">スタッフ追加</a>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                 <div class="wrapper-content clearfix">
                                     <div class="container-fluid">
                                         <div class="row">
-                                            @if(count($list_staff) > 0)
+                                            @if(empty($list_staff))
                                                 <p>No data</p>
                                             @else
                                                 @foreach($list_staff as $item)
@@ -120,7 +120,7 @@
                 <!-- END -->
             </div>    <!-- end main-content-->
 
-        @stop
+        
         <!-- Modal -->
             <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
                 <div class="modal-dialog" role="document">
@@ -214,7 +214,7 @@
                     {{Form::close()}}
                 </div>
             </div>
-
+        @stop
         @section('script')
             {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
             {{Html::script('assets/backend/js/bootstrap.min.js')}}
