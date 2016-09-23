@@ -168,7 +168,7 @@ function drawMessage(message){
   	    side = 'right';
   	    profileTemp = profile;
   	}
-  
+    $messages = $('ul.messages');
     $message = $($('.message_template').clone().html());
     $message.addClass(side).find('.text').html(message.text);
     $message.find('.avatar img').attr('src',profileTemp.pictureUrl+'/small')
