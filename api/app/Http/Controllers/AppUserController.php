@@ -369,7 +369,7 @@ class AppUserController extends Controller
         $push = UserPush::where('app_user_id', $request->user->id)->first();
 
         if (!$push)
-            return $this->error(1004);
+            $push =  new UserPush();
 
         $push->ranking = Input::get('ranking');
         $push->news = Input::get('news');
