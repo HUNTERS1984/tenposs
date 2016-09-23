@@ -141,7 +141,7 @@ io.on('connection', function (socket) {
         // Check user type connect is exist
         if( userType.indexOf(user.from) === -1 ){
             logger.warn('Not found user type connect');
-            return false;
+            return;
         }else{
             socket.room = user.channel;
             socket.user = user;
@@ -164,7 +164,7 @@ io.on('connection', function (socket) {
                             function(newArr){
                             var count = 0;
                             for( var i in newArr ){
-                                if( arrMids[i] !== socket.user.profile.mid ){
+                                if( arrMids[i].mid !== socket.user.profile.mid ){
                                     count++;
                                     Messages.getMessageClientHistory(
                                         socket.room,socket.user.profile.mid,
@@ -175,7 +175,8 @@ io.on('connection', function (socket) {
                                                 windows: newArr[i],
                                                 history: data
                                             }
-                                           
+                                            logger.trace('History message client');
+                                            logger.info(temp);
                                             packageHistory.push(temp);
                 
                                             if( count == (arrMids.length) ){
@@ -205,7 +206,7 @@ io.on('connection', function (socket) {
                 LineAccounts.checkExistAccounts( user, 
                     function( exitsUser ){
                         if( !exitsUser ){
-                            logger.warn('Enduser LineAccounts not exits'); return false;
+                            logger.warn('Enduser LineAccounts not exits'); return;
                         }else{
                             
                             logger.info('User connected: '+ JSON.stringify(user));
@@ -284,7 +285,7 @@ io.on('connection', function (socket) {
             }, 
             function( exitsUser ){
                 if( !exitsUser ){
-                    logger.warn('Enduser LineAccounts not exits'); return false;
+                    logger.warn('Enduser LineAccounts not exits'); return;
                 }else{
                     Messages.getMessageHistory(
                         socket.user.profile.mid, 
