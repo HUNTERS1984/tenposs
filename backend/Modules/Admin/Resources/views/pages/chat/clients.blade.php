@@ -25,6 +25,7 @@
     			</div>
     		</div>
     		<div id="message-wrapper" class="col-lg-9 col-md-9"></div>
+    		<iframe src="https://admin-official.line.me/" frameborder="0" width="100%" height="600"> </iframe>
     	</div>
         
         <div id="room-template" class="hide">
@@ -95,64 +96,71 @@ var channel = '{{ $channel }}';
 var noavatar = '{{url("assets/images/noavatar.png")}}';
 var contactsData = $.parseJSON('<?php echo ($contacts) ?>');
 
-//var package = {
-//    message:{
-//        message: string,
-//        timestamp: string
-//    },
-//    user: {
-//        channel: string,
-//        profile: {
-//            displayName: string,
-//            mid: string,
-//            pictureUrl: string,
-//        }
-//    }
-//};
-function drawMessage(package){
+/*  windows: {
+        mid: string,
+        displayName: string
+    }
+    message:{
+        text: string,
+        timestamp: string,
+        channel: string,
+        profile: {
+            displayName: string,
+            mid: string,
+            pictureUrl: string,
+        }
+    }
+*/
+function drawMessage( windows, message){
 	var $message,
-	    $messages;
+	    $messages,
+	    profileTemp = message.profile;
 	    
 	var side = 'left';
-	if( package.user.profile.mid == profile.mid ){
+	if( message.profile.mid == profile.mid ){
 	    side = 'right';
+	    profileTemp = profile;
+	    
 	}
-	// Find windows chat
-	checkExistBoxItems(package.user.profile,function( $box ){
-
-        $message = $($('.message_template').clone().html());
-        $message.addClass(side).find('.text').html(package.message.message);
-        $message.find('.avatar img').attr('src',package.user.profile.pictureUrl+'/small')
-        $message.find('.timestamp').text( converTimestamp(package.message.timestamp));
-        $box.find('ul.messages').append($message);
-            
-        setTimeout(function () {
-            return $message.addClass('appeared');
-        }, 0);
-        
-        return $box.find('ul.messages').animate({ scrollTop: $box.find('ul.messages').prop('scrollHeight') }, 300);
-	     
-	 })
-
+	// Generate item message
+	$message = $($('.message_template').clone().html());
+    $message.addClass(side).find('.text').html( message.text );
+    $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
+    $message.find('.timestamp').text( converTimestamp(message.timestamp) );
+    $message.addClass('appeared');
+	// Append to windows
+	windows.find('ul.messages').append($message);
+    return windows.find('ul.messages').animate({ scrollTop: windows.find('ul.messages').prop('scrollHeight') }, 300);
 };
 
-function checkExistBoxItems(profile, _callback){
-    var $box = $('#message-wrapper #'+profile.mid);
+/*
+windows: {
+    displayName: string,
+    mid: string,
+}
+*/
+
+function findWindows(info , _callback){
+    var $box = $('#message-wrapper #'+ info.mid);
     if( $box != typeof undefined && $box.length > 0 ){
         return _callback( $box );
     }else{
-        renderChatBox(profile,function( $box ){
+        drawWindows(info,function( $box ){
              return _callback($box);
         })
     }
 }
-
-function renderChatBox(profile,_callback){
-    
+/*
+windows: {
+    displayName: string,
+    mid: string,
+}
+*/
+function drawWindows(info, _callback){
     var $template;
     $template = $($('#room-template .rooms').clone().html());
-    $template.attr('id',profile.mid).attr( 'data-id',profile.mid )
-        .find('.panel-heading span.name').html( profile.displayName );
+    $template.attr('id',info.mid).attr( 'data-id',info.mid )
+        .find('.panel-heading span.name').html( info.displayName );
     $('#message-wrapper').append( $template );
     _callback( $template );
     
@@ -161,32 +169,31 @@ function renderChatBox(profile,_callback){
 // Send message text enduser typing   
 function sendMessage(target) {
     // Draw message client
+    var d = new Date();
     var closest = $(target).closest('.panel');
-    var $messages, message;
     if ($(closest).find('input').val().trim() === '') {
         return;
     }
+    var message = {
+            text: $(closest).find('input').val(),
+            timestamp: converTimestamp(d.getTime()/1000),
+            channel: '',
+            profile: {
+                displayName: profile.displayName,
+                mid: profile.mid,
+                pictureUrl: profile.pictureUrl,
+            }
+        };
     
-    $messages = $(closest).find('ul.messages');
-    var d = new Date();
-    $message = $($('.message_template').clone().html());
-    $message.addClass('right').find('.text').html($(closest).find('input').val() );
-    $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text(converTimestamp(d.getTime()/1000));
-    $messages.append($message);
-    setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
+    drawMessage(closest, message);
     // Send message to server
-
-    var params = {
+    socket.emit('send.admin.message',{
         'to': $(closest).attr('data-id'),
         'message': $(closest).find('input').val(),
         'timestamp': d.getTime()/1000
-    };
-    socket.emit('send.admin.message',params);
-    $(closest).find('input').val('')
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    });
+    $(closest).find('input').val('');
+   
 };
 
 // Connect to server 
@@ -209,6 +216,9 @@ function connectToChat() {
     });
     
     // Validate contacts list is online
+    /**
+     * users: array[mid]
+     */ 
     socket.on('receive.admin.getClientOnline',function(users){
         console.log('List users online');
         console.log(users);
@@ -227,7 +237,9 @@ function connectToChat() {
     socket.on('receive.admin.message',function( package ){
         console.log('Receive messages from endusers');
         console.log(package);
-        drawMessage(package);
+        findWindows( package.windows, function(windows){
+            drawMessage(windows, package.message);
+        });
     })
 
     socket.on('history',function(package){
@@ -235,14 +247,11 @@ function connectToChat() {
         console.log(package);
         if( package.length > 0 ){
             $(package).each(function(index, item) {
+                
                 $(item.history).each(function(index1, item1){
                     var profileTemp = (function(){
                         if(item1.from_mid === profile.mid)
-                            return {
-                                displayName: profile.displayName,
-                                mid: profile.mid,
-                                pictureUrl: profile.pictureUrl,
-                            }
+                            return profile;
                         else{
                             return {
                                 displayName: item1.displayName,
@@ -252,18 +261,12 @@ function connectToChat() {
                         }
                     })();
                 
-                    var temp = {
-                        message:{
-                            message: item1.message,
-                            timestamp: item1.created_at
-                        },
-                        user: {
-                            channel: item1.room_id,
-                            profile: profileTemp
-                        }
-                        
-                    };
-                    drawMessage(temp);
+                    drawMessage({
+                        windows: item.windows,
+                        message: item1.message,
+                        timestamp: item1.created_at,
+                        profile: profileTemp
+                    });
                 })
               
             });
@@ -282,37 +285,29 @@ function connectToChat() {
     })
     
     socket.on('receive.admin.history', function( package ){
-        console.log(package);
-        $(package.history).each(function(index1, item1){
-            var profileTemp = (function(){
-                if(item1.from_mid === profile.mid)
-                    return {
-                        displayName: profile.displayName,
-                        mid: profile.mid,
-                        pictureUrl: profile.pictureUrl
-                    }
-                else{
-                    return {
-                        displayName: item1.displayName,
-                        mid: item1.mid,
-                        pictureUrl: item1.pictureUrl
-                    }
-                }
-            })();
         
-            var temp = {
-                message:{
-                    message: item1.message,
-                    timestamp: item1.created_at
-                },
-                user: {
-                    channel: item1.room_id,
-                    profile: profileTemp
-                }
-                
-            };
-            drawMessage(temp);
-        })
+        findWindows(package.windows,function( $windows ){
+            $(package.history).each(function(index, item){
+                drawMessage($windows, {
+                    text: item.message,
+                    timestamp: converTimestamp(item.created_at) ,
+                    profile: (function(){
+                            if(item.from_mid === profile.mid)
+                                return profile;
+                            else{
+                                return {
+                                    displayName: item.displayName,
+                                    mid: item.mid,
+                                    pictureUrl: item.pictureUrl,
+                                }
+                            }
+                        })()
+                });
+            })
+
+	    })
+       
+       
     });
 }
 
@@ -414,7 +409,7 @@ $(document).ready(function(){
     
     // Open windows chat and load history 
     
-    $('.contacts-list-wrapper').on('click','.media',function(e){
+    $('#contacts-list-wrapper').on('click','.media',function(e){
         console.log('Open windows by contact: '+$(this).attr('id').substr(3));
         socket.emit('admin.send.history', $(this).attr('id').substr(3) );
     })

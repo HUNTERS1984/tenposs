@@ -11,7 +11,7 @@ var connection;
 
 exports.getMessageHistory = function(from, to, limit, _callback){
     
-        var sql =   " SELECT m.room_id,m.to_mid, m.from_mid, m.message"+
+        var sql =   " SELECT m.room_id,m.to_mid, m.from_mid, m.message, m.created_at"+
                 	" FROM messages m"+
                 	" WHERE"+ 
                 	" 	(m.from_mid = ? AND m.to_mid = ?)"+
