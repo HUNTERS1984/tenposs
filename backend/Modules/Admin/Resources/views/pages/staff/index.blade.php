@@ -11,7 +11,7 @@
                 <div class="left-topbar">
                     <h1 class="title">スタッフ</h1>
                 </div>
-                <!-- <div class="right-topbar">
+                <div class="right-topbar">
                      <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span>
                     <a href="javascript:avoid()" class="btn-me btn-topbar">保存</a>
                 </div>
@@ -51,10 +51,10 @@
                                         </div>
                                         <div class="content-preview clearfix">
                                             <div class="row-me fixHeight">
-                                                @if(empty($list_staff))
+                                                @if(empty($list_preview_staff))
                                                     <p>No data</p>
                                                 @else
-                                                    @foreach($list_staff as $item_thumb)
+                                                    @foreach($list_preview_staff as $item_thumb)
                                                         <div class="col-xs-6 padding-me">
                                                             <div class="each-menu">
                                                                 <img src="{{asset($item_thumb->image_url)}}"
@@ -107,10 +107,13 @@
 
                                                     </div>
                                                 @endforeach
-                                                <button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
                                             @endif
                                         </div>
-
+                                        <div class="clearfix">
+                                            @if(!$list_staff->isEmpty())
+                                                {{ $list_staff->render() }}
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>    <!-- wrap-content-->
                             </div>
@@ -129,7 +132,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="AddMenuLabel">カテゴリを追加します</h4>
+                            <h4 class="modal-title" id="AddMenuLabel">カテゴリ追加</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -157,7 +160,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="AddItemTitle">人手を増やします</h4>
+                            <h4 class="modal-title" id="AddItemTitle">スタッフ追加</h4>
                         </div>
                         <div class="modal-body">
                             <div class="col-md-4" align="left">
@@ -244,14 +247,14 @@
                             onSlideNextStart: function (swiper) {
                                 ++category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/staff/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
+                                // $.ajax({
+                                //     url: "/admin/staff/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
 
-                                });
+                                // });
                                 $.ajax({
                                     url: "/admin/staff/nextpreview",
                                     data: {cat: category_idx, page: page}
@@ -264,13 +267,13 @@
                             onSlidePrevStart: function (swiper) {
                                 --category_idx;
                                 page = 0;
-                                $.ajax({
-                                    url: "/admin/staff/nextcat",
-                                    data: {cat: category_idx, page: page}
-                                }).done(function (data) {
-                                    console.log(data);
-                                    $('.wrapper-content').html(data);
-                                });
+                                // $.ajax({
+                                //     url: "/admin/staff/nextcat",
+                                //     data: {cat: category_idx, page: page}
+                                // }).done(function (data) {
+                                //     console.log(data);
+                                //     $('.wrapper-content').html(data);
+                                // });
                                 $.ajax({
                                     url: "/admin/staff/nextpreview",
                                     data: {cat: category_idx, page: page}

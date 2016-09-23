@@ -16,7 +16,7 @@ use Modules\Admin\Http\Requests\ImageRequest;
 use App\Models\Users;
 use Carbon\Carbon;
 
-define('REQUEST_STAFF_ITEMS',  10);
+define('REQUEST_STAFF_ITEMS',  9);
 class StaffController extends Controller
 {
 	protected $entity;
@@ -39,30 +39,38 @@ class StaffController extends Controller
     {
 		$stores = $this->request->stores;
 		$list_staff = array();
+		$list_preview_staff = array();
 		$list_store = array();
 		if (count($stores) > 0) {
 			$staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
 
 			$list_store = $stores->lists('name', 'id');
 			//dd($menus->pluck('id')->toArray());
-			$list_staff = [];
+			
 			if (count($staff_cat) > 0) {
 				$list_staff_cat = $staff_cat->pluck('id')->toArray();
 
 				if (count($list_staff_cat) > 0) {
 
-					$list_staff = Staff::whereIn('staff_category_id',$list_staff_cat)->orderBy('updated_at', 'desc')->take(REQUEST_STAFF_ITEMS)->get();
+					$list_staff = Staff::whereIn('staff_category_id',$list_staff_cat)->orderBy('updated_at', 'desc')->paginate(REQUEST_STAFF_ITEMS);
 
 					for ($i = 0; $i < count($list_staff); $i++) {
 						if ($list_staff[$i]->image_url == null)
 							$list_staff[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+					}
+
+					$list_preview_staff = Staff::where('staff_category_id', '=',$list_staff_cat[0])->orderBy('updated_at', 'desc')->take(REQUEST_STAFF_ITEMS)->get();
+
+					for ($i = 0; $i < count($list_preview_staff); $i++) {
+						if ($list_preview_staff[$i]->image_url == null)
+							$list_preview_staff[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
 					}
 				}
 
 			}
 		}
 		//dd($list_store);
-		return view('admin::pages.staff.index',compact('staff_cat','list_staff', 'list_store'));
+		return view('admin::pages.staff.index',compact('staff_cat','list_staff', 'list_preview_staff', 'list_store'));
     }
 
     public function create()
