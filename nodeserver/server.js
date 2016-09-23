@@ -153,7 +153,7 @@ io.on('connection', function (socket) {
             if( user.from === 'client' ){
                 var packageHistory = [];
                 getEnduserMidsOnlineInRoom( user.channel, function(arrMids){
-                    logger.info('Enduser are connected'+ JSON.stringify(arrMids) );
+                    logger.info('All are connected'+ JSON.stringify(arrMids) );
                     
                     if( arrMids.length > 0 ){
                        
