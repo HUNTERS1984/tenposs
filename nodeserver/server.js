@@ -153,7 +153,7 @@ io.on('connection', function (socket) {
             if( user.from === 'client' ){
                 var packageHistory = [];
                 getEnduserMidsOnlineInRoom( user.channel, function(arrMids){
-                    logger.info('Enduser are connected'+ JSON.stringify(arrMids) );
+                    logger.info('All are connected'+ JSON.stringify(arrMids) );
                     
                     if( arrMids.length > 0 ){
                        
@@ -296,7 +296,8 @@ io.on('connection', function (socket) {
                                 history: messages,
                                 windows: {
                                     mid: exitsUser.mid,
-                                    displayName: exitsUser.displayName
+                                    displayName: exitsUser.displayName,
+                                    pictureUrl: exitsUser.pictureUrl
                                 }
                             });
                         })

@@ -314,7 +314,7 @@ function connectToChat() {
 function drawSystemMessage(package){
     console.log('System mesage'+ JSON.stringify(package) );
 
-    checkExistBoxItems(package.user.profile, function($box) {
+    findWindows(package.user.profile, function($box) {
         $box.find('span.status').text(package.status);
         var $messages = $box.find('ul.messages');
         var $message = $($('.message_template_system').clone().html());
