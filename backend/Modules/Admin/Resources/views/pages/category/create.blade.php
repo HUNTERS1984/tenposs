@@ -11,7 +11,7 @@
                 <span class="visible-xs visible-sm trigger"><span
                             class="glyphicon glyphicon-align-justify"></span></span>
                 <div class="left-topbar">
-                    <h1 class="title">カテゴリを追加</h1>
+                    <h1 class="title">カテゴリ追加</h1>
                 </div>
                 <div class="right-topbar">
                     <!-- <span class="switch-button"><input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable" /></span> -->
@@ -32,15 +32,15 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <div class="form-group">
-                                            <label for="coupon_id">格納</label>
+                                            <label for="coupon_id">ストア</label>
                                             {{Form::select('store_id',$list_store,old('store_id'),array('class'=>'form-control') )}}
                                         </div>
                                         <div class="form-group">
-                                            <label for="title">名</label>
+                                            <label for="title">タイトル</label>
                                             {{Form::text('name',old('name'), array('class'=>'form-control') )}}
                                         </div>
                                         {{--<div class="form-group">--}}
-                                            {{--{!! Form::submit('新しいカテゴリを作成します', ['class' => 'btn btn-primary']) !!}--}}
+                                            {{--{!! Form::submit('追加', ['class' => 'btn btn-primary']) !!}--}}
                                         {{--</div>--}}
                                     </div>
                                 </div>

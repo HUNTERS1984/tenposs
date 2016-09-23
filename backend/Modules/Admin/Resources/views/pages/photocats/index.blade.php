@@ -75,7 +75,7 @@
                         <div class="wrap-btn-content">
                             <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
                                data-target="#AddCat">カテゴリー追加</a>
-                            <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'photo-cate')) }}" class="btn-me btn-hong">一覧カテゴリ</a>
+                            <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'photo-cate')) }}" class="btn-me btn-hong">カテゴリー一覧</a>
                             <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"
                                data-target="#AddImage">写真追加</a>
                         </div>    <!-- end wrap-btn-content-->

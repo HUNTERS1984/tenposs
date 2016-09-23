@@ -77,8 +77,8 @@
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
-                                                   data-target="#AddMenu">カテゴリ追加</a>
-                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'staff')) }}" class="btn-me btn-hong">カテゴリ一覧</a>
+                                                   data-target="#AddMenu">カテゴリー追加</a>
+                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'staff')) }}" class="btn-me btn-hong">カテゴリー一覧</a>
                                                 <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"
                                                    data-toggle="modal" data-target="#AddItem">スタッフ追加</a>
                                             </div>

@@ -30,12 +30,12 @@
                             {{Form::model($item,array('route'=>array('admin.category.update',$item->id),'method'=>'PUT','files'=>true))}}
 
                             <div class="form-group">
-                                <label for="coupon_id">格納</label>
+                                <label for="coupon_id">ストア</label>
                                 {{Form::select('store_id',$list_store->pluck('name', 'id'),old('store_id'),['class'=>'form-control'])}}
 
                             </div>
                             <div class="form-group">
-                                {{Form::label('title','名')}}
+                                {{Form::label('title','タイトル')}}
                                 {{Form::text('name',old('name'),['class'=>'form-control'])}}
 
                             </div>
