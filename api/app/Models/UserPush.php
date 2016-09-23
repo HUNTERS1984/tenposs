@@ -10,6 +10,7 @@ class UserPush extends Model {
     protected $fillable = [
         'ranking', 'news', 'coupon', 'chat'
     ];
+    public $timestamps = false;
 
     public function app_user(){
     	 return $this->belongsTo(AppUser::class);
