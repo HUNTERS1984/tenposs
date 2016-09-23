@@ -296,7 +296,8 @@ io.on('connection', function (socket) {
                                 history: messages,
                                 windows: {
                                     mid: exitsUser.mid,
-                                    displayName: exitsUser.displayName
+                                    displayName: exitsUser.displayName,
+                                    pictureUrl: exitsUser.pictureUrl
                                 }
                             });
                         })
