@@ -32,7 +32,7 @@
                                                 src="/assets/backend/images/nav-icon.png" alt=""></a>
                                     <h2 class="title-prview">Coupon</h2>
                                 </div>
-                                <div class="content-preview">
+                                <div class="content-preview" style="height:320px;">
                                     @if(count($coupons) > 0)
                                         @foreach ($coupons as $coupon)
                                             <div class="each-coupon clearfix">

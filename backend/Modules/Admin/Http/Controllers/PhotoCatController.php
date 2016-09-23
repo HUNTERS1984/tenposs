@@ -36,10 +36,11 @@ class PhotoCatController extends Controller
         $list_preview_photo = array();
         $list_photo = array();
         if (count($stores) > 0) {
-            $photocat = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+            $photocat = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+                ->whereNull('deleted_at')->get();
             $list_store = $stores->lists('name', 'id');
             if (count($photocat) > 0) {
-                $list_preview_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->get();
+                $list_preview_photo = Photo::wherePhotoCategoryId($photocat[0]->id)->whereNull('deleted_at')->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->get();
                 for ($i = 0; $i < count($list_preview_photo); $i++) {
                     if ($list_preview_photo[$i]->image_url == null)
                         $list_preview_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
@@ -47,7 +48,7 @@ class PhotoCatController extends Controller
                         $list_preview_photo[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$list_preview_photo[$i]->image_url);
                 }
                
-                $list_photo = Photo::whereIn('photo_category_id',$photocat->pluck('id'))->orderBy('updated_at', 'desc')->paginate(REQUEST_PHOTO_ITEMS);
+                $list_photo = Photo::whereIn('photo_category_id',$photocat->pluck('id'))->whereNull('deleted_at')->orderBy('updated_at', 'desc')->paginate(REQUEST_PHOTO_ITEMS);
                 for ($i = 0; $i < count($list_photo); $i++) {
                     if ($list_photo[$i]->image_url == null)
                         $list_photo[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
@@ -70,7 +71,7 @@ class PhotoCatController extends Controller
         $list_store = $stores->lists('name','id');
         $list_photo = [];
         if (count($photocat) > 0 && count($photocat) > $cat) {
-            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
+            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->whereNull('deleted_at')->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
             for($i = 0; $i < count($list_photo); $i++)
             {
                 if ($list_photo[$i]->image_url == null)
@@ -89,11 +90,13 @@ class PhotoCatController extends Controller
         $page_num = $this->request->page;
         $cat = $this->request->cat;
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+            ->whereNull('deleted_at')->get();
         $list_store = $stores->lists('name','id');
         $list_photo = [];
         if (count($photocat) > 0 && count($photocat) > $cat) {
-            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
+            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->whereNull('deleted_at')
+                ->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
             for($i = 0; $i < count($list_photo); $i++)
             {
                 if ($list_photo[$i]->image_url == null)
@@ -112,11 +115,13 @@ class PhotoCatController extends Controller
         $page_num = $this->request->page;
         $cat = $this->request->cat;
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+            ->whereNull('deleted_at')->get();
         $list_store = $stores->lists('name','id');
         $list_photo = [];
         if (count($photocat) > 0 && count($photocat) > $cat) {
-            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
+            $list_photo = Photo::wherePhotoCategoryId($photocat[$cat]->id)->whereNull('deleted_at')
+                ->orderBy('updated_at', 'desc')->take(REQUEST_PHOTO_ITEMS)->skip($page_num*REQUEST_PHOTO_ITEMS)->get();
             for($i = 0; $i < count($list_photo); $i++)
             {
                 if ($list_photo[$i]->image_url == null)

@@ -61,7 +61,7 @@ class RedisUtil
     public function clear_cache($key)
     {
         try {
-            $this->_redis->delete($key);
+            $this->_redis->del($key);
         } catch (ConnectionException $e) {
 
         } catch (\RedisException $e) {

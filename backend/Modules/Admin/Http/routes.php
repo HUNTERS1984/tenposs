@@ -53,8 +53,13 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('photo-cate/nextpreview',['as'=>'admin.photo-cate.nextpreview','uses'=>'PhotoCatController@nextpreview'] );
         Route::resource('photo-cate','PhotoCatController');
         // STAFF
-        Route::resource('staff','StaffController');
 
+        Route::get('staff/view_more',['as'=>'admin.staff.view_more','uses'=>'StaffController@view_more'] );
+        Route::get('staff/nextcat',['as'=>'admin.staff.nextcat','uses'=>'StaffController@nextcat'] );
+        Route::get('staff/nextpreview',['as'=>'admin.staff.nextpreview','uses'=>'StaffController@nextpreview'] );
+        Route::post('staff/storestaff',['as'=>'admin.staff.storestaff','uses'=>'StaffController@storestaff'] );
+        Route::post('staff/storeCat',['as'=>'admin.staff.storeCat','uses'=>'StaffController@storeCat']);
+        Route::resource('staff','StaffController');
         // COUPON
         Route::get('coupon/view_more',['as'=>'admin.coupon.view_more','uses'=>'CouponController@view_more']);
         Route::get('coupon/approve/{coupon_id}/{post_id}',['as'=>'admin.coupon.approve','uses'=>'CouponController@approve']);
@@ -63,8 +68,13 @@ Route::group(['prefix' => 'admin'], function() {
         Route::resource('coupon','CouponController');
         
         // Categries
+        Route::delete('category/deletetype/{id}/{type}',['as'=>'admin.category.deletetype','uses'=>'CategoriesController@destroy']);
+        Route::get('category/create',['as'=>'admin.category.create','uses'=>'CategoriesController@create']);
+        Route::get('category/store',['as'=>'admin.category.store','uses'=>'CategoriesController@store']);
         Route::resource('category','CategoriesController');
-        
+        //Reserves
+        Route::resource('reserve','ReservesController');
+
         
     });
 });
