@@ -237,6 +237,8 @@ html, body{height:100%; @include mainfont;}
 				}
 				.content-preview{
 					padding:8px;
+					overflow:auto;
+					height:180px;
 					.each-coupon{
 						margin-bottom:10px;
 						.img-prview{

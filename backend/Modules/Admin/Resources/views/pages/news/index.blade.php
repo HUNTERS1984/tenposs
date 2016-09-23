@@ -49,7 +49,7 @@
                                                                         <div class="swiper-button-next"></div>
                                                                     </div>
                                                                 </div> -->
-                                <div class="content-preview">
+                                <div class="content-preview" style="height:320px;">
                                     @if(empty($news))
                                         No data
                                     @else
