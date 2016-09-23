@@ -34,7 +34,7 @@
                         <div class="wrap-btn-content">
                             {{--<a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"--}}
                             {{--data-target="#myModal">追加</a>  --}}
-                            <a href="{{ route($back_url,array('type'=>$type)) }}" class="btn-me btn-hong">バック</a>
+                            <a href="{{ route($back_url,array('type'=>$type)) }}" class="btn-me btn-hong">戻る</a>
                             <a href="{{ route('admin.category.create',array('type'=>$type)) }}"
                                class="btn-me btn-xanhduongnhat">追加</a>
                         </div>    <!-- end wrap-btn-content-->
@@ -46,8 +46,8 @@
                                     <div class="table-responsive">
                                         <table class="table">
                                             <tr>
-                                                <th>カテゴリー名</th>
-                                                <th>店名</th>
+                                                <th>カテゴリー</th>
+                                                <th>タイトル</th>
                                                 <th></th>
                                             </tr>
                                             @foreach($list_item as $item)

@@ -79,7 +79,7 @@
                                             <div class="col-xs-12">
                                                 <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
                                                    data-target="#AddMenu">メニュー追加</a>
-                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'menus')) }}" class="btn-me btn-hong">一覧カテゴリ</a>
+                                                <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'menus')) }}" class="btn-me btn-hong">カテゴリ一一覧</a>
 
                                                 <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat"
                                                    data-toggle="modal" data-target="#AddItem">項目追加</a>
