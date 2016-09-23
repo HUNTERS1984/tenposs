@@ -224,7 +224,7 @@ function connectToChat() {
         console.log(users);
         $( contactsData.data ).each(function(index, item) {
             for( i in users){
-                if( users[i] === item.mid ){
+                if( users[i].id === item.mid ){
                     $('#con'+item.mid).find('.media-heading').html('<span class="status on"></span>');
                 }
             }
