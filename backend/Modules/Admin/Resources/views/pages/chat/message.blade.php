@@ -58,7 +58,7 @@ var channel = '{{ $channel }}';
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect('{{ env('CHAT_SERVER') }}', {
+    socket = new io.connect('{{ env("CHAT_SERVER") }}', {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
@@ -79,59 +79,109 @@ function connectToChat() {
           console.log(package);
             if( package.messages ){
               for( var i in package.messages ){
-                if( profile.mid == package.messages[i].from_mid ){
-                  drawMessage('right',profile,package.messages[i].message);
-                }else{
-                   drawMessage('left',package.to,package.messages[i].message);
-                }
+                drawMessage({
+                  text: package.messages[i].message,
+                  timestamp: converTimestamp( package.messages[i].created_at ),
+                  profile: (function(id){
+                    if( profile.mid === id ){
+                      return profile;
+                    }else{
+                      return package.to;
+                    }
+                  })( package.messages[i].from_mid )
+                });
+               
               }
             }
         });
         
         
     });
-    
+    /**
+     *  package : {
+     *       text: string,
+     *       timestamp: string,
+     *       profile: profile
+     *   }
+     */
     socket.on('receive.user.message',function(package){
+      console.log('Receive client message');
       console.log(package);
-      drawMessage('left',package.user.profile,package.message.message);
+      drawMessage(package);
     });
     
+    /**
+     *  package : {
+     *       text: string,
+     *       timestamp: string,
+     *       profile: profile
+     *   }
+     */
     socket.on('receive.bot.message',function(package){
-      console.log('receive bot message');
+      console.log('Receive bot message');
       console.log(package);
-      drawMessage('right',profile,package.message.message);
+      drawMessage(package);
     });
-    
+    /**
+     * {
+     *    user: user,
+     *    message: string
+     * }
+     */
     socket.on('receive.user.connected',function(package){
       $('span#status').text('Online');
       drawSystemMessage(package.message);
     });
-    
+    /**
+     * {
+     *    user: user,
+     *    message: string
+     * }
+     */
     socket.on('receive.user.disconnect',function(package){
       $('span#status').text('Offline');
       drawSystemMessage(package.message);
     });
-    
-    socket.on('');
     return false;
 }
 
-
-function drawMessage(side, profile, message){
-     
-    var $message;
-    var $messages = $('ul.messages');
+/*
+    message:{
+        text: string,
+        timestamp: string,
+        channel: string,
+        profile: {
+            displayName: string,
+            mid: string,
+            pictureUrl: string,
+        }
+    }
+*/
+function drawMessage(message){
+    var $message,
+    $messages,
+    profileTemp = message.profile;
+    
     var d = new Date();
+  	var side = 'left';
+  	if( message.profile.mid == profile.mid ){
+  	    side = 'right';
+  	    profileTemp = profile;
+  	}
+  
     $message = $($('.message_template').clone().html());
-    $message.addClass(side).find('.text').html(message);
-    $message.find('.avatar img').attr('src',profile.pictureUrl+'/small')
-    $message.find('.timestamp').text( converTimestamp(d.getTime()/1000));
+    $message.addClass(side).find('.text').html(message.text);
+    $message.find('.avatar img').attr('src',profileTemp.pictureUrl+'/small')
+    $message.find('.timestamp').text( converTimestamp( d.getTime()/1000 ));
     $messages.append($message);
-    setTimeout(function () {
-        return $message.addClass('appeared');
-    }, 0);
+    $message.addClass('appeared');
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 }
+
+/**
+ * text: string
+ */ 
+
 
 function drawSystemMessage(text){
   var $messages = $('ul.messages');
@@ -144,29 +194,40 @@ function drawSystemMessage(text){
   return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 }
  
-
+/**
+ * text: string
+ */ 
 function sendMessage(text) {
-    var $messages, message;
     if (text.trim() === '') {
-        return;
+        return false;
     }
-    $('.message_input').val('');
-    $messages = $('ul.messages');
-    drawMessage('right',profile, text);
-    // Send message to server
     var d = new Date();
-    var package = {
+    var $messages = $('ul.messages');
+    $('.message_input').val('');
+
+    drawMessage({
+        text: text,
+        timestamp: d.getTime()/1000,
+        profile: profile
+    });
+    // Send message to server
+    socket.emit('send.user.message',{
         'message': text,
         'timestamp': d.getTime()/1000
-    };
-    socket.emit('send.user.message',package);
+    });
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
+/**
+ * @return string
+ */ 
 function getMessageText() {
    return $('.message_input').val();
 };
 
+/**
+ * timestamp: timestamp
+ */ 
 function converTimestamp(timestamp){
   var d = new Date(timestamp);
   return d.getHours()+'h:'+d.getMinutes()+'m:'+d.getSeconds()+'s '+d.getDay()+'-'+d.getMonth()+'-'+d.getUTCFullYear();
