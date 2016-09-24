@@ -476,7 +476,7 @@ class AppUserController extends Controller
     public function social_profile(Request $request)
     {
 
-        $check_items = array('token', 'social_type', 'social_id', 'social_token', 'social_secret',  'nickname', 'time', 'sig');
+        $check_items = array('token', 'social_type', 'social_id', 'social_token',  'nickname', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -500,7 +500,8 @@ class AppUserController extends Controller
             $social_profile->social_type = Input::get('social_type');
             $social_profile->social_id = Input::get('social_id');
             $social_profile->social_token = Input::get('social_token');
-            $social_profile->social_secret = Input::get('social_secret');
+            if (Input::get('social_secret'))
+                $social_profile->social_secret = Input::get('social_secret');
             $social_profile->nickname = Input::get('nickname');
             $social_profile->save();
         } catch (\Illuminate\Database\QueryException $e) {
