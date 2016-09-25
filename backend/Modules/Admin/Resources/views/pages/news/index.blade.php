@@ -134,8 +134,8 @@
                 <div class="modal-body">
                     <div class="col-md-4" align="left">
                         <img class="new_img" src="{{url('/')}}/assets/backend/images/wall.jpg" width="100%">
-                        <button class="btn_upload_img create" type="button"><i class="fa fa-picture-o"
-                                                                               aria-hidden="true"></i> 画像アップロード
+                        <button class="btn_upload_img create" type="button">
+                            <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
                         </button>
                         {!! Form::file('image_create',['class'=>'btn_upload_ipt create', 'hidden', 'type' => 'button', 'id' => 'image_create']) !!}
                     </div>
