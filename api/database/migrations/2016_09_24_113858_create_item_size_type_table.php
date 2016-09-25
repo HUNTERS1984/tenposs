@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnDeletedAtCouponType extends Migration
+class CreateItemSizeTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,10 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function up()
     {
-        Schema::table('coupon_types', function($table) {
-            $table->timestamp('deleted_at')->nullable();
+        Schema::create('item_size_types', function (Blueprint $table) {
+            $table->increments('id');// Auto increments and unsigned
+            $table->string('name',255);
+
         });
     }
 
@@ -24,8 +26,6 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function down()
     {
-        Schema::table('coupon_types', function($table) {
-            $table->dropColumn('deleted_at');
-        });
+        Schema::drop('item_size_types');
     }
 }

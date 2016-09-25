@@ -33,62 +33,36 @@
                                                 src="/assets/backend/images/nav-icon.png" alt=""></a>
                                     <h2 class="title-prview">Global Work</h2>
                                 </div>
-
-                                <div class="content-preview" style="height: 320px;">
-                                    <div class="banner-preview">
-                                        <img src="/assets/backend/images/banner-prview.jpg" class="img-responsive" alt="">
-                                    </div>
-                                    <div class="row-me clearfix">
-                                        <p class="title-top-preview">
-                                            Recently
-                                        </p>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                    </div>
-                                    <div class="row-me clearfix">
-                                        <h2 class="aligncenter">Photo Gallery</h2>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="item-photogallery">
-                                                    <img src="/assets/backend/images/h1.jpg" alt="Nakayo"/>
-                                                </div>
-                                                <div class="item-photogallery">
-                                                    <img src="/assets/backend/images/h1.jpg" alt="Nakayo"/>
-                                                </div>
-                                                <div class="item-photogallery">
-                                                    <img src="/assets/backend/images/h1.jpg" alt="Nakayo"/>
-                                                </div>
-                                                <div class="item-photogallery">
-                                                    <img src="img/2colofot.jpg" alt="Nakayo"/>
-                                                </div>
-                                                <div class="item-photogallery">
-                                                    <img src="/assets/backend/images/h1.jpg" alt="Nakayo"/>
-                                                </div>
-                                            </div>
-                                            <a href="#" class="btn tenposs-readmore">Readmore</a>
-                                        </div>
-                                    </div><!-- End photogallery -->
+                                <div class="banner-preview">
+                                    <img src="/assets/backend/images/banner-prview.jpg" class="img-responsive" alt="">
                                 </div>
-
-
+                                <div class="content-preview">
+                                    <p class="title-top-preview">
+                                        Recently
+                                    </p>
+                                    <div class="row-me clearfix">
+                                        <div class="each-top">
+                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                            <p class="name">Product 1</p>
+                                            <p class="price">10$</p>
+                                        </div>
+                                        <div class="each-top">
+                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                            <p class="name">Product 1</p>
+                                            <p class="price">10$</p>
+                                        </div>
+                                        <div class="each-top">
+                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                            <p class="name">Product 1</p>
+                                            <p class="price">10$</p>
+                                        </div>
+                                        <div class="each-top">
+                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                            <p class="name">Product 1</p>
+                                            <p class="price">10$</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
