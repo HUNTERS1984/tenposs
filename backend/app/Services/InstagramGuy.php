@@ -42,20 +42,20 @@ class InstagramGuy
         foreach ($users as $user) {
             if ($user) {
                 $response = $this->instagram->getUserMedia($user['social']['social_id'], self::IMAGES_PER_REQUEST);
-                //dd($response); die();
+//                dd(property_exists($response,'pagination')); die();
+                if (property_exists($response,'pagination')) {
+                    $client = new \GuzzleHttp\Client();
+                    while (!empty($response->pagination->next_url) && $current < self::IMAGES_TOTAL_LIMIT) {
+                        $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
+                        $current += self::IMAGES_PER_REQUEST;
+                        $response = json_decode($client->get($response->pagination->next_url)
+                            ->getBody()
+                            ->getContents());
+                    }
 
-                $client = new \GuzzleHttp\Client();
-                while (!empty($response->pagination->next_url) && $current < self::IMAGES_TOTAL_LIMIT) {
-                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
-                    $current += self::IMAGES_PER_REQUEST;
-                    $response = json_decode($client->get($response->pagination->next_url)
-                        ->getBody()
-                        ->getContents());
-                }  
-
-                if ($response && empty($response->pagination->next_url))
-                {
-                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
+                    if ($response && empty($response->pagination->next_url)) {
+                        $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
+                    }
                 }
             }
            

@@ -47,7 +47,7 @@
                                         <table class="table">
                                             <tr>
                                                 <th>カテゴリー</th>
-                                                <th>タイトル</th>
+                                                <th>店舗</th>
                                                 <th></th>
                                             </tr>
                                             @foreach($list_item as $item)
