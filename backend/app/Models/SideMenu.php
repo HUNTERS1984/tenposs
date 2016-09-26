@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class SideMenu extends Model
 {	
    protected $table = 'sidemenus';
-   protected $fillable = ['id', 'name']; 
+   protected $fillable = ['id', 'name','icon_classes']; 
 }

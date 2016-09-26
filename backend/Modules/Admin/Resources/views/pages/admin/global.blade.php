@@ -4,25 +4,27 @@
 
 @section('content')
     <div class="content">
+        <form action="{{ route('admin.global.store') }}" 
+            id="form_app_setting"
+            method="post" 
+            enctype="multipart/form-data">
+        
 
-        {{Form::model($app_settings,array('route'=>array('admin.global.store',$app_settings->id),'method'=>'POST','id'=>'form_app_setting'))}}
-        {{--{{Form::open(array('route'=>'admin.global.store', 'class' => 'formCommon'))}}--}}
-
-        <div class="topbar-content">
-            <div class="wrap-topbar clearfix">
-                <span class="visible-xs visible-sm trigger"><span
-                            class="glyphicon glyphicon-align-justify"></span></span>
-                <div class="left-topbar">
-                    <h1 class="title">グローバル</h1>
-                </div>
-                <div class="right-topbar">
-                    {{--<a href="#" class="btn-me btn-topbar">保存</a>--}}
-                    {{--{{Form::submit('保存',array('class'=>'btn btn-primary',"id"=>"btnFormData"))}}--}}
-                    <input type="button" id="btn_submit_form" name="btn_submit_form" value="保存" class="btn btn-primary">
+            <div class="topbar-content">
+                <div class="wrap-topbar clearfix">
+                    <span class="visible-xs visible-sm trigger"><span
+                                class="glyphicon glyphicon-align-justify"></span></span>
+                    <div class="left-topbar">
+                        <h1 class="title">グローバル</h1>
+                    </div>
+                    <div class="right-topbar">
+                        {{--<a href="#" class="btn-me btn-topbar">保存</a>--}}
+                        {{--{{Form::submit('保存',array('class'=>'btn btn-primary',"id"=>"btnFormData"))}}--}}
+                        <input type="button" id="btn_submit_form" name="btn_submit_form" value="保存" class="btn btn-primary">
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- END -->
+            <!-- END -->
 
         <div class="main-content global">
             @include('admin::layouts.message')
@@ -34,6 +36,7 @@
                                 <li><a href="#" alt="tab1" class="active">ヘッダー</a></li>
                                 <li><a href="#" alt="tab2">サイトメニュー</a></li>
                                 <li><a href="#" alt="tab3">Appストア</a></li>
+                                <li><a href="#" alt="tab4">アプリ情報</a></li>
                             </ul>
                         </div>
                     </div>
@@ -42,7 +45,7 @@
                             <div class="wrap-content-prview">
                                 <div class="content-preview clearfix">
                                     <div class="sidebar-preview">
-                                        <div class="side">
+                                        <div id="mobile-side" class="side" style="background: #{{$app_settings->menu_background_color }}">
                                             <div class="h_side">
                                                 <div class="imageleft">
                                                     <div class="image">
@@ -53,7 +56,8 @@
                                                     <p class="font32">User name</p>
                                                 </div>
                                             </div>
-                                            <ul class="s_nav">
+                                            <ul class="s_nav" >
+                                                <!--    
                                                 <li class="s_icon-home active"><a href="javascript:avoid();">Home</a>
                                                 </li>
                                                 <li class="s_icon-menu"><a href="javascript:avoid();">Menu</a></li>
@@ -67,6 +71,17 @@
                                                 <li class="s_icon-chat"><a href="javascript:avoid();">Chat</a></li>
                                                 <li class="s_icon-setting"><a href="javascript:avoid();">Setting</a>
                                                 </li>
+                                                -->
+                                                @if(count($data_component_dest) > 0)
+                                                    @foreach ($data_component_dest as $k=>$v)
+                                                        <li id="side-item{{$k}}" class="" data-id="{{$k}}" data-value="{{$k}}">
+                                                            <a style="color:#{{$app_settings->menu_font_color}};
+                                                            font_family: '{{ $app_settings->menu_font_family }}';
+                                                            font-size: {{ $app_settings->menu_font_size }}px" 
+                                                            href="javascript:avoid();">{{$v}}</a>
+                                                        </li>
+                                                    @endforeach
+                                                @endif
                                             </ul>
                                         </div><!-- End side -->
                                     </div>
@@ -77,18 +92,19 @@
                     <div class="col-lg-8">
                         <div class="wrapper-content">
                             <div class="content-global" id="tab1">
-                                {{--{{Form::open(array('route'=>'admin.global.store', 'class' => 'formCommon'))}}--}}
+                                
                                 <div class="formCommon">
                                     <div class="form-group">
                                         <label for="">タイトル</label>
-                                        {{Form::text('title',old('title'),array('class'=>'first-input', 'placeholder'=>''))}}
+                                        {{Form::text('title',$app_settings->title,
+                                        array('class'=>'first-input', 'placeholder'=>''))}}
                                     </div>
                                     <div class="form-group">
                                         <label for="">タイトルカラー</label>
                                     <span>
-                                        {{Form::text('title_color',old('title_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
-
-                                        <img
+                                        {{Form::text('title_color',$app_settings->title_color
+                                        ,array('id'=>'title_color','class'=>'jscolor', 'placeholder'=>''))}}
+                                        <img    onclick="document.getElementById('title_color').jscolor.show()" 
                                                 src="/assets/backend/images/draw.jpg" height="21" width="20"
                                                 class="draw"></span>
                                     </div>
@@ -96,10 +112,10 @@
                                         <label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
                                             @if(count($list_font_size) > 0)
-                                                {{Form::select('font_size',$list_font_size,old('font_size'),['class'=>'font-size'])}}
+                                                {{Form::select('font_size',$list_font_size,$app_settings->font_size,['class'=>'font-size'])}}
                                             @endif
                                             @if(count($list_font_family) > 0)
-                                                {{Form::select('font_family',$list_font_family,old('font_family'),['class'=>'font-size'])}}
+                                                {{Form::select('font_family',$list_font_family,$app_settings->font_family,['class'=>'font-size'])}}
                                             @endif
 
 										</span>
@@ -107,42 +123,55 @@
                                     <div class="form-group">
                                         <label for="">ヘッダーカラー</label>
                                     <span>
-                                        {{Form::text('header_color',old('header_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
+                                        {{Form::text('header_color',$app_settings->header_color,
+                                        array('id'=>'header_color','class'=>'jscolor', 'placeholder'=>''))}}
 
-                                        <img
+                                        <img    onclick="document.getElementById('header_color').jscolor.show()"
                                                 src="/assets/backend/images/draw.jpg" height="21" width="20"
                                                 class="draw"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="">メニューイコンカラー</label>
                                     <span>
-                                        {{Form::text('menu_icon_color',old('menu_icon_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
+                                        {{Form::text('menu_icon_color',$app_settings->menu_icon_color,
+                                        array('id'=>'menu_icon_color','class'=>'jscolor', 'placeholder'=>''))}}
 
-                                        <img
+                                        <img    onclick="document.getElementById('menu_icon_color').jscolor.show()"
                                                 src="/assets/backend/images/draw.jpg" height="21" width="20"
                                                 class="draw"></span>
                                     </div>
                                 </div>
-                                {{--{{Form::close()}}--}}
+                                
                             </div> <!-- end content global -->
 
                             <div class="content-global" id="tab2">
-                                {{--{{Form::open(array('route'=>'admin.global.store', 'class' => 'formCommon'))}}--}}
+                               
                                 <div class="formCommon">
                                     <div class="form-group">
                                         <label for="">バックグラウンドカラー</label>
                                 <span>
-                                    {{Form::text('menu_background_color',old('menu_background_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
+                                    {{Form::text('menu_background_color',$app_settings->menu_background_color,
+                                    array(
+                                    'id'=>'menu_background_color',
+                                    'class'=>'jscolor {onFineChange:"MobileView.updateMenuBackground(this)"}', 
+                                    'placeholder'=>'')
+                                    
+                                    )}}
 
-                                    <img src="/assets/backend/images/draw.jpg"
+                                    <img  onclick="document.getElementById('menu_background_color').jscolor.show()"
+                                        src="/assets/backend/images/draw.jpg"
                                          height="21" width="20"
                                          class="draw"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="">フォントカラー</label>
-                                <span> {{Form::text('menu_font_color',old('menu_font_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
+                                <span> {{Form::text('menu_font_color',$app_settings->menu_font_color,
+                                    array('id'=>'menu_font_color', 
+                                    'class'=>'jscolor {onFineChange:"MobileView.updateMenuColor(this)"}',
+                                    'placeholder'=>''))}}
 
-                                    <img src="/assets/backend/images/draw.jpg"
+                                    <img onclick="document.getElementById('menu_font_color').jscolor.show()"
+                                         src="/assets/backend/images/draw.jpg"
                                          height="21" width="20"
                                          class="draw"></span>
                                     </div>
@@ -150,10 +179,18 @@
                                         <label for="">フォントタイプ・フォントファミリ</label>
 										<span class="inline">
                                               @if(count($list_font_size) > 0)
-                                                {{Form::select('menu_font_size',$list_font_size,old('menu_font_size'),['class'=>'font-size'])}}
+                                                {{Form::select('menu_font_size',$list_font_size,$app_settings->menu_font_size,
+                                                [
+                                                    'class'=>'font-size',
+                                                    'onchange' => 'MobileView.updateMenuFontSize(this.value)'
+                                                ])}}
                                             @endif
                                             @if(count($list_font_family) > 0)
-                                                {{Form::select('menu_font_family',$list_font_family,old('menu_font_family'),['class'=>'font-size'])}}
+                                                {{Form::select('menu_font_family',$list_font_family,$app_settings->menu_font_family,
+                                                [
+                                                    'class'=>'font-size',
+                                                    'onchange' => 'MobileView.updateMenuFontFamily(this.value)'
+                                                ])}}
                                             @endif
 										</span>
                                     </div>
@@ -191,32 +228,63 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{--{{Form::close()}}--}}
+                            
                             </div>
                             <div class="content-global" id="tab3">
-                                {{--{{Form::open(array('route'=>'admin.global.store', 'class' => 'formCommon'))}}--}}
+                              
                                 <div class="formCommon">
                                     <div class="form-group">
-                                        <label for="">アプリアイコン</label>
-                                <span>
-                                  {{Form::text('app_icon_color',old('app_icon_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
-
-                                    <img src="/assets/backend/images/draw.jpg"
-                                         height="21" width="20"
-                                         class="draw"></span>
+                                        
+                                        <div class="img-wrapper col-md-4" align="">
+                                            <label for="">アプリアイコン</label>
+                                             <?php
+                                                $app_icon = (isset($app_stores->app_icon) && $app_stores->app_icon !== '') 
+                                                ? $app_stores->app_icon 
+                                                : url('/assets/backend/images/wall.jpg');
+                                            ?>
+                                            <img id="app-icon-review" class="new_img" src="{{ $app_icon }}" width="100%">
+                                            <button class="btn_upload_img create" type="button">
+                                                <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
+                                            </button>
+                                            {!! Form::file('file[app_icon]',['class'=>'btn_upload_ipt create', 
+                                            'type' => 'button', 'id' => 'app-icon']) !!}
+                                        </div>
                                     </div>
+                                
                                     <div class="form-group">
-                                        <label for="">Store用画像</label>
-                                <span>
-                                   {{Form::text('store_user_color',old('store_user_color'),array('class'=>'jscolor', 'placeholder'=>''))}}
+                                        <div class="img-wrapper col-md-4">
+                                            <label for="">Store用画像</label>
+                                            <?php
+                                                $store_image = (isset($app_stores->store_image) && $app_stores->store_image !== '') 
+                                                ? $app_stores->store_image 
+                                                : url('/assets/backend/images/wall.jpg');
+                                            ?>
+                                            <img id="store-image-review" class="new_img" src="{{$store_image}}" width="100%">
+                                            <button class="btn_upload_img create" type="button">
+                                                <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
+                                            </button>
+                                            {!! Form::file('file[store_image]',['class'=>'btn_upload_ipt create', 
+                                            'hidden', 'type' => 'button', 'id' => 'store-image']) !!}
+                                        </div>
+                                    </div>    
+                               
 
-                                    <img src="/assets/backend/images/draw.jpg"
-                                         height="21" width="20"
-                                         class="draw"></span>
-                                    </div>
-                                    </form>
                                 </div>
-                                {{--{{Form::close()}}--}}
+                              
+                            </div>
+                            <div class="content-global" id="tab4">
+                                <div class="form-group">
+                                    <label for="">企業情報</label>
+                                   
+                                    {{Form::textarea('company_info',$app_settings->company_info,
+                                    array('class'=>'form-control', 'placeholder'=>''))}}
+                                   
+                                </div>
+                                <div class="form-group">
+                                    <label for="">ユーザーのプライバシー</label>
+                                    {{Form::textarea('user_privacy',$app_settings->user_privacy,
+                                    array('class'=>'form-control', 'placeholder'=>''))}}
+                                </div>
                             </div>
                         </div>    <!-- wrap-content-->
                     </div>
@@ -225,19 +293,22 @@
 
         </div>
         <!-- END -->
-        {{Form::close()}}
+        </form>
     </div>    <!-- end main-content-->
 
 @stop
 
 @section('script')
     {{Html::script('assets/backend/js/jquery-1.11.2.min.js')}}
+    {{Html::script('assets/backend/js/mobile-reviews.js')}}
     {{Html::script('assets/backend/js/bootstrap.min.js')}}
     {{Html::script('assets/backend/js/jscolor.js')}}
     {{Html::script('assets/backend/js/script.js')}}
-
+    
     <script type="text/javascript">
         $(document).ready(function () {
+            
+            
             $('.content-global').not(':first').hide();
 
             $('.nav-tab li a').on('click', function (e) {
@@ -252,15 +323,45 @@
             $('.nav-left, .nav-right').on('click', 'li', function () {
                 $(this).toggleClass('selected');
             });
+            
+            $('.btn_upload_img.create').click(function () {
+                $(this).next('.btn_upload_ipt.create').click();
+            });
+
+           
+
+            $("#app-icon").change(function () {
+                if ( this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#app-icon-review').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            $("#store-image").change(function () {
+                if ( this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#store-image-review').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            
         })
         function moveTo(from, to) {
             $('ul.' + from + ' li.selected').remove().appendTo('ul.' + to);
             $('.' + to + ' li').removeAttr('class');
+            
+            MobileView.updateMenuListItems( $('ul.from-nav li' ) );
         }
 
         $('#btn_submit_form').click(function () {
             $('ul.nav-left li').each(function () {
-                var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_component[]">';
+                var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_sidemenus[]">';
                 $('.main-content').append(tmp);
             });
             $('#form_app_setting').submit();
