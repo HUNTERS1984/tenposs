@@ -67,7 +67,7 @@ class PhotoCatController extends Controller
         $page_num = $this->request->page;
         $cat = $this->request->cat;
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();
         $list_store = $stores->lists('name','id');
         $list_photo = [];
         if (count($photocat) > 0 && count($photocat) > $cat) {

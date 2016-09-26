@@ -1,0 +1,17 @@
+<div class="row">
+	@foreach($list_news as $item)
+		<div class="col-xs-4">
+				<div class="each-menu each-common-pr">
+					<p class="title-menu"><a href="{{route('admin.news.edit',$item->id)}}"><img src="{{asset($item->image_url)}}" class="img-responsive" alt="Item"></a></p>
+					<p class="">{{$item->name}}</p>
+					{{Form::open(array('route'=>['admin.news.destroy',$item->id],'method'=>'DELETE'))}}
+						{{Form::submit('削除',array('class'=>'btn-me btn-menu','style'=>'width:100%'))}}
+					{{Form::close()}}
+				</div>
+
+		</div>
+	@endforeach
+	@if(count($list_news) > 0)
+		<button class="view-more-btn btn btn-primary btn-block">もっと見る</button>
+	@endif
+</div>

@@ -9,7 +9,7 @@ class News extends Model
     public $timestamps = false;
 	protected $dates = ['deleted_at'];
     protected $table = 'news';
-    protected $fillable = ['title', 'date', 'description', 'image_url'];
+    protected $fillable = ['title', 'date', 'description', 'image_url','new_category_id'];
 
     public function store(){
     	 return $this->belongsTo(Store::class);

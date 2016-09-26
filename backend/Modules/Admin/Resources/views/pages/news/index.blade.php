@@ -38,22 +38,29 @@
                                                 src="/assets/backend/images/nav-icon.png" alt=""></a>
                                     <h2 class="title-prview">NEWS</h2>
                                 </div>
-                                <!-- 								<div class="control-nav-preview">
-                                                                    <div class="swiper-container">
-                                                                        <div class="swiper-wrapper">
-                                                                            <div class="swiper-slide">Spring</div>
-                                                                            <div class="swiper-slide">Summer</div>
-                                                                        </div>
+                                <div class="control-nav-preview">
+                                    <!-- Slider main container -->
+                                    <div class="swiper-container">
+                                        <!-- Additional required wrapper -->
+                                        <div class="swiper-wrapper">
+                                            <!-- Slides -->
+                                            @if(count($news_cat) > 0)
+                                                @foreach($news_cat as $item)
+                                                    <div class="swiper-slide">{{$item->name}}</div>
+                                                @endforeach
+                                            @endif
+                                        </div>
 
-                                                                        <div class="swiper-button-prev"></div>
-                                                                        <div class="swiper-button-next"></div>
-                                                                    </div>
-                                                                </div> -->
+                                        <!-- If we need navigation buttons -->
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                </div>
                                 <div class="content-preview" style="height:320px;">
-                                    @if(empty($news))
+                                    @if(empty($list_preview_news))
                                         No data
                                     @else
-                                        @foreach($news as $item_thumb)
+                                        @foreach($list_preview_news as $item_thumb)
                                             <div class="each-coupon clearfix">
                                                 <img src="{{asset($item_thumb->image_url)}}"
                                                      class="img-responsive img-prview">
@@ -73,6 +80,9 @@
                     </div>
                     <div class="col-lg-8">
                         <div class="wrap-btn-content">
+                            <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
+                               data-target="#AddMenu">カテゴリー追加</a>
+                            <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'news')) }}" class="btn-me btn-hong">カテゴリー一覧</a>
                             <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"
                                data-target="#myModal">追加</a>
                         </div>    <!-- end wrap-btn-content-->
@@ -122,6 +132,33 @@
     </div>    <!-- end main-content-->
 
     <!-- Modal -->
+    <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
+        <div class="modal-dialog" role="document">
+            {{Form::open(array('route'=>'admin.news.storeCat'))}}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="AddMenuLabel">カテゴリ追加</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        {{Form::label('Select Store','ストア')}}
+                        {{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
+
+                    </div>
+                    <div class="form-group">
+                        {{Form::label('Name', 'タイトル')}}
+                        {{Form::text('name',old('name'),['class'=>'form-control'])}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{Form::submit('Save',['class'=>'btn btn-primary'])}}
+                </div>
+            </div>
+            {{Form::close()}}
+        </div>
+    </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             {{Form::open(array('route'=>'admin.news.store','files'=>true))}}
@@ -141,8 +178,8 @@
                     </div>
                     <div class="col-md-8" align="left">
                         <div class="form-group">
-                            {{Form::label('store','ストア')}}
-                            {{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
+                            {{Form::label('store','カテゴリー')}}
+                            {{Form::select('new_category_id',$news_cat->pluck('name', 'id'),old('new_category_id'),['class'=>'form-control'])}}
 
                         </div>
                         <div class="form-group">
@@ -181,13 +218,38 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('input.lcs_check').lc_switch();
-
+            var category_idx = 0;
+            var page = 0;
             var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
                 speed: 400,
                 spaceBetween: 0,
                 slidesPerView: 1,
                 nextButton: '.control-nav-preview .swiper-button-next',
-                prevButton: '.control-nav-preview .swiper-button-prev'
+                prevButton: '.control-nav-preview .swiper-button-prev',
+                onSlideNextStart: function (swiper) {
+                    ++category_idx;
+                    page = 0;
+                    $.ajax({
+                        url: "/admin/news/nextpreview",
+                        data: {cat: category_idx, page: page}
+                    }).done(function (data) {
+                        console.log(data);
+                        $('.content-preview').html(data);
+
+                    });
+                },
+                onSlidePrevStart: function (swiper) {
+                    --category_idx;
+                    page = 0;
+                    $.ajax({
+                        url: "/admin/news/nextpreview",
+                        data: {cat: category_idx, page: page}
+                    }).done(function (data) {
+                        console.log(data);
+                        $('.content-preview').html(data);
+
+                    });
+                }
             });
 
             $('.btn_upload_img.create').click(function () {

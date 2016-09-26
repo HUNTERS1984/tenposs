@@ -381,6 +381,24 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
+
+    public function get_push_setting(Request $request)
+    {
+
+        $check_items = array('token','time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+//        $push = UserPush::where('app_user_id', $request->user->id)->first();
+        $push = UserPush::where('app_user_id',1)->first();
+        if (!$push)
+            $push =  new UserPush();
+        $this->body['data']['push_setting'] = $push;
+        return $this->output($this->body);
+    }
+
     public function profile(Request $request)
     {
         $check_items = array('token', 'time', 'sig');
@@ -399,13 +417,13 @@ class AppUserController extends Controller
         $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
-        //creare key redis
-        Log::info("config: ".Config::get('api.cache_profile'));
-        Log::info("app_app_id: ".$app['app_app_id']);
-        Log::info("user->profile->id: ".$request->user->profile->id);
+//        //creare key redis
+//        Log::info("config: ".Config::get('api.cache_profile'));
+//        Log::info("app_app_id: ".$app['app_app_id']);
+//        Log::info("user->profile->id: ".$request->user->profile->id);
 
         $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->profile->id);
-        Log::info("key: ".$key);
+//        Log::info("key: ".$key);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
@@ -453,8 +471,6 @@ class AppUserController extends Controller
             $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
             $request->user->profile->avatar_url = $destinationPath . '/' . $fileName;
-        } else {
-            return $this->error(1004);
         }
 
         try {

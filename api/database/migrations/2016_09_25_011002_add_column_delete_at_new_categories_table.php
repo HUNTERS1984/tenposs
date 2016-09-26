@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnDeletedAtCouponType extends Migration
+class AddColumnDeleteAtNewCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,8 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function up()
     {
-        Schema::table('coupon_types', function($table) {
+        Schema::table('new_categories', function(Blueprint $table)
+        {
             $table->timestamp('deleted_at')->nullable();
         });
     }
@@ -24,7 +25,7 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function down()
     {
-        Schema::table('coupon_types', function($table) {
+        Schema::table('new_categories', function($table) {
             $table->dropColumn('deleted_at');
         });
     }

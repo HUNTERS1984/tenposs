@@ -12,6 +12,7 @@ use App\Models\Menus;
 use App\Models\Item;
 use App\Models\Coupon;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Validator;
 use Session;
@@ -41,7 +42,7 @@ class MenusController extends Controller
         $list_item = array();
         $list_store = array();
         if (count($stores) > 0) {
-            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
             $list_store = $stores->lists('name', 'id');
             //dd($menus->pluck('id')->toArray());
             $list_item = [];
@@ -51,11 +52,11 @@ class MenusController extends Controller
 
                     $list_preview_item = Item::whereHas('menus', function ($query) use ($list_menu) {
                         $query->where('menu_id', '=', $list_menu[0]);
-                    })->orderBy('updated_at', 'desc')->take(REQUEST_MENU_ITEMS)->get();
+                    })->whereNull('deleted_at')->orderBy('updated_at', 'desc')->take(REQUEST_MENU_ITEMS)->get();
 
                     $list_item = Item::whereHas('menus', function ($query) use ($list_menu) {
                         $query->whereIn('menu_id',$list_menu);
-                    })->orderBy('updated_at', 'desc')->paginate(REQUEST_MENU_ITEMS);
+                    })->whereNull('deleted_at')->orderBy('updated_at', 'desc')->paginate(REQUEST_MENU_ITEMS);
 
                     //dd($list_item->toArray());
                     for ($i = 0; $i < count($list_preview_item); $i++) {
@@ -81,7 +82,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -91,7 +92,7 @@ class MenusController extends Controller
                 $menu_id = $list_menu[$cat];
                 $list_item = Item::whereHas('menus', function ($query) use ($menu_id) {
                     $query->where('menu_id', '=', $menu_id);
-                })->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
+                })->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
                 //dd($list_item->toArray());
                 for($i = 0; $i < count($list_item); $i++)
                 {
@@ -113,7 +114,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -123,7 +124,7 @@ class MenusController extends Controller
                 $menu_id = $list_menu[$cat];
                 $list_item = Item::whereHas('menus', function ($query) use ($menu_id) {
                     $query->where('menu_id', '=', $menu_id);
-                })->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
+                })->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
                 //dd($list_item->toArray());
                 for($i = 0; $i < count($list_item); $i++)
                 {
@@ -144,7 +145,7 @@ class MenusController extends Controller
         $cat = $this->request->cat;
 
         $stores = $this->request->stores;
-        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
         $list_store = $stores->lists('name','id');
         //dd($menus->pluck('id')->toArray());
         $list_item = [];
@@ -154,7 +155,7 @@ class MenusController extends Controller
                 $menu_id = $list_menu[$cat];
                 $list_item = Item::whereHas('menus', function ($query) use ($menu_id) {
                     $query->where('menu_id', '=', $menu_id);
-                })->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
+                })->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
                 //dd($list_item->toArray());
                 for($i = 0; $i < count($list_item); $i++)
                 {
@@ -315,7 +316,13 @@ class MenusController extends Controller
         foreach($item->menus()->get() as $v){
             $data_menu[] = $v->id;
         }
-        return view('admin::pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu'));
+        //size info
+        $size_type = DB::table('item_size_types')->get();
+        $size_categories = DB::table('item_size_categories')->get();
+        $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
+//        dd($size_categories);
+        return view('admin::pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu',
+            'size_type','size_categories','size_value'));
     }
 
    
@@ -365,6 +372,27 @@ class MenusController extends Controller
 
             $item->menus()->detach();
             $item->menus()->attach($this->request->input('menu_id'));
+
+            //delete size info
+            $arr_size_value = $this->request->input('size_value');
+            if (count($arr_size_value) > 0) {
+                $size_type = DB::table('item_size_types')->get();
+                $arr_insert =[];
+                foreach ($size_type as $item)
+                {
+                    $item_detail = $arr_size_value[$item->id];
+                    $size_categories = DB::table('item_size_categories')->get();
+                    foreach ($size_categories as $item_cate)
+                    {
+                        $arr_insert[] = array('item_id' => $id, 'item_size_type_id'=>$item->id,
+                            'item_size_category_id' => $item_cate->id,'value' => $item_detail[$item_cate->id]);
+                     }
+                }
+                if (count($arr_insert) > 0) {
+                    DB::table('item_sizes')->where('item_id', $id)->delete();
+                    DB::table('item_sizes')->insert($arr_insert);
+                }
+            }
             //delete cache redis
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
@@ -383,11 +411,6 @@ class MenusController extends Controller
         $item->menus()->detach();
     	$this->item->destroy($id);
         return redirect()->back();
-    }
-
-    public function demo()
-    {
-        print_r('demo');
     }
 }
 
