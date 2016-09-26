@@ -35,9 +35,12 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('upload',['as'=>'admin.upload','uses'=>'AdminController@upload']);
         Route::delete('upload/delete',['as'=>'admin.upload.delete','uses'=>'AdminController@uploaddelete']);
         Route::get('global',['as'=>'admin.global','uses'=>'AdminController@globalpage']);
-        Route::post('global/store',['as'=>'admin.global.store','uses'=>'AdminController@globalstore']);
+        Route::post('global',['as'=>'admin.global.store','uses'=>'AdminController@globalstore']);
         Route::get('test-ga',['as'=>'admin.ga','uses'=>'AdminController@getAnalytic']);
         // NEWS
+        Route::get('news/nextcat',['as'=>'admin.news.nextcat','uses'=>'NewsController@nextcat'] );
+        Route::get('news/nextpreview',['as'=>'admin.news.nextpreview','uses'=>'NewsController@nextpreview'] );
+        Route::post('news/storeCat',['as'=>'admin.news.storeCat','uses'=>'NewsController@storeCat']);
         Route::resource('news','NewsController');
         // MENUS
         Route::get('menus/view_more',['as'=>'admin.menus.view_more','uses'=>'MenusController@view_more'] );

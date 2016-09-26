@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\App;
+use App\Models\NewsCat;
 use App\Utils\HttpRequestUtil;
 use App\Utils\RedisControl;
 use Illuminate\Http\Request;
@@ -24,12 +25,14 @@ class NewsController extends Controller
     protected $entity;
     protected $store;
     protected $request;
+    protected $new_cat;
 
-    public function __construct(News $news, Request $request, Store $store)
+    public function __construct(News $news, Request $request, Store $store,NewsCat $newsCat)
     {
         $this->entity = $news;
         $this->request = $request;
         $this->store = $store;
+        $this->new_cat = $newsCat;
     }
 
     public function index()
@@ -39,17 +42,35 @@ class NewsController extends Controller
         $news = array();
         $list_store = array();
         if ($stores != null) {
-            $news = $this->entity->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->paginate(REQUEST_NEWS_ITEMS);
+            $news_cat = $this->new_cat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
+                ->whereNull('deleted_at')->get();;
+            if (count($news_cat) > 0) {
+                $list_news_cat = $news_cat->pluck('id')->toArray();
+
+                if (count($list_news_cat) > 0) {
+                    $news = News::whereIn('new_category_id',$list_news_cat)->whereNull('deleted_at')->orderBy('date', 'desc')->paginate(REQUEST_NEWS_ITEMS);
+                    for ($i = 0; $i < count($news); $i++) {
+                        if ($news[$i]->image_url == null)
+                            $news[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    }
+                    $list_preview_news = News::where('new_category_id', '=',$list_news_cat[0]) ->whereNull('deleted_at')->orderBy('date', 'desc')->take(REQUEST_NEWS_ITEMS)->get();
+
+                    for ($i = 0; $i < count($list_preview_news); $i++) {
+                        if ($list_preview_news[$i]->image_url == null)
+                            $list_preview_news[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    }
+                }
+            }
             $list_store = $stores->lists('name', 'id');
         }
-
         //dd($list_store);
-        return view('admin::pages.news.index', compact('news', 'list_store'));
+        return view('admin::pages.news.index', compact('news', 'list_store','news_cat','list_preview_news'));
     }
 
     public function create()
     {
-        return view('admin::pages.news.create');
+        $new_cat = $this->new_cat->select('name','id')->get();
+        return view('admin::pages.news.create',compact('new_cat'));
     }
 
     public function store(ImageRequest $imgrequest)
@@ -78,9 +99,9 @@ class NewsController extends Controller
         $this->entity->description = $this->request->input('description');
         $this->entity->image_url = $image_create;
         $this->entity->date = $date;
-        $this->entity->store_id = intval($this->request->input('store_id'));
+        $this->entity->new_category_id = intval($this->request->input('new_category_id'));
         $this->entity->save();
-        RedisControl::delete_cache_redis('news', intval($this->request->input('store_id')));
+        RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
         //push notify to all user on app
         $app_data = App::where('user_id', Auth::user()->id)->first();
         $data_push = array(
@@ -108,7 +129,8 @@ class NewsController extends Controller
         $newsAll = $this->entity->orderBy('id', 'DESC')->get();
         $news = $this->entity->find($id);
         $list_store = $this->store->lists('name', 'id');
-        return view('admin::pages.news.edit', compact('news', 'list_store', 'newsAll'));
+        $new_cat = $this->new_cat->select('name','id')->get();
+        return view('admin::pages.news.edit', compact('news', 'list_store', 'newsAll','new_cat'));
     }
 
     public function update(ImageRequest $imgrequest, $id)
@@ -132,19 +154,86 @@ class NewsController extends Controller
         $news = $this->entity->find($id);
         $news->title = $this->request->input('title');
         $news->description = $this->request->input('description');
-        $news->store_id = $this->request->input('store_id');
+        $news->new_category_id = $this->request->input('new_category_id');
         if ($image_edit)
             $news->image_url = $image_edit;
         $news->save();
-        RedisControl::delete_cache_redis('news', intval($this->request->input('store_id')));
-        RedisControl::delete_cache_redis('top_news', intval($this->request->input('store_id')));
+        RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
+        RedisControl::delete_cache_redis('top_news', intval($this->request->input('new_category_id')));
         return redirect()->route('admin.news.index')->withSuccess('Update the news successfully');
     }
 
     public function destroy($id)
     {
-        $this->entity->destroy($id);
+//        $this->entity->destroy($id);
+        News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
         return redirect()->route('admin.news.index')->withSuccess('Delete the news successfully');
+    }
+
+    public function storeCat(){
+        $all = $this->request->all();
+        $this->new_cat->create($all);
+        return redirect()->back();
+    }
+
+    public function nextcat()
+    {
+
+        $page_num = $this->request->page;
+        $cat = $this->request->cat;
+
+        $stores = $this->request->stores;
+        $news_cat = $this->new_cat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
+//        $list_store = $stores->lists('name','id');
+
+        $list_news = [];
+        if (count($news_cat) > 0) {
+            $list_new_cat = $news_cat->pluck('id')->toArray();
+            if (count ($list_new_cat) > 0) {
+                $new_category_id = $list_new_cat[$cat];
+
+                $list_news = News::where('new_category_id',$new_category_id)->whereNull('deleted_at')->orderBy('date','desc')->take(REQUEST_NEWS_ITEMS)->skip($page_num*REQUEST_NEWS_ITEMS)->get();
+
+                for($i = 0; $i < count($list_news); $i++)
+                {
+                    if ($list_news[$i]->image_url == null)
+                        $list_news[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                }
+            }
+
+        }
+
+        $returnHTML = view('admin::pages.news.element_item')->with(compact('list_news'))->render();
+        return $returnHTML;
+    }
+
+    public function nextpreview()
+    {
+        $page_num = $this->request->page;
+        $cat = $this->request->cat;
+
+        $stores = $this->request->stores;
+        $news_cat = $this->new_cat->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
+//        $list_store = $stores->lists('name','id');
+        //dd($menus->pluck('id')->toArray());
+        $list_news = [];
+        if (count($news_cat) > 0) {
+            $list_news_cat = $news_cat->pluck('id')->toArray();
+            if (count ($list_news_cat) > 0) {
+                $news_category_id = $list_news_cat[$cat];
+                $list_news = News::where('new_category_id',$news_category_id)->whereNull('deleted_at')->orderBy('date','desc')->take(REQUEST_NEWS_ITEMS)->skip($page_num*REQUEST_NEWS_ITEMS)->get();
+//                dd($list_news->toArray());
+                for($i = 0; $i < count($list_news); $i++)
+                {
+                    if ($list_news[$i]->image_url == null)
+                        $list_news[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
+                }
+            }
+
+        }
+
+        $returnHTML = view('admin::pages.news.element_item_preview')->with(compact('list_news'))->render();
+        return $returnHTML;
     }
 
 

@@ -13,7 +13,8 @@ class AppSetting extends Model {
     }
 
     public function components(){
-        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')->orderBy('order', 'asc');
+        return $this->belongsToMany(Component::class, 'rel_app_settings_components', 'app_setting_id', 'component_id')
+        ->orderBy('order', 'asc');
     }
 
 }

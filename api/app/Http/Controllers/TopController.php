@@ -70,7 +70,6 @@ class TopController extends Controller
         $this->body['data']['photos']['data'] = $photos;
 
 
-
         return $this->output($this->body);
     }
 
@@ -101,7 +100,10 @@ class TopController extends Controller
                 return $this->output($this->body);
             }
             $app_data = $app->with('app_setting', 'top_components', 'side_menu', 'stores')->select(['id', 'name', 'description', 'status', 'created_at', 'updated_at'])->first()->toArray();
-
+            $app_data['app_stores'] = \Illuminate\Support\Facades\DB::table('app_stores')
+                ->join('rel_apps_stores', 'rel_apps_stores.app_store_id', '=', 'app_stores.id')
+                ->where('rel_apps_stores.app_id', $app['id'])
+                ->select('app_stores.*', 'rel_apps_stores.*')->get();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
@@ -138,7 +140,7 @@ class TopController extends Controller
                     break;
                 }
                 case 'appinfo': {
-                    $str_sig = hash('sha256', $app_id . $time .$secret_key);
+                    $str_sig = hash('sha256', $app_id . $time . $secret_key);
                     $str_hash = Config::get('api.sig_appinfo');
                     break;
                 }
@@ -229,7 +231,7 @@ class TopController extends Controller
     {
         try {
             $arr = $this->_topRepository->get_app_info_from_token(123456);
-            
+
             $arr = $this->_topRepository->list_app();
 
 
@@ -243,7 +245,7 @@ class TopController extends Controller
 
     public function notification(Request $request)
     {
-        $check_items = array('app_user_id', 'type','created_by');//Config::get('api.items_notification');
+        $check_items = array('app_user_id', 'type', 'created_by');//Config::get('api.items_notification');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -252,14 +254,11 @@ class TopController extends Controller
 //        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
 //        if ($ret_sig)
 //            return $ret_sig;
-        try
-        {
+        try {
             Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
 //            $process = new NotificationRepository();
 //            $process->process_notify(json_encode(Input::all()));
-        }
-        catch (PredisException $e)
-        {
+        } catch (PredisException $e) {
             Log::error($e->getMessage());
             return $this->error(9999);
         }
@@ -268,7 +267,7 @@ class TopController extends Controller
 
     public function notification_with_app_id(Request $request)
     {
-        $check_items = array('app_id', 'type','created_by');//Config::get('api.items_notification');
+        $check_items = array('app_id', 'type', 'created_by');//Config::get('api.items_notification');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -277,14 +276,11 @@ class TopController extends Controller
 //        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
 //        if ($ret_sig)
 //            return $ret_sig;
-        try
-        {
+        try {
             Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
 //            $process = new NotificationRepository();
 //            $process->process_notify(json_encode(Input::all()));
-        }
-        catch (PredisException $e)
-        {
+        } catch (PredisException $e) {
             Log::error($e->getMessage());
             return $this->error(9999);
         }

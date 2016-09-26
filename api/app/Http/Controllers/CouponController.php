@@ -22,6 +22,7 @@ class CouponController extends Controller
     //
     protected $request;
     protected $_topRepository;
+
     public function __construct(TopsRepositoryInterface $ur, Request $request)
     {
         $this->_topRepository = $ur;
@@ -51,34 +52,36 @@ class CouponController extends Controller
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key redis
-        $key = sprintf(Config::get('api.cache_coupons'), Input::get('app_id'), Input::get('store_id'), Input::get('pageindex'),Input::get('pagesize'));
+        $key = sprintf(Config::get('api.cache_coupons'), Input::get('app_id'), Input::get('store_id'), Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
+//        $data = null;
         //check data and return data
         if ($data != null) {
             $this->body = $data;
             return $this->output($this->body);
         }
-        try
-        {
+        try {
             $coupons = [];
-            if (Input::get('store_id') == 0){
+            if (Input::get('store_id') == 0) {
                 $total_coupon = Coupon::count();
-                if ($total_coupon > 0)
-                    $coupon = Coupon::skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-            }
-            else {
+                if ($total_coupon > 0) {
+                    $coupons = Coupon::skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+//                    for ($i = 0; $i < count($coupons); $i++) {
+//                        $coupons[$i]['code'] = '';
+//                    }
+                }
+            } else {
                 $list_coupon_type = CouponType::where('store_id', '=', Input::get('store_id'))->get();
 
                 $total_coupon = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->orderBy('updated_at', 'desc')->count();
-                
+
                 if ($total_coupon > 0) {
                     $currentDate = date('Y-m-d');
-                    $currentDate=date('Y-m-d', strtotime($currentDate));
+                    $currentDate = date('Y-m-d', strtotime($currentDate));
 
                     $coupons = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get();
-                    for ($i = 0; $i < count($coupons); $i++)
-                    {   
+                    for ($i = 0; $i < count($coupons); $i++) {
                         $dateBegin = date('Y-m-d', strtotime($coupons[$i]['start_date']));
                         $dateEnd = date('Y-m-d', strtotime($coupons[$i]['end_date']));
 
@@ -89,27 +92,33 @@ class CouponController extends Controller
                             if ($session) {
                                 $user = $session->app_user()->first();
                                 $coupons[$i]['can_use'] = DB::table('rel_app_users_coupons')
-                                                    ->whereAppUserId($user->id)
-                                                    ->whereCouponId($coupons[$i]->id)
-                                                    ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
+                                        ->whereAppUserId($user->id)
+                                        ->whereCouponId($coupons[$i]->id)
+                                        ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
+                                $coupon_code = DB::table('rel_app_users_coupons')
+                                    ->whereAppUserId($user->id)
+                                    ->whereCouponId($coupons[$i]->id)->get();
+                                if (count($coupon_code) > 0)
+                                    $coupons[$i]['code'] = $coupon_code[0]->code;
+                                else
+                                    $coupons[$i]['code'] = '';
                             } else {
                                 $coupons[$i]['can_use'] = false;
+                                $coupons[$i]['code'] = '';
                             }
 
-                            
                         } else {
                             $coupons[$i]['can_use'] = false;
+                            $coupons[$i]['code'] = '';
                         }
                         $coupons[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons[$i]['image_url']);
-                         
+
                     }
 
                 }
-                    
+
             }
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return $this->error(9999);
         }
         $this->body['data']['coupons'] = $coupons;

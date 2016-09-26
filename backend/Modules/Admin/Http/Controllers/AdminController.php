@@ -42,7 +42,7 @@ class AdminController extends Controller
     {
         $app_data = App::where('user_id', Auth::user()->id)->first();
 
-        $component_all = Component::whereNotNull('sidemenu')->pluck('name', 'id');
+        $component_all = Component::whereNotNull('sidemenu')->pluck('name', 'id','icon_classes');
         $data_component_source = array();
         $data_component_dest = array();
         if (count($app_data) > 0) {
@@ -54,8 +54,8 @@ class AdminController extends Controller
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
                     ->whereNotNull('components.sidemenu')
-                    ->pluck('name', 'id');
-//               dd($data_component_dest);
+                    ->pluck('name', 'id','icon_classes');
+               //dd($component_all->toArray());
                 if (count($data_component_dest) > 0) {
                     $data_component_source = array_diff($component_all->toArray(), $data_component_dest);
 //                    $data_component_source = Component::all()->whereNotIn('id',$list_id)->get();
@@ -66,11 +66,24 @@ class AdminController extends Controller
         }
         $list_font_size = Config::get('font.size');
         $list_font_family = Config::get('font.family');
-        return view('admin::pages.admin.global')->with(array('app_settings' => $app_settings,
-            'data_component_dest' => $data_component_dest,
-            'data_component_source' => $data_component_source,
-            'list_font_size' => $list_font_size,
-            'list_font_family' => $list_font_family));
+        
+        // Get app_stores
+        $app_stores = DB::table('app_stores')
+            ->join('stores','stores.id','=','app_stores.store_id')
+            ->join('apps','apps.id','=','stores.app_id')
+            ->where('apps.id',$app_data->id)
+            ->where('apps.user_id',Auth::user()->id)
+            ->select('app_stores.*')
+            ->get();
+            
+        return view('admin::pages.admin.global')->with(
+            array(
+                'app_stores' => $app_stores,
+                'app_settings' => $app_settings,
+                'data_component_dest' => $data_component_dest,
+                'data_component_source' => $data_component_source,
+                'list_font_size' => $list_font_size,
+                'list_font_family' => $list_font_family));
     }
 
     public function menu()
@@ -123,15 +136,17 @@ class AdminController extends Controller
         return view('admin::pages.ga.week')->with(array('visitor' => $visitorAweek));
     }
 
-    public function globalstore()
+    public function globalstore(Request $request)
     {
-//        $data = $this->request->all();
-
+       
+        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
         try {
-            $app_data = App::where('user_id', Auth::user()->id)->first();
+
             if (count($app_data) > 0) {
-                $app = new AppSetting();
-                $app_setting = $app->with('components')->find($app_data->id);
+                // Save app_settings
+                $app_setting = AppSetting::where('app_id', $app_data->id)->firstOrFail();
+                //$app_setting = $app->with('components')->find($app_data->id);
+                $app_setting->app_id = $app_data->id;
                 $app_setting->title = $this->request->input('title');
                 $app_setting->title_color = $this->request->input('title_color');
                 $app_setting->font_size = $this->request->input('font_size');
@@ -142,44 +157,75 @@ class AdminController extends Controller
                 $app_setting->menu_font_color = $this->request->input('menu_font_color');
                 $app_setting->menu_font_size = $this->request->input('menu_font_size');
                 $app_setting->menu_font_family = $this->request->input('menu_font_family');
-                $data_component = $this->request->input('data_component');
-
+                $app_setting->company_info = $this->request->input('company_info');
+                $app_setting->user_privacy = $this->request->input('user_privacy');
+                $app_setting->template_id = 1;
                 $app_setting->save();
-                $list_id = [];
-                $list_insert = [];
-                if (count($data_component) > 0) {
-                    $app_data = App::where('user_id', Auth::user()->id)->first();
-                    $app = new AppSetting();
-                    $app_setting = $app->find($app_data->id);
+                // Save rel_app_settings_sidemenus
+                $data_sidemenus = $this->request->input('data_sidemenus');
+                if (count($data_sidemenus) > 0) {
+                    DB::table('rel_app_settings_sidemenus')
+                        ->where('app_setting_id', $app_setting->id)->delete();
+                    
                     $i = 1;
-                    foreach ($data_component as $item) {
-                        $list_id[] = $item;
-                        $list_insert[] = array('app_setting_id' => $app_setting->id,
-                            'sidemenu_id' => $item,
+                    $list_insert = array();
+                    foreach ($data_sidemenus as $menu) {
+                        
+                        $list_insert[] = array(
+                            'app_setting_id' => $app_setting->id,
+                            'sidemenu_id' => $menu,
                             'order' => $i);
                         $i++;
                     }
+                     DB::table('rel_app_settings_sidemenus')->insert($list_insert);
+                    
                 }
-                if (count($list_id) > 0)
-                    DB::table('rel_app_settings_sidemenus')->whereIn('app_setting_id', $list_id)->delete();
-                if (count($list_insert) > 0)
-                    DB::table('rel_app_settings_sidemenus')->insert($list_insert);
-
-//        $app_setting->app_icon_color = $this->request->input('app_icon_color');
-//        $app_setting->store_user_color = $this->request->input('store_user_color');
+            
+                // save app_stores
+                $app_icon = '';
+                $store_image = '';
+                if( $request->hasFile('file') ){
+                    foreach( $request->file('file') as $key => $file ){
+                        if( $file ) {
+                            
+                            $destinationPath = 'uploads'; // upload path
+                            $extension = $file->getClientOriginalExtension(); // getting image extension
+                            $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                            $file->move($destinationPath, $fileName); // uploading file to given path
+                 
+                            if( $key === 'app_icon' ){
+                                $app_icon = $destinationPath . '/' . $fileName;
+                            }
+                            if( $key === 'store_image' ){
+                                $store_image = $destinationPath . '/' . $fileName;
+                            }
+                        }
+                    }
+                }
+        
+                $app_stores = DB::table('app_stores')
+                    ->join('stores','stores.id','=','app_stores.store_id')
+                    ->join('apps','apps.id','=','stores.app_id')
+                    ->where('apps.id',$app_data->id)
+                    ->where('apps.user_id',Auth::user()->id)
+                    ->update([
+                        'app_icon' => $app_icon,
+                        'store_image' => $store_image
+                    ]);
+            
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
-
-                //
-                Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add App Setting successfully'));
+                Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
                 return back();
             }
         } catch (QueryException $e) {
             Log::error("globalstore: " . $e->getMessage());
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Add App Setting fail'));
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Setting fail'));
             return back();
         }
     }
+    
+   
 
     public function upload()
     {

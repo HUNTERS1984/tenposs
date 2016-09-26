@@ -12,7 +12,9 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('coupon_types', function($table) {
+            $table->timestamp('deleted_at')->nullable();
+        });
     }
 
     /**
@@ -22,6 +24,8 @@ class AddColumnDeletedAtCouponType extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('coupon_types', function($table) {
+            $table->dropColumn('deleted_at');
+        });
     }
 }

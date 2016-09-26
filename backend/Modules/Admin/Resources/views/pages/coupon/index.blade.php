@@ -57,6 +57,7 @@
                         <div class="wrap-btn-content">
                             <a href="javascript:avoid()" class="btn-me btn-hong" data-toggle="modal"
                                data-target="#AddCouponType">クーポンタイプ追加</a>
+                            <a style="margin-left: 10px;" href="{{ route('admin.category.index',array('type'=>'coupon')) }}" class="btn-me btn-hong">カテゴリ一一覧</a>
                             <a href="javascript:avoid()" class="btn-me btn-xanhduongnhat" data-toggle="modal"
                                data-target="#AddCoupon">クーポン追加</a>
                         </div>    <!-- end wrap-btn-content-->
