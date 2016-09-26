@@ -422,7 +422,7 @@ class AppUserController extends Controller
 //        Log::info("app_app_id: ".$app['app_app_id']);
 //        Log::info("user->profile->id: ".$request->user->profile->id);
 
-        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->profile->id);
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
 //        Log::info("key: ".$key);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
