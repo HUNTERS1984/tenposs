@@ -67,22 +67,42 @@
 
                                 </div>
                                 {{--<div class="form-group">--}}
-                                    {{--{{Form::submit('保存',array('class'=>'btn btn-primary'))}}--}}
+                                {{--{{Form::submit('保存',array('class'=>'btn btn-primary'))}}--}}
                                 {{--</div>--}}
                             </div>
                         </div>
                         <!-- end item detail -->
                         <div class="content-global" id="tab2">
-                            size
+                            <div class="table">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <th>#</th>
+                                    @for ($t = 0; $t < count($size_categories); $t++)
+                                        <th style="text-align: center;">{{$size_categories[$t]->name}}</th>
+                                    @endfor
+                                    </thead>
+                                    <tbody>
+                                    @for ($i = 0; $i < count($size_type); $i++)
+                                        <tr>
+                                            <td style="text-align: center;" class="col-md-2">{{$size_type[$i]->name}} </td>
+                                            @for ($j = 0; $j < count($size_categories); $j++)
+                                                <td class="col-md-2">
+                                                    <input style="width: 100%;text-align: center;" type="number" name="size_value[{{$size_type[$i]->id}}][{{$size_categories[$j]->id}}]" value="{{\App\Utils\Convert::get_value_size_from_type_category_id($size_value,$size_type[$i]->id,$size_categories[$j]->id)}}" ></td>
+                                            @endfor
+                                        </tr>
+                                    @endfor
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
                         <!---end size ->
                     </div>    <!-- wrap-content-->
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-    {{Form::close()}}
+        </div>
+        {{Form::close()}}
     </div>
 @stop
 

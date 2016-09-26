@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use App\Models\Menu;
+use Illuminate\Support\Facades\Log;
 use Mail;
 use App\Address;
 use DB;
@@ -96,6 +98,7 @@ class ItemController extends Controller
         $key = sprintf(Config::get('api.cache_items'), Input::get('app_id'), Input::get('menu_id'), Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
+//        $data = null;
         //check data and return data
         if ($data != null) {
             $this->body = $data;
@@ -106,10 +109,24 @@ class ItemController extends Controller
             $items = [];
             if ($total_items > 0)
                 $items = Menu::find(Input::get('menu_id'))->items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
-
+//            dd($items);
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
+                try {
+                    $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
+                        ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
+                        ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
+                        ->where('item_sizes.item_id', '=', $items[$i]['id'])
+                        ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
+                            'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
+                        ->get();
+                    $items[$i]['size'] = $items_size;
+                } catch (QueryException $ex) {
+                    Log::error($ex->getMessage());
+                    $items[$i]['size'] = [];
+                }
             }
+
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);

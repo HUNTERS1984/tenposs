@@ -42,7 +42,7 @@ class StaffController extends Controller
 		$list_preview_staff = array();
 		$list_store = array();
 		if (count($stores) > 0) {
-			$staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+			$staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 
 			$list_store = $stores->lists('name', 'id');
 			//dd($menus->pluck('id')->toArray());
@@ -228,7 +228,7 @@ class StaffController extends Controller
 		$cat = $this->request->cat;
 
 		$stores = $this->request->stores;
-		$staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+		$staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 		$list_store = $stores->lists('name','id');
 
 		$list_staff = [];
@@ -237,7 +237,7 @@ class StaffController extends Controller
 			if (count ($list_staff_cat) > 0) {
 				$staff_category_id = $list_staff_cat[$cat];
 
-				$list_staff = Staff::where('staff_category_id',$staff_category_id)->orderBy('updated_at','desc')->take(REQUEST_STAFF_ITEMS)->skip($page_num*REQUEST_STAFF_ITEMS)->get();
+				$list_staff = Staff::where('staff_category_id',$staff_category_id)->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_STAFF_ITEMS)->skip($page_num*REQUEST_STAFF_ITEMS)->get();
 
 				for($i = 0; $i < count($list_staff); $i++)
 				{
@@ -263,7 +263,7 @@ class StaffController extends Controller
 		$cat = $this->request->cat;
 
 		$stores = $this->request->stores;
-		$staff_cat = $this->staffcat->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
+		$staff_cat = $this->staffcat->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 		$list_store = $stores->lists('name','id');
 		//dd($menus->pluck('id')->toArray());
 		$list_staff = [];
@@ -271,7 +271,7 @@ class StaffController extends Controller
 			$list_staff_cat = $staff_cat->pluck('id')->toArray();
 			if (count ($list_staff_cat) > 0) {
 				$staff_category_id = $list_staff_cat[$cat];
-				$list_staff = Staff::where('staff_category_id',$staff_category_id)->orderBy('updated_at','desc')->take(REQUEST_STAFF_ITEMS)->skip($page_num*REQUEST_STAFF_ITEMS)->get();
+				$list_staff = Staff::where('staff_category_id',$staff_category_id)->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_STAFF_ITEMS)->skip($page_num*REQUEST_STAFF_ITEMS)->get();
 				//dd($list_item->toArray());
 				for($i = 0; $i < count($list_staff); $i++)
 				{

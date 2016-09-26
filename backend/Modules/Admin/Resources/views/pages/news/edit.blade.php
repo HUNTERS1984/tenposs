@@ -31,7 +31,7 @@
 							{{Form::model($news,array('route'=>array('admin.news.update',$news->id),'method'=>'PUT','files'=>true))}}
 								<div class="form-group">
 									{{Form::label('store','ストア')}}
-									{{Form::select('store_id',$list_store,$news->store_id,array('class'=>'form-control'))}}
+									{{Form::select('new_category_id',$new_cat->pluck('name','id'),$news->new_category_id,array('class'=>'form-control'))}}
 								</div>
 								<div class="form-group">
 									{{Form::label('title','タイトル')}}

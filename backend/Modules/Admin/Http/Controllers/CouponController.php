@@ -44,8 +44,8 @@ class CouponController extends Controller
         $coupons = array();
         $list_coupon_type = array();
         if (count($list_store) > 0) {
-            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->get();
-            $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
+            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->get();
+            $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->whereNull('deleted_at')->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
             for ($i = 0; $i < count($coupons); $i++) {
                 if ($coupons[$i]->image_url == null)
                     $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
@@ -71,6 +71,17 @@ class CouponController extends Controller
         $app_user = Post::find($post_id)->app_user()->first();
 
         $app_user->coupons()->attach($coupon_id);
+        //create code for QR
+        $data_info = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
+            ->where([['app_user_id','=',$app_user->id],['coupon_id','=',$coupon_id]])->get();
+        if (count($data_info) > 0)
+        {
+            if (empty($data_info[0]->code)) {
+                \Illuminate\Support\Facades\DB::table('users')
+                    ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])
+                    ->update(['code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
+            }
+        }
         //push notify to all user on app
 //        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
         if (count($app_user) > 0) {
