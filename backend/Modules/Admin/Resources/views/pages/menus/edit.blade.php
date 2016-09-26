@@ -76,7 +76,7 @@
                             <div class="table">
                                 <table class="table table-bordered">
                                     <thead>
-                                    <th>#</th>
+                                    <th style="text-align: center;">#</th>
                                     @for ($t = 0; $t < count($size_categories); $t++)
                                         <th style="text-align: center;">{{$size_categories[$t]->name}}</th>
                                     @endfor
