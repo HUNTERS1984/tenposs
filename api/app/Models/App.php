@@ -25,7 +25,7 @@ class App extends Model
 
    	public function app_setting()
     {
-        return $this->hasOne(AppSetting::class)->select(['id', 'app_id', 'title', 'title_color', 'font_size', 'font_family', 'header_color', 'menu_icon_color', 'menu_background_color' ,'menu_font_color', 'menu_font_size', 'menu_font_family', 'template_id']);
+        return $this->hasOne(AppSetting::class)->select(['id', 'app_id', 'title', 'title_color', 'font_size', 'font_family', 'header_color', 'menu_icon_color', 'menu_background_color' ,'menu_font_color', 'menu_font_size', 'menu_font_family', 'template_id','company_info','user_privacy']);
     }
 
     public function top_components()

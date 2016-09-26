@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="global-tab">
+                        <div class="global-tab" style="width: 40%">
                             <ul class="nav-tab clearfix">
                                 <li><a href="#" alt="tab1" class="active">アイテムの詳細</a></li>
                                 <li><a href="#" alt="tab2">サイズ</a></li>
