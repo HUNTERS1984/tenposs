@@ -80,7 +80,7 @@ class User extends Authenticatable
     
     public function createAppSettingDefault(){
         
-
+        // Create app default info
         $app = new \App\Models\App;
         $app->name = $this->app_name_register;
         $app->app_app_id = md5(uniqid(rand(), true));
@@ -90,7 +90,7 @@ class User extends Authenticatable
         $app->business_type = $this->business_type;
         $app->user_id = $this->id;
         $app->save();
-          
+        // Set default app templates 1   
         $templateDefaultID = 1;
     
         $appSetting = new \App\Models\AppSetting;
@@ -108,27 +108,52 @@ class User extends Authenticatable
         $appSetting->template_id = $templateDefaultID;
         $appSetting->top_main_image_url = 'uploads/1.jpg';
         $appSetting->save();
-       
         
-        \App\Models\Component::all()
-            ->each( function( $component ) use ($appSetting){
+        // Set rel_app_settings_sidemenus, rel_app_settings_components 
+        
+        $component = DB::table('components')
+                    ->whereNotNull('sidemenu')
+                    ->get();
+        
+        $i = 0;$j = 0;
+        foreach( $component as $com){
+            if( $com->top !== '' ){
                 DB::table('rel_app_settings_components')->insert(
                     [
                         'app_setting_id' => $appSetting->id,
-                        'component_id' => $component->id
+                        'component_id' => $com->id
                     ]
                 );
-            } );
+                $j++;
+            }
             
-        \App\Models\SideMenu::all()
-            ->each( function( $menu ) use ($appSetting) {
+            
+            if( $com->sidemenu !== '' ){
                 DB::table('rel_app_settings_sidemenus')->insert([
                     'app_setting_id' => $appSetting->id,
-                    'sidemenu_id' => $menu->id,
-                    'order' => 1
+                    'sidemenu_id' => $com->id,
+                    'order' => $i
                 ]);
-            } );    
+                $i++;
+            }
+
+            
+        }
+        // Create app_stores,rel_apps_stores default
         
+        $stores_default = DB::tables('app_stores')->all();
+        
+        foreach($stores_default as $store){
+           
+            DB::table('rel_apps_stores')->insert([
+                'app_id' => $app->id,
+                'app_store_id' => $store->id,
+                'version' => '1.0'
+            ]);
+            
+        }
+        
+        // setting default rel_app_stores
         DB::table('app_top_main_images')->insert([
             'app_setting_id' => $appSetting->id,
             'image_url' =>  'uploads/1.jpg',
