@@ -85,7 +85,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-            
+//            dd($app_settings);
         return view('admin::pages.admin.global')->with(
             array(
                 'app_stores' => $app_stores,

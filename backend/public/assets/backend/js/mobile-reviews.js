@@ -12,7 +12,11 @@ MobileView = {
     
     updateMenuFontSize: function(size){
         console.log(size );
-        $(".s_nav li > a").css('cssText','font-size: '+ size + 'px !important');
+        if(size == 'micro')
+            size= 'x-small';
+        if(size == 'extra_large')
+            size = 'x-large';
+        $(".s_nav li > a").css('cssText','font-size: '+ size + ' !important');
     },
     
     updateMenuFontFamily: function(fontName){
