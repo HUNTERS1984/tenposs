@@ -63,7 +63,9 @@ class AdminController extends Controller
                
                 if (count($data_component_dest) > 0) {
                     
-                    $data_component_source = array_udiff($component_all, $data_component_dest,
+                    $data_component_source = array_udiff(
+                            $component_all, 
+                            $data_component_dest,
                             function ($obj_a, $obj_b) {
                                 return $obj_a->id - $obj_b->id;
                             }
@@ -117,24 +119,55 @@ class AdminController extends Controller
     public function top()
     {
         $all = Component::whereNotNull('top')->pluck('name', 'id');
-        $app_data = App::where('user_id', Auth::user()->id)->first();
+        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
         $app_components = array();
         $available_components = array();
         if (count($all) > 0) {
 //            $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
             $app = AppSetting::where('id', $app_data->id);
-            $app_settings = $app->first();
+            $app_settings = $app->firstOrFail();
 
             if ($app_settings != null) {
-                $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
+                $app_components = $app->first()
+                    ->components()
+                    ->whereNotNull('top')
+                    ->pluck('name', 'id')
+                    ->toArray();
                 if (count($app_components) > 0) {
                     $available_components = array_diff($all->toArray(), $app_components);
                 } else {
                     $available_components = $all->toArray();
                 }
             }
+            
+            
+            
         }
-        return view('admin::pages.admin.top', compact('app_components', 'available_components'));
+        
+        $slides = DB::table('app_top_main_images')
+            ->where('app_setting_id', $app_settings->id)
+            ->get();
+        
+        $photos = DB::table('apps')
+            ->join('stores','apps.id','=','stores.app_id')
+            ->join('photo_categories','photo_categories.store_id','=','stores.id')
+            ->join('photos','photos.photo_category_id','=','photo_categories.id' )
+            ->where('apps.id', $app_data->id)
+            ->select('photos.image_url')
+            ->paginate(9);
+            
+        $news = DB::table('apps')
+            ->join('stores','apps.id','=','stores.app_id')
+            ->join('new_categories','new_categories.store_id','=','stores.id')
+            ->join('news','news.new_category_id','=','new_categories.id' )
+            ->where('apps.id', $app_data->id)
+            ->select('news.*')
+            ->paginate(9);   
+       
+        return view('admin::pages.admin.top', 
+        compact(    'slides','photos','news',
+                    'app_components', 
+                    'available_components'));
     }
 
     public function getAnalytic()

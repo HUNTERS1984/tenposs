@@ -17,6 +17,7 @@
 		<link rel="stylesheet" href="{{URL::to('assets/backend/css/jquery.fileupload-ui-noscript.css')}}">
 	</noscript>
 	<title>@yield('title','TenPoss')</title>
+	@yield('headStyle')
 </head>
 <body>
 	<div class="page">
