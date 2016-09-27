@@ -110,11 +110,12 @@ class TopsRepository implements TopsRepositoryInterface
         }
         $app = $this->get_app_info($app_app_id);
         if ($app) {
-            $stores = $app->stores()->lists('id')->toArray();
+//            $stores = $app->stores()->lists('id')->toArray();
 
-            $news = News::whereHas('store', function ($query) use ($stores) {
-                $query->whereIn('store_id', $stores);
-            })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
+//            $news = News::whereHas('store', function ($query) use ($stores) {
+//                $query->whereIn('store_id', $stores);
+//            })->take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
+            $news = News::take(TOP_MAX_ITEM)->orderBy('id', 'desc')->get()->toArray();
             for ($i = 0; $i < count($news); $i++) {
                 $news[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }
