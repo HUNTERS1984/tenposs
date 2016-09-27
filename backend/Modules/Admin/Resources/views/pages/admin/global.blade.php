@@ -72,6 +72,7 @@
                                                 <li class="s_icon-setting"><a href="javascript:avoid();">Setting</a>
                                                 </li>
                                                 -->
+
                                                 @if(count($data_component_dest) > 0)
                                                     @foreach ($data_component_dest as $v)
                                                         <li id="side-item{{$v->id}}" 
@@ -80,7 +81,7 @@
                                                             data-value="{{$v->id}}">
                                                             <a style="color:#{{$app_settings->menu_font_color}};
                                                             font_family: '{{ $app_settings->menu_font_family }}';
-                                                            font-size: {{ $app_settings->menu_font_size }}px" 
+                                                            font-size: {{ $app_settings->menu_font_size }}"
                                                             href="javascript:avoid();">{{$v->name}}</a>
                                                         </li>
                                                     @endforeach
