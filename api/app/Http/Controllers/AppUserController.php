@@ -422,7 +422,7 @@ class AppUserController extends Controller
 //        Log::info("app_app_id: ".$app['app_app_id']);
 //        Log::info("user->profile->id: ".$request->user->profile->id);
 
-        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->profile->id);
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
 //        Log::info("key: ".$key);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
@@ -471,8 +471,6 @@ class AppUserController extends Controller
             $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
             $request->user->profile->avatar_url = $destinationPath . '/' . $fileName;
-        } else {
-            return $this->error(1004);
         }
 
         try {

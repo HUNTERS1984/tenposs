@@ -40,41 +40,49 @@ class AdminController extends Controller
 
     public function globalpage()
     {
-        $app_data = App::where('user_id', Auth::user()->id)->first();
-
-        $component_all = Component::whereNotNull('sidemenu')->pluck('name', 'id','icon_classes');
+        
+        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
+        $component_all = DB::table('components')->whereNotNull('sidemenu')
+            ->select('name', 'id','sidemenu_icon')
+            ->get();
+  
+    
         $data_component_source = array();
         $data_component_dest = array();
+        
         if (count($app_data) > 0) {
-            $app = AppSetting::where('id', $app_data->id);
-            $app_settings = $app->first();
+            $app_settings = AppSetting::where('app_id', $app_data->id)->firstOrFail();
+            
             if ($app_settings != null) {
-//                $data_component_dest = $app->first()->components()->pluck('name', 'id')->toArray();
                 $data_component_dest = DB::table('components')
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
                     ->whereNotNull('components.sidemenu')
-                    ->pluck('name', 'id','icon_classes');
-               //dd($component_all->toArray());
+                    ->select('name', 'id','sidemenu_icon')
+                    ->get();
+               
                 if (count($data_component_dest) > 0) {
-                    $data_component_source = array_diff($component_all->toArray(), $data_component_dest);
-//                    $data_component_source = Component::all()->whereNotIn('id',$list_id)->get();
-//                    $data_component_source = DB::table('components')->whereNotIn('id', [])->get();
+                    
+                    $data_component_source = array_udiff($component_all, $data_component_dest,
+                            function ($obj_a, $obj_b) {
+                                return $obj_a->id - $obj_b->id;
+                            }
+                        );
                 } else
-                    $data_component_source = $component_all->toArray();
+                    $data_component_source = $component_all;
             }
         }
+        
         $list_font_size = Config::get('font.size');
         $list_font_family = Config::get('font.family');
         
         // Get app_stores
         $app_stores = DB::table('app_stores')
-            ->join('stores','stores.id','=','app_stores.store_id')
-            ->join('apps','apps.id','=','stores.app_id')
-            ->where('apps.id',$app_data->id)
-            ->where('apps.user_id',Auth::user()->id)
-            ->select('app_stores.*')
-            ->get();
+            ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')
+            ->join('apps','apps.id','=','rel_apps_stores.app_id')
+            ->where('rel_apps_stores.app_id',$app_data->id)
+            ->select('rel_apps_stores.*')
+            ->first();
             
         return view('admin::pages.admin.global')->with(
             array(
@@ -161,8 +169,11 @@ class AdminController extends Controller
                 $app_setting->user_privacy = $this->request->input('user_privacy');
                 $app_setting->template_id = 1;
                 $app_setting->save();
+                
+                
                 // Save rel_app_settings_sidemenus
                 $data_sidemenus = $this->request->input('data_sidemenus');
+               
                 if (count($data_sidemenus) > 0) {
                     DB::table('rel_app_settings_sidemenus')
                         ->where('app_setting_id', $app_setting->id)->delete();
@@ -180,7 +191,7 @@ class AdminController extends Controller
                      DB::table('rel_app_settings_sidemenus')->insert($list_insert);
                     
                 }
-            
+                
                 // save app_stores
                 $app_icon = '';
                 $store_image = '';
@@ -188,31 +199,32 @@ class AdminController extends Controller
                     foreach( $request->file('file') as $key => $file ){
                         if( $file ) {
                             
-                            $destinationPath = 'uploads'; // upload path
+                            $destinationPath = public_path('uploads'); // upload path
                             $extension = $file->getClientOriginalExtension(); // getting image extension
                             $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
                             $file->move($destinationPath, $fileName); // uploading file to given path
                  
                             if( $key === 'app_icon' ){
-                                $app_icon = $destinationPath . '/' . $fileName;
+                                $app_icon = 'uploads/' . $fileName;
                             }
                             if( $key === 'store_image' ){
-                                $store_image = $destinationPath . '/' . $fileName;
+                                $store_image = 'uploads/' . $fileName;
                             }
                         }
                     }
                 }
-        
-                $app_stores = DB::table('app_stores')
-                    ->join('stores','stores.id','=','app_stores.store_id')
-                    ->join('apps','apps.id','=','stores.app_id')
-                    ->where('apps.id',$app_data->id)
-                    ->where('apps.user_id',Auth::user()->id)
-                    ->update([
-                        'app_icon' => $app_icon,
-                        'store_image' => $store_image
-                    ]);
+                
+                
             
+                $app_stores = DB::table('app_stores')
+                    ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')
+                    ->join('apps','apps.id','=','rel_apps_stores.app_id')
+                    ->where('rel_apps_stores.app_id',$app_data->id)
+                    ->update([
+                        'rel_apps_stores.app_icon_url' => $app_icon,
+                        'rel_apps_stores.store_icon_url' => $store_image
+                    ]);
+           
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));

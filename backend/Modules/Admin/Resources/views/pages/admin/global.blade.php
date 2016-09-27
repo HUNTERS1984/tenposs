@@ -73,15 +73,19 @@
                                                 </li>
                                                 -->
                                                 @if(count($data_component_dest) > 0)
-                                                    @foreach ($data_component_dest as $k=>$v)
-                                                        <li id="side-item{{$k}}" class="" data-id="{{$k}}" data-value="{{$k}}">
+                                                    @foreach ($data_component_dest as $v)
+                                                        <li id="side-item{{$v->id}}" 
+                                                            class="{{$v->sidemenu_icon}}" 
+                                                            data-id="{{$v->id}}" 
+                                                            data-value="{{$v->id}}">
                                                             <a style="color:#{{$app_settings->menu_font_color}};
                                                             font_family: '{{ $app_settings->menu_font_family }}';
                                                             font-size: {{ $app_settings->menu_font_size }}px" 
-                                                            href="javascript:avoid();">{{$v}}</a>
+                                                            href="javascript:avoid();">{{$v->name}}</a>
                                                         </li>
                                                     @endforeach
                                                 @endif
+      
                                             </ul>
                                         </div><!-- End side -->
                                     </div>
@@ -202,8 +206,8 @@
                                                 <ul class="nav-left from-nav">
                                                     @if(count($data_component_dest) > 0)
                                                         @foreach ($data_component_dest as $k=>$v)
-                                                            <li data-id="{{$k}}" data-value="{{$k}}">
-                                                                {{$v}}</li>
+                                                            <li data-id="{{$v->id}}" data-value="{{$v->id}}">
+                                                                {{$v->name}}</li>
                                                         @endforeach
                                                     @endif
                                                 </ul>
@@ -219,8 +223,8 @@
                                                 <ul class="nav-right to-nav">
                                                     @if(count($data_component_source) > 0)
                                                         @foreach ($data_component_source as $k=>$v)
-                                                            <li data-id="{{$k}}" data-value="{{$k}}">
-                                                                {{$v}}</li>
+                                                            <li data-id="{{$v->id}}" data-value="{{$v->id}}">
+                                                                {{$v->name}}</li>
                                                         @endforeach
                                                     @endif
                                                 </ul>
@@ -238,8 +242,8 @@
                                         <div class="img-wrapper col-md-4" align="">
                                             <label for="">アプリアイコン</label>
                                              <?php
-                                                $app_icon = (isset($app_stores->app_icon) && $app_stores->app_icon !== '') 
-                                                ? $app_stores->app_icon 
+                                                $app_icon = (isset($app_stores->app_icon_url) && $app_stores->app_icon_url !== '') 
+                                                ? url($app_stores->app_icon_url) 
                                                 : url('/assets/backend/images/wall.jpg');
                                             ?>
                                             <img id="app-icon-review" class="new_img" src="{{ $app_icon }}" width="100%">
@@ -255,8 +259,8 @@
                                         <div class="img-wrapper col-md-4">
                                             <label for="">Store用画像</label>
                                             <?php
-                                                $store_image = (isset($app_stores->store_image) && $app_stores->store_image !== '') 
-                                                ? $app_stores->store_image 
+                                                $store_image = (isset($app_stores->store_icon_url) && $app_stores->store_icon_url !== '') 
+                                                ? url($app_stores->store_icon_url) 
                                                 : url('/assets/backend/images/wall.jpg');
                                             ?>
                                             <img id="store-image-review" class="new_img" src="{{$store_image}}" width="100%">
