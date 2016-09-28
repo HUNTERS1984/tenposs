@@ -375,6 +375,7 @@ class AppUserController extends Controller
         $push->news = Input::get('news');
         $push->coupon = Input::get('coupon');
         $push->chat = Input::get('chat');
+        $push->app_user_id = $request->user->id;
 
         $push->save();
 
