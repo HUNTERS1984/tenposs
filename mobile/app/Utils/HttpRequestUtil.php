@@ -32,7 +32,7 @@ class HttpRequestUtil
         return $this->_url . $str;
     }
 
-    private function get_sig_param_by_function($function, $data_params)
+    private function get_sig_param_by_function($function, $data_params,$app_secret_key)
     {
         $sig = '';
         $params = array();
@@ -100,21 +100,33 @@ class HttpRequestUtil
             case 'staffs':
                 $params = Config::get('api.sig_staffs');
                 break;
+            case 'news_detail':
+                $params = Config::get('api.sig_news_detail');
+                break;
+            case 'coupon_detail':
+                $params = Config::get('api.sig_coupon_detail');
+                break;
+            case 'get_app_by_domain':
+                $params = Config::get('api.sig_app_domain');
+                break;
             default:
                 break;
         }
         if (count($params) > 0) {
-            $sig = ValidateUtil::get_sig($params, $this->_secret_key, $data_params);
+            if ($function == 'get_app_by_domain')
+                 $sig = ValidateUtil::get_sig($params, $this->_secret_key, $data_params);
+            else
+                $sig = ValidateUtil::get_sig($params, $app_secret_key, $data_params);
         }
         return $sig;
     }
 
-    public function get_data($function, $data_params)
+    public function get_data($function, $data_params,$app_secret_key = null)
     {
         try {
 
             $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
-            $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params);
+            $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params,$app_secret_key);
             $service_url = $this->_url . $function . '?' . http_build_query($data_params);
 
             $curl = curl_init($service_url);
@@ -133,11 +145,11 @@ class HttpRequestUtil
         }
     }
 
-    public function post_data($function, $data_params)
+    public function post_data($function, $data_params,$app_secret_key = null)
     {
         try {
             $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
-            $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params);
+            $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params,$app_secret_key);
             $data_params = json_encode($data_params);
             $service_url = $this->_url . $function;
             $curl = curl_init($service_url);

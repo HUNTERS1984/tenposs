@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
-use DB; 
+use DB;
 use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
@@ -287,6 +289,7 @@ class AppUserController extends Controller
                 $user_session->type = 0;
                 $user_session->app_user_id = $user->id;
                 $user_session->save();
+                $push = UserPush::where('app_user_id', $user->id)->first();
             } catch (\Illuminate\Database\QueryException $e) {
                 return $this->error(9999);
             }
@@ -298,6 +301,10 @@ class AppUserController extends Controller
             $this->body['data']['social_type'] = NULL;
             $this->body['data']['social_id'] = NULL;
             $this->body['data']['profile'] = $profile;
+
+            if (!$push)
+                $push = new UserPush();
+            $this->body['data']['push_setting'] = $push;
             return $this->output($this->body);
         } else {
             return $this->error(9995);
@@ -369,7 +376,7 @@ class AppUserController extends Controller
         $push = UserPush::where('app_user_id', $request->user->id)->first();
 
         if (!$push)
-            $push =  new UserPush();
+            $push = new UserPush();
 
         $push->ranking = Input::get('ranking');
         $push->news = Input::get('news');
@@ -386,7 +393,7 @@ class AppUserController extends Controller
     public function get_push_setting(Request $request)
     {
 
-        $check_items = array('token','time', 'sig');
+        $check_items = array('token', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -395,7 +402,7 @@ class AppUserController extends Controller
         $push = UserPush::where('app_user_id', $request->user->id)->first();
 //        $push = UserPush::where('app_user_id',1)->first();
         if (!$push)
-            $push =  new UserPush();
+            $push = new UserPush();
         $this->body['data']['push_setting'] = $push;
         return $this->output($this->body);
     }
@@ -423,7 +430,7 @@ class AppUserController extends Controller
 //        Log::info("app_app_id: ".$app['app_app_id']);
 //        Log::info("user->profile->id: ".$request->user->profile->id);
 
-        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
+        $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'], $request->user->id);
 //        Log::info("key: ".$key);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
@@ -432,7 +439,7 @@ class AppUserController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
-        $request->user->profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$request->user->profile->avatar_url);
+        $request->user->profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $request->user->profile->avatar_url);
         $this->body['data']['user'] = $request->user;
 
         if ($request->user != null && count($request->user) > 0) { // set cache
@@ -480,7 +487,7 @@ class AppUserController extends Controller
             $request->user->profile->address = Input::get('address');
             $request->user->profile->save();
 
-            $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'],$request->user->id);
+            $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'], $request->user->id);
 
             RedisUtil::getInstance()->clear_cache($key);
         } catch (\Illuminate\Database\QueryException $e) {
@@ -493,7 +500,7 @@ class AppUserController extends Controller
     public function social_profile(Request $request)
     {
 
-        $check_items = array('token', 'social_type', 'social_id', 'social_token',  'nickname', 'time', 'sig');
+        $check_items = array('token', 'social_type', 'social_id', 'social_token', 'nickname', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -527,5 +534,48 @@ class AppUserController extends Controller
 
         return $this->output($this->body);
     }
+
+    public function get_app_by_domain(Request $request)
+    {
+        $check_items = array('domain', 'time', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //validate sig
+        $check_sig_items = Config::get('api.sig_app_domain');
+
+        $ret_sig = $this->validate_sig($check_sig_items, Config::get('api.secret_key_for_domain'));
+        if ($ret_sig)
+            return $ret_sig;
+//        //creare key redis
+
+        $key = sprintf(Config::get('api.cache_app_domain'), urlencode(Input::get('domain')));
+//        Log::info("key: ".$key);
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+
+        try {
+            $app_info = User::where('domain', Input::get('domain'))->with('apps')->first()->toArray();
+
+            if (count($app_info) > 0 && array_key_exists('apps', $app_info)) {
+                $rs_data = $app_info['apps'][0];
+            }
+
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+        }
+
+        $this->body['data']['app_info'] = $rs_data;
+        if (count($rs_data) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+        return $this->output($this->body);
+    }
+
 
 }

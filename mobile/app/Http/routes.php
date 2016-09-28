@@ -17,10 +17,10 @@ Route::get('/', function () {
 
 
 Route::get('/test', function () {
-    $arr = array('item_id' => 2,
-        'app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
-
-    return \App\Utils\HttpRequestUtil::getInstance()->get_data('appinfo', $arr);
+//    $arr = array('item_id' => 2,
+//        'app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
+//
+//    return \App\Utils\HttpRequestUtil::getInstance()->get_data('appinfo', $arr);
 
     $arr_post = array('email' => 'bangnk@a.a',
         'password' => '123456',
