@@ -558,12 +558,12 @@ class AppUserController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
-
+        $rs_data = array();
         try {
-            $app_info = User::where('domain', Input::get('domain'))->with('apps')->first()->toArray();
-
+            $app_info = User::where('domain', Input::get('domain'))->with('apps')->first();
             if (count($app_info) > 0 && array_key_exists('apps', $app_info)) {
-                $rs_data = $app_info['apps'][0];
+                if (count($app_info['apps']) > 0)
+                    $rs_data = $app_info['apps'][0];
             }
 
         } catch (QueryException $e) {
