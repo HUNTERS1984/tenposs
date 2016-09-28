@@ -104,7 +104,7 @@ class NewsController extends Controller
         }
         try {
             if ($category_id > 0)
-                $total_news = News::where('new_category_id',$category_id)->count();
+                $total_news = News::where('new_category_id', $category_id)->count();
             else
                 $total_news = News::all()->count();
 
@@ -126,6 +126,52 @@ class NewsController extends Controller
         $this->body['data']['news'] = $news;
         $this->body['data']['total_news'] = $total_news;
         if ($total_news > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+        return $this->output($this->body);
+    }
+
+    public function news_detail(Request $request)
+    {
+        $check_items = array('app_id', 'id', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_news_detail');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        //create key redis
+        $key = sprintf(Config::get('api.cache_news_detail'), Input::get('app_id'), Input::get('id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+//        $data = null;
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+        try {
+            $news = News::where('id', Input::get('id'))->whereNull('deleted_at')->first()->toArray();
+            if (count($news) > 0 && array_key_exists('image_url', $news))
+                $news['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news['image_url']);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        $this->body['data']['news'] = $news;
+        if (count($news) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
         return $this->output($this->body);

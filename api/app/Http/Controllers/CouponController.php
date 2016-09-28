@@ -129,4 +129,83 @@ class CouponController extends Controller
         return $this->output($this->body);
 
     }
+
+    public function coupon_detail()
+    {
+        $check_items = array('app_id', 'time', 'id', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_coupon_detail');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        //create key redis
+        $key = sprintf(Config::get('api.cache_coupons_detail'), Input::get('app_id'), Input::get('id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+//        $data = null;
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+        try {
+            $currentDate = date('Y-m-d');
+            $currentDate = date('Y-m-d', strtotime($currentDate));
+
+            $coupons = Coupon::where('id', Input::get('id'))->with('coupon_type')->first();
+
+            if (count($coupons) > 0) {
+                $dateBegin = date('Y-m-d', strtotime($coupons['start_date']));
+                $dateEnd = date('Y-m-d', strtotime($coupons['end_date']));
+
+                $coupons['taglist'] = Coupon::find(Input::get('id'))->tags()->lists('tag')->toArray();
+
+                if (Input::get('token')) { // in case login
+                    $session = UserSession::where('token', Input::get('token'))->first();
+
+                    if ($session) {
+                        $user = $session->app_user()->first();
+                        $coupons['can_use'] = DB::table('rel_app_users_coupons')
+                                ->whereAppUserId($user->id)
+                                ->whereCouponId($coupons['id'])
+                                ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
+                        $coupon_code = DB::table('rel_app_users_coupons')
+                            ->whereAppUserId($user->id)
+                            ->whereCouponId($coupons['id'])->get();
+                        if (count($coupon_code) > 0)
+                            $coupons['code'] = $coupon_code[0]->code;
+                        else
+                            $coupons['code'] = '';
+                    } else {
+                        $coupons['can_use'] = false;
+                        $coupons['code'] = '';
+                    }
+
+                } else {
+                    $coupons['can_use'] = false;
+                    $coupons['code'] = '';
+                }
+                $coupons['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons['image_url']);
+
+            }
+
+        } catch (QueryException $e) {
+            return $this->error(9999);
+        }
+        $this->body['data']['coupons'] = $coupons;
+        if (count($coupons) > 0) { // set cache reiis
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+        return $this->output($this->body);
+
+    }
 }

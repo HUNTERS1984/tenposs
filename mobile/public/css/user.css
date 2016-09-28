@@ -1,0 +1,93 @@
+#user ul{
+    list-style: none;
+}
+#user ul li{
+    padding: 10px 30px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+#user ul li:nth-child(n+2){
+    height: 100px;
+    line-height: 100px;
+    padding: 0 0 0 30px;
+}
+#user ul li label{
+    width: 240px;
+}
+#user ul li input{
+    border: none;
+}
+#user ul li i.icon-clean{
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    margin-top: -14px;
+    background: url(../img/icon/icon-clear.png) left top no-repeat;
+    display: block;
+}
+#user ul li i.arrow-down{
+    width: 22px;
+    height: 12px;
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    margin-top: -6px;
+    background: url(../img/icon/arrow-down.png) left top no-repeat;
+    display: block;
+}
+
+ul.social{
+    margin-top: 60px;
+    border-top: 1px solid #eee;
+}
+#user ul.social li{
+    padding: 0 0 0 150px;
+    height: 100px;
+    line-height: 100px;
+}
+#user ul.social li a{
+    background: #e2f8f8;
+    color: #14c8c8;
+    width: 165px;
+    height: 56px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    margin-top: -28px;
+    display: block;
+    font-size: 24px;
+    line-height: 38px;
+}
+.icon-face{
+    width: 56px;
+    height: 56px;
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    margin-top: -28px;
+    background: url(../img/icon/facebook.png) left top no-repeat;
+    display: block;
+}
+.icon-twitter{
+    width: 56px;
+    height: 56px;
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    margin-top: -28px;
+    background: url(../img/icon/twitter.png) left top no-repeat;
+    display: block;
+}
+.icon-instagram{
+    width: 56px;
+    height: 56px;
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    margin-top: -28px;
+    background: url(../img/icon/instagram.png) left top no-repeat;
+    display: block;
+}

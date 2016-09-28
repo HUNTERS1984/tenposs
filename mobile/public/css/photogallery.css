@@ -1,0 +1,18 @@
+/* Category */
+#category{
+    border-bottom: 1px solid #eee;
+}
+#category .swiper-slide{
+    padding: 40px 0;
+    text-align: center;
+    font-size: 24px;
+}
+#category .swiper-button-next,#category .swiper-button-prev{
+    background-size: 15px 44px;
+}
+#category .swiper-button-prev{
+    left: 70px;
+}
+#category .swiper-button-next{
+    right: 70px;
+}

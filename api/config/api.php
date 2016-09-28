@@ -26,6 +26,9 @@ return [
     'sig_social_profile' => array('token','social_type', 'social_id', 'social_token', 'social_secret', 'nickname', 'time'),
     'sig_staff_category' => array('app_id','time','store_id'),
     'sig_staffs' => array('app_id','time','category_id'),
+    'sig_news_detail' => array('app_id','time','id'),
+    'sig_coupon_detail' => array('app_id','time','id'),
+    'sig_app_domain' => array('domain','time'),
 
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
@@ -45,6 +48,9 @@ return [
     'cache_top_contacts' => 'top_contacts_%s', // app_id
     'cache_profile' => 'profile_%s_%s', // app_id,user_id
     'cache_app_user_push' => 'app_user_push_%s', // app_id
+    'cache_news_detail' => 'news_detail_%s_%s', // app_id,id
+    'cache_coupons_detail' => 'coupons_detail_%s_%s', // app_id,id
+    'cache_app_domain' => 'app_by_domain_%s', // domain
 
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
     'noti_apple_url'=>'ssl://gateway.sandbox.push.apple.com:2195',
@@ -52,5 +58,7 @@ return [
 
     'cache_staff' => 'staff_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
     'cache_staff_categories' => 'staff_categories_%s_%s', // app_id,menu_id
+
+    'secret_key_for_domain' => 'Tenposs@123',
 
 ];

@@ -32,7 +32,8 @@ class AuthController extends Controller
 			'password' => 'required|min:3|confirmed',
 			'password_confirmation' => 'required|min:3',
             'business_type'=>'required',
-            'app_name_register'=>'required'
+            'app_name_register'=>'required',
+            'domain'=>'required|Url|unique:users'
         ]);
     }
 
