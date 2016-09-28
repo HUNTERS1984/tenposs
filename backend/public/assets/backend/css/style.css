@@ -220,9 +220,7 @@ html, body {
             font-weight: 600;
             text-align: center;
             text-transform: uppercase; }
-          .content-preview {
-          overflow: auto;
-          height: 280px;}
+        
         .main .content .main-content .wrap-preview .content-preview {
           padding: 8px; }
           .main .content .main-content .wrap-preview .content-preview .each-coupon {

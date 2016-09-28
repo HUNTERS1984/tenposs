@@ -391,8 +391,8 @@ class AppUserController extends Controller
         if ($ret)
             return $ret;
 
-//        $push = UserPush::where('app_user_id', $request->user->id)->first();
-        $push = UserPush::where('app_user_id',1)->first();
+        $push = UserPush::where('app_user_id', $request->user->id)->first();
+//        $push = UserPush::where('app_user_id',1)->first();
         if (!$push)
             $push =  new UserPush();
         $this->body['data']['push_setting'] = $push;

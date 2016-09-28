@@ -2,6 +2,12 @@
 
 @section('title', 'トップ')
 
+@section('headStyle')
+<!-- Slider swiper core CSS -->
+<link href="/assets/backend/js/swiper/swiper.min.css" rel="stylesheet">
+<link href="/assets/plugins/jquery.scrollbar/jquery.scrollbar.css" rel="stylesheet">
+@stop
+
 @section('content')
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -28,40 +34,92 @@
                     <div class="col-lg-4">
                         <div class="wrap-preview">
                             <div class="wrap-content-prview">
-                                <div class="header-preview">
-                                    <a href="javascript:avoid()" class="trigger-preview"><img
-                                                src="/assets/backend/images/nav-icon.png" alt=""></a>
-                                    <h2 class="title-prview">Global Work</h2>
-                                </div>
-                                <div class="banner-preview">
-                                    <img src="/assets/backend/images/banner-prview.jpg" class="img-responsive" alt="">
-                                </div>
-                                <div class="content-preview">
-                                    <p class="title-top-preview">
-                                        Recently
-                                    </p>
-                                    <div class="row-me clearfix">
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
-                                        </div>
-                                        <div class="each-top">
-                                            <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
-                                            <p class="name">Product 1</p>
-                                            <p class="price">10$</p>
+                                <div class="scroller scrollbar-macosx">
+                                    <div class="header-preview">
+                                        <a href="javascript:avoid()" class="trigger-preview"><img
+                                                    src="/assets/backend/images/nav-icon.png" alt=""></a>
+                                        <h2 class="title-prview">Global Work</h2>
+                                    </div>
+                                    <div id="mobile-1" class="banner-preview">
+                                       <!-- Slider main container -->
+                                        <div class="swiper-container">
+                                            <div class="swiper-wrapper">
+                                                @foreach( $slides as $slide )
+                                                <div class="swiper-slide">
+                                                    <img width="228" src="{{ url($slide->image_url) }}" alt=""/>
+                                                </div>
+                                                @endforeach
+                                              
+                                            </div>
+                                            <!-- If we need pagination -->
+                                            <div class="swiper-pagination"></div>
                                         </div>
                                     </div>
+                                    <!--
+                                    <div id="mobile-recent" class="content-preview">
+                                        <p class="title-top-preview">
+                                            Recently
+                                        </p>
+                                        <div class="row-me clearfix">
+                                            <div class="each-top">
+                                                <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                                <p class="name">Product 1</p>
+                                                <p class="price">10$</p>
+                                            </div>
+                                            <div class="each-top">
+                                                <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                                <p class="name">Product 1</p>
+                                                <p class="price">10$</p>
+                                            </div>
+                                            <div class="each-top">
+                                                <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                                <p class="name">Product 1</p>
+                                                <p class="price">10$</p>
+                                            </div>
+                                            <div class="each-top">
+                                                <img src="/assets/backend/images/h1.jpg" class="img-responsive " alt="">
+                                                <p class="name">Product 1</p>
+                                                <p class="price">10$</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    -->
+                                    <div id="mobile-5" class="content-preview photos">
+                                        <p class="title-top-preview">
+                                            Photo Gallery
+                                        </p>
+                                        <div class="row">
+                                            @foreach($photos as $photo)
+                                            <div class="item-photogallery">
+                                                <img src="{{ $photo->image_url }}" alt=""/>
+                                            </div>
+                                            @endforeach
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="mobile-3" class="content-preview news">
+                                        <p class="title-top-preview">
+                                            News
+                                        </p>
+                                        <div class="row">
+                                            @foreach( $news as $new )
+                                           <div class="item-coupon imageleft clearfix">
+                                                <div class="image">
+                                                    <img src="{{ url($new->image_url) }}" alt="{{ $new->title }}"/>
+                                                </div>
+                                                <div class="info clearfix">
+                                                    <a href="#">{{ $new->title }}</a>
+                                                  
+                                                    <p>
+                                                        {{ $new->description }}
+                                                    </p>
+                                                </div>
+                                            </div><!-- End item coupon -->
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -189,20 +247,47 @@
 
     {{Html::script('assets/backend/js/switch/lc_switch.js')}}
     {{Html::style('assets/backend/js/switch/lc_switch.css')}}
+    
+    {{Html::script('assets/backend/js/swiper/swiper.jquery.min.js')}}
+    {{Html::script('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js')}}
+
 
     {{Html::script('assets/backend/js/script.js')}}
     <script type="text/javascript">
+    
         $(document).ready(function () {
+            
+            $('.scroller').scrollbar();
+            
             $('input.lcs_check').lc_switch();
 
             $('.nav-left, .nav-right').on('click', 'li', function () {
                 $(this).toggleClass('selected');
             });
+            
+            var bannerSwiper = new Swiper('.swiper-container', {
+                autoplay: 2000,
+                speed: 400,
+                loop: true,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: ".swiper-pagination",
+                paginationClickable: true
+            });
+            
+            $('div[id^=mobile]').hide();
+            $('.nav-left li').each(function(index,item){
+                $('#mobile-'+$(item).attr('data-value')).show();
+            })
 
         })
         function moveTo(from, to) {
             $('ul.' + from + ' li.selected').remove().appendTo('ul.' + to);
             $('.' + to + ' li').removeAttr('class');
+            $('div[id^=mobile]').hide();
+            $('.nav-left li').each(function(index,item){
+                $('#mobile-'+$(item).attr('data-value')).show();
+            })
         }
         $('#btn_submit_form').click(function () {
             $('ul.nav-left li').each(function () {
@@ -305,8 +390,12 @@
 
 
     </script>
+    
+    
+    
     {{Html::script('assets/backend/js/upload/vendor/jquery.ui.widget.js')}}
-
+    
+    
     <!-- The Templates plugin is included to render the upload/download listings -->
     {{Html::script('assets/backend/js/upload/tmpl.min.js')}}
     {{--<script src="http://blueimp.github.io/JavaScript-Templates/js/upload/tmpl.min.js"></script>--}}
