@@ -40,4 +40,20 @@ class MobileController extends Controller
             
         ] );
     }
+    
+    public function login(){
+        $app = DB::table('apps')
+                ->where('id',$this->app_id)
+                ->first();
+        if( !$app ){
+            abort(404);
+        }
+        
+        $appInfos = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('appinfo',[
+            'app_id' => $app->app_app_id ],$app->app_app_secret);
+        return view('login',[
+            'app_info' => json_decode($appInfos),
+        ]);
+    }
 }

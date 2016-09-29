@@ -1,10 +1,20 @@
 <div id="side">
     <div class="h_side">
         <div class="imageleft">
+            @if( Auth::check() )
             <div class="image">
-                <img class="img-circle" src="img/tkNdnb1.jpg" alt="Thư kỳ"/>
+                <img class="img-circle" src="img/tkNdnb1.jpg" alt=""/>
+            </div>
+            <p class="font32">{{ Auth::user()->name }}</p>
+            @else
+            <div class="image">
+                <a href="{{ route('login') }}">
+                <img class="img-circle" src="img/tkNdnb1.jpg" alt=""/>
+                </a>
             </div>
             <p class="font32">User name</p>
+            @endif
+            
         </div>
     </div>
   

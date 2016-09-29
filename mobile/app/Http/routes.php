@@ -13,6 +13,7 @@
 
 Route::get('/', 'MobileController@index');
 
+Route::get('/sign-in', ['as'=> 'login', 'uses' => 'MobileController@login']);
 
 Route::get('/test', function () {
 //    $arr = array('item_id' => 2,
