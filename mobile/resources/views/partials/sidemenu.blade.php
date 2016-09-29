@@ -7,15 +7,18 @@
             <p class="font32">User name</p>
         </div>
     </div>
-    <ul class="s_nav">
-        <li class="s_icon-home"><a class="active" href="index.html">Home</a></li>
-        <li class="s_icon-menu"><a href="menu.html">Menu</a></li>
-        <li class="s_icon-reserve"><a href="reserve.html">Reserve</a></li>
-        <li class="s_icon-news"><a href="news.html">News</a></li>
-        <li class="s_icon-photo"><a href="photogallery.html">Photo Gallery</a></li>
-        <li class="s_icon-staff"><a href="staff.html">Staff</a></li>
-        <li class="s_icon-coupon"><a href="coupon.html">Coupon</a></li>
-        <li class="s_icon-chat"><a href="chat.html">Chat</a></li>
-        <li class="s_icon-setting"><a href="setting.html">Setting</a></li>
+  
+    <ul class="s_nav" style="
+            background: #{{ $app_info->data->app_setting->menu_background_color}}
+        ">
+        @foreach ( $app_info->data->side_menu as $menu )
+        <li class="s_icon-home">
+            <a class="active" href="#" style="
+                font-size: {{ $app_info->data->app_setting->menu_font_size }}px;
+                font-family: {{ $app_info->data->app_setting->menu_font_family }}
+            ">
+            {{ $menu->name }}
+        </a></li>    
+        @endforeach
     </ul>
 </div><!-- End side -->

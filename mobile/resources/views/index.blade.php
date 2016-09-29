@@ -3,7 +3,11 @@
 @section('page')
 <div id="header">
     <div class="container-fluid">
-            <h1 class="aligncenter">Global work</h1>
+            <h1 class="aligncenter" style="
+                color: {{ $app_info->data->app_setting->title_color}};
+                background-color: #{{ $app_info->data->app_setting->header_color}};
+                ">
+                {{ $app_info->data->name }}</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="img/icon/h_nav.png" alt="nav"/>
             </a>
@@ -15,9 +19,11 @@
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide"><img src="img/korean-fashion.jpg" alt="korean"/></div>
-                    <div class="swiper-slide"><img src="img/jpop-fashion.jpg" alt="korean"/></div>
-                    <div class="swiper-slide"><img src="img/scenes-fashion.jpg" alt="korean"/></div>
+                    @if( isset( $app_top->data->images->data)  && count($app_top->data->images->data) > 0 )
+                        @foreach( $app_top->data->images->data as $img )
+                        <div class="swiper-slide"><img src="{{ $img->image_url }}" alt=""/></div>
+                        @endforeach
+                    @endif
                 </div>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>
@@ -28,21 +34,16 @@
                 <h2 class="aligncenter">Recentry</h2>
                 <div class="container-fluid">
                     <div class="row">
+                        @if( isset( $app_top->data->items->data)  
+                            && count($app_top->data->items->data) > 0 )
+                            @foreach( $app_top->data->items->data as $item )
                         <div class="item-product">
-                            <img src="img/mdjps1.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
+                            <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
+                            <p>{{ $item->title }}</p>
+                            <span>$ {{ $item->price }}</span>
                         </div>
-                        <div class="item-product">
-                            <img src="img/tkNdnb1.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
-                        </div>
-                        <div class="item-product">
-                            <img src="img/Jpnsfr.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
-                        </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div><!-- End recentry -->
@@ -50,21 +51,14 @@
                 <h2 class="aligncenter">Photo Gallery</h2>
                 <div class="container-fluid">
                     <div class="row">
+                        @if( isset( $app_top->data->photos->data)  
+                            && count($app_top->data->photos->data) > 0 )
+                            @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
+                            <img src="{{ $photo->image_url }}" alt=""/>
                         </div>
-                        <div class="item-photogallery">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                        </div>
-                        <div class="item-photogallery">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                        </div>
-                        <div class="item-photogallery">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                        </div>
-                        <div class="item-photogallery">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                        </div>
+                        @endforeach
+                        @endif
                     </div>
                     <a href="#" class="btn tenposs-readmore">Readmore</a>
                 </div>
@@ -72,76 +66,73 @@
             <div id="news">
                 <h2 class="aligncenter">News</h2>
                 <div class="container-fluid">
+                     @if( isset( $app_top->data->news->data)  
+                            && count($app_top->data->news->data) > 0 )
+                        @foreach( $app_top->data->news->data as $news )
+                    
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
-                            <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
+                            <img src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
                         </div>
                         <div class="info clearfix">
-                            <a href="coupondetail.html">What is Lorem Ipsum?</a>
-                            <h3>Lorem Ipsum</h3>
-                            <p>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                Lorem Ipsum has been the industry's 
-                            </p>
+                            <a href="">{{ $news->title }}</a>
+                            <h3>{{ $news->new_category_id }}</h3>
+                            <p>{{ str_limit($news->description,100,'...') }}</p>
                         </div>
                     </div><!-- End item coupon -->
-                    <div class="item-coupon imageleft clearfix">
-                        <div class="image">
-                            <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                        </div>
-                        <div class="info clearfix">
-                            <a href="coupondetail.html">What is Lorem Ipsum?</a>
-                            <h3>Lorem Ipsum</h3>
-                            <p>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                Lorem Ipsum has been the industry's 
-                            </p>
-                        </div>
-                    </div><!-- End item coupon -->
-                    <div class="item-coupon imageleft clearfix">
-                        <div class="image">
-                            <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                        </div>
-                        <div class="info clearfix">
-                            <a href="coupondetail.html">What is Lorem Ipsum?</a>
-                            <h3>Lorem Ipsum</h3>
-                            <div class="justify">
-                                <p>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                    Lorem Ipsum has been the industry's 
-                                </p>
-                            </div>
-                        </div>
-                    </div><!-- End item coupon -->
+                        @endforeach
+                    @endif
 
                     <a href="#" class="btn tenposs-readmore">Readmore</a>
                 </div>
             </div><!-- End News -->
             <div id="contact">
-                <img src="img/map.jpg" alt="map">
+                <script type="text/javascript">
+                    var maps = [];
+                </script>
+                 @if( isset( $app_top->data->contact->data)  
+                            && count($app_top->data->contact->data) > 0 )
+                        @foreach( $app_top->data->contact->data as $contact )
+                <div id="map-{{$contact->id}}" class="maps"></div>
                 <ul>
+                    
                     <li>
                         <div class="table-cell">
                             <img src="img/icon/f_location.png" alt="icon">
-                            Location
+                            {{ $contact->title }}
                         </div>
                     </li>
                     <li>
                         <div class="table-cell">
                             <img src="img/icon/f_time.png" alt="icon">
-                            AM 10:00 - PM 20:00
+                            {{ $contact->start_time }} - {{ $contact->end_time }}
                         </div>
                     </li>
                     <li>
                         <div class="table-cell">
                             <img src="img/icon/f_tel.png" alt="icon">
-                            <a href="#">050-1234-5678</a>
+                            <a href="#">{{ $contact->tel }}</a>
                         </div>
                     </li>
                 </ul>
+                
                 <div class="container-fluid">
-                    <a href="#" class="btn tenposs-button">Contact</a>
+                    <a href="phone:{{ $contact->tel }} " class="btn tenposs-button">Contact</a>
                 </div>
+                <script type="text/javascript">
+                    maps.push({
+                        id : '{{$contact->id}}',
+                        lat : '{{$contact->latitude}}',
+                        long : '{{$contact->longitude}}',
+                        title: '{{$contact->title}}'
+                    });
+                    
+                </script>
+                
+                
+                @endforeach
+                @endif
+                
             </div><!-- End contact -->
         </div><!-- End content -->
         @include('partials.sidemenu')
@@ -151,6 +142,10 @@
     </div><!-- End footer -->
 @endsection
 @section('footerJS')
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrEF9NEPkuxtYouSqVqNj3KSoX__7Rm8g"></script>
+<script src="{{ url('plugins/maps/jquery.googlemap.js') }}"></script>
+
+
 <script type="text/javascript">
     var bannerSwiper = new Swiper('#banner .swiper-container', {
         autoplay: 2000,
@@ -161,5 +156,24 @@
         pagination: "#banner .swiper-pagination",
         paginationClickable: true
     });
+    
+    $(document).ready(function(){
+        $(maps).each(function(index, item){
+            $("#map-"+item.id).googleMap();
+            $("#map-"+item.id).addMarker({
+              coords: [item.lat,item.long], // GPS coords
+              title: item.title, // Title
+              text: item.title
+            });
+        })
+        
+    })
+    
+   
+        
+        
+        
 </script>
+
+
 @endsection

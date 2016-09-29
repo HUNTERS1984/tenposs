@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'MobileController@index');
 
 
 Route::get('/test', function () {
