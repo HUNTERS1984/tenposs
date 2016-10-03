@@ -6,31 +6,29 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use DB;
+use Session;
 
 class MobileController extends Controller
 {
     //
-    protected $app_id;
+    protected $app;
     public function __construct(){
-        $this->app_id = 1;
+        
+        $this->app = Session::get('app') ;
+        
     }
     
     
     public function index(Request $request){
-        $app = DB::table('apps')
-                ->where('id',$this->app_id)
-                ->first();
-        if( !$app ){
-            abort(404);
-        }
         
+
         $appInfos = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo',[
-            'app_id' => $app->app_app_id ],$app->app_app_secret);
+            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
             
         $appTop = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('top',[
-            'app_id' => $app->app_app_id ],$app->app_app_secret);    
+            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);    
             
         //dd(json_decode($appTop));
         return view('index', 
@@ -42,16 +40,10 @@ class MobileController extends Controller
     }
     
     public function login(){
-        $app = DB::table('apps')
-                ->where('id',$this->app_id)
-                ->first();
-        if( !$app ){
-            abort(404);
-        }
-        
+       
         $appInfos = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo',[
-            'app_id' => $app->app_app_id ],$app->app_app_secret);
+            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
         return view('login',[
             'app_info' => json_decode($appInfos),
         ]);
