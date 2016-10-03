@@ -14,6 +14,17 @@
 Route::get('/', 'MobileController@index');
 
 Route::get('/sign-in', ['as'=> 'login', 'uses' => 'MobileController@login']);
+//Social Login
+Route::get('/login/{provider?}',[
+    'uses' => 'LoginController@getSocialAuth',
+    'as'   => 'auth.getSocialAuth'
+]);
+Route::get('/login/callback/{provider?}',[
+    'uses' => 'LoginController@getSocialAuthCallback',
+    'as'   => 'auth.getSocialAuthCallback'
+]);
+
+
 
 Route::get('/test', function () {
 //    $arr = array('item_id' => 2,
