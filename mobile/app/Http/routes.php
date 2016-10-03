@@ -33,11 +33,32 @@ $appRoutes = function(){
             'uses' => 'LoginController@getSocialAuthCallback',
             'as'   => 'auth.getSocialAuthCallback'
         ]);
+        
+        
+        //Menu
+        Route::get('/menus','MenusController@index');
+        Route::get('/menus_detail','MenusController@detail');
     } );
 };
 
 
 Route::group( ['domain' => '{name}.'.env('APP_DOMAIN') ], $appRoutes);
 Route::group( ['domain' => env('APP_DOMAIN') ], $appRoutes);
+
+
+
+Route::get('/test', function () {
+    $arr = array('app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
+    $secret_key = "ádsadsadsa"; //lay tu app_app_secret
+    return \App\Utils\HttpRequestUtil::getInstance()->get_data('appinfo', $arr,$secret_key);
+
+    $arr_post = array('email' => 'bangnk@a.a',
+        'password' => '123456',
+        'app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
+    $secret_key = "ádsadsadsa"; //lay tu app_app_secret
+    return \App\Utils\HttpRequestUtil::getInstance()->post_data('signin',$arr_post,$secret_key);
+});
+
+
 
 
