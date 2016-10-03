@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
 use Session;
+use Auth;
+
 
 class MobileController extends Controller
 {
@@ -19,9 +21,8 @@ class MobileController extends Controller
     }
     
     
-    public function index(Request $request){
-        
-
+    public function index(Request $request, $name =  null){
+ 
         $appInfos = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo',[
             'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
@@ -49,6 +50,7 @@ class MobileController extends Controller
         return view('login',[
             'app_info' => json_decode($appInfos),
         ]);
+        
     }
     
     
