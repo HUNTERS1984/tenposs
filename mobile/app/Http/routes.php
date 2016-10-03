@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'MobileController@index');
 
+Route::get('/sign-in', ['as'=> 'login', 'uses' => 'MobileController@login']);
 
 Route::get('/test', function () {
     $arr = array('app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
