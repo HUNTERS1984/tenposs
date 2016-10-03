@@ -19,10 +19,10 @@
             <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn btn-block tenposs-button bg-fb">
                 <i class="fa fa-facebook"></i>
                 Facebook</a>
-            <a href="" class="btn btn-block tenposs-button bg-tw">
+            <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn btn-block tenposs-button bg-tw">
                 <i class="fa fa-facebook"></i>
                 TWitterではじめる</a>
-            <a href="" class="btn btn-block tenposs-button bg-mail">
+            <a href="{{ route('signup') }}" class="btn btn-block tenposs-button bg-mail">
                 <i class="fa fa-facebook"></i>
                 メールアドレスではじめる</a> 
             

@@ -1,11 +1,12 @@
 <div id="side">
     <div class="h_side">
         <div class="imageleft">
-            @if( Auth::check() )
+            @if( Session::has('user') )
             <div class="image">
-                <img class="img-circle" src="img/tkNdnb1.jpg" alt=""/>
+                <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url }}" alt=""/>
             </div>
-            <p class="font32">{{ Auth::user()->name }}</p>
+            <p class="font32">{{ Session::get('user')->profile->name }}</p>
+            <p> <a href="{{ route('logout') }}">Logout</a> </p>
             @else
             <div class="image">
                 <a href="{{ route('login') }}">
