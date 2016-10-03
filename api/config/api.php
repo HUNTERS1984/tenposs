@@ -16,6 +16,8 @@ return [
     'sig_signout' => array('token','time'),
     'sig_menu' => array('app_id','time','store_id'),
     'sig_items' => array('app_id','time','menu_id'),
+    'sig_items_relate' => array('app_id','time','item_id'),
+    'sig_items_detail' => array('app_id','time','item_id'),
     'sig_news' => array('app_id','time'),
     'sig_news_cat' => array('app_id','time','store_id'),
     'sig_photo_cat' => array('app_id','time','store_id'),
@@ -33,6 +35,8 @@ return [
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
     'cache_items' => 'items_%s_%s_%s_%s', // app_id,menu_id,pageindex,pagesize
+    'cache_items_relate' => 'items_%s_%s', // app_id,item_id
+    'cache_items_detail' => 'items_%s_%s', // app_id,item_id
     'cache_menus' => 'menus_%s_%s', // app_id,menu_id
     'cache_photo_cat' => 'photo_cat_%s_%s', // app_id,store_id
     'cache_photos' => 'photos_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize

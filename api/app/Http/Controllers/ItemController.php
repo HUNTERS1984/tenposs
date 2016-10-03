@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
 use Illuminate\Database\QueryException;
@@ -144,13 +145,13 @@ class ItemController extends Controller
     public function item_relate()
     {
 
-        $check_items = array('app_id', 'item_id', 'pageindex', 'pagesize', 'time', 'sig');
+        $check_items = array('app_id', 'item_id', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
         //start validate app_id and sig
-        $check_sig_items = Config::get('api.sig_items');
+        $check_sig_items = Config::get('api.sig_items_relate');
         // check app_id in database
         $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if ($app == null || count($app) == 0)
@@ -160,26 +161,23 @@ class ItemController extends Controller
         if ($ret_sig)
             return $ret_sig;
         //end validate app_id and sig
-        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
-            return $this->error(1004);
-
-        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+//        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+//            return $this->error(1004);
+//
+//        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key
-        $key = sprintf(Config::get('api.cache_items'), Input::get('app_id'), Input::get('menu_id'), Input::get('pageindex'), Input::get('pagesize'));
+        $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
-//        $data = null;
+        $data = null;
         //check data and return data
         if ($data != null) { 
             $this->body = $data;
             return $this->output($this->body);
         }
         try {
-            $total_items = Menu::find(Input::get('menu_id'))->items()->count();
-            $items = [];
-            if ($total_items > 0)
-                $items = Menu::find(Input::get('menu_id'))->items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->with('rel_items')->get()->toArray();
-//            dd($items);
+            $total_items = Item::find(Input::get('item_id'))->rel_items()->count();
+            $items = Item::find(Input::get('item_id'))->rel_items()->get()->toArray();
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
                 try {
@@ -205,6 +203,69 @@ class ItemController extends Controller
         $this->body['data']['items'] = $items;
         $this->body['data']['total_items'] = $total_items;
         if ($total_items > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+
+        return $this->output($this->body);
+    }
+
+    public function item_detail()
+    {
+
+        $check_items = array('app_id', 'item_id', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_items_detail');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        //create key
+        $key = sprintf(Config::get('api.cache_items_detail'), Input::get('app_id'), Input::get('item_id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        $data = null;
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+        try {
+            $items = \Illuminate\Support\Facades\DB::table('items')
+                ->where('id',Input::get('app_id'))->get();
+
+            for ($i = 0; $i < count($items); $i++) {
+                $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
+                try {
+                    $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
+                        ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
+                        ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
+                        ->where('item_sizes.item_id', '=', $items[$i]->id)
+                        ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
+                            'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
+                        ->get();
+                    $items[$i]->size = $items_size;
+                } catch (QueryException $ex) {
+                    Log::error($ex->getMessage());
+                    $items[$i]->size = [];
+                }
+            }
+
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        $this->body['data']['items'] = $items;
+        if (count($items) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
 
