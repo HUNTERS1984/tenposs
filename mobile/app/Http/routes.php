@@ -26,3 +26,8 @@ Route::get('/test', function () {
     $secret_key = "ádsadsadsa"; //lay tu app_app_secret
     return \App\Utils\HttpRequestUtil::getInstance()->post_data('signin',$arr_post,$secret_key);
 });
+
+
+//Menu
+Route::get('/menus','MenusController@index');
+Route::get('/menus_detail','MenusController@detail');
