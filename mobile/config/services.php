@@ -37,9 +37,9 @@ return [
     
     
     'facebook' => [
-        'client_id' => '570059106506930',
-        'client_secret' => '7493266245fb5e678e67f7de0c018d91',
-        'redirect' => 'http://your-callback-url',
+        'client_id' => '159391921181596',
+        'client_secret' => 'cc9ad24a6a123349ada67fb373067fbc',
+        'redirect' => 'https://m.ten-po.com/callback/facebook',
     ],
 
 ];

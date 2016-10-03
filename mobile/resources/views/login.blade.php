@@ -16,7 +16,7 @@
     <div id="sign-up-page">
        
         <div class="bottom-layout">
-            <a href="" class="btn btn-block tenposs-button bg-fb">
+            <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn btn-block tenposs-button bg-fb">
                 <i class="fa fa-facebook"></i>
                 Facebook</a>
             <a href="" class="btn btn-block tenposs-button bg-tw">
