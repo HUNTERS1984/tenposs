@@ -39,7 +39,7 @@ return [
     'facebook' => [
         'client_id' => '159391921181596',
         'client_secret' => 'cc9ad24a6a123349ada67fb373067fbc',
-        'redirect' => 'https://tenposs-end-phanvannhien.c9users.io/callback/facebook',
+        'redirect' => 'https://m.ten-po.com/callback/facebook',
     ],
 
 ];
