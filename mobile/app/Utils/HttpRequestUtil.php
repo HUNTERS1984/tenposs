@@ -112,6 +112,9 @@ class HttpRequestUtil
             case 'news_detail':
                 $params = Config::get('api.sig_news_detail');
                 break;
+            case 'get_push_setting':
+                $params = Config::get('api.sig_get_push_setting');
+                break;
             default:
                 break;
         }

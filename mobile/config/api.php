@@ -29,5 +29,6 @@ return [
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain','time'),
     'sig_news_detail' => array('app_id','time','id'),
+    'sig_get_push_setting' => array('token','time'),
     'secret_key_for_domain' => 'Tenposs@123',
 ];
