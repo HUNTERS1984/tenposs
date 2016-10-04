@@ -13,17 +13,22 @@ define('TOTAL_ITEMS', 10);
 class MenusController extends Controller
 {
     protected $app;
+    protected $request;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
 
         $this->app = Session::get('app');
+        $this->request = $request;
 
     }
 
     //
     public function index()
     {
+        $page_number = $this->request->page;
+        $menu_id = $this->request->menu_id;
+
         $app_info = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo', [
                 'app_id' => $this->app->app_app_id], $this->app->app_app_secret);
@@ -39,12 +44,15 @@ class MenusController extends Controller
             if ($menus->code == '1000') {
                 $menus_data = $menus->data->menus;
                 if (count($menus_data) > 0) {
-
+                    if (empty($menu_id))
+                        $menu_id = $menus_data[0]->id;
+                    if (empty($page_number))
+                        $page_number = 1;
                     $items = HttpRequestUtil::getInstance()->get_data('items',
                         ['app_id' => $this->app->app_app_id,
-                            'menu_id' => $menus_data[0]->id,
-                            'pageindex' => 1,
-                            'pagesize' => 20],
+                            'menu_id' => 2,
+                            'pageindex' => $page_number,
+                            'pagesize' => TOTAL_ITEMS],
                         $this->app->app_app_secret);
                     if (!empty($items)) {
                         $items = json_decode($items);
@@ -58,6 +66,7 @@ class MenusController extends Controller
                 }
             }
         }
+        //print_r($items_data);
         return view('menu.index', compact('app_info', 'menus_data', 'items_data', 'items_total_data', 'total_page'));
     }
 
@@ -77,7 +86,6 @@ class MenusController extends Controller
             $items_detail = json_decode($items_detail);
             if ($items_detail->code == '1000') {
                 $items_detail_data = $items_detail->data->items[0];
-                dd($items_detail_data);
                 $items_relate = HttpRequestUtil::getInstance()->get_data('item_relate',
                     [
                         'app_id' => $this->app->app_app_id,
@@ -91,6 +99,6 @@ class MenusController extends Controller
                 }
             }
         }
-        return view('menu.detail', compact('app_info'));
+        return view('menu.detail', compact('app_info', 'items_detail_data', 'items_relate_data'));
     }
 }

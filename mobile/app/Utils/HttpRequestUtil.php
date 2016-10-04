@@ -115,6 +115,9 @@ class HttpRequestUtil
             case 'item_detail':
                 $params = Config::get('api.sig_items_detail');
                 break;
+            case 'news_detail':
+                $params = Config::get('api.sig_news_detail');
+                break;
             default:
                 break;
         }

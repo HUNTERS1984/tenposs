@@ -28,6 +28,6 @@ return [
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain','time'),
-
+    'sig_news_detail' => array('app_id','time','id'),
     'secret_key_for_domain' => 'Tenposs@123',
 ];

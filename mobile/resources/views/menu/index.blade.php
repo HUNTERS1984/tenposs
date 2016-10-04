@@ -24,10 +24,15 @@
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
                         <!-- Slides -->
-                        <div class="swiper-slide">Spring</div>
-                        <div class="swiper-slide">Summer</div>
-                        <div class="swiper-slide">Autumn</div>
-                        <div class="swiper-slide">Winter</div>
+                        {{--<div class="swiper-slide">Spring</div>--}}
+                        {{--<div class="swiper-slide">Summer</div>--}}
+                        {{--<div class="swiper-slide">Autumn</div>--}}
+                        {{--<div class="swiper-slide">Winter</div>--}}
+                        @if(count($menus_data) > 0)
+                            @foreach($menus_data as $item)
+                                <div class="swiper-slide">{{$item->name}}</div>
+                            @endforeach
+                        @endif
                     </div>
 
                     <!-- If we need navigation buttons -->
@@ -44,85 +49,19 @@
                             <!-- Slides -->
                             <div class="swiper-slide">
                                 <div class="row">
-                                    <div class="item-product">
-                                        <a href="menudetail.html">
-                                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                                            <p>Nayako</p>
-                                            <span>$ 1,200</span>
-                                        </a>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/Jpnsfr.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/tkNdnb1.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
+                                    @if(count($items_data) > 0)
+                                        @foreach($items_data as $item)
+                                            <div class="item-product">
+                                                <a href="{{ route('menus.detail', array('id' => 1))}}">
+                                                    <img src="{{$item->image_url}}}" alt="{{$item->title}}"/>
+                                                    <p>{{$item->title}}</p>
+                                                    <span>$ {{number_format($item->price, 0, '', '.')}}</span>
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
-                            <!-- Slides -->
-                            <div class="swiper-slide">
-                                <div class="row">
-                                    <div class="item-product">
-                                        <img src="img/mdjps1.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/tkNdnb1.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/Jpnsfr.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Slides -->
-                            <div class="swiper-slide">
-                                <div class="row">
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Slides -->
-                            <div class="swiper-slide">
-                                <div class="row">
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                    <div class="item-product">
-                                        <img src="img/ynQ1r5Jf.jpg" alt="Nakayo"/>
-                                        <p>Nayako</p>
-                                        <span>$ 1,200</span>
-                                    </div>
-                                </div>
-                            </div><!-- End swiper slide -->
                         </div>
                     </div><!-- End  swiper -->
                 </div><!-- End container fluid -->
