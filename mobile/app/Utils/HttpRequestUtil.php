@@ -64,12 +64,6 @@ class HttpRequestUtil
             case 'news':
                 $params = Config::get('api.sig_news');
                 break;
-            case 'news':
-                $params = Config::get('api.sig_news');
-                break;
-            case 'news':
-                $params = Config::get('api.sig_news');
-                break;
             case 'news_cat':
                 $params = Config::get('api.sig_news_cat');
                 break;
