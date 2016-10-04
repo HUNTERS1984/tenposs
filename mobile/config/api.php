@@ -13,6 +13,8 @@ return [
     'sig_signout' => array('token', 'time'),
     'sig_menu' => array('app_id', 'time', 'store_id'),
     'sig_items' => array('app_id', 'time', 'menu_id'),
+    'sig_items_relate' => array('app_id','time','item_id'),
+    'sig_items_detail' => array('app_id','time','item_id'),
     'sig_news' => array('app_id', 'time'),
     'sig_news_cat' => array('app_id', 'time', 'store_id'),
     'sig_photo_cat' => array('app_id', 'time', 'store_id'),
@@ -26,6 +28,6 @@ return [
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain','time'),
-
+    'sig_news_detail' => array('app_id','time','id'),
     'secret_key_for_domain' => 'Tenposs@123',
 ];
