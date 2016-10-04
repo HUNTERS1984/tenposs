@@ -39,5 +39,28 @@ class MobileController extends Controller
             
         ] );
     }
-
+    
+    public function chat(){
+        $appInfos = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('appinfo',[
+            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
+            
+  
+        return view('chat', 
+        [ 
+            'app_info' => json_decode($appInfos)
+        ] );
+    }
+    
+    public function profile(){
+        $appInfos = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('appinfo',[
+            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
+            
+        return view('profile', 
+        [ 
+            'app_info' => json_decode($appInfos)
+        ] );    
+            
+    }
 }

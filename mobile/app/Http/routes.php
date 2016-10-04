@@ -36,10 +36,21 @@ $appRoutes = function(){
             'as'   => 'auth.getSocialAuthCallback'
         ]);
         
-        
+        Route::get('/user/profile',[ 'as' => 'profile', 'uses' => 'MobileController@profile']);
         //Menu
-        Route::get('/menus','MenusController@index');
+        Route::get('/menus',[ 'as' => 'menu', 'uses' => 'MenusController@index']);
         Route::get('/menus_detail','MenusController@detail');
+        
+        Route::get('/news',[ 'as' => 'news', 'uses' => 'MenusController@index']); 
+        Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'MenusController@index']); 
+        Route::get('/photo',[ 'as' => 'photo.gallery', 'uses' => 'MenusController@index']); 
+        Route::get('/home',[ 'as' => 'home', 'uses' => 'MenusController@index']); 
+        Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat']); 
+        Route::get('/staff',[ 'as' => 'staff', 'uses' => 'MenusController@index']); 
+        Route::get('/coupon',[ 'as' => 'coupon', 'uses' => 'MenusController@index']); 
+        Route::get('/configuration',[ 'as' => 'configuration', 'uses' => 'MenusController@index']); 
+        
+        
     } );
 };
 
