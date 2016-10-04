@@ -27,8 +27,9 @@
         @foreach ( $app_info->data->side_menu as $menu )
         <li class="s_icon-home">
             <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
-                font-size: {{ $app_info->data->app_setting->menu_font_size }}px;
-                font-family: {{ $app_info->data->app_setting->menu_font_family }}
+                font-size: {{ $app_info->data->app_setting->menu_font_size }};
+                font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                color: #{{ $app_info->data->app_setting->menu_font_color }};
             ">
             {{ $menu->name }}
         </a></li>    

@@ -13,31 +13,18 @@ use Validator;
 class LoginController extends Controller
 {
     protected $socialite;
-    protected $app;
-    
+
     public function __construct(Socialite $socialite){
-       $this->socialite = $socialite;
-       $this->app = Session::get('app');
+        parent::__construct();
+        $this->socialite = $socialite;
     }
     
     public function login(){
-       
-        $get = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('appinfo',[
-            'app_id' => $this->app->app_app_id ],
-            $this->app->app_app_secret);
-        
-        $response = json_decode($get);
-        
-        if( \App\Utils\Messages::validateErrors($response) ){
-            return view('login',[
-                'app_info' => $response,
-            ]);
-        }
-        
-        Session::flash('message', \App\Utils\Messages::getMessage( $response ));
-        return back();
-       
+      
+        return view('login',[
+            'app_info' => $this->app_info,
+        ]);
+
     }
     
     public function loginNormal(){
@@ -72,7 +59,6 @@ class LoginController extends Controller
         }
         Session::flash('message', \App\Utils\Messages::getMessage( $response ));
         return back()->withInput();
-
         
     }
     
@@ -126,7 +112,7 @@ class LoginController extends Controller
     
     public function getSocialAuth( $provider = null ){
         if(!config("services.$provider")) 
-            abort('404'); //just to handle providers that doesn't exist
+            abort('404');
         return $this->socialite->with($provider)->redirect();
     }
     

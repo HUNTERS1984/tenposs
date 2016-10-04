@@ -2,6 +2,12 @@
 
 @section('headCSS')
 <link href="{{ url('css/user.css') }}" rel="stylesheet">
+<style>
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: '{{ $app_info->data->app_setting->font_family }}';
+    }
+</style>
 @endsection
 
 @section('page')
@@ -23,22 +29,22 @@
         <div id="user">
             <ul>
                 <li>
-                    <label><img src="img/icon/icon-user.png" alt="User"/></label>
+                    <label><img src="{{ Session::get('user')->profile->avatar_url }}" alt="{{ Session::get('user')->profile->name }}"/></label>
                     Lorem Ipsum is simply dummy
                 </li>
                 <li>
                     <label>Username</label>
-                    <input type="text" value="tenposs1234"/>
+                    <input type="text" name="name" value="{{ $profile->data->user->profile->name }}"/>
                     <i class="icon-clean"></i>
                 </li>
                 <li>
                     <label>Password</label>
-                    <input type="text" value="********"/>
+                    <input type="text" value="******"/>
                     <i class="icon-clean"></i>
                 </li>
                 <li>
                     <label>Email</label>
-                    <input type="text" value="Example@ex.com"/>
+                    <input type="email" name="email" value="{{ $profile->data->user->email }}"/>
                     <i class="icon-clean"></i>
                 </li>
                 <li>
@@ -86,8 +92,9 @@
             @foreach ( $app_info->data->side_menu as $menu )
             <li class="s_icon-home">
                 <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
-                    font-size: {{ $app_info->data->app_setting->menu_font_size }}px;
-                    font-family: {{ $app_info->data->app_setting->menu_font_family }}
+                    font-size: {{ $app_info->data->app_setting->menu_font_size }};
+                    font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                    color: #{{ $app_info->data->app_setting->menu_font_color }};
                 ">
                 {{ $menu->name }}
             </a></li>    

@@ -1,9 +1,17 @@
 @extends('master')
+@section('headCSS')
+<style>
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: "{{ $app_info->data->app_setting->font_family }}";
+    }
+</style>
+@endsection
 @section('page')
 <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter" style="
-            color: {{ $app_info->data->app_setting->title_color}};
+            color: #{{ $app_info->data->app_setting->title_color}};
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
             {{ $app_info->data->name }}</h1>

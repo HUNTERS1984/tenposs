@@ -1,5 +1,12 @@
 @extends('master')
-
+@section('headCSS')
+<style>
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: {{ $app_info->data->app_setting->font_family }};
+    }
+</style>
+@endsection
 @section('page')
 <div id="header">
     <div class="container-fluid">
@@ -142,8 +149,6 @@
 @section('footerJS')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrEF9NEPkuxtYouSqVqNj3KSoX__7Rm8g"></script>
 <script src="{{ url('plugins/maps/jquery.googlemap.js') }}"></script>
-
-
 <script type="text/javascript">
     var bannerSwiper = new Swiper('#banner .swiper-container', {
         autoplay: 2000,
