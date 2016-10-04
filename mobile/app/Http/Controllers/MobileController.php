@@ -39,20 +39,5 @@ class MobileController extends Controller
             
         ] );
     }
-    
-    public function login(){
-       
-        $appInfos = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('appinfo',[
-            'app_id' => $this->app->app_app_id ],
-            $this->app->app_app_secret);
-            
-        return view('login',[
-            'app_info' => json_decode($appInfos),
-        ]);
-        
-    }
-    
-    
-    
+
 }

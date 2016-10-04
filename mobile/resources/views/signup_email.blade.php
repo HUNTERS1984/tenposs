@@ -13,19 +13,19 @@
 <div id="main">
     <div id="content">
         @include('partials.message')
-        <form action="{{ route('signup.post') }}" class="form" method="post">
+        <form action="{{ route('register.post') }}" class="form" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <input class="form-control" type="text" name="name" placeholder="Name"/>
+                <input value="{{ old('name') }}" class="form-control" type="text" name="name" placeholder="Name"/>
             </div>
              <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Email"/>
+                <input value="{{ old('email') }}" class="form-control" type="email" name="email" placeholder="Email"/>
             </div>
              <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="パスワード"/>
+                <input value="{{ old('password') }}" class="form-control" type="password" name="password" placeholder="パスワード"/>
             </div>
             <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="パスワード (確認)"/>
+                <input value="{{ old('password_confirm') }}" class="form-control" type="password" name="password_confirm" placeholder="パスワード (確認)"/>
             </div>
             <button class="btn btn-block  tenposs-button" type="submit">OK</button>
             

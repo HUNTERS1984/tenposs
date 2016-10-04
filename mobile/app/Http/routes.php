@@ -18,11 +18,13 @@ $appRoutes = function(){
             
         Route::get('/','MobileController@index' );
         
-        Route::get('/sign-in', ['as'=> 'login', 'uses' => 'MobileController@login']);
-        Route::get('/sign-up', ['as'=> 'signup', 'uses' => 'LoginController@signup']);
-        Route::post('/sign-up', ['as'=> 'signup.post', 'uses' => 'LoginController@signupPost']);
         
-        Route::get('/sign-out', ['as'=> 'logout', 'uses' => 'LoginController@logout']);
+        Route::get('/login', ['as'=> 'login', 'uses' => 'LoginController@login']);
+        Route::get('/register', ['as'=> 'register', 'uses' => 'LoginController@register']);
+        Route::post('/register', ['as'=> 'register.post', 'uses' => 'LoginController@registerPost']);
+        Route::get('/login/normal', ['as'=> 'login.normal', 'uses' => 'LoginController@loginNormal']);
+        Route::post('/login/normal', ['as'=> 'login.normal.post', 'uses' => 'LoginController@loginNormalPost']);
+        Route::get('/logout', ['as'=> 'logout', 'uses' => 'LoginController@logout']);
         
         //Social Login
         Route::get('/login/{provider?}',[

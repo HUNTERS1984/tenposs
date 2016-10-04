@@ -8,17 +8,72 @@ use App\Http\Requests;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Session;
 use Auth;
+use Validator;
 
 class LoginController extends Controller
 {
-    //
     protected $socialite;
     protected $app;
-    
     
     public function __construct(Socialite $socialite){
        $this->socialite = $socialite;
        $this->app = Session::get('app');
+    }
+    
+    public function login(){
+       
+        $get = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('appinfo',[
+            'app_id' => $this->app->app_app_id ],
+            $this->app->app_app_secret);
+        
+        $response = json_decode($get);
+        
+        if( \App\Utils\Messages::validateErrors($response) ){
+            return view('login',[
+                'app_info' => $response,
+            ]);
+        }
+        
+        Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+        return back();
+       
+    }
+    
+    public function loginNormal(){
+        return view('login_normal');
+    }
+    
+    public function loginNormalPost(Request $request){
+        $rules = array(
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        );
+        
+        $v = Validator::make($request->all(), $rules);
+        if( $v->fails() ){
+            return back()
+                ->withInput()
+                ->withErrors($v);
+        }
+        $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('signin',[
+                     'app_id' => $this->app->app_app_id,
+                     'email' =>  $request->input('email') ,
+                     'password' => $request->input('password') ,
+                ],
+                $this->app->app_app_secret); 
+                
+        $response = json_decode($post);
+
+        if( \App\Utils\Messages::validateErrors($response) ){
+            Session::put('user', $response->data);
+            return redirect('/');
+        }
+        Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+        return back()->withInput();
+
+        
     }
     
     public function logout(){
@@ -26,11 +81,28 @@ class LoginController extends Controller
         return redirect('/');
     }
     
-    public function signup(){
+    
+    public function register(){
         return view('signup_email');
     }
     
-    public function signupPost(Request $request){
+    public function registerPost(Request $request){
+       
+        $rules = array(
+            'name' => 'required|alpha_num',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'password_confirm' => 'required|min:6|same:password'
+        );
+        
+        $v = Validator::make($request->all(), $rules);
+        if( $v->fails() ){
+            return back()
+                ->withInput()
+                ->withErrors($v);
+        }
+        
+        
         $post = \App\Utils\HttpRequestUtil::getInstance()
                 ->post_data('signup',[
                      'app_id' => $this->app->app_app_id,
@@ -42,14 +114,14 @@ class LoginController extends Controller
                 
         $response = json_decode($post);
         
-        if ( $response && $response->code == 1000  ){
+        if( \App\Utils\Messages::validateErrors($response) ){
             Session::put('user', $response->data);
             return redirect('/');
-        }elseif ( $response->code == 9996 ){
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => $response->message ));
-            return back();
+        }else{
+            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+            return back()->withInput();
         }
-       
+
     }
     
     public function getSocialAuth( $provider = null ){
@@ -59,11 +131,8 @@ class LoginController extends Controller
     }
     
     public function getSocialAuthCallback( $provider = null){
-        
-        
-        
+
         if($user = $this->socialite->with($provider)->user()){
-            
             
             if( $provider == 'facebook' ){
                 $params = [
@@ -95,18 +164,21 @@ class LoginController extends Controller
                 ->post_data('social_login',$params,
                 $this->app->app_app_secret);  
                 
-            $response = json_decode($login);
+            $response = json_decode($post);
           
-            if ( $response && $response->code == 1000  ){
+            if( \App\Utils\Messages::validateErrors($response) ){
                 Session::put('user', $response->data);
                 return redirect('/');
-            }else{
-                dd('Error');
             }
-            
+            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+            return back();
            
         }else{
-            return 'something went wrong';
+            Session::flash('message', \App\Utils\Messages::customMessage(2000) );
+            return back();
         }
     }
+    
+    
+    
 }
