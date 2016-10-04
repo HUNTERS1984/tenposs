@@ -11,39 +11,51 @@
 |
 */
 
-$appRoutes = function () {
-    Route::group([
-        'middleware' => ['verify.app'],
-        'middlewareGroups' => ['web']], function () {
 
-        Route::get('/', 'MobileController@index');
+Route::group([
+    'middleware' => ['verify.app'],
+    'middlewareGroups' => ['web']], function () {
 
-        Route::get('/sign-in', ['as' => 'login', 'uses' => 'MobileController@login']);
-        Route::get('/sign-up', ['as' => 'signup', 'uses' => 'LoginController@signup']);
-        Route::post('/sign-up', ['as' => 'signup.post', 'uses' => 'LoginController@signupPost']);
-
-        Route::get('/sign-out', ['as' => 'logout', 'uses' => 'LoginController@logout']);
-
-        //Social Login
-        Route::get('/login/{provider?}', [
-            'uses' => 'LoginController@getSocialAuth',
-            'as' => 'auth.getSocialAuth'
-        ]);
-        Route::get('/login/callback/{provider?}', [
-            'uses' => 'LoginController@getSocialAuthCallback',
-            'as' => 'auth.getSocialAuthCallback'
-        ]);
+    Route::get('/', 'MobileController@index');
 
 
-        //Menu
-        Route::get('/menus', [
-            'uses' => 'MenusController@index',
-            'as' => 'menus.index']);
-        Route::get('/menus_detail', [
-            'uses' => 'MenusController@detail',
-            'as' => 'menus.detail']);
-    });
-};
+    Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
+    Route::get('/register', ['as' => 'register', 'uses' => 'LoginController@register']);
+    Route::post('/register', ['as' => 'register.post', 'uses' => 'LoginController@registerPost']);
+    Route::get('/login/normal', ['as' => 'login.normal', 'uses' => 'LoginController@loginNormal']);
+    Route::post('/login/normal', ['as' => 'login.normal.post', 'uses' => 'LoginController@loginNormalPost']);
+    Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
+
+    //Social Login
+    Route::get('/login/{provider?}', [
+        'uses' => 'LoginController@getSocialAuth',
+        'as' => 'auth.getSocialAuth'
+    ]);
+    Route::get('/login/callback/{provider?}', [
+        'uses' => 'LoginController@getSocialAuthCallback',
+        'as' => 'auth.getSocialAuthCallback'
+    ]);
+
+
+});
+
+Route::get('/user/profile', ['as' => 'profile', 'uses' => 'MobileController@profile']);
+//Menu
+Route::get('/menus', [
+    'uses' => 'MenusController@index',
+    'as' => 'menus.index']);
+Route::get('/menus_detail', [
+    'uses' => 'MenusController@detail',
+    'as' => 'menus.detail']);
+
+Route::get('/news', ['as' => 'news', 'uses' => 'MenusController@index']);
+Route::get('/reservation', ['as' => 'reservation', 'uses' => 'MenusController@index']);
+Route::get('/photo', ['as' => 'photo.gallery', 'uses' => 'MenusController@index']);
+Route::get('/home', ['as' => 'home', 'uses' => 'MenusController@index']);
+Route::get('/chat', ['as' => 'chat', 'uses' => 'MobileController@chat']);
+Route::get('/staff', ['as' => 'staff', 'uses' => 'MenusController@index']);
+Route::get('/coupon', ['as' => 'coupon', 'uses' => 'MenusController@index']);
+Route::get('/configuration', ['as' => 'configuration', 'uses' => 'MenusController@index']);
 
 
 Route::group(['domain' => '{name}.' . env('APP_DOMAIN')], $appRoutes);
