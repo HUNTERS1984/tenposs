@@ -40,7 +40,7 @@ class MobileController extends Controller
             $this->app->app_app_secret);    
         
         $response = json_decode($get);
-        
+  
         if( \App\Utils\Messages::validateErrors($response) ){
             return view('profile', 
             [ 
@@ -54,4 +54,31 @@ class MobileController extends Controller
         
 
     }
+    
+    public function profilePost( Request $request ){
+        
+    }
+    
+    public function configuration(){
+        
+        $get = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('get_push_setting',[
+                'token' => Session::get('user')->token
+            ],
+            $this->app->app_app_secret);    
+        
+        $response = json_decode($get);
+        //dd($response);
+        if( \App\Utils\Messages::validateErrors($response) ){
+            return view('configurations', 
+            [ 
+                'config' => $response,
+                'app_info' => $this->app_info
+            ]);
+        }else{
+            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+            return back();
+        }
+    }
+    
 }

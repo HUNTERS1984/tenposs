@@ -25,9 +25,16 @@ $appRoutes = function(){
         Route::get('/login/normal', ['as'=> 'login.normal', 'uses' => 'LoginController@loginNormal']);
         Route::post('/login/normal', ['as'=> 'login.normal.post', 'uses' => 'LoginController@loginNormalPost']);
         Route::get('/logout', ['as'=> 'logout', 'uses' => 'LoginController@logout']);
-        Route::get('/user/profile',[ 'as' => 'profile', 'uses' => 'MobileController@profile']);
+        Route::get('/user/profile',[ 
+            'middleware' => 'auth.custom',
+            'as' => 'profile', 
+            'uses' => 'MobileController@profile']);
         
-
+         Route::post('/user/profile',[ 
+            'middleware' => 'auth.custom',
+            'as' => 'profile', 
+            'uses' => 'MobileController@profilePost']);
+            
         //Social Login
         Route::get('/login/{provider?}',[
             'uses' => 'LoginController@getSocialAuth',
@@ -54,7 +61,10 @@ $appRoutes = function(){
         Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat']); 
         Route::get('/staff',[ 'as' => 'staff', 'uses' => 'MenusController@index']); 
         Route::get('/coupon',[ 'as' => 'coupon', 'uses' => 'MenusController@index']); 
-        Route::get('/configuration',[ 'as' => 'configuration', 'uses' => 'MenusController@index']); 
+        Route::get('/configuration',[ 
+            'middleware' => 'auth.custom',
+            'as' => 'configuration', 
+            'uses' => 'MobileController@configuration']); 
         
         //End
     } );
