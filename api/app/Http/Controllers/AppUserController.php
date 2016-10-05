@@ -302,8 +302,13 @@ class AppUserController extends Controller
             $this->body['data']['social_id'] = NULL;
             $this->body['data']['profile'] = $profile;
 
-            if (!$push)
+            if (!$push) {
                 $push = new UserPush();
+                $push->ranking = 1;
+                $push->news = 1;
+                $push->coupon = 1;
+                $push->chat = 1;
+            }
             $this->body['data']['push_setting'] = $push;
             return $this->output($this->body);
         } else {
