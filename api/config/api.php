@@ -31,6 +31,7 @@ return [
     'sig_news_detail' => array('app_id','time','id'),
     'sig_coupon_detail' => array('app_id','time','id'),
     'sig_app_domain' => array('domain','time'),
+    'sig_get_push_setting' => array('token','time'),
 
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id

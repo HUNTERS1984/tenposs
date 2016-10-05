@@ -39,7 +39,13 @@ return [
     'facebook' => [
         'client_id' => '159391921181596',
         'client_secret' => 'cc9ad24a6a123349ada67fb373067fbc',
-        'redirect' => 'https://m.ten-po.com/callback/facebook',
+        'redirect' => 'https://tenposs-end-phanvannhien.c9users.io/login/callback/facebook',
+    ],
+    
+    'twitter' => [
+        'client_id' => 'RwA2MxYOwBwVC8AvjbWzL34Sw',
+        'client_secret' => 'Ise1bqJluX3ZN2SwOZw3rSPBRYOJwsQt72Pxct7S2HYRrglDKc',
+        'redirect' => 'https://tenposs-end-phanvannhien.c9users.io/login/callback/twitter',
     ],
 
 ];
