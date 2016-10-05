@@ -6,33 +6,17 @@ use App\Utils\HttpRequestUtil;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\Session;
 
-define('TOTAL_ITEMS', 10);
+define('TOTAL_ITEMS', 1);
 
 class MenusController extends Controller
 {
-    protected $app;
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-
-        $this->app = Session::get('app');
-        $this->request = $request;
-
-    }
-
     //
     public function index()
     {
         $page_number = $this->request->page;
         $menu_id = $this->request->menu_id;
-
-        $app_info = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('appinfo', [
-                'app_id' => $this->app->app_app_id], $this->app->app_app_secret);
-
+        $app_info = $this->app_info;
         $menus = HttpRequestUtil::getInstance()->get_data('menu', [
             'app_id' => $this->app->app_app_id, 'store_id' => 1], $this->app->app_app_secret);
         $menus_data = array();
@@ -67,8 +51,41 @@ class MenusController extends Controller
             }
         }
         //print_r($items_data);
-        return view('menu.index', compact('app_info', 'menus_data', 'items_data', 'items_total_data', 'total_page'));
+        return view('menu.index', compact('app_info', 'menus_data', 'items_data', 'items_total_data', 'total_page','page_number'));
     }
+
+    public function get_data()
+    {
+        $page_number = $this->request->page;
+        $menu_id = $this->request->menu_id;
+
+        $items_data = array();
+        $items_total_data = 0;
+        $total_page = 0;
+
+        if (empty($page_number))
+            $page_number = 1;
+        $items = HttpRequestUtil::getInstance()->get_data('items',
+            ['app_id' => $this->app->app_app_id,
+                'menu_id' => $menu_id,
+                'pageindex' => $page_number,
+                'pagesize' => TOTAL_ITEMS],
+            $this->app->app_app_secret);
+
+        if (!empty($items)) {
+            $items = json_decode($items);
+            if ($items->code == '1000') {
+                $items_data = $items->data->items;
+                $items_total_data = $items->data->total_items;
+                $total_page = ceil($items_total_data / TOTAL_ITEMS);
+            }
+        }
+        //print_r($items_data);
+        $returnHTML = view('menu.element_item')->with(compact('items_data','total_page'))->render();
+//        $data = array('data' => $returnHTML, 'cur_page' => $total_page);
+        return $returnHTML;
+    }
+
 
     public function detail()
     {

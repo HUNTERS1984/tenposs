@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,28 +14,29 @@ use Session;
 class Controller extends BaseController
 {
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
-    
+
     protected $app_info;
     protected $app;
-    
-    public function __construct(){
-       
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
         $this->app = Session::get('app');
-       
         $get = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('appinfo',[
-            'app_id' => $this->app->app_app_id ],
-            $this->app->app_app_secret);
-        
+            ->get_data('appinfo', [
+                'app_id' => $this->app->app_app_id],
+                $this->app->app_app_secret);
+
         $response = json_decode($get);
-        
-        if( \App\Utils\Messages::validateErrors($response) ){
+
+        if (\App\Utils\Messages::validateErrors($response)) {
             $this->app_info = $response;
-        }else{
+        } else {
             abort(404);
         }
 
     }
-    
-    
+
+
 }

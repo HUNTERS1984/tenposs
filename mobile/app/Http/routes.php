@@ -51,8 +51,9 @@ $appRoutes = function(){
          * Mọi người sửa cái controller trỏ tới controller của mình nhé.
          * Phần này Nhiên hardcode để làm sidemenu
          */
-        Route::get('/menus',[ 'as' => 'menu', 'uses' => 'MenusController@index']);
-        Route::get('/menus_detail','MenusController@detail');
+        Route::get('/menus',[ 'as' => 'menus.index', 'uses' => 'MenusController@index']);
+        Route::get('/menus/get_data',[ 'as' => 'menus.index.get_data', 'uses' => 'MenusController@get_data']);
+        Route::get('/menus/detail',[ 'as' => 'menus.detail', 'uses' => 'MenusController@detail']);
         
         Route::get('/news',[ 'as' => 'news', 'uses' => 'MenusController@index']); 
         Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'MenusController@index']); 

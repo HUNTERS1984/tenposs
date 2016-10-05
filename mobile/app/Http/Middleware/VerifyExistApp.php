@@ -28,6 +28,7 @@ class VerifyExistApp
                     ->first();
             Session::put('app',$app);        
         }
+
         return $next($request);
     }
 }

@@ -401,8 +401,14 @@ class AppUserController extends Controller
 
         $push = UserPush::where('app_user_id', $request->user->id)->first();
 //        $push = UserPush::where('app_user_id',1)->first();
-        if (!$push)
+        if (!$push) {
             $push = new UserPush();
+            $push->ranking = 1;
+            $push->news = 1;
+            $push->coupon = 1;
+            $push->chat = 1;
+            $push->app_user_id = $request->user->id;
+        }
         $this->body['data']['push_setting'] = $push;
         return $this->output($this->body);
     }
