@@ -142,10 +142,10 @@ class ItemController extends Controller
         return $this->output($this->body);
     }
 
-    public function item_relate()
+    public function item_related()
     {
 
-        $check_items = array('app_id', 'item_id', 'time', 'sig');
+        $check_items = array('app_id', 'item_id', 'pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -160,11 +160,11 @@ class ItemController extends Controller
         $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
         if ($ret_sig)
             return $ret_sig;
-        //end validate app_id and sig
-//        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
-//            return $this->error(1004);
+//        end validate app_id and sig
+        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+            return $this->error(1004);
 //
-//        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key
         $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'));
         //get data from redis
@@ -177,7 +177,7 @@ class ItemController extends Controller
         }
         try {
             $total_items = Item::find(Input::get('item_id'))->rel_items()->count();
-            $items = Item::find(Input::get('item_id'))->rel_items()->get()->toArray();
+            $items = Item::find(Input::get('item_id'))->rel_items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
                 try {
@@ -258,13 +258,16 @@ class ItemController extends Controller
                     $items[$i]->size = [];
                 }
             }
-
+            $total_items_relate = Item::find(Input::get('item_id'))->rel_items()->count();
+            $items_relate = Item::find(Input::get('item_id'))->rel_items()->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
 
         $this->body['data']['items'] = $items;
+        $this->body['data']['items_related'] = $items_relate;
+        $this->body['data']['total_items_related'] = $total_items_relate;
         if (count($items) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
