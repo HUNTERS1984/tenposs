@@ -8,7 +8,7 @@ class Menus{
             case 1:
                 return route('slideshow');//スライドショー
             case 2:
-                return route('menu');//メニュー
+                return route('menus.index');//メニュー
             case 3:
                 return route('news');//ニュース
             case 4:

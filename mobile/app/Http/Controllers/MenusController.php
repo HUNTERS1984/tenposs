@@ -6,6 +6,7 @@ use App\Utils\HttpRequestUtil;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Response;
 
 define('TOTAL_ITEMS', 1);
 
@@ -50,15 +51,15 @@ class MenusController extends Controller
                 }
             }
         }
-        //print_r($items_data);
-        return view('menu.index', compact('app_info', 'menus_data', 'items_data', 'items_total_data', 'total_page','page_number'));
+        //print_r($total_page);
+        return view('menu.index', compact('app_info', 'menus_data', 'items_data', 'items_total_data', 'total_page', 'page_number'));
     }
 
     public function get_data()
     {
         $page_number = $this->request->page;
         $menu_id = $this->request->menu_id;
-
+        $type = $this->request->type;
         $items_data = array();
         $items_total_data = 0;
         $total_page = 0;
@@ -80,18 +81,21 @@ class MenusController extends Controller
                 $total_page = ceil($items_total_data / TOTAL_ITEMS);
             }
         }
+//        print_r($total_page);die;
         //print_r($items_data);
-        $returnHTML = view('menu.element_item')->with(compact('items_data','total_page'))->render();
+        if ($type == 'load_more')
+            return Response::json(array('items_data' => $items_data, 'total_page' => $total_page, 'page_number' => $page_number));
+//            $returnHTML = view('menu.element_item_more')->with(compact('items_data','total_page','page_number'))->render();
+        else
+            return $returnHTML = view('menu.element_item')->with(compact('items_data', 'total_page', 'page_number'))->render();
 //        $data = array('data' => $returnHTML, 'cur_page' => $total_page);
-        return $returnHTML;
+//        return $returnHTML;
     }
 
 
     public function detail()
     {
-        $app_info = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('appinfo', [
-                'app_id' => $this->app->app_app_id], $this->app->app_app_secret);
+        $app_info = $this->app_info;
 
         $items_detail = HttpRequestUtil::getInstance()->get_data('item_detail',
             [
@@ -116,6 +120,7 @@ class MenusController extends Controller
                 }
             }
         }
+//        dd($items_relate_data);
         return view('menu.detail', compact('app_info', 'items_detail_data', 'items_relate_data'));
     }
 }

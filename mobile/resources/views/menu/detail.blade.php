@@ -5,71 +5,105 @@
 @section('page')
     <div id="header">
         <div class="container-fluid">
-            {{--<h1 class="aligncenter" style="--}}
-            {{--color: {{ $app_info->data->app_setting->title_color}};--}}
-            {{--background-color: #{{ $app_info->data->app_setting->header_color}};--}}
-            {{--">--}}
-            {{--{{ $app_info->data->name }}</h1>--}}
-            <h1>Menu detail</h1>
+            <h1 class="aligncenter" style="
+                    color: {{ $app_info->data->app_setting->title_color}};
+                    background-color: #{{ $app_info->data->app_setting->header_color}};
+                    ">
+                メニュー詳細</h1>
+
             <a href="javascript:void(0)" class="h_control-nav">
-                <img src="img/icon/h_nav.png" alt="nav"/>
+                <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
             </a>
         </div>
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <img src="img/single.jpg" alt="Nakayo"/>
-            <div class="container-fluid">
-                <div class="info-productdetail">
-                    <div class="container-fluid">
-                        <span>ID: 123456</span>
-                        <p class="font32"><strong>PRODUCT NAME</strong></p>
-                        <span class="price">$1,200</span>
-                    </div>
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-button">Buy now</a>
-                </div>
-                <div class="entry-productdetail">
-                    <div class="option">
-                        <span class="btn switch switch-on">Lorem Ipsum</span>
-                        <span class="btn switch switch-off">is simply</span>
-                    </div>
-                    <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                        It has survived not only five centuries,
-                        but also the leap into electronic typesetting, remaining essentially unchanged.
-                    </p>
-                    <div class="pad20">
-                        <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">Buy now</a>
-                    </div>
-                </div>
-            </div><!-- End container fluid -->
-            <div id="related">
+            @if(count($items_detail_data) > 0)
+                <img src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}"/>
                 <div class="container-fluid">
-                    <h2 class="aligncenter font32">Related</h2>
-                    <div class="row clearfix">
-                        <div class="item-product">
-                            <img src="img/2colofot.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
+                    <div class="info-productdetail">
+                        <div class="container-fluid">
+                            <span>ID: {{$items_detail_data->id}}</span>
+                            <p class="font32"><strong>{{$items_detail_data->title}}</strong></p>
+                            <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
                         </div>
-                        <div class="item-product">
-                            <img src="img/Jpnsfr.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
+                        <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">今買う</a>
+                    </div>
+                    <div class="entry-productdetail">
+                        <div class="option">
+                            {{--<span class="btn switch switch-on" alt="tab1">説明</span>--}}
+                            {{--<span class="btn switch switch-off"  alt="tab2">サイズ</span>--}}
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active"><a href="#tab1">説明</a></li>
+                                <li><a href="#tab2">サイズ</a></li>
+                            </ul>
                         </div>
-                        <div class="item-product">
-                            <img src="img/tkNdnb1.jpg" alt="Nakayo"/>
-                            <p>Nayako</p>
-                            <span>$ 1,200</span>
+                        <div id="tab1" class="tab-pane fade in active">
+                            {{$items_detail_data->description}}
+                        </div>
+                        <div id="tab2" class="tab-pane fade">
+                            @if(count($items_detail_data->size) > 0)
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center;">#</th>
+                                        <?php $category_start = $items_detail_data->size[0]->item_size_category_id;?>
+
+                                        @for($i = 0;$i <count($items_detail_data->size);$i++)
+                                            @if($i > 0 && $category_start == $items_detail_data->size[$i]->item_size_category_id)
+                                                @break;
+                                            @endif
+                                            <th style="text-align: center;">{{$items_detail_data->size[$i]->item_size_category_name}}</th>
+
+                                        @endfor
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $data_row = \App\Utils\Convert::convert_size_item_to_array($items_detail_data->size); ?>
+                                    @if(count($data_row) > 0)
+                                        @foreach($data_row as $item)
+                                            <tr>
+                                                <td style="text-align: center;"
+                                                    class="col-md-2">{{$item[0]->item_size_type_name}}</td>
+                                                @for($t=0;$t <  count($item);$t++)
+                                                    <td class="col-md-2"
+                                                        style="text-align: center;">{{round($item[$t]->value,2)}}
+                                                    </td>
+                                                @endfor
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                    </tbody>
+                                </table>
+                            @endif
+
+                        </div>
+                        <div class="pad20">
+                            <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">今買う</a>
                         </div>
                     </div>
                 </div><!-- End container fluid -->
-            </div><!-- End related -->
+            @endif
+            @if(count($items_relate_data) > 0)
+                <div id="related">
+                    <div class="container-fluid">
+                        <h2 class="aligncenter font32">関連しました</h2>
+                        <div class="row clearfix">
+                            @foreach($items_relate_data as $item_relate)
+                                <div class="item-product">
+                                    <img src="{{$item_relate->image_url}}" alt="{{$item_relate->title}}"/>
+                                    <p>{{$item_relate->title}}</p>
+                                    <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </div><!-- End container fluid -->
+                </div><!-- End related -->
+            @endif
         </div><!-- End content -->
 
-        {{--@include('partials.sidemenu')--}}
+        @include('partials.sidemenu')
     </div><!-- End main -->
     <div id="footer">
 
@@ -78,14 +112,12 @@
 @section('footerJS')
 
     <script type="text/javascript">
-        var bannerSwiper = new Swiper('#banner .swiper-container', {
-            autoplay: 2000,
-            speed: 400,
-            loop: true,
-            spaceBetween: 0,
-            slidesPerView: 1,
-            pagination: "#banner .swiper-pagination",
-            paginationClickable: true
+
+        $(document).ready(function () {
+            $("#myTab a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
         });
     </script>
 
