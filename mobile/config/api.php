@@ -32,4 +32,5 @@ return [
     'sig_get_push_setting' => array('token','time'),
     'secret_key_for_domain' => 'Tenposs@123',
     'sig_set_push_setting' => array('token', 'ranking', 'news', 'coupon', 'chat'),
+    'sig_staff_detail' => array('app_id', 'id'),
 ];
