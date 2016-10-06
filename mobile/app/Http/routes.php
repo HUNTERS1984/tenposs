@@ -66,6 +66,11 @@ $appRoutes = function(){
             'middleware' => 'auth.custom',
             'as' => 'configuration', 
             'uses' => 'MobileController@configuration']); 
+            
+        Route::post('/configuration/save',[ 
+            'middleware' => 'auth.custom',
+            'as' => 'configuration.save', 
+            'uses' => 'MobileController@configurationSave']); 
         
         //End
     } );
