@@ -10,11 +10,11 @@
             </div>
         @endforeach
     @else
-        <p style="text-align: center;">No data</p>
+        <p style="text-align: center;">データなし</p>
     @endif
 </div>
 @if($total_page > 1)
-    <div class="row" id="div_load_more">
+    <div class="row"  style="text-align:center;"  id="div_load_more">
         <a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">続きを読む</a>
     </div>
 @endif

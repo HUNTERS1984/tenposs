@@ -5,14 +5,14 @@
 @section('page')
     <div id="header">
         <div class="container-fluid">
-            {{--<h1 class="aligncenter" style="--}}
-            {{--color: {{ $app_info->data->app_setting->title_color}};--}}
-            {{--background-color: #{{ $app_info->data->app_setting->header_color}};--}}
-            {{--">--}}
-            {{--{{ $app_info->data->name }}</h1>--}}
-            <h1>Menu</h1>
+            <h1 class="aligncenter" style="
+            color: {{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">
+                メニュー</h1>
+            {{--<h1>Menu</h1>--}}
             <a href="javascript:void(0)" class="h_control-nav">
-                <img src="img/icon/h_nav.png" alt="nav"/>
+                <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
             </a>
         </div>
     </div><!-- End header -->
@@ -24,10 +24,6 @@
                     <!-- Additional required wrapper -->
                     <div class="swiper-wrapper">
                         <!-- Slides -->
-                        {{--<div class="swiper-slide">Spring</div>--}}
-                        {{--<div class="swiper-slide">Summer</div>--}}
-                        {{--<div class="swiper-slide">Autumn</div>--}}
-                        {{--<div class="swiper-slide">Winter</div>--}}
                         @if(count($menus_data) > 0)
                             @foreach($menus_data as $item)
                                 <div class="swiper-slide" data-id="{{$item->id}}">{{$item->name}}</div>
@@ -63,12 +59,12 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        <p>No data</p>
+                                        <p>データなし</p>
                                     @endif
 
                                 </div>
                                 @if($total_page > 1)
-                                    <div class="row" id="div_load_more">
+                                    <div class="row" style="text-align:center;" id="div_load_more">
                                         <a href="javascript:void(0)" id="load_more"
                                            class="btn tenposs-readmore">続きを読む</a>
                                     </div>
@@ -81,29 +77,15 @@
             </div><!-- End category detail -->
         </div><!-- End content -->
 
-        {{--@include('partials.sidemenu')--}}
+        @include('partials.sidemenu')
     </div><!-- End main -->
     <div id="footer">
 
     </div><!-- End footer -->
 @endsection
 @section('footerJS')
-
+    <script src="{{ url('js/custom.js') }}"></script>
     <script type="text/javascript">
-        //        var categorySwiper = new Swiper('#category .swiper-container', {
-        //            speed: 400,
-        //            spaceBetween: 0,
-        //            slidesPerView: 1,
-        //            nextButton: '#category .swiper-button-next',
-        //            prevButton: '#category .swiper-button-prev'
-        //        });
-        //        var categorydetailSwiper = new Swiper('#category-detail .swiper-container', {
-        //            speed: 400,
-        //            spaceBetween: 0,
-        //            slidesPerView: 1
-        //        });
-        //        categorySwiper.params.control = categorydetailSwiper;
-        //        categorydetailSwiper.params.control = categorySwiper;
         var categorySwiper = new Swiper('#category .swiper-container', {
             speed: 400,
             spaceBetween: 0,
@@ -118,10 +100,11 @@
                     url: "{{ route('menus.index.get_data')}}",
                     data: {menu_id: category_idx, page: 1},
                     beforeSend: function () {
-                        alert(1);
+                        var data = '<div id="row-data" style="text-align:center;" class="row"><img src="{{ url('img/loading.gif') }}" /></div>';
+                        $('#category-data').html(data);
                     }
                 }).done(function (data) {
-                    console.log(data);
+                    $('#current_page').val(1);
                     $('#category-data').html(data);
 
                 });
@@ -131,9 +114,13 @@
                 var category_idx = $('.swiper-slide-active ').data('id');
                 $.ajax({
                     url: "{{ route('menus.index.get_data')}}",
-                    data: {menu_id: category_idx, page: 1}
+                    data: {menu_id: category_idx, page: 1},
+                    beforeSend: function () {
+                        var data = '<div id="row-data" style="text-align:center;" class="row"><img src="{{ url('img/loading.gif') }}" /></div>';
+                        $('#category-data').html(data);
+                    }
                 }).done(function (data) {
-                    console.log(data);
+                    $('#current_page').val(1);
                     $('#category-data').html(data);
 
                 });
@@ -141,23 +128,34 @@
         });
         $(document).ready(function () {
             $(document).on("click", "#load_more", function () {
-                var current_page = $('#current_page').val();
+                var current_page = parseInt($('#current_page').val());
                 var next_page = current_page + 1;
                 var category_idx = $('.swiper-slide-active ').data('id');
                 var total_page = parseInt('{{$total_page}}');
-                alert(total_page);
-                {{--$.ajax({--}}
-                {{--url: "{{ route('menus.index.get_data')}}",--}}
-                {{--data: {menu_id: category_idx, page: next_page}--}}
-                {{--}).done(function (data) {--}}
-                {{--console.log(data);--}}
-                {{--$('#row-data').html(data);--}}
-                {{--$('#current_page').value(next_page);--}}
-                {{--if (next_page == total_page)--}}
-                {{--$('#load_more').css('display', 'none');--}}
-                {{--});--}}
+
+                $.ajax({
+                    url: "{{ route('menus.index.get_data')}}",
+                    async: true,
+                    data: {menu_id: category_idx, page: next_page, type: 'load_more'},
+                    beforeSend: function () {
+                        var data = '<img src="{{ url('img/loading.gif') }}" />';
+                        $('#div_load_more').html(data);
+//                        $('#div_load_more').remove();
+                    }
+                }).done(function (data) {
+                    var tmp_html = bind_html_load_more(data.items_data, '{{ route('menus.detail')}}')
+                    $('#row-data').append(tmp_html);
+                    $('#current_page').val(next_page);
+                    if (parseInt(data.page_number) >= parseInt(data.total_page))
+                        $('#div_load_more').remove();
+                    else {
+                        var html = '<a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">続きを読む</a>';
+                        $('#div_load_more').html(html);
+                    }
+                });
             });
         });
+
     </script>
 
 
