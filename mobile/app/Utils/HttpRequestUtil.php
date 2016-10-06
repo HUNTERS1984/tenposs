@@ -115,6 +115,9 @@ class HttpRequestUtil
             case 'get_push_setting':
                 $params = Config::get('api.sig_get_push_setting');
                 break;
+            case 'set_push_setting':
+                $params = Config::get('api.sig_set_push_setting');
+                break;
             default:
                 break;
         }
