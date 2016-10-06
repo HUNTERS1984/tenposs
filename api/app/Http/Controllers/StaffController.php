@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Staff;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
 use Illuminate\Http\Request;
@@ -116,6 +117,52 @@ class StaffController extends Controller
         $this->body['data']['staffs'] = $staffs;
         $this->body['data']['total_staffs'] = $total_staffs;
         if ($total_staffs > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+
+        return $this->output($this->body);
+    }
+
+    public function staff_detail()
+    {
+
+        $check_items = array('app_id', 'id', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_staff_detail');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        //create key
+        $key = sprintf(Config::get('api.cache_staff_detail'), Input::get('app_id'), Input::get('id'));
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+        try {
+            $staffs = Staff::where('id', Input::get('id'))->whereNull('deleted_at')->first();
+            if (count($staffs) > 0 && array_key_exists('image_url', $staffs))
+                $staffs['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs['image_url']);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            dd($e);
+            return $this->error(9999);
+        }
+
+        $this->body['data']['staffs'] = $staffs;
+        if (count($staffs) > 0) { // set cache
             RedisUtil::getInstance()->set_cache($key, $this->body);
         }
 
