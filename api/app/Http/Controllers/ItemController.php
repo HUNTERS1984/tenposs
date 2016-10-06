@@ -171,7 +171,7 @@ class ItemController extends Controller
         $data = RedisUtil::getInstance()->get_cache($key);
         $data = null;
         //check data and return data
-        if ($data != null) { 
+        if ($data != null) {
             $this->body = $data;
             return $this->output($this->body);
         }
@@ -247,7 +247,7 @@ class ItemController extends Controller
         }
         try {
             $items = \Illuminate\Support\Facades\DB::table('items')
-                ->where('id',Input::get('app_id'))->get();
+                ->where('id', Input::get('app_id'))->get();
 
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
@@ -265,14 +265,16 @@ class ItemController extends Controller
                     $items[$i]->size = [];
                 }
             }
-            $tmp_related = Item::find(Input::get('item_id'))->rel_items();
+            $tmp_items = Item::find(Input::get('item_id'));
             $total_items_relate = 0;
             $items_relate = array();
-            if ($tmp_related) {
-                $total_items_relate = $tmp_related->count();
-                $items_relate = $tmp_related->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
+            if ($tmp_items) {
+                $tmp_related = $tmp_items->rel_items();
+                if ($tmp_related) {
+                    $total_items_relate = $tmp_related->count();
+                    $items_relate = $tmp_related->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
+                }
             }
-
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
