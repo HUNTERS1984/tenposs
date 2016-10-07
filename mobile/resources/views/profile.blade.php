@@ -11,7 +11,8 @@
 @endsection
 
 @section('page')
-<form action="" method="post">
+<form action="{{ route('profile.save') }}" method="post">
+    <input type="hidden" value="{{ csrf_token() }}" name="_token">
 <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter" style="
@@ -33,16 +34,30 @@
 </div><!-- End header -->
 <div id="main">
     <div id="content">
+        @include('partials.message')
         <div id="user">
             <ul>
                 <li>
-                    <label><img src="{{ Session::get('user')->profile->avatar_url }}" alt="{{ Session::get('user')->profile->name }}"/></label>
-                    Lorem Ipsum is simply dummy
+                    
+                        
+                    <?php
+                    $avatar = ($profile->data->user->profile->avatar_url != '') 
+                        ? $profile->data->user->profile->avatar_url
+                        : url('img/wall.jpg');
+                    ?>
+                    <div style="width:20%">
+                    <label>
+                    <img id="app-icon-review" class="new_img" src="{{ $avatar }}" width="100%"></label>
+                    <button class="btn_upload_img create" type="button">
+                        <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
+                    </button>
+                    <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
+                    </div>
                 </li>
                 <li>
                     <label>Username</label>
                     <input type="text" name="name" value="{{ $profile->data->user->profile->name }}"/>
-                    <i class="icon-clean"></i>
+                    
                 </li>
                 <li>
                     <label>Password</label>
@@ -61,29 +76,48 @@
                         <option value="1">Female</option>
                         <option value="2">Orther</option>
                     </select>   
-                    <i class="arrow-down"></i>
+           
                 </li>
                 <li>
                     <label>Address</label>
-                    <input type="email" name="email" value="{{ $profile->data->user->profile->address }}"/>
-                    <i class="icon-clean"></i>
+                    <input type="text" name="address" value="{{ $profile->data->user->profile->address }}"/>
+                   
                 </li>
             </ul>
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
                     Facebook
-                    <a class="btn">Lorem</a>
+                    @if( $profile->data->user->profile->facebook_status == 1 )
+                    <a href="#" class="btn">接続</a>
+                    @else    
+                    <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
+                       接続します
+                    </a>
+                    @endif
+                    
                 </li>
                 <li>
                     <i class="icon-twitter"></i>
                     Twitter
-                    <a class="btn">Lorem</a>
+                    @if( $profile->data->user->profile->twitter_status == 1 )
+                    <a href="#" class="btn">接続</a>
+                    @else    
+                    <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
+                       接続します
+                    </a>
+                    @endif
                 </li>
                 <li>
                     <i class="icon-instagram"></i>
                     Instagram
-                    <a class="btn">Lorem</a>
+                    @if( $profile->data->user->profile->instagram_status == 1 )
+                    <a href="#" class="btn">接続</a>
+                    @else    
+                    <a href="{{ $instagram_login_url }}" class="btn">
+                       接続します
+                    </a>
+                    @endif
                 </li>
             </ul>
         </div>
@@ -122,5 +156,23 @@
 @endsection
 
 @section('footerJS')
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+    
+    
+        $('.btn_upload_img.create').click(function () {
+            $(this).next('.btn_upload_ipt.create').click();
+        });
+        $("input.btn_upload_ipt").change(function () {
+            if ( this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#app-icon-review').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    })
+</script>
 @endsection
