@@ -74,7 +74,7 @@ class HttpRequestUtil
                 $params = Config::get('api.sig_photo');
                 break;
             case 'reserve':
-                $params = Config::get('api.reserve');
+                $params = Config::get('api.sig_reserve');
                 break;
             case 'coupon':
                 $params = Config::get('api.sig_coupon');
@@ -88,7 +88,7 @@ class HttpRequestUtil
             case 'social_profile':
                 $params = Config::get('api.sig_social_profile');
                 break;
-            case 'staff_category':
+            case 'staff_categories':
                 $params = Config::get('api.sig_staff_category');
                 break;
             case 'staffs':

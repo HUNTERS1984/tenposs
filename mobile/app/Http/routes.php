@@ -64,12 +64,21 @@ $appRoutes = function(){
         Route::get('/menus/related/{id}',[ 'as' => 'menus.related', 'uses' => 'MenusController@related']);
         Route::get('/menus/related_get_data',[ 'as' => 'menus.related.get_data', 'uses' => 'MenusController@related_get_data']);
 
-        Route::get('/news',[ 'as' => 'news', 'uses' => 'MenusController@index']); 
-        Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'MenusController@index']); 
-        Route::get('/photo',[ 'as' => 'photo.gallery', 'uses' => 'MenusController@index']); 
+        Route::get('/news',[ 'as' => 'news', 'uses' => 'NewsController@index']); 
+        Route::get('/news/detail/{id}',[ 'as' => 'news.detail', 'uses' => 'NewsController@getDetail']); 
+        Route::post('/news/ajaxLoadmore',[ 'as' => 'news.ajax', 'uses' => 'NewsController@ajaxLoadmore']);
+
+        Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'ReserveController@index']); 
+        Route::get('/photo',[ 'as' => 'photo.gallery', 'uses' => 'PhotoController@index']); 
+        Route::post('/photo/ajaxLoadmore',[ 'as' => 'photo.ajax', 'uses' => 'PhotoController@ajaxLoadmore']); 
+
         Route::get('/home',[ 'as' => 'home', 'uses' => 'MenusController@index']); 
+
         Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat']); 
-        Route::get('/staff',[ 'as' => 'staff', 'uses' => 'MenusController@index']);
+
+        Route::get('/staff',[ 'as' => 'staff', 'uses' => 'StaffController@index']);
+        Route::get('/staff/detail/{id}',[ 'as' => 'staff.detail', 'uses' => 'StaffController@getDetail']);
+        Route::post('/staff/ajaxLoadmore',[ 'as' => 'staff.ajax', 'uses' => 'StaffController@ajaxLoadmore']);
         //Coupon
         Route::get('/coupon',[ 'as' => 'coupon', 'uses' => 'CouponController@index']);
         Route::get('/coupon/get_data',[ 'as' => 'coupon.get_data', 'uses' => 'CouponController@get_data']);
