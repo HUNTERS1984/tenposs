@@ -7,8 +7,7 @@
                     <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url }}" alt=""/>
                 </a>
             </div>
-            <p class="font32">{{ Session::get('user')->profile->name }}</p>
-            <p> <a href="{{ route('logout') }}">Logout</a> </p>
+            <p class="font32">{{ Session::get('user')->profile->name }} <a href="{{ route('logout') }}">| ログアウト</a></p>
             @else
             <div class="image">
                 <a href="{{ route('login') }}">

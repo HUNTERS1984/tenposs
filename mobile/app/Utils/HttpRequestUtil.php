@@ -103,7 +103,7 @@ class HttpRequestUtil
             case 'get_app_by_domain':
                 $params = Config::get('api.sig_app_domain');
                 break;
-            case 'item_relate':
+            case 'item_related':
                 $params = Config::get('api.sig_items_relate');
                 break;
             case 'item_detail':
@@ -117,6 +117,9 @@ class HttpRequestUtil
                 break;
             case 'set_push_setting':
                 $params = Config::get('api.sig_set_push_setting');
+                break;
+            case 'staff_detail':
+                $params = Config::get('api.sig_staff_detail');
                 break;
             default:
                 break;
@@ -137,7 +140,7 @@ class HttpRequestUtil
             $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
             $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params, $app_secret_key);
             $service_url = $this->_url . $function . '?' . http_build_query($data_params);
-
+//            print_r($service_url);
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             $curl_response = curl_exec($curl);

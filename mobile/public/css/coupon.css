@@ -97,3 +97,17 @@
 #below-content p span{
     font-size: 16px;
 }
+
+#below-content-disable p{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    background: #5e5e5e;
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 0;
+}

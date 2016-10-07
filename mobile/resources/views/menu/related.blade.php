@@ -9,7 +9,7 @@
             color: {{ $app_info->data->app_setting->title_color}};
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
-                メニュー</h1>
+                関連商品</h1>
             {{--<h1>Menu</h1>--}}
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
@@ -19,22 +19,7 @@
     <div id="main">
         <div id="content">
             <div id="category">
-                <!-- Slider main container -->
-                <div class="swiper-container">
-                    <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper">
-                        <!-- Slides -->
-                        @if(count($menus_data) > 0)
-                            @foreach($menus_data as $item)
-                                <div class="swiper-slide" data-id="{{$item->id}}">{{$item->name}}</div>
-                            @endforeach
-                        @endif
-                    </div>
-
-                    <!-- If we need navigation buttons -->
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
+                <a href="{{route('menus.detail',$item_id)}}">バック</a>
             </div><!-- End category -->
             <div id="category-detail">
                 <form id="myform" method="post" action="">
@@ -86,57 +71,17 @@
 @section('footerJS')
     <script src="{{ url('js/custom.js') }}"></script>
     <script type="text/javascript">
-        var categorySwiper = new Swiper('#category .swiper-container', {
-            speed: 400,
-            spaceBetween: 0,
-            slidesPerView: 1,
-            nextButton: '#category .swiper-button-next',
-            prevButton: '#category .swiper-button-prev',
-            onSlideNextStart: function (swiper) {
-
-                console.log($('.swiper-slide-active ').data('id'));
-                var category_idx = $('.swiper-slide-active ').data('id');
-                $.ajax({
-                    url: "{{ route('menus.index.get_data')}}",
-                    data: {menu_id: category_idx, page: 1},
-                    beforeSend: function () {
-                        var data = '<div id="row-data" style="text-align:center;" class="row"><img src="{{ url('img/loading.gif') }}" /></div>';
-                        $('#category-data').html(data);
-                    }
-                }).done(function (data) {
-                    $('#current_page').val(1);
-                    $('#category-data').html(data);
-
-                });
-            },
-            onSlidePrevStart: function (swiper) {
-                console.log($('.swiper-slide-active').data('id'));
-                var category_idx = $('.swiper-slide-active ').data('id');
-                $.ajax({
-                    url: "{{ route('menus.index.get_data')}}",
-                    data: {menu_id: category_idx, page: 1},
-                    beforeSend: function () {
-                        var data = '<div id="row-data" style="text-align:center;" class="row"><img src="{{ url('img/loading.gif') }}" /></div>';
-                        $('#category-data').html(data);
-                    }
-                }).done(function (data) {
-                    $('#current_page').val(1);
-                    $('#category-data').html(data);
-
-                });
-            }
-        });
         $(document).ready(function () {
             $(document).on("click", "#load_more", function () {
                 var current_page = parseInt($('#current_page').val());
                 var next_page = current_page + 1;
-                var category_idx = $('.swiper-slide-active ').data('id');
+                var item_id = {{$item_id}}
                 var total_page = parseInt('{{$total_page}}');
 
                 $.ajax({
-                    url: "{{ route('menus.index.get_data')}}",
+                    url: "{{ route('menus.related.get_data')}}",
                     async: true,
-                    data: {menu_id: category_idx, page: next_page, type: 'load_more'},
+                    data: {item_id: item_id, page: next_page, type: 'load_more'},
                     beforeSend: function () {
                         var data = '<img src="{{ url('img/loading.gif') }}" />';
                         $('#div_load_more').html(data);
