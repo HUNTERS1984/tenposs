@@ -40,7 +40,9 @@ class MobileController extends Controller
             $this->app->app_app_secret);    
         
         $response = json_decode($get);
-  
+        
+        dd($response);
+        
         if( \App\Utils\Messages::validateErrors($response) ){
             return view('profile', 
             [ 
