@@ -166,35 +166,42 @@ class ItemController extends Controller
 //
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key
-        $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'));
+        $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'), Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         $data = null;
         //check data and return data
-        if ($data != null) { 
+        if ($data != null) {
             $this->body = $data;
             return $this->output($this->body);
         }
+        $items = array();
+        $total_items = 0;
         try {
-            $total_items = Item::find(Input::get('item_id'))->rel_items()->count();
-            $items = Item::find(Input::get('item_id'))->rel_items()->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-            for ($i = 0; $i < count($items); $i++) {
-                $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
-                try {
-                    $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
-                        ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
-                        ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
-                        ->where('item_sizes.item_id', '=', $items[$i]['id'])
-                        ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
-                            'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
-                        ->get();
-                    $items[$i]['size'] = $items_size;
-                } catch (QueryException $ex) {
-                    Log::error($ex->getMessage());
-                    $items[$i]['size'] = [];
+            $tmp_items = Item::find(Input::get('item_id'));
+            if ($tmp_items) {
+                $tmp_related = $tmp_items->rel_items();
+                if ($tmp_related) {
+                    $total_items = $tmp_related->count();
+                    $items = $tmp_related->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    for ($i = 0; $i < count($items); $i++) {
+                        $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
+                        try {
+                            $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
+                                ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
+                                ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
+                                ->where('item_sizes.item_id', '=', $items[$i]['id'])
+                                ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
+                                    'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
+                                ->get();
+                            $items[$i]['size'] = $items_size;
+                        } catch (QueryException $ex) {
+                            Log::error($ex->getMessage());
+                            $items[$i]['size'] = [];
+                        }
+                    }
                 }
             }
-
 
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
@@ -240,7 +247,7 @@ class ItemController extends Controller
         }
         try {
             $items = \Illuminate\Support\Facades\DB::table('items')
-                ->where('id',Input::get('app_id'))->get();
+                ->where('id', Input::get('app_id'))->get();
 
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
@@ -258,9 +265,16 @@ class ItemController extends Controller
                     $items[$i]->size = [];
                 }
             }
-            $total_items_relate = Item::find(Input::get('item_id'))->rel_items()->count();
-            $items_relate = Item::find(Input::get('item_id'))->rel_items()->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
-
+            $tmp_items = Item::find(Input::get('item_id'));
+            $total_items_relate = 0;
+            $items_relate = array();
+            if ($tmp_items) {
+                $tmp_related = $tmp_items->rel_items();
+                if ($tmp_related) {
+                    $total_items_relate = $tmp_related->count();
+                    $items_relate = $tmp_related->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
+                }
+            }
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }

@@ -28,6 +28,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
     Route::get('item_related', 'ItemController@item_related');
     Route::get('item_detail', 'ItemController@item_detail');
     Route::get('staff_categories', 'StaffController@staff_categories');
+    Route::get('staff_detail', 'StaffController@staff_detail');
     Route::get('staffs', 'StaffController@staffs');
     Route::get('news', 'NewsController@index');
     Route::get('news_detail', 'NewsController@news_detail');
