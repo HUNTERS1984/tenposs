@@ -80,16 +80,17 @@ class AppUserController extends Controller
 
     public function social_login(Request $request)
     {
-
+        $facebook_status = 0;
+        $twitter_status = 0;
         if (Input::get('social_type') == 1) {
             $check_items = array('app_id', 'name', 'social_type', 'social_id', 'social_token', 'time', 'sig');
-
+            $facebook_status = 1;
             if ($this->verify_facebook_token(Input::get('social_id'), Input::get('social_token')) == false) {
                 return $this->error(9998);
             }
         } else if (Input::get('social_type') == 2) {
             $check_items = array('app_id', 'name', 'social_type', 'social_id', 'social_token', 'social_secret', 'time', 'sig');
-
+            $twitter_status = 1;
             if ($this->verify_twitter_token(Input::get('social_id'), Input::get('social_token'), Input::get('social_secret')) == false) {
                 return $this->error(9998);
             }
@@ -135,8 +136,8 @@ class AppUserController extends Controller
                 $profile->gender = 0;
                 $profile->address = null;
                 $profile->avatar_url = null;
-                $profile->facebook_status = 0;
-                $profile->twitter_status = 0;
+                $profile->facebook_status = $facebook_status;
+                $profile->twitter_status = $twitter_status;
                 $profile->instagram_status = 0;
 
                 $profile->save();
@@ -539,6 +540,30 @@ class AppUserController extends Controller
                 $social_profile->social_secret = Input::get('social_secret');
             $social_profile->nickname = Input::get('nickname');
             $social_profile->save();
+            // update status social
+            $user_profile = UserProfile::find($request->user->profile->id);
+            if ($user_profile) {
+                $user_profile->app_user_id = $request->user->id;
+                $user_profile->gender = 0;
+                if (Input::get('social_type') == 1) {
+                    $user_profile->facebook_status = 1;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+
+                    $user_profile->facebook_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 2) {
+                    $user_profile->twitter_status = 1;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+                    $user_profile->twitter_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 3) {
+                    $user_profile->instagram_status = 1;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = Input::get('social_token');
+                }
+                $user_profile->save();
+            }
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
