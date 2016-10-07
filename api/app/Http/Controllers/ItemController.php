@@ -166,7 +166,7 @@ class ItemController extends Controller
 //
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         //create key
-        $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'));
+        $key = sprintf(Config::get('api.cache_items_relate'), Input::get('app_id'), Input::get('item_id'), Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         $data = null;

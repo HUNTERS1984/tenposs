@@ -38,7 +38,7 @@ return [
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
     'cache_items' => 'items_%s_%s_%s_%s', // app_id,menu_id,pageindex,pagesize
-    'cache_items_relate' => 'items_%s_%s', // app_id,item_id
+    'cache_items_relate' => 'items_%s_%s_%s_%s', // app_id,item_id,pageindex,pagesize
     'cache_items_detail' => 'items_%s_%s', // app_id,item_id
     'cache_menus' => 'menus_%s_%s', // app_id,menu_id
     'cache_photo_cat' => 'photo_cat_%s_%s', // app_id,store_id

@@ -38,51 +38,58 @@
                                 <li><a href="#tab2">サイズ</a></li>
                             </ul>
                         </div>
-                        <div id="tab1" class="tab-pane fade in active">
-                            {{$items_detail_data->description}}
+                        <div class="tab-content" style="padding-top: 20px; background: #fff;">
+                            <div id="tab1" class="tab-pane fade in active">
+                                {{$items_detail_data->description}}
+                            </div>
+                            <div id="tab2" class="tab-pane fade">
+                                @if(count($items_detail_data->size) > 0)
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th style="text-align: center;">#</th>
+                                            <?php $category_start = $items_detail_data->size[0]->item_size_category_id;?>
+
+                                            @for($i = 0;$i <count($items_detail_data->size);$i++)
+                                                @if($i > 0 && $category_start == $items_detail_data->size[$i]->item_size_category_id)
+                                                    @break;
+                                                @endif
+                                                <th style="text-align: center;">{{$items_detail_data->size[$i]->item_size_category_name}}</th>
+
+                                            @endfor
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php $data_row = \App\Utils\Convert::convert_size_item_to_array($items_detail_data->size); ?>
+                                        @if(count($data_row) > 0)
+                                            @foreach($data_row as $item)
+                                                <tr>
+                                                    <td style="text-align: center;"
+                                                        class="col-md-2">{{$item[0]->item_size_type_name}}</td>
+                                                    @for($t=0;$t <  count($item);$t++)
+                                                        <td class="col-md-2"
+                                                            style="text-align: center;">{{round($item[$t]->value,2)}}
+                                                        </td>
+                                                    @endfor
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                        </tbody>
+                                    </table>
+                                @endif
+
+                            </div>
                         </div>
-                        <div id="tab2" class="tab-pane fade">
-                            @if(count($items_detail_data->size) > 0)
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th style="text-align: center;">#</th>
-                                        <?php $category_start = $items_detail_data->size[0]->item_size_category_id;?>
 
-                                        @for($i = 0;$i <count($items_detail_data->size);$i++)
-                                            @if($i > 0 && $category_start == $items_detail_data->size[$i]->item_size_category_id)
-                                                @break;
-                                            @endif
-                                            <th style="text-align: center;">{{$items_detail_data->size[$i]->item_size_category_name}}</th>
-
-                                        @endfor
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php $data_row = \App\Utils\Convert::convert_size_item_to_array($items_detail_data->size); ?>
-                                    @if(count($data_row) > 0)
-                                        @foreach($data_row as $item)
-                                            <tr>
-                                                <td style="text-align: center;"
-                                                    class="col-md-2">{{$item[0]->item_size_type_name}}</td>
-                                                @for($t=0;$t <  count($item);$t++)
-                                                    <td class="col-md-2"
-                                                        style="text-align: center;">{{round($item[$t]->value,2)}}
-                                                    </td>
-                                                @endfor
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                    </tbody>
-                                </table>
-                            @endif
-
-                        </div>
                         <div class="pad20">
                             <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">今買う</a>
                         </div>
                     </div>
                 </div><!-- End container fluid -->
+            @else
+                <div class="container-fluid" style="text-align: center;">
+                    <p>データなし</p>
+                </div>
             @endif
             @if(count($items_relate_data) > 0)
                 <div id="related">
@@ -99,6 +106,12 @@
 
                         </div>
                     </div><!-- End container fluid -->
+                    @if($load_more_releated)
+                        <div class="row" style="text-align:center;" id="div_load_more">
+                            <a href="javascript:void(0)" id="load_more"
+                               class="btn tenposs-readmore">続きを読む</a>
+                        </div>
+                    @endif
                 </div><!-- End related -->
             @endif
         </div><!-- End content -->

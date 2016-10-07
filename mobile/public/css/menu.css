@@ -45,7 +45,7 @@
     background: #f8f8fa;
     padding: 10px;
     border-radius: 4px;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
 }
 .entry-productdetail p{
     text-align: justify;
@@ -67,4 +67,15 @@
 }
 #related{
     border-top: 30px solid #f8f8fa;
+}
+#myTab li {
+    width:50%;
+    text-align: center;
+    border: 0;
+}
+#myTab li.active a {
+    border: 0;
+}
+#myTab {
+    border: 0;
 }
