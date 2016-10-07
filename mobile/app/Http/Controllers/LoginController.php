@@ -14,8 +14,8 @@ class LoginController extends Controller
 {
     protected $socialite;
 
-    public function __construct(Socialite $socialite){
-        parent::__construct();
+    public function __construct(Socialite $socialite, Request $request){
+        parent::__construct($request);
         $this->socialite = $socialite;
     }
     

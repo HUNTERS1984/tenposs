@@ -40,7 +40,9 @@ class MobileController extends Controller
             $this->app->app_app_secret);    
         
         $response = json_decode($get);
-  
+        
+        dd($response);
+        
         if( \App\Utils\Messages::validateErrors($response) ){
             return view('profile', 
             [ 
@@ -68,17 +70,49 @@ class MobileController extends Controller
             $this->app->app_app_secret);    
         
         $response = json_decode($get);
-        //dd($response);
+   
         if( \App\Utils\Messages::validateErrors($response) ){
             return view('configurations', 
             [ 
-                'config' => $response,
+                'configs' => $response,
                 'app_info' => $this->app_info
             ]);
         }else{
             Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
             return back();
         }
+    }
+    
+    public function configurationSave(Request $request){
+        if( $request->ajax() ){
+            $arrKeys = ['ranking','news','coupon','chat' ];
+            $arrParams = $request->all();
+            foreach( $arrParams as $key => $value ){
+                if( in_array( $key, $arrKeys ) ){
+                    if( $value == 'true'){
+                        $arrParams[$key] = 1;
+                    }else{
+                        $arrParams[$key] = 0;
+                    }
+                } 
+            }
+            
+            $arrParams['token'] = Session::get('user')->token;
+            
+            $get = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('set_push_setting',
+                    $arrParams,
+                    $this->app->app_app_secret);    
+            
+            $response = json_decode($get);
+            
+            if( \App\Utils\Messages::validateErrors($response) ){
+                return response()->json($response);
+            }else{
+                return response()->json(['success' => false ]);
+            }
+            
+        }   
     }
     
 }
