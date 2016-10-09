@@ -56,6 +56,7 @@ $appRoutes = function(){
         Route::get('/menus/detail/{item_id}',[ 'as' => 'menus.detail', 'uses' => 'MenusController@detail']);
         Route::get('/menus/related/{id}',[ 'as' => 'menus.related', 'uses' => 'MenusController@related']);
         Route::get('/menus/related_get_data',[ 'as' => 'menus.related.get_data', 'uses' => 'MenusController@related_get_data']);
+        Route::get('/get_notification/{key}',[ 'as' => 'index.get_notification', 'uses' => 'NotificationController@get_notification']);
 
         Route::get('/news',[ 'as' => 'news', 'uses' => 'MenusController@index']); 
         Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'MenusController@index']); 
