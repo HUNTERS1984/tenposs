@@ -41,6 +41,8 @@ Route::group(array('prefix' => 'api/v1'), function () {
     Route::get('get_sig_test', 'TopController@get_sig_time_test');
     Route::get('list_app', 'TopController@list_app');
     Route::get('get_app_by_domain', 'AppUserController@get_app_by_domain');
+    Route::get('get_data_web_notification', 'AppUserController@get_data_web_notification');
+    Route::get('delete_data_web_notification', 'AppUserController@delete_data_web_notification');
     // User
     Route::resource('user', 'UserController');
 
