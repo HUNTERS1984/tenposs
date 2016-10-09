@@ -40,3 +40,12 @@
 
     
 }
+.btn_upload_img.create {
+    width: 100%;
+    padding: 10px;
+    border: solid 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #434b4e;
+    color: white;
+}

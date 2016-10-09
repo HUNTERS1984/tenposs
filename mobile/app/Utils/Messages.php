@@ -34,7 +34,9 @@ class Messages
     
     static $customErrorsList = array(
          '2000' => "Can't not get social user",
-         '2001' => "Can't not get user profile"
+         '2001' => "Can't not get user profile",
+         '2002' => "Update profile successful",
+         
     );
     
     

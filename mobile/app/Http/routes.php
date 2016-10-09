@@ -16,7 +16,7 @@ $appRoutes = function(){
         'middleware' => ['verify.app'] , 
         'middlewareGroups' => ['web'] ], function(){
             
-        Route::get('/','MobileController@index' );
+        Route::get('/',['as' => 'index', 'uses' => 'MobileController@index'] );
         
         //User routing
         Route::get('/login', ['as'=> 'login', 'uses' => 'LoginController@login']);
@@ -28,12 +28,12 @@ $appRoutes = function(){
         Route::get('/user/profile',[ 
             'middleware' => 'auth.custom',
             'as' => 'profile', 
-            'uses' => 'MobileController@profile']);
+            'uses' => 'LoginController@profile']);
         
          Route::post('/user/profile',[ 
             'middleware' => 'auth.custom',
-            'as' => 'profile', 
-            'uses' => 'MobileController@profilePost']);
+            'as' => 'profile.save', 
+            'uses' => 'LoginController@profilePost']);
             
         //Social Login
         Route::get('/login/{provider?}',[
@@ -44,6 +44,13 @@ $appRoutes = function(){
             'uses' => 'LoginController@getSocialAuthCallback',
             'as'   => 'auth.getSocialAuthCallback'
         ]);
+        
+        Route::get('/auth/instagram',[
+            'uses' => 'LoginController@instagramAuthCallback',
+            'as'   => 'instagram.callback'
+        ]);
+        
+        
         
 
         // All pages routing
