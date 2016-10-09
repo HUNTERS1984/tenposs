@@ -9,14 +9,24 @@ use Laravel\Socialite\Contracts\Factory as Socialite;
 use Session;
 use Auth;
 use Validator;
+use MetzWeb\Instagram\Instagram;
+
 
 class LoginController extends Controller
 {
     protected $socialite;
-
+    protected $instagram;
+    
+    
     public function __construct(Socialite $socialite, Request $request){
         parent::__construct($request);
         $this->socialite = $socialite;
+        
+        $this->instagram = new Instagram(array(
+            'apiKey'      => '17d7e27257b74d05b352fc55692b2b59',
+            'apiSecret'   => 'e2cbde752038423f8f9c6100ef815634',
+            'apiCallback' => route('instagram.callback')
+        ));
     }
     
     public function login(){
@@ -166,5 +176,78 @@ class LoginController extends Controller
     }
     
     
+    public function profile(){
     
+        $get = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('profile',[
+                'token' => Session::get('user')->token
+            ],
+            $this->app->app_app_secret);    
+        
+        $response = json_decode($get);
+        
+        if( \App\Utils\Messages::validateErrors($response) ){
+            return view('profile', 
+            [ 
+                'instagram_login_url' => $this->instagram->getLoginUrl(),
+                'profile' => $response,
+                'app_info' => $this->app_info
+            ]);
+        }else{
+            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+            return back();
+        }
+        
+
+    }
+    
+    public function profilePost( Request $request ){
+        $post = \App\Utils\HttpRequestUtil::getInstance()
+            ->post_data('update_profile',[
+                'token' => Session::get('user')->token,
+                'username' => $request->input('name') ,
+                'gender' => $request->input('gender'),
+                'address' => $request->input('address'),
+                'avatar' => $request->input('avatar')
+            ],
+            $this->app->app_app_secret);    
+        
+        $response = json_decode($post);
+        
+        if( \App\Utils\Messages::validateErrors($response) ){
+            Session::flash('message', \App\Utils\Messages::customMessage( 2002 ));
+            return back();
+        }else{
+            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+            return back();
+        }
+    }
+    
+    public function instagramAuthCallback(Request $request){
+        // grab OAuth callback code
+        $code = $request->input('code');
+        $data = $this->instagram->getOAuthToken($code);
+        if( $data ){
+            $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('social_profile',[
+                    'token' => Session::get('user')->token,
+                    'social_type' => 3,
+                    'social_id' => $data->user->id,
+                    'social_token' => $data->access_token,
+                    'nickname' => $data->user->full_name
+                ],
+                $this->app->app_app_secret);    
+            
+            $response = json_decode($post);
+            
+            if( \App\Utils\Messages::validateErrors($response) ){
+                return redirect()->route('profile');
+            }else{
+                Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+                return back();
+            }
+        
+        }
+
+    }
 }

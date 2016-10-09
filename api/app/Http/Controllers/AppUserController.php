@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
+use App\Models\News;
 use App\Models\User;
+use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -613,5 +616,87 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
+    public function get_data_web_notification()
+    {
+        $check_items = array('app_id', 'key', 'time', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //validate sig
+        $check_sig_items = Config::get('api.sig_web_push_current');
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+
+        $info_notify = array();
+        $info_data = array();
+        try {
+            $info_notify = WebPushCurrent::whereRaw('app_user_id = ? and `key` = ?', [$app['id'], Input::get('key')])->orderBy('created_at', 'desc')->first();
+            if ($info_notify) {
+                switch ($info_notify->type) {
+                    case "news":
+                        $info_data = News::where('id', $info_notify->data_id)->first();
+                        break;
+                    case "coupon":
+                        $info_data = Coupon::where('id', $info_notify->data_id)->first();
+                        break;
+                    case "chat":
+                        if (!empty($info_notify->data_value)) {
+                            $info_data = array('title' => $info_notify->title,
+                                'description' => $info_notify->data_value);
+                        }
+                        break;
+                    case "custom":
+                        if (!empty($info_notify->data_value)) {
+                            $info_data = array('title' => $info_notify->title,
+                                'description' => $info_notify->data_value);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (QueryException $e) {
+
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        $this->body['data']['info'] = $info_notify;
+        $this->body['data']['detail'] = $info_data;
+        return $this->output($this->body);
+    }
+
+    public function delete_data_web_notification()
+    {
+        $check_items = array('app_id', 'id', 'time', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //validate sig
+        $check_sig_items = Config::get('api.sig_delete_data_web_notification');
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        try {
+            $web_push = WebPushCurrent::find(Input::get('id'));
+            if ($web_push)
+                $web_push->delete();
+
+        } catch (QueryException $e) {
+
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+    }
 
 }

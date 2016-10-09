@@ -31,36 +31,6 @@ class MobileController extends Controller
         return view( 'chat', ['app_info' => $this->app_info] );
     }
     
-    public function profile(){
-    
-        $get = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('profile',[
-                'token' => Session::get('user')->token
-            ],
-            $this->app->app_app_secret);    
-        
-        $response = json_decode($get);
-        
-        dd($response);
-        
-        if( \App\Utils\Messages::validateErrors($response) ){
-            return view('profile', 
-            [ 
-                'profile' => $response,
-                'app_info' => $this->app_info
-            ]);
-        }else{
-            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
-            return back();
-        }
-        
-
-    }
-    
-    public function profilePost( Request $request ){
-        
-    }
-    
     public function configuration(){
         
         $get = \App\Utils\HttpRequestUtil::getInstance()

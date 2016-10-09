@@ -16,7 +16,7 @@ $appRoutes = function(){
         'middleware' => ['verify.app'] , 
         'middlewareGroups' => ['web'] ], function(){
             
-        Route::get('/','MobileController@index' );
+        Route::get('/',['as' => 'index', 'uses' => 'MobileController@index'] );
         
         //User routing
         Route::get('/login', ['as'=> 'login', 'uses' => 'LoginController@login']);
@@ -28,12 +28,12 @@ $appRoutes = function(){
         Route::get('/user/profile',[ 
             'middleware' => 'auth.custom',
             'as' => 'profile', 
-            'uses' => 'MobileController@profile']);
+            'uses' => 'LoginController@profile']);
         
          Route::post('/user/profile',[ 
             'middleware' => 'auth.custom',
-            'as' => 'profile', 
-            'uses' => 'MobileController@profilePost']);
+            'as' => 'profile.save', 
+            'uses' => 'LoginController@profilePost']);
             
         //Social Login
         Route::get('/login/{provider?}',[
@@ -44,6 +44,13 @@ $appRoutes = function(){
             'uses' => 'LoginController@getSocialAuthCallback',
             'as'   => 'auth.getSocialAuthCallback'
         ]);
+        
+        Route::get('/auth/instagram',[
+            'uses' => 'LoginController@instagramAuthCallback',
+            'as'   => 'instagram.callback'
+        ]);
+        
+        
         
 
         // All pages routing
@@ -56,6 +63,7 @@ $appRoutes = function(){
         Route::get('/menus/detail/{item_id}',[ 'as' => 'menus.detail', 'uses' => 'MenusController@detail']);
         Route::get('/menus/related/{id}',[ 'as' => 'menus.related', 'uses' => 'MenusController@related']);
         Route::get('/menus/related_get_data',[ 'as' => 'menus.related.get_data', 'uses' => 'MenusController@related_get_data']);
+        Route::get('/get_notification/{key}',[ 'as' => 'index.get_notification', 'uses' => 'NotificationController@get_notification']);
 
         Route::get('/news',[ 'as' => 'news', 'uses' => 'MenusController@index']); 
         Route::get('/reservation',[ 'as' => 'reservation', 'uses' => 'MenusController@index']); 

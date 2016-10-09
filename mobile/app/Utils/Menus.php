@@ -25,7 +25,9 @@ class Menus{
                 return route('coupon');//クーポン  
             case 10:
                 return route('configuration');//設定   
-                
+            default:
+                return route('index');
+                break;
         }
         
     }
