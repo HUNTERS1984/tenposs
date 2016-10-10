@@ -74,6 +74,14 @@
   margin-right: auto;
   display: block;
 }
+
+.messages .message.left .avatar img{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  width: 100%;
+}
+
 .messages .message.left .text_wrapper {
   background-color: #f4f6f7;
   margin-left: 20px;
@@ -88,10 +96,15 @@
 .messages .message.right .avatar {
   background-color: #fdbf68;
   float: right;
+}
+
+.messages .message.right .avatar img{
   margin-left: auto;
   margin-right: auto;
   display: block;
+  width: 100%;
 }
+
 .messages .message.right .text_wrapper {
   background-color: #f4f6f7;
   margin-right: 20px;
