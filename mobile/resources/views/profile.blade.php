@@ -11,7 +11,7 @@
 @endsection
 
 @section('page')
-<form action="{{ route('profile.save') }}" method="post">
+<form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" value="{{ csrf_token() }}" name="_token">
 <div id="header">
     <div class="container-fluid">
@@ -20,8 +20,8 @@
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
             {{ Session::get('user')->profile->name }}
-            <button type="submit" class="btn pull-right" style="background-color: white;">
-            保存
+            <button type="submit" class="btn pull-right">
+            はい
         </button>
         
             </h1>
@@ -38,8 +38,6 @@
         <div id="user">
             <ul>
                 <li>
-                    
-                        
                     <?php
                     $avatar = ($profile->data->user->profile->avatar_url != '') 
                         ? $profile->data->user->profile->avatar_url
@@ -49,15 +47,10 @@
                     <label>
                     <img id="app-icon-review" class="new_img" src="{{ $avatar }}" width="100%"></label>
                     <button class="btn_upload_img create" type="button">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
+                        <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
                     </button>
                     <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
                     </div>
-                </li>
-                <li>
-                    <label>ユーザーID</label>
-                    <input type="text" name="name" value="{{ $profile->data->user->id }}"/>
-                    
                 </li>
                 <li>
                     <label>ユーザー名</label>
@@ -77,14 +70,14 @@
                 <li>
                     <label>性别</label>
                     <select name="gender" id="">
-                        <option value="0">男性</option>
-                        <option value="1">女性</option>
-                        <option value="2">未定義</option>
+                        <option value="0">Male</option>
+                        <option value="1">Female</option>
+                        <option value="2">Orther</option>
                     </select>   
            
                 </li>
                 <li>
-                    <label>都道府桌</label>
+                    <label>住所</label>
                     <input type="text" name="address" value="{{ $profile->data->user->profile->address }}"/>
                    
                 </li>
@@ -94,10 +87,10 @@
                     <i class="icon-face"></i>
                     Facebook
                     @if( $profile->data->user->profile->facebook_status == 1 )
-                    <a href="#" class="btn">非接続</a>
+                    <a href="#" class="btn">接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
-                       連携
+                       接続します
                     </a>
                     @endif
                     
@@ -106,10 +99,10 @@
                     <i class="icon-twitter"></i>
                     Twitter
                     @if( $profile->data->user->profile->twitter_status == 1 )
-                    <a href="#" class="btn">非接続</a>
+                    <a href="#" class="btn">接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
-                       連携
+                       接続します
                     </a>
                     @endif
                 </li>
@@ -117,44 +110,17 @@
                     <i class="icon-instagram"></i>
                     Instagram
                     @if( $profile->data->user->profile->instagram_status == 1 )
-                    <a href="#" class="btn">非接続</a>
+                    <a href="#" class="btn">接続</a>
                     @else    
                     <a href="{{ $instagram_login_url }}" class="btn">
-                       連携
+                       接続します
                     </a>
                     @endif
                 </li>
             </ul>
         </div>
     </div><!-- End content -->
-    <div id="side">
-        <div class="h_side">
-            <div class="imageleft">
-                <div class="image">
-                    <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url }}" alt=""/>
-                </div>
-                <p class="font32">
-                    <strong>{{ $profile->data->user->profile->name }}</strong>
-                    - <a href="{{ route('logout') }}">Logout</a>
-                </p>
-            </div>
-        </div>
-        <ul class="s_nav" style="
-            background: #{{ $app_info->data->app_setting->menu_background_color}}
-            ">
-            @foreach ( $app_info->data->side_menu as $menu )
-            <li class="s_icon-home">
-                <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
-                    font-size: {{ $app_info->data->app_setting->menu_font_size }};
-                    font-family: {{ $app_info->data->app_setting->menu_font_family }};
-                    color: #{{ $app_info->data->app_setting->menu_font_color }};
-                ">
-                {{ $menu->name }}
-            </a></li>    
-            @endforeach
-        </ul>
-        
-    </div><!-- End side -->
+    @include('partials.sidemenu')
 </div><!-- End main -->
 <div id="footer"></div><!-- End footer -->
 </form>
@@ -166,13 +132,16 @@
         
     
     
-        $('.btn_upload_img.create').click(function () {
-            $(this).next('.btn_upload_ipt.create').click();
+        $('.btn_upload_img').click(function () {
+            $('.btn_upload_ipt').click();
         });
-        $("input.btn_upload_ipt").change(function () {
+        
+        $(".btn_upload_ipt").change(function () {
             if ( this.files && this.files[0]) {
+               
                 var reader = new FileReader();
                 reader.onload = function (e) {
+                    //console.log( e.target.result);
                     $('#app-icon-review').attr('src', e.target.result);
                 }
                 reader.readAsDataURL(this.files[0]);

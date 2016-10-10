@@ -10,7 +10,9 @@
         <link rel="icon" href="{{ url('favicon.ico') }}">
         <link rel="manifest" href="manifest.json">
         <title>Top</title>
-
+        
+        <link href="{{ url('fonts/themify/themify-icons.css') }}" rel="stylesheet">
+        
         <!-- Bootstrap core CSS -->
         <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
 

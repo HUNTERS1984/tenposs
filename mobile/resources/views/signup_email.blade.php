@@ -16,22 +16,22 @@
         <form action="{{ route('register.post') }}" class="form" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <input value="{{ old('name') }}" class="form-control" type="text" name="name" placeholder="Name"/>
+                <input value="{{ old('name') }}" class="form-control input-lg" type="text" name="name" placeholder="ユーザー名"/>
             </div>
              <div class="form-group">
-                <input value="{{ old('email') }}" class="form-control" type="email" name="email" placeholder="Email"/>
+                <input value="{{ old('email') }}" class="form-control input-lg" type="email" name="email" placeholder="メールアドレス"/>
             </div>
              <div class="form-group">
-                <input value="{{ old('password') }}" class="form-control" type="password" name="password" placeholder="パスワード"/>
+                <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード"/>
             </div>
             <div class="form-group">
-                <input value="{{ old('password_confirm') }}" class="form-control" type="password" name="password_confirm" placeholder="パスワード (確認)"/>
+                <input value="{{ old('password_confirm') }}" class="form-control input-lg" type="password" name="password_confirm" placeholder="パスワード (確認)"/>
             </div>
-            <button class="btn btn-block  tenposs-button" type="submit">OK</button>
+            <button class="btn btn-block  tenposs-button" type="submit">新規会員</button>
             
         </form>
         <p class="text-center">
-            すでに会員の方は、こちらへ
+            すでに会員の方は、<a href="{{ route('login.normal') }}">こちらへ</a> 
         </p>
     </div>
 </div><!-- End header -->                        
