@@ -10,7 +10,7 @@ var notify = {
         init: function (url_sw) {
             if ('serviceWorker' in navigator) {
                 console.log('Service Worker is supported');
-                navigator.serviceWorker.register('./notification_worker.js').then(function () {
+                navigator.serviceWorker.register('notification_worker.js').then(function () {
                     return navigator.serviceWorker.ready;
                 }).then(function (serviceWorkerRegistration) {
                     reg = serviceWorkerRegistration;
