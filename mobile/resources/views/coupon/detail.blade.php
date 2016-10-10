@@ -55,10 +55,10 @@
                                     @endforeach
                                     <?php $ls_tag = rtrim($ls_tag, ",");?>
                                 @endif
-                                <input type="text" class="form-control" id="target_copy" value="{{$ls_tag}}"
+                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="{{$ls_tag}}"
                                        placeholder="ハッシュタグ">
 
-                                <div class="input-group-addon"><a href="javascipt:void(0)" id="copy_hashtag">コピー</a>
+                                <div class="input-group-addon" style="cursor: pointer;"><a style="padding:20px 50px 20px 50px;" href="javascipt:void(0)" id="copy_hashtag">コピー</a>
                                 </div>
                             </div>
                         </div>
@@ -99,6 +99,7 @@
         $(document).ready(function () {
             $(document).on("click", "#copy_hashtag", function () {
 //                alert(1);
+                $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
             });
         });
