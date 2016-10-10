@@ -8,10 +8,9 @@
 	<div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-                color: {{ $app_info->data->app_setting->title_color}};
-                background-color: #{{ $app_info->data->app_setting->header_color}};
-                ">
-                {{ $app_info->data->name }}</h1>
+            color: #{{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">スタップ</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="img/icon/h_nav.png" alt="nav"/>
             </a>
@@ -65,7 +64,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <a href="#" class="btn tenposs-readmore">Readmore</a>
+                                    <a href="#" class="btn tenposs-readmore">もっと見る</a>
                                 </div>
                                 @endforeach
                             @endif

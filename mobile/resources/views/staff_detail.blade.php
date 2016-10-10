@@ -30,11 +30,11 @@
                 </div>
                 <div class="entry-productdetail">
                     <div class="option">
-                        <span class="btn switch switch-on">Lorem Ipsum</span>
-                        <span class="btn switch switch-off">is simply</span>
+                        <span class="btn switch switch-on">自己紹介</span>
+                        <span class="btn switch switch-off">プロフィール</span>
                     </div>
                     <p>{{$detail->data->staffs->introduction}}</p>
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">Readmore</a>
+                    <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
                 </div>
             </div><!-- End container fluid -->
         </div><!-- End content -->

@@ -6,10 +6,9 @@
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-                    color: {{ $app_info->data->app_setting->title_color}};
-                    background-color: #{{ $app_info->data->app_setting->header_color}};
-                    ">
-                クーポン</h1>
+            color: #{{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">クーポン</h1>
             {{--<h1>Menu</h1>--}}
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
@@ -50,7 +49,7 @@
             @if($total_page > 1)
                 <div class="row" style="text-align:center;" id="div_load_more">
                     <a href="javascript:void(0)" id="load_more"
-                       class="btn tenposs-readmore">続きを読む</a>
+                       class="btn tenposs-readmore">もっと見る</a>
                 </div>
             @endif
         </div><!-- End content -->

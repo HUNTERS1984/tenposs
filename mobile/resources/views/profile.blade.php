@@ -20,8 +20,8 @@
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
             {{ Session::get('user')->profile->name }}
-            <button type="submit" class="btn pull-right">
-            Save
+            <button type="submit" class="btn pull-right" style="background-color: white;">
+            保存
         </button>
         
             </h1>
@@ -49,37 +49,42 @@
                     <label>
                     <img id="app-icon-review" class="new_img" src="{{ $avatar }}" width="100%"></label>
                     <button class="btn_upload_img create" type="button">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
+                        <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
                     </button>
                     <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
                     </div>
                 </li>
                 <li>
-                    <label>Username</label>
+                    <label>ユーザーID</label>
+                    <input type="text" name="name" value="{{ $profile->data->user->id }}"/>
+                    
+                </li>
+                <li>
+                    <label>ユーザー名</label>
                     <input type="text" name="name" value="{{ $profile->data->user->profile->name }}"/>
                     
                 </li>
                 <li>
-                    <label>Password</label>
+                    <label>パスワード</label>
                     <input readonly type="text" value="******"/>
                     
                 </li>
                 <li>
-                    <label>Email</label>
+                    <label>メールアドレス</label>
                     <input type="email" readonly name="email" value="{{ $profile->data->user->email }}"/>
                     
                 </li>
                 <li>
-                    <label>Gender</label>
+                    <label>性别</label>
                     <select name="gender" id="">
-                        <option value="0">Male</option>
-                        <option value="1">Female</option>
-                        <option value="2">Orther</option>
+                        <option value="0">男性</option>
+                        <option value="1">女性</option>
+                        <option value="2">未定義</option>
                     </select>   
            
                 </li>
                 <li>
-                    <label>Address</label>
+                    <label>都道府桌</label>
                     <input type="text" name="address" value="{{ $profile->data->user->profile->address }}"/>
                    
                 </li>
@@ -89,10 +94,10 @@
                     <i class="icon-face"></i>
                     Facebook
                     @if( $profile->data->user->profile->facebook_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                     
@@ -101,10 +106,10 @@
                     <i class="icon-twitter"></i>
                     Twitter
                     @if( $profile->data->user->profile->twitter_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                 </li>
@@ -112,10 +117,10 @@
                     <i class="icon-instagram"></i>
                     Instagram
                     @if( $profile->data->user->profile->instagram_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ $instagram_login_url }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                 </li>
