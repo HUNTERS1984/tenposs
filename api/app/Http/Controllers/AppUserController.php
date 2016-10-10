@@ -366,7 +366,7 @@ class AppUserController extends Controller
         if (Input::get('client') == 0)
             $request->user->android_push_key = Input::get('key');
         else if (Input::get('client') == 3)
-            $request->user->web_push_key = Input::get('key');
+            $request->user->android_push_key = Input::get('key');
         else
             $request->user->apple_push_key = Input::get('key');
 
