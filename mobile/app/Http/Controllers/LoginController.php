@@ -126,6 +126,7 @@ class LoginController extends Controller
         return $this->socialite->with($provider)->redirect();
     }
     
+    
     public function getSocialAuthCallback( $provider = null){
 
         if($user = $this->socialite->with($provider)->user()){
@@ -175,6 +176,23 @@ class LoginController extends Controller
         }
     }
     
+    public function setPushKey(Request $request){
+        // set push key after login
+        if( $request->ajax() && $request->has('key') ){
+            $postPushKey = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('set_push_key',[
+                     'token' => Session::get('user')->token,
+                     'client' =>  3,
+                     'key' => $request->input('key')
+                ],
+                $this->app->app_app_secret); 
+                $responsePushKey = json_decode($postPushKey);
+                if( \App\Utils\Messages::validateErrors($responsePushKey) ){
+                    return response()->json(['msg' => 'Set push key success' ]);
+                }
+        }
+        
+    }
     
     public function profile(){
     

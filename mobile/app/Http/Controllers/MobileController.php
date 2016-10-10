@@ -14,7 +14,7 @@ class MobileController extends Controller
 {
   
     public function index(Request $request){
- 
+       
         $appTop = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('top',[
             'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);    
