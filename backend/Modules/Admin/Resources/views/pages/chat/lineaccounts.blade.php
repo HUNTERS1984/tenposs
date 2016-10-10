@@ -29,9 +29,15 @@
         </div>
         <div class="panel-footer" style="border-top: 0px;
     padding: 0px;">
-          <a href="{{ route('chat.login') }}" class="btn tenposs-btn">ログイン</a>
+          <a onclick="login()" class="btn tenposs-btn">ログイン</a>
         </div>
       </div><!--end panel --> 
     </div><!--end container -->  
   </body>
 </html>
+
+<script type="text/javascript">
+    function login() {
+        window.parent.location.href = 'https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id={{ Config::get('line.LINE_CHANEL_ID') }}&redirect_uri={{Config::get('line.LINE_LOGIN_CALLBACK_URL')}}&state=';
+    }
+</script>

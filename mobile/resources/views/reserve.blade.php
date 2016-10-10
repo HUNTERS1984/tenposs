@@ -10,8 +10,7 @@
             <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color}};
                 background-color: #{{ $app_info->data->app_setting->header_color}};
-                ">
-                {{ $app_info->data->name }}</h1>
+                ">予約</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="/img/icon/h_nav.png" alt="nav"/>
             </a>
@@ -19,15 +18,9 @@
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <div id="chat">
                 @if(isset($reserve_arr) && count($reserve_arr) > 0)
-                    @foreach($reserve_arr as $reserve)
-                        @foreach($reserve->data->reserve as $item)
-                        <p><iframe src="{{$item->reserve_url}}" width="100%" height="350" frameborder="0"></iframe></p>
-                        @endforeach
-                    @endforeach
+                    <p><iframe src="{{$reserve_arr[0]->data->reserve[0]->reserve_url}}" width="100%" height="350" frameborder="0"></iframe></p>
                 @endif
-            </div>
         </div><!-- End content -->
         @include('partials.sidemenu')
     </div><!-- End main -->
@@ -49,5 +42,9 @@
         });
         categorySwiper.params.control = categorydetailSwiper;
         categorydetailSwiper.params.control = categorySwiper;
+        $(document).ready(function(){
+            $('#content iframe').css({ height: $(window).innerHeight()+'px' });
+        })
     </script>
+
 @stop

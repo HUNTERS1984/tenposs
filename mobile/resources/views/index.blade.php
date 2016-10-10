@@ -67,7 +67,7 @@
                         @endforeach
                         @endif
                     </div>
-                    <a href="#" class="btn tenposs-readmore">Readmore</a>
+                    <a href="#" class="btn tenposs-readmore">もっと見る</a>
                 </div>
             </div><!-- End photogallery -->
             <div id="news">
@@ -90,7 +90,7 @@
                         @endforeach
                     @endif
 
-                    <a href="#" class="btn tenposs-readmore">Readmore</a>
+                    <a href="#" class="btn tenposs-readmore">もっと見る</a>
                 </div>
             </div><!-- End News -->
             <div id="contact">

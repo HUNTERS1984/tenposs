@@ -9,7 +9,7 @@
                     color: {{ $app_info->data->app_setting->title_color}};
                     background-color: #{{ $app_info->data->app_setting->header_color}};
                     ">
-                クーポン詳細</h1>
+                {{$items_detail_data->title}}</h1>
 
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>

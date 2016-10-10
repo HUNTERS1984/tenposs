@@ -13,8 +13,7 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
                 background-color: #{{ $app_info->data->app_setting->header_color }};
-                ">
-                {{ $app_info->data->name }} チャット</h1>
+                ">チャット</h1>
  
         <a href="javascript:void(0)" class="h_control-nav">
             <img src="img/icon/h_nav.png" alt="nav"/>

@@ -73,7 +73,7 @@ $appRoutes = function(){
         Route::get('/photo',[ 'as' => 'photo.gallery', 'uses' => 'PhotoController@index']); 
         Route::post('/photo/ajaxLoadmore',[ 'as' => 'photo.ajax', 'uses' => 'PhotoController@ajaxLoadmore']); 
 
-        Route::get('/home',[ 'as' => 'home', 'uses' => 'MenusController@index']); 
+        Route::get('/home',[ 'as' => 'home', 'uses' => 'MobileController@index']); 
 
         Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat']); 
 
