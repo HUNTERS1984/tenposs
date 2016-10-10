@@ -121,6 +121,9 @@ class HttpRequestUtil
             case 'staff_detail':
                 $params = Config::get('api.sig_staff_detail');
                 break;
+            case 'get_data_web_notification':
+                $params = Config::get('api.sig_web_push_current');
+                break;
             default:
                 break;
         }

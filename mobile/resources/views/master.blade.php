@@ -25,6 +25,7 @@
 
         <!-- Custom styles for this template -->
         <link href="{{ url('css/main.css') }}" rel="stylesheet">
+        <link rel="manifest" href="manifest.json">
         @yield('headCSS')
     </head>
 
@@ -42,6 +43,12 @@
         <script src="{{ url('js/bootstrap.min.js') }}"></script>
         <script src="{{ url('js/swiper.jquery.min.js') }}"></script>
         <script src="{{ url('js/script.js') }}"></script>
+        <script src="{{ url('js/notification.js') }}"></script>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                notify.init('{{ url('js/notification_worker.js') }}');
+            });
+        </script>
         @yield('footerJS')
     </body>
 </html>
