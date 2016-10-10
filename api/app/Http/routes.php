@@ -94,6 +94,7 @@ Route::group(array('prefix' => 'admin',
 
     Route::get('/clients/{user_id}/apps/{app_id}/setting', array('as' => 'admin.clients.apps.setting', 'uses' => 'Admin\AppsController@setting'));
     Route::post('/clients/{user_id}/apps/{app_id}/upload', array('as' => 'admin.clients.apps.upload', 'uses' => 'Admin\AppsController@upload'));
+    Route::post('/clients/{user_id}/apps/{app_id}/upload_web', array('as' => 'admin.clients.apps.uploadweb', 'uses' => 'Admin\AppsController@upload_web'));
 
     Route::get('/clients/approved/list', array('as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers'));
     Route::post('/clients/approved/process', array('as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess'));
