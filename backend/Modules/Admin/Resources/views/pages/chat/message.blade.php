@@ -20,7 +20,7 @@
           <div class="input-group input-message">
               <input type="text" class="form-control message_input" placeholder="メッセージを入力してください...">
               <span class="input-group-btn input-group-addon">
-                  <button class="btn btn-default send_message" type="button">送信</button>
+                  <a class="send_message">送信</a>
               </span>
           </div><!-- /input-group -->
         </div>
