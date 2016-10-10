@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Response;
 
-define('TOTAL_COUPON', 1);
+define('TOTAL_COUPON', 10);
 
 class CouponController extends Controller
 {
