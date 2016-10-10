@@ -34,4 +34,5 @@ return [
     'sig_set_push_setting' => array('token', 'ranking', 'news', 'coupon', 'chat'),
     'sig_staff_detail' => array('app_id', 'id'),
     'sig_web_push_current' => array('app_id','key', 'time'),
+    'sig_set_push_key' => array('token','client', 'key','time'),
 ];

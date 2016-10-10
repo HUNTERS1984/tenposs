@@ -124,6 +124,9 @@ class HttpRequestUtil
             case 'get_data_web_notification':
                 $params = Config::get('api.sig_web_push_current');
                 break;
+            case 'set_push_key':
+                $params = Config::get('api.sig_set_push_key');
+                break;
             default:
                 break;
         }
