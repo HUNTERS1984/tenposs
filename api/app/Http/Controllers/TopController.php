@@ -83,6 +83,7 @@ class TopController extends Controller
         try {
             // check app_id in database
             $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+
             if ($app == null || count($app) == 0)
                 return $this->error(1004);
             //validate sig
@@ -104,6 +105,8 @@ class TopController extends Controller
                 ->join('rel_apps_stores', 'rel_apps_stores.app_store_id', '=', 'app_stores.id')
                 ->where('rel_apps_stores.app_id', $app['id'])
                 ->select('app_stores.*', 'rel_apps_stores.*')->get();
+            $url = 'https://api.ten-po.com/uploads/'.$app['id'].'/manifest.json';
+            $app_data['notification'] = array("url_manifest" => $url);
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
