@@ -11,7 +11,7 @@
             @else
             <div class="image">
                 <a href="{{ route('login') }}">
-                <img class="img-circle" src="{{ url('img/tkNdnb1.jpg') }}" alt=""/>
+                <img class="img-circle" src="{{ url('/img/tkNdnb1.jpg') }}" alt=""/>
                 </a>
             </div>
             <p class="font32">User name</p>
