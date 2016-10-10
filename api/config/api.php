@@ -63,6 +63,7 @@ return [
 
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
     'noti_apple_url' => 'ssl://gateway.sandbox.push.apple.com:2195',
+    'noti_web_url' => 'https://android.googleapis.com/gcm/send',
     'redis_chanel_notification' => 'notification_mobile',
 
     'cache_staff' => 'staff_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
