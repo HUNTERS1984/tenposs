@@ -61,6 +61,20 @@
                         </button>
                     </td>
                 </tr>
+                <tr>
+                    <td><img src="{{ url('adcp/images/web.png') }}"/>Google Chrome and Mozilla Firefox</td>
+                    <td style="text-align: center;">
+                        @if($android_status == 1)
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: blue;"></span></td>
+                    @endif
+                    <td>
+                    {{--<a href="{{route('admin.clients.apps.edit',['user_id'=>$user_id,'app_id' => $app->id])}}">Configure</a>--}}
+                    <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#web">
+                            configure
+                        </button>
+                    </td>
+                </tr>
 
                 </tbody>
 
@@ -111,7 +125,7 @@
                         </p>
                         <div class="form-group">
                             <label for="apikey" style="font-weight: normal">FCM server key</label>
-                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="Server keys">
+                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="Server keys" value="{{$data['android_push_api_key']}}">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -157,7 +171,53 @@
                         </p>
                         <div class="form-group">
                             <label for="apikey" style="font-weight: normal">Password Certificate</label>
-                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="Password">
+                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="Password" value="{{$data['apple_push_cer_password']}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal web-->
+    <div class="modal fade" id="web" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <form method="post" enctype="multipart/form-data"
+              action="{{ route('admin.clients.apps.uploadweb',['user_id' => $user_id,'app_id' => $app_id]) }}">
+            <input type="hidden" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="flatform" value="web">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Configure Platform</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="title">Firebase Cloud Messaging (FCM) Configuration</h4>
+                        <hr>
+                        <h4>Genarate Firebase Cloud Message</h4>
+                        <div class="well"
+                             style="cursor: pointer; border: 1px solid #00acc1; padding: 10px; border-left: 3px solid #00acc1; background: transparent">
+                            <a target="_blank" href="https://firebase.google.com/docs/cloud-messaging/">
+                                Read the documentation to learn how to fill in the fields below
+                            </a>
+                        </div>
+
+                        <h4 class="title" style="margin-top: 20px;">Create Firebase Cloud Messaging</h4>
+                        <hr>
+                        <p style="padding-left: 20px;">
+                        <div class="form-group">
+                            <label for="apikey" style="font-weight: normal">FCM server key</label>
+                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="Server keys" value="{{$data['web_push_server_key']}}">
+                        </div>
+                        </p>
+                        <div class="form-group">
+                            <label for="apikey" style="font-weight: normal">Sender ID</label>
+                            <input type="text" class="form-control" id="senderid" name="senderid" placeholder="Sender ID" value="{{$data['web_push_sender_id']}}">
                         </div>
                     </div>
                     <div class="modal-footer">

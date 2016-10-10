@@ -132,19 +132,25 @@ class AppsController extends Controller
     {
 
         $data = $this->appRepo->getAppInfoById($app_id);
+//        dd($data);
         $android_status = 0;
         if (!empty($data[0]['android_push_api_key']) && !empty($data[0]['android_push_service_file']))
             $android_status = 1;
         $ios_status = 0;
         if (!empty($data[0]['apple_push_cer_password']) && !empty($data[0]['apple_push_cer_file']))
             $ios_status = 1;
+        $web_status = 0;
+        if (!empty($data[0]['web_push_server_key']) && !empty($data[0]['web_push_sender_id']))
+            $web_status = 1;
         return view('admin.apps.setting',
             [
                 'user_id' => $user_id,
                 'app_id' => $app_id,
 //                'apps' => $this->appRepo->fetchAppsByUser($filters,$user_id)
                 'android_status' => $android_status,
-                'ios_status' => $ios_status
+                'ios_status' => $ios_status,
+                'web_status' => $web_status,
+                'data' => $data[0]
             ]);
 
     }
@@ -169,7 +175,7 @@ class AppsController extends Controller
             $extension = pathinfo($imageName, PATHINFO_EXTENSION);
             $filename = '';
             if ($extension == 'p12')
-                $filename = ConvertUtils::convert_p12_to_pem($path . $imageName, $request->input('apikey'),$pathAppend);
+                $filename = ConvertUtils::convert_p12_to_pem($path . $imageName, $request->input('apikey'), $pathAppend);
             $flatform = $request->input('flatform');
             $dataUpdate = null;
             switch ($flatform) {
@@ -188,6 +194,40 @@ class AppsController extends Controller
                 default:
                     break;
             }
+
+            if ($dataUpdate != null && count($dataUpdate) > 0) {
+                $updated = $this->appRepo->updateNotifyInfo($app_id, $dataUpdate);
+                if ($updated) {
+                    Session::flash('message', array('class' => 'alert-success', 'detail' => 'Configure successful!'));
+
+                } else {
+                    Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Configure fail!'));
+                }
+            } else {
+                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Data configure fail!'));
+            }
+            return back();
+        }
+        abort(403);
+    }
+
+    public function upload_web(Request $request, $user_id, $app_id)
+    {
+        if ($request->isMethod('post')) {
+            // is create new apps
+            $rules = [
+                'senderid' => 'required',
+                'apikey' => 'required'
+            ];
+            $v = Validator::make($request->all(), $rules);
+            if ($v->fails()) {
+                return back()->withInput()->withErrors($v);
+            }
+            $dataUpdate = [
+                'web_push_server_key' => $request->input('apikey'),
+                'web_push_sender_id' => $request->input('senderid')
+            ];
+
 
             if ($dataUpdate != null && count($dataUpdate) > 0) {
                 $updated = $this->appRepo->updateNotifyInfo($app_id, $dataUpdate);
