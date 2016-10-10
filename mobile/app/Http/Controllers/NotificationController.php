@@ -32,9 +32,13 @@ class NotificationController extends Controller
                 $url = '';
                 switch ($type) {
                     case "news":
+                        $url = route('news.detail', $id);
                         break;
                     case "coupon":
                         $url = route('coupon.detail', $id);
+                        break;
+                    case "chat":
+                        $url = route('chat');
                     default:
                         break;
                 }
