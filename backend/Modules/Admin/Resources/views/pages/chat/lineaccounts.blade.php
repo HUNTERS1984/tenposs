@@ -29,7 +29,7 @@
         </div>
         <div class="panel-footer" style="border-top: 0px;
     padding: 0px;">
-          <a href="{{ route('chat.login') }}" class="btn tenposs-btn" >他のアカウントをログイン</a>
+          <a href="{{ route('chat.login') }}" class="btn tenposs-btn">ログイン</a>
         </div>
       </div><!--end panel --> 
     </div><!--end container -->  
