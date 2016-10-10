@@ -93,16 +93,17 @@ class MenusController extends Controller
     }
 
 
-    public function detail()
+    public function detail($id)
     {
         $app_info = $this->app_info;
 
         $items_detail = HttpRequestUtil::getInstance()->get_data('item_detail',
             [
                 'app_id' => $this->app->app_app_id,
-                'item_id' => $this->request->id
+                'item_id' => $id
             ]
             , $this->app->app_app_secret);
+
         $load_more_releated = false;
         $items_detail_data = array();
         $items_relate_data = array();
