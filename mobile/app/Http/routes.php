@@ -50,8 +50,10 @@ $appRoutes = function(){
             'as'   => 'instagram.callback'
         ]);
         
-        
-        
+        Route::post('/setpushkey',[
+            'middleware' => 'auth.custom',
+            'as' => 'setpushkey', 
+            'uses' => 'LoginController@setPushKey']);
 
         // All pages routing
         /**

@@ -7,7 +7,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 
-define('PAGESIZE', 10);
+define('PAGESIZE', 20);
 define('STEPSHOW', 1);
 
 class StaffController extends Controller

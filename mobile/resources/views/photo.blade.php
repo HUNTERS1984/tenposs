@@ -64,7 +64,9 @@
                                             @endif
                                         </div>
                                     </div>
+                                    @if($pagesize > 20)
                                     <a href="#" class="btn tenposs-readmore more">もっと見る</a>
+                                    @endif
                                 </div>
                                 @endforeach
                             @endif

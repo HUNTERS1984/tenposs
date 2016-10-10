@@ -87,7 +87,7 @@
             url: '{{ route("configuration.save") }}',
             dataType: 'json',
             type: 'post',
-             headers: {
+            headers: {
                 'X-CSRF-TOKEN': '{{  csrf_token() }}'
             },
             data: params,

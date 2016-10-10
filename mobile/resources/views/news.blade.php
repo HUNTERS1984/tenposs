@@ -64,7 +64,9 @@
                                         </div><!-- End item coupon -->
                                         @endforeach
                                     </div>
+                                    @if($pagesize > 20)
                                     <a href="#" class="btn tenposs-readmore more">もっと見る</a>
+                                    @endif
                                 </div><!-- swiper slide -->
                             @endforeach
                             @endif

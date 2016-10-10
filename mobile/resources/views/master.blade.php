@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{{ url('favicon.ico') }}">
-
+        <link rel="manifest" href="manifest.json">
         <title>Top</title>
 
         <!-- Bootstrap core CSS -->
@@ -25,7 +25,6 @@
 
         <!-- Custom styles for this template -->
         <link href="{{ url('css/main.css') }}" rel="stylesheet">
-        <link rel="manifest" href="manifest.json">
         @yield('headCSS')
     </head>
 
@@ -45,10 +44,38 @@
         <script src="{{ url('js/script.js') }}"></script>
         <script src="{{ url('js/notification.js') }}"></script>
         <script type="application/javascript">
+            var setPushKeyFlag = false;
             $(document).ready(function () {
                 notify.init('{{ url('js/notification_worker.js') }}');
             });
         </script>
+        <script type="text/javascript">
+             $(document).ready(function () {
+                 @if( Session::has('user') )
+                    if( !setPushKeyFlag ){
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': '{{  csrf_token() }}'
+                            },
+                            url: '{{ route("setpushkey") }}',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                key: notify.data.subscribe()
+                            },
+                            
+                            success: function(response){
+                                setPushKeyFlag = true;
+                                console.log('Setpushkey success');
+                            }
+                        })
+                    }
+                    
+                @endif
+             });
+        </script>
+        
         @yield('footerJS')
     </body>
 </html>
+
