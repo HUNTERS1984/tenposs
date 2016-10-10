@@ -19,7 +19,7 @@
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <img src="{{$detail->data->staffs->image_url}}" alt="Nakayo"/>
+            <img src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
             <div class="container-fluid">
                 <div class="info-productdetail">
                     <div class="container-fluid">
@@ -34,7 +34,9 @@
                         <span class="btn switch switch-off">プロフィール</span>
                     </div>
                     <p>{{$detail->data->staffs->introduction}}</p>
+                    @if(str_word_count($detail->data->staffs->introduction) > 40)
                     <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
+                    @endif
                 </div>
             </div><!-- End container fluid -->
         </div><!-- End content -->
