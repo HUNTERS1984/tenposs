@@ -22,13 +22,19 @@ class NotificationController extends Controller
         if (!empty($data)) {
             $data = json_decode($data);
             if ($data->code == '1000') {
-                $type = $data->data->info->type;
-                print_r(array_key_exists('isdadd', $data->data->detail));
+                $type = '';
+                if (count($data->data->info) > 0)
+                    $type = $data->data->info->type;
                 $id = 0;
-                if (array_key_exists('id', $data->data->detail))
-                    $id = $data->data->detail->id;
-                $title = $data->data->detail->title;
-                $description = $data->data->detail->description;
+                $title = '';
+                $description = '';
+                if (count($data->data->detail) > 0) {
+
+                    if (array_key_exists('id', $data->data->detail))
+                        $id = $data->data->detail->id;
+                    $title = $data->data->detail->title;
+                    $description = $data->data->detail->description;
+                }
                 $url = '';
                 switch ($type) {
                     case "news":
