@@ -22,7 +22,7 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th width="80%">Mobile Platform</th>
+                    <th width="80%">Platform</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
