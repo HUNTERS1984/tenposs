@@ -14,6 +14,7 @@ use App\Models\AppUser;
 use App\Models\Coupon;
 use App\Models\News;
 use App\Models\UserPushLogTracking;
+use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\NotificationRepositoryInterface;
 
 use App\Utils\PushNotification;
@@ -48,12 +49,15 @@ class NotificationRepository implements NotificationRepositoryInterface
                         $result = array("user" => array(
                             "android_push_key" => $rs[0]['android_push_key'],
                             "apple_push_key" => $rs[0]['apple_push_key'],
+                            "web_user_push_key" => $rs[0]['web_push_key'],
                         ),
                             "app" => array(
                                 "android_push_service_file" => $rsApp[0]['android_push_service_file'],
                                 "android_push_api_key" => $rsApp[0]['android_push_api_key'],
                                 "apple_push_cer_file" => $rsApp[0]['apple_push_cer_file'],
-                                "apple_push_cer_password" => $rsApp[0]['apple_push_cer_password']
+                                "apple_push_cer_password" => $rsApp[0]['apple_push_cer_password'],
+                                "web_push_server_key" => $rsApp[0]['web_push_server_key'],
+                                "web_push_sender_id" => $rsApp[0]['web_push_sender_id']
                             ),
                             "userpushs" => $rs[0]['userpushs']);
 
@@ -101,7 +105,10 @@ class NotificationRepository implements NotificationRepositoryInterface
                     "android_push_service_file" => $rs['app']['android_push_service_file'],
                     "android_push_api_key" => $rs['app']['android_push_api_key'],
                     "apple_push_cer_file" => $rs['app']['apple_push_cer_file'],
-                    "apple_push_cer_password" => $rs['app']['apple_push_cer_password']);
+                    "apple_push_cer_password" => $rs['app']['apple_push_cer_password'],
+                    "web_push_server_key" => $rs['app']['web_push_server_key'],
+                    "web_push_sender_id" => $rs['app']['web_push_sender_id'],
+                    "web_user_push_key" => $rs['user']['web_user_push_key']);
             }
         }
         return null;
@@ -214,6 +221,29 @@ class NotificationRepository implements NotificationRepositoryInterface
                                     $obj->notify_status = 0;//fail
                                 $this->save_log_tracking($obj);
                             }
+
+                            if (!empty($notify_info['web_push_server_key'] && !empty($notify_info['web_user_push_key']))) {
+                                //notification to apple
+                                $rs_ios = PushNotification::getInstance()->web($data_notify, $notify_info['web_user_push_key'], $notify_info['web_push_server_key']);
+                                $obj->platform = 'ios';
+                                if ($rs_ios)
+                                    $obj->notify_status = 1;//success
+                                else
+                                    $obj->notify_status = 0;//fail
+                                //luu info cho web push
+                                $web_push = new WebPushCurrent();
+                                $web_push->key = $notify_info['web_user_push_key'];
+                                $web_push->type = $obj->type;
+                                $web_push->data_id = $data_notify['id'];
+                                $web_push->data_value = $data_notify['desc'];
+                                $web_push->title = $data_notify['title'];
+                                $web_push->app_user_id = $obj->app_user_id;
+                                $web_push->save();
+
+                                $this->save_log_tracking($obj);
+                            }
+
+
 //                            else {
 //                                $obj->platform = 'ios';
 //                                $obj->notify_status = -1;//miss info
@@ -253,17 +283,15 @@ class NotificationRepository implements NotificationRepositoryInterface
             if (count($obj) > 0) {
                 if (property_exists($obj, "app_user_id") && $obj->app_user_id > 0) {
                     //process notification app_user_id
-                    Log::info('send notify to one app_user_id: '.$obj->app_user_id);
+                    Log::info('send notify to one app_user_id: ' . $obj->app_user_id);
                     $this->process_notify($message, $obj->app_user_id);
                 } else if (property_exists($obj, "app_id") && $obj->app_id > 0) { // //process notification app_id
-                    Log::info('send notify to app_id: '.$obj->app_id);
-                    $app_user_info = AppUser::where('app_id',$obj->app_id)->get()->toArray();
-                    if (count($app_user_info) > 0)
-                    { //send notify to app_user_id
-                        foreach ($app_user_info as $item)
-                        {
-                            Log::info('send notify to  user: '.$item['email']);
-                            $this->process_notify($message,$item['id']);
+                    Log::info('send notify to app_id: ' . $obj->app_id);
+                    $app_user_info = AppUser::where('app_id', $obj->app_id)->get()->toArray();
+                    if (count($app_user_info) > 0) { //send notify to app_user_id
+                        foreach ($app_user_info as $item) {
+                            Log::info('send notify to  user: ' . $item['email']);
+                            $this->process_notify($message, $item['id']);
                         }
                     }
                 } else {

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Config;
 class PushNotification
 {
     private $gooole_url;
+    private $web_url;
     private $apple_url;
     protected static $_instance = null;
 
@@ -20,6 +21,7 @@ class PushNotification
     {
         $this->gooole_url = Config::get('api.noti_google_url');
         $this->apple_url = Config::get('api.noti_apple_url');
+        $this->web_url =  Config::get('api.noti_web_url');
     }
 
     public static function getInstance()
@@ -56,6 +58,40 @@ class PushNotification
         );
 
         $result = $this->useCurl($this->gooole_url, $headers, json_encode($fields));
+
+        if ($this->isJson($result)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Sends Push notification for Android users
+    public function web($data, $reg_id, $api_access_key)
+    {
+        $message = array(
+            'title' => $data['title'],
+            'message' => $data['desc'],
+            'subtitle' => '',
+            'tickerText' => '',
+            'msgcnt' => 1,
+            'vibrate' => 1,
+            'id' => $data['id'],
+            'type' => $data['type'],
+            'image_url' => $data['image_url']
+        );
+
+        $headers = array(
+            'Authorization: key=' . $api_access_key,
+            'Content-Type: application/json'
+        );
+
+        $fields = array(
+            'registration_ids' => array($reg_id),
+            'data' => $message,
+        );
+
+        $result = $this->useCurl($this->web_url, $headers, json_encode($fields));
 
         if ($this->isJson($result)) {
             return true;
