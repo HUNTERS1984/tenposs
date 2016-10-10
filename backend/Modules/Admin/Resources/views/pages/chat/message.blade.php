@@ -10,18 +10,17 @@
   <body>
     <div class="container">
       <p>&nbsp;</p>  
-      <div class="panel panel-info">
-        <div class="panel-heading">Tenposs <span id="status" style="color:red"></span></div>
+      <div class="panel panel-info" style="border-color: white;">
         <div class="panel-body">
           <div id="" class="">
               <ul class="messages scrollbar-macosx"></ul>
           </div>
         </div>
         <div class="panel-footer">
-          <div class="input-group">
-              <input type="text" class="form-control message_input" placeholder="Enter message...">
-              <span class="input-group-btn">
-                  <button class="btn btn-default send_message" type="button">Send</button>
+          <div class="input-group input-message">
+              <input type="text" class="form-control message_input" placeholder="メッセージを入力してください...">
+              <span class="input-group-btn input-group-addon">
+                  <button class="btn btn-default send_message" type="button">送信</button>
               </span>
           </div><!-- /input-group -->
         </div>

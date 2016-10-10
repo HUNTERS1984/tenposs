@@ -30,7 +30,7 @@
         
         <div id="room-template" class="hide">
         	<div id="" class="rooms">
-    	        <div class="panel panel-default">
+    	        <div class="panel panel-default"　style="border-color: white;">
     	            <div class="panel-heading">
     	                <span class="name"></span>
     	                <span class="status" style="color:red">Online</span>
@@ -39,12 +39,12 @@
     	                <ul class="messages scrollbar-macosx"></ul>
     	            </div>
     	            <div class="panel-footer">
-    	                <div class="input-group">
-                            <input type="text" class="form-control message_input" placeholder="Enter message...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default send_message" type="button">Send</button>
-                            </span>
-                        </div><!-- /input-group -->
+                          <div class="input-group input-message">
+                              <input type="text" class="form-control message_input" placeholder="メッセージを入力してください...">
+                              <span class="input-group-btn input-group-addon">
+                                  <button class="btn btn-default send_message" type="button">送信</button>
+                              </span>
+                          </div><!-- /input-group -->
     	            </div>
     	        </div>
     	    </div>
