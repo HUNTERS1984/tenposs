@@ -61,6 +61,9 @@
                         <div class="slider round"></div>
                     </label>
                 </li>
+                   
+                <li><a href="{{ route('company.info') }}">逼営会社</a></li>   
+                <li><a href="{{ route('user.privacy') }}">採用情報</a></li>   
                
             </ul>
         </div>

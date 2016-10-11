@@ -54,6 +54,15 @@ $appRoutes = function(){
             'middleware' => 'auth.custom',
             'as' => 'setpushkey', 
             'uses' => 'LoginController@setPushKey']);
+        
+        Route::get('/user-privacy',[
+            'as' => 'user.privacy', 
+            'uses' => 'MobileController@userPrivacy']);
+
+        Route::get('/company-info',[
+            'as' => 'company.info', 
+            'uses' => 'MobileController@companyInfo']);
+        
 
         // All pages routing
         /**
