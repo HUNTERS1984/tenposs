@@ -45,7 +45,9 @@
                             && count($app_top->data->items->data) > 0 )
                             @foreach( $app_top->data->items->data as $item )
                         <div class="item-product">
-                            <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
+                            <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
+                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
+                            </a>
                             <p>{{ $item->title }}</p>
                             <span>$ {{ $item->price }}</span>
                         </div>
@@ -62,12 +64,21 @@
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            <img src="{{ $photo->image_url }}" alt=""/>
+                            <a href="{{$photo->image_url}}" 
+                            class = "box-photogallery"
+                            data-toggle="lightbox" 
+                            data-gallery="multiimages" 
+                            data-title="">
+                                <img src="{{ $photo->image_url }}" alt=""/>
+                            </a>
                         </div>
                         @endforeach
                         @endif
                     </div>
-                    <a href="#" class="btn tenposs-readmore">もっと見る</a>
+                    @if( isset( $app_top->data->photos->data)  
+                            && count($app_top->data->photos->data) > 0 )
+                        <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
+                    @endif
                 </div>
             </div><!-- End photogallery -->
             <div id="news">
@@ -79,10 +90,12 @@
                     
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
+                            <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
                             <img src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
+                            </a>
                         </div>
                         <div class="info clearfix">
-                            <a href="">{{ $news->title }}</a>
+                            <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
                             <h3>{{ $news->new_category_id }}</h3>
                             <p>{{ str_limit($news->description,100,'...') }}</p>
                         </div>
@@ -118,13 +131,13 @@
                     <li>
                         <div class="table-cell">
                             <img src="img/icon/f_tel.png" alt="icon">
-                            <a href="#">{{ $contact->tel }}</a>
+                            <a href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
                         </div>
                     </li>
                 </ul>
                 
                 <div class="container-fluid">
-                    <a href="phone:{{ $contact->tel }} " class="btn tenposs-button">予約</a>
+                    <a href="{{ route('reservation') }} " class="btn tenposs-button">予約</a>
                 </div>
                 <script type="text/javascript">
                     maps.push({
@@ -149,6 +162,7 @@
 @section('footerJS')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrEF9NEPkuxtYouSqVqNj3KSoX__7Rm8g"></script>
 <script src="{{ url('plugins/maps/jquery.googlemap.js') }}"></script>
+<script src="{{ url('js/ekko-lightbox.min.js') }}"></script>
 <script type="text/javascript">
     var bannerSwiper = new Swiper('#banner .swiper-container', {
         autoplay: 2000,
@@ -168,7 +182,12 @@
               title: item.title, // Title
               text: item.title
             });
-        })
+        });
+        
+        $('.box-photogallery').on('click',function(event){
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
         
     })
 </script>
