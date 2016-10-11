@@ -488,15 +488,20 @@ class AppUserController extends Controller
 
         if (Input::get('gender') != '0' && Input::get('gender') != '1')
             return $this->error(1004);
-
+        Log::info("start upload avatar");
         if (Input::file('avatar') != null && Input::file('avatar')->isValid()) {
             $file = array('avatar' => Input::file('avatar'));
+            Log::info(count($file));
             $destinationPath = 'uploads'; // upload path
             $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
+            Log::info($extension);
             $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            Log::info($fileName);
             Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
             $request->user->profile->avatar_url = $destinationPath . '/' . $fileName;
+            Log::info($request->user->profile->avatar_url);
         }
+        Log::info("end upload avatar");
 
         try {
             $request->user->profile->name = Input::get('username');

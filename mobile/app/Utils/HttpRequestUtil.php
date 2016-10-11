@@ -82,7 +82,7 @@ class HttpRequestUtil
             case 'profile':
                 $params = Config::get('api.sig_profile');
                 break;
-            case 'profile':
+            case 'update_profile':
                 $params = Config::get('api.sig_profile');
                 break;
             case 'social_profile':

@@ -20,8 +20,8 @@
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
             {{ Session::get('user')->profile->name }}
-            <button type="submit" class="btn pull-right">
-            はい
+            <button type="submit" class="btn pull-right btn-lg" style="background-color:white">
+            保存
         </button>
         
             </h1>
@@ -43,14 +43,15 @@
                         ? $profile->data->user->profile->avatar_url
                         : url('img/wall.jpg');
                     ?>
-                    <div style="width:20%">
+                    
                     <label>
-                    <img id="app-icon-review" class="new_img" src="{{ $avatar }}" width="100%"></label>
-                    <button class="btn_upload_img create" type="button">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i> 画像アップロード
-                    </button>
+                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
+                    <label style="width: 60%;">
+                    <a class="btn_upload_avatar create" type="button">
+                        <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
+                    </a>
                     <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
-                    </div>
+                    </label>
                 </li>
                 <li>
                     <label>ユーザー名</label>
@@ -69,10 +70,10 @@
                 </li>
                 <li>
                     <label>性别</label>
-                    <select name="gender" id="">
-                        <option value="0">Male</option>
-                        <option value="1">Female</option>
-                        <option value="2">Orther</option>
+                    <select name="gender" id="" class="">
+                        <option value="0">男性</option>
+                        <option value="1">女性</option>
+                        <option value="2">未定義</option>
                     </select>   
            
                 </li>
@@ -132,7 +133,7 @@
         
     
     
-        $('.btn_upload_img').click(function () {
+        $('.btn_upload_avatar').click(function () {
             $('.btn_upload_ipt').click();
         });
         
