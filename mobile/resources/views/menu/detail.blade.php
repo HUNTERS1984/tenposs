@@ -75,8 +75,9 @@
                                         @endif
                                         </tbody>
                                     </table>
+                                @else
+                                    <p>データなし</p>
                                 @endif
-
                             </div>
                         </div>
 
@@ -91,7 +92,7 @@
                 </div>
             @endif
             @if(count($items_relate_data) > 0)
-                <div id="related">
+                <div id="related" style="margin-top: 50px;">
                     <div class="container-fluid">
                         <h2 class="aligncenter font32">関連</h2>
                         <div class="row clearfix">
