@@ -36,6 +36,7 @@ return [
     'sig_set_push_setting' => array('token', 'ranking', 'news', 'coupon', 'chat','time'),
     'sig_web_push_current' => array('app_id','key', 'time'),
     'sig_delete_data_web_notification' => array('app_id','id', 'time'),
+    'sig_set_push_key' => array('token','client', 'key','time'),
 
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
