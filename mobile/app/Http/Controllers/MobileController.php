@@ -18,7 +18,7 @@ class MobileController extends Controller
         $appTop = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('top',[
             'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);    
-            
+  
         return view('index', 
         [ 
             'app_info' => $this->app_info ,

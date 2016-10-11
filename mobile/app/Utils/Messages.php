@@ -31,9 +31,9 @@ class Messages
     */
     
     static $customErrorsList = array(
-         '2000' => "Can't not get social user",
-         '2001' => "Can't not get user profile",
-         '2002' => "Update profile successful",
+         '2000' => "Cannot get social user",
+         '2001' => "ユーザープロファイルを取得できません",
+         '2002' => "プロファイルの成功を更新",
          
     );
     
@@ -50,16 +50,16 @@ class Messages
         return false;
     }
     
-    public static function getMessage( $response ){
+    public static function getMessage( $response , $class = 'alert-danger' ){
         return array(
-            'class' => 'alert-danger', 
+            'class' => $class , 
             'detail' => $response->message 
         );
     }
     
-    public static function customMessage( $code ){
+    public static function customMessage( $code, $class = 'alert-danger' ){
         return array(
-            'class' => 'alert-danger', 
+            'class' => $class, 
             'detail' => self::getCustomErrorMessage($code)
         );
     }
