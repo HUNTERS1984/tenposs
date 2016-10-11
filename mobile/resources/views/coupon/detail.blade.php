@@ -81,7 +81,7 @@
         @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
             <div id="below-content">
                 <p>
-                    このクーボンを利用す
+                    このクーボンを利用す\n(※ Instagramこ移動します。)
                 </p>
             </div>
         @else
@@ -98,9 +98,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(document).on("click", "#copy_hashtag", function () {
-//                alert(1);
-                $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
+                alert('ハッシユタグをコピーしました');
             });
         });
     </script>

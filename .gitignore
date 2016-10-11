@@ -1,3 +1,4 @@
+*.lock
 api/.env
 .idea/blade.xml
 .idea/deployment.xml
