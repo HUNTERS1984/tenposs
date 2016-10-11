@@ -485,6 +485,7 @@ class AppUserController extends Controller
         if ($ret_sig)
             return $ret_sig;
 
+        dd(Input::all());
 
         if (Input::get('gender') != '0' && Input::get('gender') != '1')
             return $this->error(1004);
