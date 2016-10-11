@@ -47,30 +47,30 @@
 <script src="{{ url('js/notification.js') }}"></script>
 <script type="text/javascript">
     var setPushKeyFlag = false;
-    notify.init('{{ url('js/notification_worker.js') }}');
+    {{--notify.init('{{ url('js/notification_worker.js') }}');--}}
     $(document).ready(function () {
+        notify.init('{{ url('js/notification_worker.js') }}');
+        {{--@if( Session::has('user') )--}}
+        {{--if (!setPushKeyFlag) {--}}
+            {{--$.ajax({--}}
+                {{--headers: {--}}
+                    {{--'X-CSRF-TOKEN': '{{  csrf_token() }}'--}}
+                {{--},--}}
+                {{--url: '{{ route("setpushkey") }}',--}}
+                {{--type: 'post',--}}
+                {{--dataType: 'json',--}}
+                {{--data: {--}}
+                    {{--key: notify.data.subscribe()--}}
+                {{--},--}}
 
-        @if( Session::has('user') )
-        if (!setPushKeyFlag) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': '{{  csrf_token() }}'
-                },
-                url: '{{ route("setpushkey") }}',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    key: notify.data.subscribe()
-                },
+                {{--success: function (response) {--}}
+                    {{--setPushKeyFlag = true;--}}
+                    {{--console.log('Setpushkey success');--}}
+                {{--}--}}
+            {{--})--}}
+        {{--}--}}
 
-                success: function (response) {
-                    setPushKeyFlag = true;
-                    console.log('Setpushkey success');
-                }
-            })
-        }
-
-        @endif
+        {{--@endif--}}
     });
 </script>
 
