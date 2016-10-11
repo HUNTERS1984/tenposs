@@ -602,9 +602,7 @@ class AppUserController extends Controller
         $rs_data = array();
         try {
             $app_info = User::where('domain', Input::get('domain'))->with('apps')->first();
-
-            if (count($app_info) > 0 && array_key_exists('apps', $app_info)) {
-                dd($app_info['apps']);
+            if (count($app_info) > 0) {
                 if (count($app_info['apps']) > 0)
                     $rs_data = $app_info['apps'][0];
             }
