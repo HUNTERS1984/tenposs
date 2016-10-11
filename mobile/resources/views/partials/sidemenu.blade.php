@@ -36,7 +36,7 @@
         @endforeach
         @if( Session::has('user') )
         <li class="">
-            <a class="active" href=""{{ route('logout') }}"" style="
+            <a class="active" href="{{ route('logout') }}" style="
                 font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
