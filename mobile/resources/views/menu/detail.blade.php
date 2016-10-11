@@ -81,9 +81,9 @@
                             </div>
                         </div>
 
-                        <div class="pad20">
-                            <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>
-                        </div>
+                        {{--<div class="pad20">--}}
+                            {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
+                        {{--</div>--}}
                     </div>
                 </div><!-- End container fluid -->
             @else
