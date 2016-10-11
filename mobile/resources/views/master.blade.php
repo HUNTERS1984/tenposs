@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{{ url('favicon.ico') }}">
-        <link rel="manifest" href="manifest.json">
+        <link rel="manifest" href="{{ url('manifest.json') }}">
         <title>Top</title>
         
         <link href="{{ url('fonts/themify/themify-icons.css') }}" rel="stylesheet">
@@ -53,7 +53,7 @@
         </script>
         <script type="text/javascript">
              $(document).ready(function () {
-                 @if( Session::has('user') )
+                 @if( Session::has('user') && ! Session::get('setpushkey') )
                     if( !setPushKeyFlag ){
                         $.ajax({
                             headers: {

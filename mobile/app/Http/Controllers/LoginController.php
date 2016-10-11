@@ -187,7 +187,9 @@ class LoginController extends Controller
                 ],
                 $this->app->app_app_secret); 
                 $responsePushKey = json_decode($postPushKey);
-                if( \App\Utils\Messages::validateErrors($responsePushKey) ){
+               
+                if( $responsePushKey->code == 1000 ){
+                    Session::put('setpushkey', true );
                     return response()->json(['msg' => 'Set push key success' ]);
                 }
         }
@@ -238,7 +240,8 @@ class LoginController extends Controller
             }
             
         }
-        
+        $filePost = new \CURLFile( public_path($url));
+       
        
         $post = \App\Utils\HttpRequestUtil::getInstance()
             ->post_data('update_profile',[
@@ -246,12 +249,12 @@ class LoginController extends Controller
                 'username' => $request->input('name') ,
                 'gender' => $request->input('gender'),
                 'address' => $request->input('address'),
-                'avatar' => $url
+                'avatar' => new \CURLFile( public_path($url) )
             ],
             $this->app->app_app_secret);    
         
         $response = json_decode($post);
-        
+         dd( $response );
         if( \App\Utils\Messages::validateErrors($response) ){
             Session::flash('message', \App\Utils\Messages::customMessage( 2002 ));
             return back();
