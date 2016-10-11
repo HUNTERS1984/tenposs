@@ -24,34 +24,17 @@ var notify = {
     },
     data: {
         subscribe: function () {
-            var subscribe_id = '';
-            navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
-                serviceWorkerRegistration.pushManager.getSubscription().then(function (subscription) {
-                    if (!subscription) {
-                        serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true}).then(function (sub) {
-                            subscribe_id = sub.endpoint.split("/").slice(-1)[0];
-                        }).catch(function (e) {
-                            console.log('Unable to register for push');
-                        });
-                    }
-                    else {
-                        console.log("DONE to register for push");
-                    }
-                })
+            var findvalue = 'gcm/send/'
+            reg.pushManager.subscribe({userVisibleOnly: true}).then(function (pushSubscription) {
+                sub = pushSubscription;
+                console.log('Subscribed! Endpoint:', sub.endpoint);
             });
-
-            /*
-             var findvalue = 'gcm/send/'
-             reg.pushManager.subscribe({userVisibleOnly: true}).then(function (pushSubscription) {
-             sub = pushSubscription;
-             console.log('Subscribed! Endpoint:', sub.endpoint);
-             });
-             if (sub !== null && sub.endpoint.length > 0) {
-             // var idx = sub.endpoint.indexOf(findvalue);
-             // return sub.endpoint.substring(idx + findvalue.length, sub.endpoint.length);
-             return sub.endpoint.slice(sub.endpoint.lastIndexOf('/') + 1);
-             }*/
-            return subscribe_id;
+            if (sub !== null && sub.endpoint.length > 0) {
+                // var idx = sub.endpoint.indexOf(findvalue);
+                // return sub.endpoint.substring(idx + findvalue.length, sub.endpoint.length);
+                return sub.endpoint.slice(sub.endpoint.lastIndexOf('/') + 1);
+            }
+            return '';
         },
         unsubscribe: function () {
             sub.unsubscribe().then(function (event) {

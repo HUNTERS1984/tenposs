@@ -108,3 +108,41 @@
     width: 1024px;
     height: 1024px;
 }
+
+/*UPDATE STAFF DETAIL (11/10/2016)*/
+ul.nav-switch{
+    list-style:none;
+    padding:0;
+    margin: 0;
+}
+ul.nav-switch li{
+    display:inline-block;
+    padding: 22px 0px;
+    /*margin-right: 20px;*/
+    width: 49%;
+    text-align: center;
+    font-size: 24px;
+}
+ul.nav-switch li a{
+    display: block;
+    color:#333;
+}
+ul.nav-switch li.active{
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius:2px;
+}
+ul.nav-switch li.active a, ul.nav-switch li:hover a{
+    color:#14c8c8;
+}
+div.general-content{
+    padding:15px 0;
+}
+div.general-content .row{
+    margin-bottom:15px;
+}
+}
+div.general-content p.title-text{
+    font-size:18px;
+    font-style:italic;
+}
