@@ -19,7 +19,7 @@
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <img src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
+            <img src="{{$detail->data->staffs->image_url}}" style="width:100%; max-height:300px" alt="Nakayo"/>
             <div class="container-fluid">
                 <div class="info-productdetail">
                     <div class="container-fluid">
@@ -30,13 +30,52 @@
                 </div>
                 <div class="entry-productdetail">
                     <div class="option">
-                        <span class="btn switch switch-on">自己紹介</span>
-                        <span class="btn switch switch-off">プロフィール</span>
+                        <!-- <span class="btn switch switch-on">自己紹介</span>
+                        <span class="btn switch switch-off">プロフィール</span> -->
+                        <ul class="nav-switch">
+                            <li class="active"><a href="#" alt="intro">自己紹介</a></li>
+                            <li><a href="#" alt="info">プロフィール</a></li>
+                        </ul>
                     </div>
-                    <p>{{$detail->data->staffs->introduction}}</p>
-                    @if(str_word_count($detail->data->staffs->introduction) > 40)
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
-                    @endif
+                    <div class="general-content" id="intro">
+                        <div class="container-fluid">
+                            <p>{{$detail->data->staffs->introduction}}</p>
+                        </div>
+
+                        @if(str_word_count($detail->data->staffs->introduction) > 40)
+                        <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
+                        @endif
+                    </div>
+                    <div class="general-content" id="info">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p class="title-text">Gender:</p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p class="text-general">{{$detail->data->staffs->gender}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p class="title-text">Birthday:</p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p class="text-general">{{$detail->data->staffs->birthday}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p class="title-text">Tel:</p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p class="text-general">{{$detail->data->staffs->tel}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
                 </div>
             </div><!-- End container fluid -->
         </div><!-- End content -->
@@ -55,5 +94,18 @@
             pagination: "#banner .swiper-pagination",
             paginationClickable: true
         });
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('.general-content').not(':first').hide();
+        $('ul.nav-switch li a').on('click',function(e){
+            e.preventDefault();
+            var id = $(this).attr('alt');
+            $('.general-content').slideUp();
+            $('ul.nav-switch li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('#'+id).slideDown();
+        });
+    })
     </script>
 @stop

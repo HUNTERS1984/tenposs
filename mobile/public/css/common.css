@@ -227,7 +227,7 @@ h3,.h3{font-size: 28px;}
     padding: 0;
     margin: 0;
 }
-#side .s_nav li a {
+/*#side .s_nav li a {
     height: 100px;
     line-height: 100px;
     display: block;
@@ -235,8 +235,8 @@ h3,.h3{font-size: 28px;}
     
     color: #fff;
     font-size: 30px;
-}
-#side .s_nav li a span{
+}*/
+/*#side .s_nav li a span{
     font-size: 30px;
     padding-left: 100px;
     margin-right: 20px;
@@ -245,7 +245,7 @@ h3,.h3{font-size: 28px;}
 
 #side .s_nav li a:hover,#side .s_nav li a.active{
    
-}
+}*/
 #side .s_nav li.s_icon-home a{}
 #side .s_nav li.s_icon-menu a{background-position: 50px -100px;}
 #side .s_nav li.s_icon-reserve a{background-position: 50px -200px;}
@@ -256,6 +256,30 @@ h3,.h3{font-size: 28px;}
 #side .s_nav li.s_icon-chat a{background-position: 50px -700px;}
 #side .s_nav li.s_icon-setting a{background-position: 50px -800px;}
 /*--------------------*/
+
+/*SIDEBAR UPDATE (11/10/2016)*/
+#side .s_nav li{
+    position:relative;
+    padding:25px 0 25px 100px;
+    margin-bottom: 5px;
+}
+#side .s_nav li a{
+    display:block;
+    font-size:30px;
+}
+#side .s_nav li:before{
+    position:absolute;
+    width:24px;
+    height:25px;
+    top:50%;
+    transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    left:60px;
+}
+#side .s_nav li:hover, #side .s_nav li.active{
+    background:#96a0a4;
+}
 
 /* Footer */
 #footer{
