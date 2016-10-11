@@ -87,10 +87,10 @@
                     <i class="icon-face"></i>
                     Facebook
                     @if( $profile->data->user->profile->facebook_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                     
@@ -99,10 +99,10 @@
                     <i class="icon-twitter"></i>
                     Twitter
                     @if( $profile->data->user->profile->twitter_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                 </li>
@@ -110,10 +110,10 @@
                     <i class="icon-instagram"></i>
                     Instagram
                     @if( $profile->data->user->profile->instagram_status == 1 )
-                    <a href="#" class="btn">接続</a>
+                    <a href="#" class="btn">非接続</a>
                     @else    
                     <a href="{{ $instagram_login_url }}" class="btn">
-                       接続します
+                       連携
                     </a>
                     @endif
                 </li>
