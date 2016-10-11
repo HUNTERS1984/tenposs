@@ -14,7 +14,7 @@
                 <img class="img-circle" src="{{ url('/img/tkNdnb1.jpg') }}" alt=""/>
                 </a>
             </div>
-            <p class="font32">User name</p>
+            <p class="font32"><a href="{{ route('login') }}">ログイン</a></p>
             @endif
             
         </div>
@@ -24,12 +24,13 @@
             background: #{{ $app_info->data->app_setting->menu_background_color}}
         ">
         @foreach ( $app_info->data->side_menu as $menu )
-        <li class="s_icon-home">
+        <li class="">
             <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
                 font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
             ">
+                <span class="{{ $menu->icon }}"></span>
             {{ $menu->name }}
         </a></li>    
         @endforeach

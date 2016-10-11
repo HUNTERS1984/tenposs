@@ -77,7 +77,7 @@ $appRoutes = function(){
 
         Route::get('/home',[ 'as' => 'home', 'uses' => 'MobileController@index']); 
 
-        Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat']); 
+        Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat','middleware' => 'auth.custom']); 
 
         Route::get('/staff',[ 'as' => 'staff', 'uses' => 'StaffController@index']);
         Route::get('/staff/detail/{id}',[ 'as' => 'staff.detail', 'uses' => 'StaffController@getDetail']);

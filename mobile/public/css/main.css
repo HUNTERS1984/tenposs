@@ -33,7 +33,7 @@
 }
 
 .bottom-layout{
-    padding: 20px;
+    padding: 0 100px;
     position: absolute;
     width: 100%;
     bottom: 50px;
@@ -48,4 +48,11 @@
     border-bottom-right-radius: 5px;
     background-color: #434b4e;
     color: white;
+}
+.input-xl{
+    height: 90px;
+    padding: 10px 16px;
+    font-size: 30px;
+    line-height: 80px;
+    border-radius: 6px;
 }

@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Session;
 use DB;
+use URL;
+use Config;
 
 class VerifyExistApp
 {
@@ -18,15 +20,27 @@ class VerifyExistApp
     public function handle($request, Closure $next)
     {
         if( !Session::has('app') ){
-            if( $request->has('name') ){
-                $name = $request->input('name');
+           
+            $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->get_data('get_app_by_domain',[
+                    'domain' => URL::to('/')
+                ],Config::get('api.secret_key_for_domain')
+            );    
+        
+            $response = json_decode($post);
+    
+            if( \App\Utils\Messages::validateErrors($response) && count($response->data->app_info) > 0 ){
+                
+                $app = DB::table('apps')
+                    ->where('app_app_id', $response->data->app_info->app_app_id )
+                    ->first();
+                Session::put('app',$app);  
+                
+            }else{
+                Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+                abort(404);
             }
             
-            $name = '2a33ba4ea5c9d70f9eb22903ad1fb8b2';
-            $app = DB::table('apps')
-                    ->where('app_app_id',$name)
-                    ->first();
-            Session::put('app',$app);        
         }
 
         return $next($request);

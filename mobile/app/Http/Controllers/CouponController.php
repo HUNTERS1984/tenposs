@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 define('TOTAL_COUPON', 10);
 
@@ -73,11 +74,15 @@ class CouponController extends Controller
     public function detail($id)
     {
         $app_info = $this->app_info;
+        $token = '';
+        if (Session::get('user'))
+            $token = Session::get('user')->token;
 
         $items_detail = HttpRequestUtil::getInstance()->get_data('coupon_detail',
             [
                 'app_id' => $this->app->app_app_id,
                 'id' => $id,
+                'token' => $token
             ]
             , $this->app->app_app_secret);
         if (!empty($items_detail)) {
