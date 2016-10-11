@@ -50,9 +50,9 @@ class Messages
         return false;
     }
     
-    public static function getMessage( $response ){
+    public static function getMessage( $response , $class = 'alert-danger' ){
         return array(
-            'class' => 'alert-danger', 
+            'class' => $class , 
             'detail' => $response->message 
         );
     }
