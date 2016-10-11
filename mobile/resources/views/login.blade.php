@@ -26,15 +26,17 @@
         <div class="bottom-layout">
             <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn btn-block tenposs-button bg-fb">
                 <i class="fa fa-facebook"></i>
-                Facebook</a>
+                Facebook ではじめる</a>
+                
             <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn btn-block tenposs-button bg-tw">
                 <i class="fa fa-facebook"></i>
-                TWitterではじめる</a>
+                Twitter ではじめる</a>
+                
             <a href="{{ route('register') }}" class="btn btn-block tenposs-button bg-mail">
                 <i class="fa fa-facebook"></i>
                 メールアドレスではじめる</a> 
             
-            <a href="{{ route('login.normal') }}" class="btn btn-block tenposs-button bg-transparent">
+            <a href="{{ route('index') }}" class="btn btn-block tenposs-button bg-transparent">
                 <i class="fa fa-facebook"></i>
                 スキップ</a>
         </p>

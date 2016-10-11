@@ -1,7 +1,5 @@
 <?php
 namespace App\Utils;
-
-
 class Messages
 {
     /*
@@ -46,7 +44,7 @@ class Messages
     }
     
     public static function validateErrors( $response ){
-        if( $response->code == 1000 ){
+        if( $response->code == 1000 && count( $response->data)>0 ){
             return true;
         }
         return false;

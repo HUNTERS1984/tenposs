@@ -220,13 +220,33 @@ class LoginController extends Controller
     }
     
     public function profilePost( Request $request ){
+      
+        // save avatar
+        
+        if( $request->hasFile('avatar') ){
+            
+            
+            $file = $request->file('avatar');
+          
+            if( $file ) {
+                
+                $destinationPath = public_path('uploads'); // upload path
+                $extension = $file->getClientOriginalExtension(); // getting image extension
+                $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                $file->move($destinationPath, $fileName); // uploading file to given path
+                $url = 'uploads/' . $fileName;
+            }
+            
+        }
+        
+       
         $post = \App\Utils\HttpRequestUtil::getInstance()
             ->post_data('update_profile',[
                 'token' => Session::get('user')->token,
                 'username' => $request->input('name') ,
                 'gender' => $request->input('gender'),
                 'address' => $request->input('address'),
-                'avatar' => $request->input('avatar')
+                'avatar' => $url
             ],
             $this->app->app_app_secret);    
         
@@ -236,7 +256,7 @@ class LoginController extends Controller
             Session::flash('message', \App\Utils\Messages::customMessage( 2002 ));
             return back();
         }else{
-            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
             return back();
         }
     }
