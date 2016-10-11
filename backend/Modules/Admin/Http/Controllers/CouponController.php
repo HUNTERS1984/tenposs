@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Utils\HttpRequestUtil;
 use App\Utils\RedisControl;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Utils\UrlHelper;
 
@@ -73,9 +74,8 @@ class CouponController extends Controller
         $app_user->coupons()->attach($coupon_id);
         //create code for QR
         $data_info = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
-            ->where([['app_user_id','=',$app_user->id],['coupon_id','=',$coupon_id]])->get();
-        if (count($data_info) > 0)
-        {
+            ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])->get();
+        if (count($data_info) > 0) {
             if (empty($data_info[0]->code)) {
                 \Illuminate\Support\Facades\DB::table('users')
                     ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])
@@ -214,7 +214,7 @@ class CouponController extends Controller
             );
             $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
             if (!$push)
-                Log::info('push fail: '. json_decode($data_push));
+                Log::info('push fail: ' . json_decode($data_push));
             //end push
 
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully'));
@@ -349,6 +349,81 @@ class CouponController extends Controller
             Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Delete coupon fail'));
             return back();
         }
+    }
+
+    public function coupon_use_code_view($user_id, $coupon_id, $code, $sig)
+    {
+        $code_hash = hash('sha256', $user_id . $coupon_id . $code . '-' . Config::get('api.secret_key_coupon_use'));
+        $is_approve = true;
+
+        if ($code_hash != $sig) {
+            $is_approve = false;
+            return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+        }
+        try {
+            $coupon_code = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
+                ->whereAppUserId($user_id)
+                ->whereCouponId($coupon_id)->get();
+
+            if (count($coupon_code) > 0) {
+                if ($coupon_code[0]->code != $code) {
+                    $is_approve = false;
+                    return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+                }
+            } else {
+                $is_approve = false;
+                return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+            }
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $is_approve = false;
+            return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+        }
+
+        return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+    }
+
+    public function coupon_use_code_approve()
+    {
+        $user_id = $this->request->user_id;
+        $coupon_id = $this->request->coupon_id;
+        $code = $this->request->code;
+        $sig = $this->request->sig;
+        $code_hash = hash('sha256', $user_id . $coupon_id . $code . '-' . Config::get('api.secret_key_coupon_use'));
+
+        $is_approve_success = true;
+        if ($code_hash != $sig) {
+            $is_approve_success = false;
+            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+        }
+        try {
+            $coupon_code = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
+                ->whereAppUserId($user_id)
+                ->whereCouponId($coupon_id)->get();
+            if (count($coupon_code) > 0) {
+                if ($coupon_code[0]->code != $code) {
+                    $is_approve_success = false;
+                    return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+                }
+            } else {
+                $is_approve_success = false;
+                return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+            }
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $is_approve_success = false;
+            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+        }
+        try {
+            \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
+                ->whereAppUserId($user_id)
+                ->whereCouponId($coupon_id)->update(['code' => '']);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $is_approve_success = false;
+            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+        }
+        return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
     }
 }
 
