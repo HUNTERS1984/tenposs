@@ -187,7 +187,9 @@ class LoginController extends Controller
                 ],
                 $this->app->app_app_secret); 
                 $responsePushKey = json_decode($postPushKey);
-                if( \App\Utils\Messages::validateErrors($responsePushKey) ){
+               
+                if( $responsePushKey->code == 1000 ){
+                    Session::put('setpushkey', true );
                     return response()->json(['msg' => 'Set push key success' ]);
                 }
         }
@@ -224,10 +226,7 @@ class LoginController extends Controller
         // save avatar
         
         if( $request->hasFile('avatar') ){
-            
-            
             $file = $request->file('avatar');
-          
             if( $file ) {
                 
                 $destinationPath = public_path('uploads'); // upload path
@@ -236,29 +235,34 @@ class LoginController extends Controller
                 $file->move($destinationPath, $fileName); // uploading file to given path
                 $url = 'uploads/' . $fileName;
             }
-            
         }
-        
        
-        $post = \App\Utils\HttpRequestUtil::getInstance()
-            ->post_data('update_profile',[
+        if (function_exists('curl_file_create')) { // php 5.6+
+            $cFile = curl_file_create( public_path($url) );
+        } else { // 
+            $cFile = '@' . public_path($url) ;
+        }
+       
+        $params = [
                 'token' => Session::get('user')->token,
                 'username' => $request->input('name') ,
                 'gender' => $request->input('gender'),
                 'address' => $request->input('address'),
-                'avatar' => $url
-            ],
-            $this->app->app_app_secret);    
+                'avatar' => $cFile
+            ];
+     
+        $post = \App\Utils\HttpRequestUtil::getInstance()
+            ->post_data_file('update_profile',$params,$this->app->app_app_secret);    
         
         $response = json_decode($post);
-        
-        if( \App\Utils\Messages::validateErrors($response) ){
-            Session::flash('message', \App\Utils\Messages::customMessage( 2002 ));
-            return back();
-        }else{
-            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+ 
+        if( $response->code == 1000 ){
+            Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
             return back();
         }
+        Session::flash('message', \App\Utils\Messages::customMessage( 2001, 'alert-danger' ));
+        return back();
+        
     }
     
     public function instagramAuthCallback(Request $request){

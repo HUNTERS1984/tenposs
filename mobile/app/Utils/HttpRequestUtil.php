@@ -173,11 +173,42 @@ class HttpRequestUtil
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_params);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_POST,1);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SAFE_UPLOAD, false);
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
                     'Content-Length: ' . strlen($data_params))
             );
+            $curl_response = curl_exec($curl);
+            if ($curl_response === false) {
+                $info = curl_getinfo($curl);
+                Log::error(json_encode($info));
+                return json_encode($info);
+            }
+            curl_close($curl);
+            return $curl_response;
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return null;
+        }
+    }
+    
+    public function post_data_file($function, $data_params, $app_secret_key = null)
+    {
+        try {
+            $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
+            $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params, $app_secret_key);
+            
+            $service_url = $this->_url . $function;
+            $curl = curl_init($service_url);
+            
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_params);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
             $curl_response = curl_exec($curl);
             if ($curl_response === false) {
                 $info = curl_getinfo($curl);

@@ -47,10 +47,10 @@
                     <label>
                     <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
                     <label style="width: 60%;">
-                    <a class="btn_upload_avatar create" type="button">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
-                    </a>
-                    <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
+                        <a class="btn_upload_avatar create" href="javascript:void(0)">
+                            <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
+                        </a>
+                        <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
                     </label>
                 </li>
                 <li>
