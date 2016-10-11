@@ -18,7 +18,7 @@
     <div id="main">
         <div id="content">
             @if(count($items_detail_data) > 0)
-                <img src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}"/>
+                <img class="image_size_detail" src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}"/>
                 <div class="container-fluid">
                     <div class="info-productdetail">
                         <div class="container-fluid">
@@ -81,9 +81,9 @@
                             </div>
                         </div>
 
-                        <div class="pad20">
-                            <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>
-                        </div>
+                        {{--<div class="pad20">--}}
+                            {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
+                        {{--</div>--}}
                     </div>
                 </div><!-- End container fluid -->
             @else
@@ -98,7 +98,7 @@
                         <div class="row clearfix">
                             @foreach($items_relate_data as $item_relate)
                                 <div class="item-product">
-                                    <img src="{{$item_relate->image_url}}" alt="{{$item_relate->title}}"/>
+                                    <img class="image_size" src="{{$item_relate->image_url}}" alt="{{$item_relate->title}}"/>
                                     <p>{{$item_relate->title}}</p>
                                     <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
                                 </div>

@@ -138,3 +138,8 @@
 #page, #below-content, #below-content p {
     width: inherit;
 }
+
+.image_size_detail {
+    width: 1024px;
+    height: 1024px;
+}
