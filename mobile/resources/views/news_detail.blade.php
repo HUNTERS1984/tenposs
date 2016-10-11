@@ -11,29 +11,15 @@
                 color: #{{ $app_info->data->app_setting->title_color}};
                 background-color: #{{ $app_info->data->app_setting->header_color}};
                 ">
-                {{ $app_info->data->name }}</h1>
+                {{$detail->data->news->title}}</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="/img/icon/h_nav.png" alt="nav"/>
             </a>
         </div>
     </div><!-- End header -->
-    <div id="banner">
-        <!-- Slider main container -->
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                @if( isset( $app_top->data->images->data)  && count($app_top->data->images->data) > 0 )
-                    @foreach( $app_top->data->images->data as $img )
-                    <div class="swiper-slide"><img src="{{ $img->image_url }}" alt=""/></div>
-                    @endforeach
-                @endif
-            </div>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
-        </div>
-    </div><!-- End banner -->
     <div id="main">
         <div id="content">
+            <img src="{{$detail->data->news->image_url}}" style="width:100%" alt=""/>
             <div class="container-fluid">
                 @if(isset($detail))
                 <div class="infodetail">

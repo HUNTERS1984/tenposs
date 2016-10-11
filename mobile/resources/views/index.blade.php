@@ -38,7 +38,7 @@
         </div><!-- End banner -->
         <div id="content">
             <div id="recentry">
-                <h2 class="aligncenter">Recentry</h2>
+                <h2 class="aligncenter">最近</h2>
                 <div class="container-fluid">
                     <div class="row">
                         @if( isset( $app_top->data->items->data)  
@@ -55,7 +55,7 @@
                 </div>
             </div><!-- End recentry -->
             <div id="photogallery">
-                <h2 class="aligncenter">Photo Gallery</h2>
+                <h2 class="aligncenter">フォトギャラリー</h2>
                 <div class="container-fluid">
                     <div class="row">
                         @if( isset( $app_top->data->photos->data)  
@@ -71,7 +71,7 @@
                 </div>
             </div><!-- End photogallery -->
             <div id="news">
-                <h2 class="aligncenter">News</h2>
+                <h2 class="aligncenter">ニュース</h2>
                 <div class="container-fluid">
                      @if( isset( $app_top->data->news->data)  
                             && count($app_top->data->news->data) > 0 )
@@ -124,7 +124,7 @@
                 </ul>
                 
                 <div class="container-fluid">
-                    <a href="phone:{{ $contact->tel }} " class="btn tenposs-button">Contact</a>
+                    <a href="phone:{{ $contact->tel }} " class="btn tenposs-button">予約</a>
                 </div>
                 <script type="text/javascript">
                     maps.push({

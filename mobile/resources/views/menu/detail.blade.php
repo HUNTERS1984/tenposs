@@ -6,10 +6,9 @@
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-                    color: {{ $app_info->data->app_setting->title_color}};
-                    background-color: #{{ $app_info->data->app_setting->header_color}};
-                    ">
-                メニュー詳細</h1>
+            color: #{{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">{{ $items_detail_data->title }}</h1>
 
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
@@ -27,7 +26,7 @@
                             <p class="font32"><strong>{{$items_detail_data->title}}</strong></p>
                             <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
                         </div>
-                        <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">今買う</a>
+                        <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">商品購入ペ一ジへ</a>
                     </div>
                     <div class="entry-productdetail">
                         <div class="option">
@@ -82,9 +81,9 @@
                             </div>
                         </div>
 
-                        {{--<div class="pad20">--}}
-                            {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">今買う</a>--}}
-                        {{--</div>--}}
+                        <div class="pad20">
+                            <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>
+                        </div>
                     </div>
                 </div><!-- End container fluid -->
             @else
@@ -95,7 +94,7 @@
             @if(count($items_relate_data) > 0)
                 <div id="related" style="margin-top: 50px;">
                     <div class="container-fluid">
-                        <h2 class="aligncenter font32">関連しました</h2>
+                        <h2 class="aligncenter font32">関連</h2>
                         <div class="row clearfix">
                             @foreach($items_relate_data as $item_relate)
                                 <div class="item-product">
@@ -110,7 +109,7 @@
                     @if($load_more_releated)
                         <div class="row" style="text-align:center;" id="div_load_more">
                             <a href="javascript:void(0)" id="load_more"
-                               class="btn tenposs-readmore">続きを読む</a>
+                               class="btn tenposs-readmore">もっと見る</a>
                         </div>
                     @endif
                 </div><!-- End related -->
