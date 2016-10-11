@@ -17,14 +17,14 @@ h3,.h3{font-size: 28px;}
 }
 .tenposs-button{
     display: block;
-    font-size: 32px;
+    font-size: 24px;
     background: #14c8c8;
     color: #fff;
     width: 100%;
     margin-top: 46px;
     margin-bottom: 35px;
     display: block;
-    line-height: 76px;
+    line-height: 50px;
 }
 
 .wrap{
@@ -153,6 +153,8 @@ h3,.h3{font-size: 28px;}
 .item-coupon p{
     color: #96a0a4;
     margin-bottom: 10px;
+    max-height: 100px;
+    overflow: hidden;
 }
 /* Contact */
 #contact ul{

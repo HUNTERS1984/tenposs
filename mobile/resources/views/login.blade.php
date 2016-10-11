@@ -8,18 +8,6 @@
 </style>
 @endsection
 @section('page')
-<div id="header">
-    <div class="container-fluid">
-        <h1 class="aligncenter" style="
-            color: #{{ $app_info->data->app_setting->title_color}};
-            background-color: #{{ $app_info->data->app_setting->header_color}};
-            ">
-            {{ $app_info->data->name }}</h1>
-        <a href="javascript:void(0)" class="h_control-nav">
-            <img src="img/icon/h_nav.png" alt="nav"/>
-        </a>
-    </div>
-</div><!-- End header -->
 <div id="main">    
     <div id="sign-up-page">
        
@@ -32,7 +20,7 @@
                 <i class="fa fa-facebook"></i>
                 Twitter ではじめる</a>
                 
-            <a href="{{ route('register') }}" class="btn btn-block tenposs-button bg-mail">
+            <a href="{{ route('login.normal') }}" class="btn btn-block tenposs-button bg-mail">
                 <i class="fa fa-facebook"></i>
                 メールアドレスではじめる</a> 
             

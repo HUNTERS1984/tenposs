@@ -16,6 +16,7 @@
 }
 #user ul li input{
     border: none;
+    width: 60%;
 }
 #user ul li i.icon-clean{
     width: 28px;

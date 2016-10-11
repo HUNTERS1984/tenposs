@@ -17,17 +17,17 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             
              <div class="form-group">
-                <input value="{{ old('email') }}" class="form-control input-lg" type="email" name="email" placeholder="メ一ルアドレス"/>
+                <input value="{{ old('email') }}" class="form-control input-lg" type="email" name="email" placeholder="メ一ルアドレス" style="height: 60px;"/>
             </div>
              <div class="form-group">
-                <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード"/>
+                <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード" style="height: 60px;"/>
             </div>
            
             <button class="btn btn-block  tenposs-button" type="submit">ログイン</button>
             
         </form>
         <p class="text-center">
-            すでに会員の方は、<a href="{{ route('login') }}">こちらへ。</a>
+            <a href="{{ route('register') }}">新規会員登録</a>
         </p>
     </div>
 </div><!-- End header -->                        

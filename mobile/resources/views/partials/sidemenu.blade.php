@@ -7,7 +7,7 @@
                     <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url }}" alt=""/>
                 </a>
             </div>
-            <p class="font32">{{ Session::get('user')->profile->name }} <a href="{{ route('logout') }}">| ログアウト</a></p>
+            <p class="font32">{{ Session::get('user')->profile->name }}</p>
             @else
             <div class="image">
                 <a href="{{ route('login') }}">
@@ -32,7 +32,18 @@
             ">
                 <span class="{{ $menu->icon }}"></span>
             {{ $menu->name }}
-        </a></li>    
+        </a></li>            
         @endforeach
+        @if( Session::has('user') )
+        <li class="">
+            <a class="active" href="{{ route('logout') }}" style="
+                font-size: {{ $app_info->data->app_setting->menu_font_size }};
+                font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                color: #{{ $app_info->data->app_setting->menu_font_color }};
+            ">
+                <span class="ti-unlock"></span>
+            ログアウト
+        </a></li> 
+        @endif
     </ul>
 </div><!-- End side -->

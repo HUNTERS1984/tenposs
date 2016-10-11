@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" href="{{ url('favicon.ico') }}">
-        <link rel="manifest" href="{{ url('manifest.json') }}">
-        <title>Top</title>
-        
-        <link href="{{ url('fonts/themify/themify-icons.css') }}" rel="stylesheet">
-        
-        <!-- Bootstrap core CSS -->
-        <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ url('favicon.ico') }}">
+    <link rel="manifest" href="{{ url('manifest.json') }}">
+    <title>Tenpo</title>
+    
+    <link href="{{ url('fonts/themify/themify-icons.css') }}" rel="stylesheet">
+    
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
 
-        <!-- Slider swiper core CSS -->
-        <link href="{{ url('css/swiper.min.css') }}" rel="stylesheet">
+    <!-- Slider swiper core CSS -->
+    <link href="{{ url('css/swiper.min.css') }}" rel="stylesheet">
 
-        <!-- Custom styles for this template -->
-        <link href="{{ url('css/reset.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url('css/reset.css') }}" rel="stylesheet">
+    
+    <!-- Custom common for this template -->
+    <link href="{{ url('css/common.css') }}" rel="stylesheet">
 
-        <!-- Custom common for this template -->
-        <link href="{{ url('css/common.css') }}" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="{{ url('css/main.css') }}" rel="stylesheet">
-        @yield('headCSS')
-    </head>
+    <!-- Custom styles for this template -->
+    <link href="{{ url('css/main.css') }}" rel="stylesheet">
+    
+    @yield('headCSS')
 
     <body>
         <div class="wrap">
@@ -46,37 +47,34 @@
         <script src="{{ url('js/script.js') }}"></script>
         <script src="{{ url('js/notification.js') }}"></script>
         <script type="application/javascript">
-            var setPushKeyFlag = false;
             $(document).ready(function () {
-                notify.init('{{ url('js/notification_worker.js') }}');
+                notify.init('{{ url("js/notification_worker.js") }}');
             });
         </script>
-        <script type="text/javascript">
-             $(document).ready(function () {
-                 @if( Session::has('user') && ! Session::get('setpushkey') )
-                    if( !setPushKeyFlag ){
-                        $.ajax({
-                            headers: {
-                                'X-CSRF-TOKEN': '{{  csrf_token() }}'
-                            },
-                            url: '{{ route("setpushkey") }}',
-                            type: 'post',
-                            dataType: 'json',
-                            data: {
-                                key: notify.data.subscribe()
-                            },
-                            
-                            success: function(response){
-                                setPushKeyFlag = true;
-                                console.log('Setpushkey success');
-                            }
-                        })
-                    }
-                    
-                @endif
-             });
-        </script>
         
+             
+         @if( Session::has('user') && !Session::get('setpushkey') )
+         <script type="text/javascript">
+            $(document).ready(function () {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': '{{  csrf_token() }}'
+                    },
+                    url: '{{ route("setpushkey") }}',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        key: notify.data.subscribe()
+                    },
+                    
+                    success: function(response){
+                        console.log('Setpushkey success');
+                    }
+                })
+            });
+        </script>   
+        @endif
+             
         @yield('footerJS')
     </body>
 </html>

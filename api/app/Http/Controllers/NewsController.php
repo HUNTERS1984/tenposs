@@ -162,7 +162,7 @@ class NewsController extends Controller
             return $this->output($this->body);
         }
         try {
-            $news = News::where('id', Input::get('id'))->whereNull('deleted_at')->first();
+            $news = News::where('id', Input::get('id'))->whereNull('deleted_at')->first()->toArray();
             if (count($news) > 0 && array_key_exists('image_url', $news))
                 $news['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news['image_url']);
 
