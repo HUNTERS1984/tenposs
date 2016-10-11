@@ -51,30 +51,7 @@
                 notify.init('{{ url("js/notification_worker.js") }}');
             });
         </script>
-        
-             
-         @if( Session::has('user') && !Session::get('setpushkey') )
-         <script type="text/javascript">
-            $(document).ready(function () {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': '{{  csrf_token() }}'
-                    },
-                    url: '{{ route("setpushkey") }}',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        key: notify.data.subscribe()
-                    },
-                    
-                    success: function(response){
-                        console.log('Setpushkey success');
-                    }
-                })
-            });
-        </script>   
-        @endif
-             
+
         @yield('footerJS')
     </body>
 </html>

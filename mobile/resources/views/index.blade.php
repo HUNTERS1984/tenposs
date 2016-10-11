@@ -103,7 +103,7 @@
                         @endforeach
                     @endif
 
-                    <a href="#" class="btn tenposs-readmore">もっと見る</a>
+                    <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
                 </div>
             </div><!-- End News -->
             <div id="contact">
@@ -191,6 +191,26 @@
         
     })
 </script>
-
+@if( Session::has('user') && !Session::get('setpushkey') )
+ <script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{  csrf_token() }}'
+            },
+            url: '{{ route("setpushkey") }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                key: notify.data.subscribe()
+            },
+            
+            success: function(response){
+                console.log('Setpushkey success');
+            }
+        })
+    });
+</script>   
+@endif
 
 @endsection
