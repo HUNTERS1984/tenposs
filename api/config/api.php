@@ -72,5 +72,6 @@ return [
     'cache_staff_categories' => 'staff_categories_%s_%s', // app_id,menu_id
 
     'secret_key_for_domain' => 'Tenposs@123',
-
+    'secret_key_coupon_use' => 'ASDFghjkl@12345A',
+    'url_open_coupon_code' => 'https://ten-po.com/coupon/use/code/%s/%s/%s/%s',
 ];
