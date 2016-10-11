@@ -24,7 +24,6 @@ class VerifyExistApp
             $url = URL::to('/');
             $url = parse_url($url,PHP_URL_HOST);
             $url = strstr(str_replace("www.","",$url), ".",true);
-     
 
             $post = \App\Utils\HttpRequestUtil::getInstance()
                 ->get_data('get_app_by_domain',[

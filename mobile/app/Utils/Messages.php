@@ -31,10 +31,9 @@ class Messages
     */
     
     static $customErrorsList = array(
-         '2000' => "社会的なユーザーを取得できません!",//Cannot get social user
+         '2000' => "Cannot get social user",
          '2001' => "ユーザープロファイルを取得できません",
          '2002' => "プロファイルの成功を更新",
-         '2003' => '間違ったメールアドレスまたはパスワード！', //Wrong email or password!
          
     );
     
