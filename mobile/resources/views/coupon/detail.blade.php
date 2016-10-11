@@ -22,7 +22,7 @@
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide"><img src="{{$items_detail_data->image_url}}"
+                    <div class="swiper-slide"><img class="image_size_detail" src="{{$items_detail_data->image_url}}"
                                                    alt="{{$items_detail_data->title}}"/></div>
 
                 </div>

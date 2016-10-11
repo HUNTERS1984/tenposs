@@ -1,36 +1,45 @@
 /* Category */
-#category{
+#category {
     border-bottom: 1px solid #eee;
 }
-#category .swiper-slide{
+
+#category .swiper-slide {
     padding: 40px 0;
     text-align: center;
     font-size: 24px;
 }
-#category .swiper-button-next,#category .swiper-button-prev{
+
+#category .swiper-button-next, #category .swiper-button-prev {
     background-size: 15px 44px;
 }
-#category .swiper-button-prev{
+
+#category .swiper-button-prev {
     left: 70px;
 }
-#category .swiper-button-next{
+
+#category .swiper-button-next {
     right: 70px;
 }
+
 /* Menu detail */
-.info-productdetail{
+.info-productdetail {
     padding: 40px 0 35px;
     position: relative;
 }
-.info-productdetail{
+
+.info-productdetail {
     border-bottom: 1px solid #ddd;
 }
-.info-productdetail p{
+
+.info-productdetail p {
     margin: 10px 0 40px;
 }
-.info-productdetail span{
+
+.info-productdetail span {
     color: #96a0a4;
 }
-.info-productdetail span.price{
+
+.info-productdetail span.price {
     position: absolute;
     top: 80px;
     right: 20px;
@@ -38,44 +47,64 @@
     font-size: 36px;
     color: red;
 }
-.entry-productdetail{
+
+.entry-productdetail {
     padding: 30px 0 0;
 }
-.entry-productdetail .option{
+
+.entry-productdetail .option {
     background: #f8f8fa;
     padding: 10px;
     border-radius: 4px;
     /*margin-bottom: 50px;*/
 }
-.entry-productdetail p{
+
+.entry-productdetail p {
     text-align: justify;
 }
-.entry-productdetail .option span{
+
+.entry-productdetail .option span {
     padding: 22px 10px;
     display: inline-block;
     margin-right: 20px;
     width: 332px;
     font-size: 24px;
 }
-.entry-productdetail .option span:last-child{
+
+.entry-productdetail .option span:last-child {
     margin-right: 0;
 }
-.entry-productdetail .option span.switch-on{
+
+.entry-productdetail .option span.switch-on {
     background: #fff;
     border: 1px solid #eee;
     color: #14c8c8;
 }
-#related{
+
+#related {
     border-top: 30px solid #f8f8fa;
 }
+
 #myTab li {
-    width:50%;
+    width: 50%;
     text-align: center;
     border: 0;
 }
+
 #myTab li.active a {
     border: 0;
 }
+
 #myTab {
     border: 0;
+}
+
+.image_size {
+    width: 354px;
+    height: 354px;
+}
+
+.image_size_detail {
+    width: 1024px;
+    height: 1024px;
 }
