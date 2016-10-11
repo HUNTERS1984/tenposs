@@ -181,9 +181,10 @@ class CouponController extends Controller
                         $coupon_code = DB::table('rel_app_users_coupons')
                             ->whereAppUserId($user->id)
                             ->whereCouponId($coupons['id'])->get();
-                        if (count($coupon_code) > 0)
+                        if (count($coupon_code) > 0) {
                             $coupons['code'] = $coupon_code[0]->code;
-                        else
+                            $coupons['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $user->id, $coupons['id'], $coupon_code[0]->code, hash("sha256", $user->id . $coupons['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
+                        } else
                             $coupons['code'] = '';
                     } else {
                         $coupons['can_use'] = false;
