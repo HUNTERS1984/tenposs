@@ -153,6 +153,8 @@ h3,.h3{font-size: 28px;}
 .item-coupon p{
     color: #96a0a4;
     margin-bottom: 10px;
+    max-height: 100px;
+    overflow: hidden;
 }
 /* Contact */
 #contact ul{
