@@ -85,4 +85,12 @@ class MobileController extends Controller
         }   
     }
     
+    public function userPrivacy(){
+        return view( 'user_privacy', ['app_info' => $this->app_info ] );
+    }
+    
+    public function companyInfo(){
+        return view( 'company_info', ['app_info' => $this->app_info ] );
+    }
+    
 }
