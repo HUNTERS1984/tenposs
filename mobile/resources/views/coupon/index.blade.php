@@ -36,7 +36,7 @@
                                     @endif
                                 </a>
                                 <h3>{{$item->title}}</h3>
-                                <p>
+                                <p align="justify">
                                     {{$item->description}}
                                 </p>
                             </div>
