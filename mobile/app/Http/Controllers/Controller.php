@@ -34,7 +34,8 @@ class Controller extends BaseController
         if (\App\Utils\Messages::validateErrors($response)) {
             $this->app_info = $response;
             // write file manifest
-            File::put( public_path('manifest.json') , file_get_contents($this->app_info->data->notification->url_manifest) );
+            if( $file = file_get_contents($this->app_info->data->notification->url_manifest) )
+                File::put( public_path('manifest.json') , $file );
             
         } else {
             abort(404);
