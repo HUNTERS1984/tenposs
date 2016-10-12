@@ -105,6 +105,7 @@
                                         <p>{{$item_relate->title}}</p>
                                         <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
                                     </a>
+                                    
                                 </div>
                             @endforeach
 
