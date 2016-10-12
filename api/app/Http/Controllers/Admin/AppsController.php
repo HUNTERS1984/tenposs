@@ -9,7 +9,6 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\AppsRepositoryInterface;
 use App\Repositories\Contracts\UsersRepositoryInterface;
-use Illuminate\Support\Facades\File;
 use Validator;
 use Session;
 use App\Filters\EntityFilters\AppsFilters;
@@ -170,7 +169,7 @@ class AppsController extends Controller
             }
 //            $imageTempName = $request->file('file')->getPathname();
             $imageName = $request->file('file')->getClientOriginalName();
-            $pathAppend = '/public/uploads/' . $app_id . '/';
+            $pathAppend = '/public/uploads/appsetting/file/';
             $path = base_path() . $pathAppend;
             $request->file('file')->move($path, $imageName);
             $extension = pathinfo($imageName, PATHINFO_EXTENSION);
@@ -229,12 +228,6 @@ class AppsController extends Controller
                 'web_push_sender_id' => $request->input('senderid')
             ];
 
-            $arr = array('name' => 'Wed Push Notifications', 'gcm_sender_id' => $request->input('senderid'));
-            $pathAppend = '/public/uploads/' . $app_id;// . '/manifest.json';
-            $path = base_path() . $pathAppend;
-            if (!File::isDirectory($path))
-                File::makeDirectory($path, 0777, true, true);
-            File::put($path . '/manifest.json', json_encode($arr));
 
             if ($dataUpdate != null && count($dataUpdate) > 0) {
                 $updated = $this->appRepo->updateNotifyInfo($app_id, $dataUpdate);
