@@ -230,9 +230,11 @@ class AppsController extends Controller
             ];
 
             $arr = array('name' => 'Wed Push Notifications', 'gcm_sender_id' => $request->input('senderid'));
-            $pathAppend = '/public/uploads/' . $app_id . '/manifest.json';
+            $pathAppend = '/public/uploads/' . $app_id;// . '/manifest.json';
             $path = base_path() . $pathAppend;
-            File::put($path, json_encode($arr));
+            if (!File::isDirectory($path))
+                File::makeDirectory($path, 0777, true, true);
+            File::put($path . '/manifest.json', json_encode($arr));
 
             if ($dataUpdate != null && count($dataUpdate) > 0) {
                 $updated = $this->appRepo->updateNotifyInfo($app_id, $dataUpdate);
