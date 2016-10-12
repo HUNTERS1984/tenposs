@@ -98,9 +98,12 @@
                         <div class="row clearfix">
                             @foreach($items_relate_data as $item_relate)
                                 <div class="item-product">
-                                    <img class="image_size" src="{{$item_relate->image_url}}" alt="{{$item_relate->title}}"/>
-                                    <p>{{$item_relate->title}}</p>
-                                    <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
+                                    <a href="{{ route('menus.detail', $item_relate->id)}}">
+                                        <img class="image_size" src="{{$item_relate->image_url}}"
+                                             alt="{{$item_relate->title}}"/>
+                                        <p>{{$item_relate->title}}</p>
+                                        <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
+                                    </a> 
                                 </div>
                             @endforeach
 
