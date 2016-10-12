@@ -6,9 +6,9 @@
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-            color: {{ $app_info->data->app_setting->title_color}};
-            background-color: #{{ $app_info->data->app_setting->header_color}};
-            ">
+                    color: {{ $app_info->data->app_setting->title_color}};
+                    background-color: #{{ $app_info->data->app_setting->header_color}};
+                    ">
                 関連商品</h1>
             {{--<h1>Menu</h1>--}}
             <a href="javascript:void(0)" class="h_control-nav">
@@ -18,7 +18,7 @@
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <div id="category">
+            <div id="category" style="text-align: right;">
                 <a href="{{route('menus.detail',$item_id)}}">バック</a>
             </div><!-- End category -->
             <div id="category-detail">
@@ -75,7 +75,8 @@
             $(document).on("click", "#load_more", function () {
                 var current_page = parseInt($('#current_page').val());
                 var next_page = current_page + 1;
-                var item_id = {{$item_id}}
+                var item_id =
+                        {{$item_id}}
                 var total_page = parseInt('{{$total_page}}');
 
                 $.ajax({
