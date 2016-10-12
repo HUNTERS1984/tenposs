@@ -6,9 +6,9 @@
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-                    color: #{{ $app_info->data->app_setting->title_color}};
-                    background-color: #{{ $app_info->data->app_setting->header_color}};
-                    ">{{ $items_detail_data->title }}</h1>
+            color: #{{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">{{ $items_detail_data->title }}</h1>
 
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
@@ -18,8 +18,7 @@
     <div id="main">
         <div id="content">
             @if(count($items_detail_data) > 0)
-                <img class="image_size_detail" src="{{$items_detail_data->image_url}}"
-                     alt="{{$items_detail_data->title}}"/>
+                <img class="image_size_detail" src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}"/>
                 <div class="container-fluid">
                     <div class="info-productdetail">
                         <div class="container-fluid">
@@ -83,7 +82,7 @@
                         </div>
 
                         {{--<div class="pad20">--}}
-                        {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
+                            {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
                         {{--</div>--}}
                     </div>
                 </div><!-- End container fluid -->
@@ -104,8 +103,7 @@
                                              alt="{{$item_relate->title}}"/>
                                         <p>{{$item_relate->title}}</p>
                                         <span>$ {{number_format($item_relate->price, 0, '', '.')}}</span>
-                                    </a>
-                                    
+                                    </a> 
                                 </div>
                             @endforeach
 
@@ -113,7 +111,7 @@
                     </div><!-- End container fluid -->
                     @if($load_more_releated)
                         <div class="row" style="text-align:center;" id="div_load_more">
-                            <a href="{{ route('menus.related', $items_detail_data->id)}}"
+                            <a href="javascript:void(0)" id="load_more"
                                class="btn tenposs-readmore">もっと見る</a>
                         </div>
                     @endif

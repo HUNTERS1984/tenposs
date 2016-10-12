@@ -15,6 +15,6 @@
 </div>
 @if($total_page > 1)
     <div class="row"  style="text-align:center;"  id="div_load_more">
-        <a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">続きを読む</a>
+        <a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">もっと見る</a>
     </div>
 @endif

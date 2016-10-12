@@ -6,9 +6,9 @@
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-                    color: {{ $app_info->data->app_setting->title_color}};
-                    background-color: #{{ $app_info->data->app_setting->header_color}};
-                    ">
+            color: {{ $app_info->data->app_setting->title_color}};
+            background-color: #{{ $app_info->data->app_setting->header_color}};
+            ">
                 関連商品</h1>
             {{--<h1>Menu</h1>--}}
             <a href="javascript:void(0)" class="h_control-nav">
@@ -18,7 +18,7 @@
     </div><!-- End header -->
     <div id="main">
         <div id="content">
-            <div id="category" style="text-align: right;">
+            <div id="category">
                 <a href="{{route('menus.detail',$item_id)}}">バック</a>
             </div><!-- End category -->
             <div id="category-detail">
@@ -51,7 +51,7 @@
                                 @if($total_page > 1)
                                     <div class="row" style="text-align:center;" id="div_load_more">
                                         <a href="javascript:void(0)" id="load_more"
-                                           class="btn tenposs-readmore">続きを読む</a>
+                                           class="btn tenposs-readmore">もっと見る</a>
                                     </div>
                                 @endif
                             </div>
@@ -75,8 +75,7 @@
             $(document).on("click", "#load_more", function () {
                 var current_page = parseInt($('#current_page').val());
                 var next_page = current_page + 1;
-                var item_id =
-                        {{$item_id}}
+                var item_id = {{$item_id}}
                 var total_page = parseInt('{{$total_page}}');
 
                 $.ajax({
@@ -95,7 +94,7 @@
                     if (parseInt(data.page_number) >= parseInt(data.total_page))
                         $('#div_load_more').remove();
                     else {
-                        var html = '<a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">続きを読む</a>';
+                        var html = '<a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">もっと見る</a>';
                         $('#div_load_more').html(html);
                     }
                 });
