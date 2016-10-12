@@ -25,6 +25,7 @@
     <div id="content">
         <div id="setting">
             <ul>
+                <li><a href="{{ route('profile') }}">プロフィール編集</a></li>  
                 <li>
                     <a href="#">ランキング</a>
                     <!-- Rounded switch -->

@@ -47,7 +47,14 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         );
         
-        $v = Validator::make($request->all(), $rules);
+        $message = array(
+            'email.required' => '電子メールのフィールドは必須です。',
+            'email.email' => 'メール誤タイプ',
+            'password.required' => 'パスワードフィールドが必要です。',
+            'password.min' => 'パスワードは少なくとも6文字でなければなりません。',
+        );
+        
+        $v = Validator::make($request->all(), $rules, $message);
         if( $v->fails() ){
             return back()
                 ->withInput()
@@ -67,7 +74,7 @@ class LoginController extends Controller
             Session::put('user', $response->data);
             return redirect('/');
         }
-        Session::flash('message', \App\Utils\Messages::getMessage( $response ));
+        Session::flash('message', \App\Utils\Messages::customMessage('2003') );
         return back()->withInput();
         
     }
@@ -85,13 +92,25 @@ class LoginController extends Controller
     public function registerPost(Request $request){
        
         $rules = array(
-            'name' => 'required|alpha_num',
+            'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:6',
             'password_confirm' => 'required|min:6|same:password'
         );
         
-        $v = Validator::make($request->all(), $rules);
+        $message = array(
+            'name.required' => '名前のフィールドが必要です。',
+            'email.required' => '電子メールのフィールドは必須です。',
+            'email.email' => 'メール誤タイプ',
+            'password.required' => 'パスワードフィールドが必要です。',
+            'password.min' => 'パスワードは少なくとも6文字でなければなりません。',
+            'password_confirm.required' => 'パスワードの確認フィールドが必要です。',
+            'password_confirm.min' => 'パスワードの確認は、少なくとも6文字でなければなりません。',
+            'password_confirm.same' => 'パスワードの確認とパスワードが一致している必要があります。',
+            
+        );
+        
+        $v = Validator::make($request->all(), $rules,$message);
         if( $v->fails() ){
             return back()
                 ->withInput()

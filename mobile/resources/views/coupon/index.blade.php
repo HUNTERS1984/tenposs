@@ -85,7 +85,7 @@
                     if (parseInt(data.page_number) >= parseInt(data.total_page))
                         $('#div_load_more').remove();
                     else {
-                        var html = '<a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">続きを読む</a>';
+                        var html = '<a href="javascript:void(0)" id="load_more" class="btn tenposs-readmore">もっと見る</a>';
                         $('#div_load_more').html(html);
                     }
                 });
