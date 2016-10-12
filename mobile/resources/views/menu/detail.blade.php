@@ -112,7 +112,7 @@
                     </div><!-- End container fluid -->
                     @if($load_more_releated)
                         <div class="row" style="text-align:center;" id="div_load_more">
-                            <a href="javascript:void(0)" id="load_more"
+                            <a href="{{ route('menus.related', $items_detail_data->id)}}"
                                class="btn tenposs-readmore">もっと見る</a>
                         </div>
                     @endif
