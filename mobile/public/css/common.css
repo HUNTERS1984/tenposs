@@ -15,6 +15,12 @@ h3,.h3{font-size: 28px;}
     display: block;
     line-height: 76px;
 }
+@media screen and (max-width: 479px){
+    .tenposs-readmore{
+        font-size:24px;
+        line-height: 35px;
+    }
+}
 .tenposs-button{
     display: block;
     font-size: 24px;
@@ -28,7 +34,8 @@ h3,.h3{font-size: 28px;}
 }
 
 .wrap{
-    width: 768px;
+    max-width: 768px;
+    width:100%;
     margin: 0 auto;
     overflow-x: hidden;
     position: relative;
@@ -40,13 +47,22 @@ h3,.h3{font-size: 28px;}
     margin: 0 -10px;
 }
 #page{
-    min-width: 750px;
+    max-width: 750px;
+    overflow: hidden;
+    position:relative;
+    left:0;
     transition: all .3s ease;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
 }
 #page.active-scrollbar{
-    margin-left: 560px;
+    /*margin-left: 560px;*/
+    left: 560px;
+}
+@media screen and (max-width:479px){
+    #page.active-scrollbar{
+        left: 300px;
+    }
 }
 .overfog{
     position: fixed;
@@ -62,6 +78,11 @@ h3,.h3{font-size: 28px;}
     transition: all .3s ease;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
+}
+@media screen and (max-width:479px){
+    #page.active-scrollbar .overfog{
+        left:300px;
+    }
 }
 /* Header */
 #header h1{
@@ -103,10 +124,20 @@ h3,.h3{font-size: 28px;}
     color: #646e72;
     margin: 20px 0 10px;
 }
+@media screen and (max-width:479px){
+    .item-product p{
+        font-size:18px;
+    }
+}
 .item-product span{
     color: #646e72;
     margin: 10px 0 20px;
     display: block;
+}
+@media screen and (max-width:479px){
+    .item-product span{
+        font-size:16px;
+    }
 }
 .item-product:nth-child(2n+1){
     clear: both;
@@ -138,17 +169,35 @@ h3,.h3{font-size: 28px;}
     -moz-box-shadow: 0 2px 2px #ddd;
 }
 .item-coupon img{
-    width: 220px;
+    max-width: 220px;
+    width:100%;
     height: 220px;
+}
+@media screen and (max-width:479px){
+    .item-coupon img{
+        height:100px;
+        max-width:100px;
+    }
 }
 /* info coupon */
 .item-coupon a{
     display: block;
     margin: 20px 0 5px;
 }
+@media screen and (max-width:479px){
+    .item-coupon a{
+        font-size:16px;
+    }
+
+}
 .item-coupon h3{
     color: #505a5e;
     margin: 20px 0 10px;
+}
+@media screen and (max-width:479px){
+    .item-coupon h3{
+        font-size:18px;
+    }
 }
 .item-coupon p{
     color: #96a0a4;
@@ -156,13 +205,27 @@ h3,.h3{font-size: 28px;}
     max-height: 100px;
     overflow: hidden;
 }
+@media screen and (max-width:479px){
+   .item-coupon p{
+    font-size:14px;
+   }
+}
+
 /* Contact */
 #contact ul{
     list-style: none;
+    padding-left:15px;
+    padding-right:15px;
 }
 #contact li{
     border-bottom: 1px solid #eee;
 }
+#contact li div.table{
+    display: table;
+    width:100%;
+    margin-bottom: 0;
+}
+
 #contact li div.table-cell{
     height: 127px;
     display: table-cell;
@@ -170,8 +233,18 @@ h3,.h3{font-size: 28px;}
     text-align: center;
     clear: both;
 }
+#contact li div.table-cell .left-table-cell{
+    width:20%;
+    display:inline-block;
+    vertical-align: middle;
+}
+#contact li div.table-cell .right-table-cell{
+    display:inline-block;
+    width:75%;
+    vertical-align: middle;
+}
 #contact li div.table-cell img{
-    margin-right: 40px;
+    /*margin-right: 40px;*/
 }
 /* Side */
 
@@ -210,6 +283,12 @@ h3,.h3{font-size: 28px;}
     -moz-transition: all .3s ease;
     overflow-y: scroll;
 }
+@media screen and (max-width:479px){
+    #side{
+        left:-300px;
+        width:300px;
+    }
+}
 .active-scrollbar #side{
     left: 0;
 }
@@ -221,15 +300,33 @@ h3,.h3{font-size: 28px;}
     padding: 70px 0 70px 30px;
     line-height: 100px;
 }
+@media screen and (max-width:479px){
+    #side .h_side .imageleft .image{
+        float:none;
+    }
+}
+
 /*--------------------*/
 #side .s_nav{
     list-style: none;
     padding: 0;
     margin: 0;
 }
+#side .s_nav li{
+    padding:20px 0 20px 100px;
+    position:relative;
+}
+#side .s_nav li:before{
+    position:absolute;
+    left:40px;
+    top:50%;
+    transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+}
 #side .s_nav li a {
-    height: 100px;
-    line-height: 100px;
+    /*height: 100px;
+    line-height: 100px;*/
     display: block;
     width: 100%;
     
@@ -243,8 +340,8 @@ h3,.h3{font-size: 28px;}
     display: inline-block;
 }
 
-#side .s_nav li a:hover,#side .s_nav li a.active{
-   
+#side .s_nav li:hover,#side .s_nav li.active{
+   background:#646e72;
 }
 #side .s_nav li.s_icon-home a{}
 #side .s_nav li.s_icon-menu a{background-position: 50px -100px;}

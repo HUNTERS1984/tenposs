@@ -30,13 +30,45 @@
                 </div>
                 <div class="entry-productdetail">
                     <div class="option">
-                        <span class="btn switch switch-on">自己紹介</span>
-                        <span class="btn switch switch-off">プロフィール</span>
+                        <ul class="nav-switch">
+                            <li class="active"><a href="#" data-alt="intro">自己紹介</a></li>
+                            <li><a href="#" data-alt="info">プロフィール</a></li>
+                        </ul>
                     </div>
-                    <p>{{$detail->data->staffs->introduction}}</p>
-                    @if(str_word_count($detail->data->staffs->introduction) > 40)
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
-                    @endif
+                    <div class="content-staffDetail" id="intro">
+                        <p>{{$detail->data->staffs->introduction}}</p>
+                        @if(str_word_count($detail->data->staffs->introduction) > 40)
+                        <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
+                        @endif
+                    </div>
+                    <div class="content-staffDetail" id="info">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <p class="title-staff">Gender:</p>
+                                </div>
+                                <div class="col-xs-8">
+                                    <p class="title-staff">{{$detail->data->staffs->gender}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <p class="title-staff">Birthday:</p>
+                                </div>
+                                <div class="col-xs-8">
+                                    <p class="title-staff">{{$detail->data->staffs->birthday}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <p class="title-staff">Tel:</p>
+                                </div>
+                                <div class="col-xs-8">
+                                    <p class="title-staff">{{$detail->data->staffs->tel}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div><!-- End container fluid -->
         </div><!-- End content -->
@@ -55,5 +87,15 @@
             pagination: "#banner .swiper-pagination",
             paginationClickable: true
         });
+
+        $('.content-staffDetail').not(':first').hide();
+        $('.nav-switch li a').on('click',function(e){
+            e.preventDefault();
+            var id = $(this).data('alt');
+            $('.nav-switch li').removeClass('active');
+            $(this).parent('li').addClass('active');
+            $('.content-staffDetail').slideUp();
+            $('#'+id).slideDown();
+        })
     </script>
 @stop

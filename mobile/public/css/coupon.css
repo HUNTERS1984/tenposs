@@ -49,6 +49,11 @@
 .infodetail, .entrydetail {
     padding: 40px 0;
 }
+@media screen and (max-width:479px){
+    .infodetail, .entrydetail {
+        padding:20px 0;
+    }
+}
 
 .infodetail {
     border-bottom: 1px solid #ddd;
@@ -72,6 +77,11 @@
     top: 83px;
     right: 20px;
     color: #96a0a4;
+}
+@media screen and (max-width:479px){
+    .infodetail .news-dateadd{
+        font-size:14px;
+    }
 }
 
 .infodetail .form-mail {
