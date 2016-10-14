@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'media_base_url' => 'https://api.ten-po.com/',
+    'media_base_url' => 'https://ten-po.com/',
+    'media_base_url_api' => 'https://api.ten-po.com/',
 
     'time_expire' => 5000000,
 
