@@ -287,7 +287,7 @@ class AppUserController extends Controller
             try {
                 $profile = UserProfile::where('app_user_id', $user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
                 if ($profile && !empty($profile->avatar_url))
-                    $profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $profile->avatar_url);
+                    $profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url_api'), $profile->avatar_url);
                 UserSession::where('app_user_id', $user->id)->delete();
                 $user_session = new UserSession();
                 $user_session->token = $token;

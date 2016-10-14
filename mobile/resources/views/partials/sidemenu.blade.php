@@ -24,24 +24,22 @@
             background: #{{ $app_info->data->app_setting->menu_background_color}}
         ">
         @foreach ( $app_info->data->side_menu as $menu )
-        <li class="">
+        <li class="{{ $menu->icon }}">
             <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
                 font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
             ">
-                <span class="{{ $menu->icon }}"></span>
             {{ $menu->name }}
         </a></li>            
         @endforeach
         @if( Session::has('user') )
-        <li class="">
+        <li class="ti-unlock">
             <a class="active" href="{{ route('logout') }}" style="
                 font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
             ">
-                <span class="ti-unlock"></span>
             ログアウト
         </a></li> 
         @endif

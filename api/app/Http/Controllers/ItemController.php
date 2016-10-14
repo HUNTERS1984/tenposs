@@ -247,8 +247,15 @@ class ItemController extends Controller
         }
         try {
             $items = \Illuminate\Support\Facades\DB::table('items')
-                ->where('id', Input::get('app_id'))->get();
-
+                ->where('id', Input::get('item_id'))->get();
+            $items = Menu::find(1)->items()->where('id', Input::get('item_id'))->get();
+            $items = \Illuminate\Support\Facades\DB::table('items')
+                ->join('rel_menus_items','rel_menus_items.item_id','=','items.id')
+                ->join('menus','menus.id','=','rel_menus_items.menu_id')
+                ->where('items.id','=',Input::get('item_id'))
+                ->select('items.*','menus.id AS menu_id','menus.name AS menu_name')
+                ->first();
+            dd($items);
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
                 try {
