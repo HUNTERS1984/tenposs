@@ -41,7 +41,7 @@
                 <h2 class="aligncenter">最近</h2>
                 <div class="container-fluid">
                     <div class="row">
-                        @if( isset( $app_top->data->items->data)  
+                        @if( isset( $app_top->data->items->data)
                             && count($app_top->data->items->data) > 0 )
                             @foreach( $app_top->data->items->data as $item )
                         <div class="item-product">
@@ -60,14 +60,14 @@
                 <h2 class="aligncenter">フォトギャラリー</h2>
                 <div class="container-fluid">
                     <div class="row">
-                        @if( isset( $app_top->data->photos->data)  
+                        @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            <a href="{{$photo->image_url}}" 
+                            <a href="{{$photo->image_url}}"
                             class = "box-photogallery"
-                            data-toggle="lightbox" 
-                            data-gallery="multiimages" 
+                            data-toggle="lightbox"
+                            data-gallery="multiimages"
                             data-title="">
                                 <img src="{{ $photo->image_url }}" alt=""/>
                             </a>
@@ -75,7 +75,7 @@
                         @endforeach
                         @endif
                     </div>
-                    @if( isset( $app_top->data->photos->data)  
+                    @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                         <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
                     @endif
@@ -84,10 +84,10 @@
             <div id="news">
                 <h2 class="aligncenter">ニュース</h2>
                 <div class="container-fluid">
-                     @if( isset( $app_top->data->news->data)  
+                     @if( isset( $app_top->data->news->data)
                             && count($app_top->data->news->data) > 0 )
                         @foreach( $app_top->data->news->data as $news )
-                    
+
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="info clearfix">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
-                            <h3>{{ $news->new_category_id }}</h3>
+                            <!-- <h3>{{ $news->new_category_id }}</h3> -->
                             <p>{{ str_limit($news->description,100,'...') }}</p>
                         </div>
                     </div><!-- End item coupon -->
@@ -110,32 +110,51 @@
                 <script type="text/javascript">
                     var maps = [];
                 </script>
-                 @if( isset( $app_top->data->contact->data)  
+                 @if( isset( $app_top->data->contact->data)
                             && count($app_top->data->contact->data) > 0 )
                         @foreach( $app_top->data->contact->data as $contact )
                 <div id="map-{{$contact->id}}" class="maps"></div>
-                <ul>
-                    
+                <ul class="list-location">
                     <li>
-                        <div class="table-cell">
-                            <img src="img/icon/f_location.png" alt="icon">
-                            {{ $contact->title }}
+                        <div class="table">
+                            <div class="table-cell">
+                                <div class="left-table-cell">
+                                    <img src="img/icon/f_location.png" alt="icon">
+                                </div>
+                                <div class="right-table-cell">
+                                    {{ $contact->title }}
+                                </div>
+                            </div>
                         </div>
                     </li>
                     <li>
-                        <div class="table-cell">
-                            <img src="img/icon/f_time.png" alt="icon">
-                            {{ $contact->start_time }} - {{ $contact->end_time }}
+                        <div class="table">
+                            <div class="table-cell">
+                                <div class="left-table-cell">
+                                    <img src="img/icon/f_time.png" alt="icon">
+                                </div>
+                                <div class="right-table-cell">
+                                    {{ $contact->start_time }} - {{ $contact->end_time }}
+                                </div>
+                            </div>
                         </div>
+
                     </li>
                     <li>
-                        <div class="table-cell">
-                            <img src="img/icon/f_tel.png" alt="icon">
-                            <a href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
+                        <div class="table">
+                            <div class="table-cell">
+                                <div class="left-table-cell">
+                                    <img src="img/icon/f_tel.png" alt="icon">
+                                </div>
+                                <div class="right-table-cell">
+                                    <a href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
+                                </div>
+                            </div>
                         </div>
+
                     </li>
                 </ul>
-                
+
                 <div class="container-fluid">
                     <a href="{{ route('reservation') }} " class="btn tenposs-button">予約</a>
                 </div>
@@ -146,11 +165,11 @@
                         long : '{{$contact->longitude}}',
                         title: '{{$contact->title}}'
                     });
-                    
+
                 </script>
                 @endforeach
                 @endif
-                
+
             </div><!-- End contact -->
         </div><!-- End content -->
         @include('partials.sidemenu')
@@ -173,7 +192,7 @@
         pagination: "#banner .swiper-pagination",
         paginationClickable: true
     });
-    
+
     $(document).ready(function(){
         $(maps).each(function(index, item){
             $("#map-"+item.id).googleMap();
@@ -183,12 +202,12 @@
               text: item.title
             });
         });
-        
+
         $('.box-photogallery').on('click',function(event){
             event.preventDefault();
             $(this).ekkoLightbox();
         });
-        
+
     })
 </script>
 @if( Session::has('user') && !Session::get('setpushkey') )
@@ -204,13 +223,13 @@
             data: {
                 key: notify.data.subscribe()
             },
-            
+
             success: function(response){
                 console.log('Setpushkey success');
             }
         })
     });
-</script>   
+</script>
 @endif
 
 @endsection
