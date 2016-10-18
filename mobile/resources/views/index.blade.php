@@ -64,12 +64,9 @@
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            <a href="{{$photo->image_url}}"
-                            class = "box-photogallery"
-                            data-toggle="lightbox"
-                            data-gallery="multiimages"
-                            data-title="">
-                                <img src="{{ $photo->image_url }}" alt=""/>
+                            
+                            <a href="{{$photo->image_url}}" data-lightbox="lightbox">
+                                <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
                             </a>
                         </div>
                         @endforeach
@@ -181,7 +178,9 @@
 @section('footerJS')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrEF9NEPkuxtYouSqVqNj3KSoX__7Rm8g"></script>
 <script src="{{ url('plugins/maps/jquery.googlemap.js') }}"></script>
-<script src="{{ url('js/ekko-lightbox.min.js') }}"></script>
+<link rel="stylesheet" href="js/lightbox/css/lightbox.css">
+<script src="js/lightbox/js/lightbox.min.js"></script>
+
 <script type="text/javascript">
     var bannerSwiper = new Swiper('#banner .swiper-container', {
         autoplay: 2000,
@@ -202,13 +201,12 @@
               text: item.title
             });
         });
-
-        $('.box-photogallery').on('click',function(event){
-            event.preventDefault();
-            $(this).ekkoLightbox();
-        });
-
     })
+    $(document).ready(function ($) {
+       lightbox.option({
+          'showImageNumberLabel': false
+        })
+    });
 </script>
 @if( Session::has('user') && !Session::get('setpushkey') )
  <script type="text/javascript">

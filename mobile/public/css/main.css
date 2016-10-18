@@ -1,12 +1,58 @@
 .bg-fb{
     background-color: #3b5998 !important;
 }
+.bg-fb:before{
+    content:'';
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    left:30px;
+    width:21px;
+    height:40px;
+    background:url('../img/icon/ic-fb.png')no-repeat;
+}
 
 .bg-tw{
     background-color: #4da8e0 !important;
 }
+.bg-tw:before{
+    content:'';
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    left:20px;
+    width:49px;
+    height:40px;
+    background:url('../img/icon/ic-twitter.png')no-repeat;
+}
 .bg-mail{
     background-color: #14c8c8 !important;
+}
+.bg-mail:before{
+    content:'';
+    position:absolute;
+    top:50%;
+    margin-top:-20px;
+    left:10px;
+    width:63px;
+    height:40px;
+    background:url('../img/icon/ic-mail.png')no-repeat;
+}
+@media screen and (max-width:479px){
+    .bg-fb:before, .bg-tw:before, .bg-mail:before{
+        transform:scale(0.6);
+        -webkit-transform:scale(0.6);
+        -moz-transform:scale(0.6);
+    }
+    .bg-fb:before{
+        left:15px;
+    }
+    .bg-tw:before{
+        left:7px;
+    }
+    .bg-mail:before{
+        left:-3px;
+    }
 }
 .bg-transparent{
     background-color: rgba(255,255,255,0.3) !important;
@@ -37,8 +83,11 @@
     position: absolute;
     width: 100%;
     bottom: 20px;
-
-    
+}
+@media screen and (max-width:479px){
+    .bottom-layout{
+        padding:0 20px;
+    }
 }
 .btn_upload_img.create {
     width: 100%;
