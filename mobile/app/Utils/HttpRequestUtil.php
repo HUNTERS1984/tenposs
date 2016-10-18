@@ -127,6 +127,15 @@ class HttpRequestUtil
             case 'set_push_key':
                 $params = Config::get('api.sig_set_push_key');
                 break;
+            case 'coupon_use':
+                $params = Config::get('api.sig_coupon_use');
+                break;
+            case 'share_get_code':
+                $params = Config::get('api.sig_share_get_code');
+                break;
+            case 'social_profile_cancel':
+                $params = Config::get('api.sig_social_profile_cancel');
+                break;
             default:
                 break;
         }
@@ -174,7 +183,7 @@ class HttpRequestUtil
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_params);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_POST,1);
+            curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SAFE_UPLOAD, false);
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
@@ -194,16 +203,16 @@ class HttpRequestUtil
             return null;
         }
     }
-    
+
     public function post_data_file($function, $data_params, $app_secret_key = null)
     {
         try {
             $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
             $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params, $app_secret_key);
-            
+
             $service_url = $this->_url . $function;
             $curl = curl_init($service_url);
-            
+
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_params);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

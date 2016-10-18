@@ -108,10 +108,11 @@ class MenusController extends Controller
         $items_detail_data = array();
         $items_relate_data = array();
         if (!empty($items_detail)) {
-//            dd($items_detail);
             $items_detail = json_decode($items_detail);
+
             if ($items_detail->code == '1000') {
-                $items_detail_data = $items_detail->data->items[0];
+//              print_r($items_detail);die;
+                $items_detail_data = $items_detail->data->items;
                 $items_relate_data = $items_detail->data->items_related;
                 if ($items_detail->data->total_items_related > 9)
                     $load_more_releated = true;
