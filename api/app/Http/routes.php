@@ -54,6 +54,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
         Route::get('profile', 'AppUserController@profile');
         Route::post('update_profile', 'AppUserController@update_profile');
         Route::post('social_profile', 'AppUserController@social_profile');
+        Route::post('social_profile_cancel', 'AppUserController@social_profile_cancel');
         Route::get('get_push_setting', 'AppUserController@get_push_setting');
         Route::post('coupon_use', 'CouponController@coupon_use');
     });
