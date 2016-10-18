@@ -29,7 +29,7 @@ return [
     'sig_social_profile' => array('token', 'social_type', 'social_id', 'social_token', 'social_secret', 'nickname', 'time'),
     'sig_staff_category' => array('app_id', 'time', 'store_id'),
     'sig_staffs' => array('app_id', 'time', 'category_id'),
-    'sig_staff_detail' => array('app_id', 'id'),
+    'sig_staff_detail' => array('app_id','time', 'id'),
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain', 'time'),
