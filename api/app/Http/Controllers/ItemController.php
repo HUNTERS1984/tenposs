@@ -246,31 +246,28 @@ class ItemController extends Controller
             return $this->output($this->body);
         }
         try {
+//            $items = \Illuminate\Support\Facades\DB::table('items')
+//                ->where('id', Input::get('item_id'))->get();
+//            $items = Menu::find(1)->items()->where('id', Input::get('item_id'))->get();
             $items = \Illuminate\Support\Facades\DB::table('items')
-                ->where('id', Input::get('item_id'))->get();
-            $items = Menu::find(1)->items()->where('id', Input::get('item_id'))->get();
-            $items = \Illuminate\Support\Facades\DB::table('items')
-                ->join('rel_menus_items','rel_menus_items.item_id','=','items.id')
-                ->join('menus','menus.id','=','rel_menus_items.menu_id')
-                ->where('items.id','=',Input::get('item_id'))
-                ->select('items.*','menus.id AS menu_id','menus.name AS menu_name')
+                ->join('rel_menus_items', 'rel_menus_items.item_id', '=', 'items.id')
+                ->join('menus', 'menus.id', '=', 'rel_menus_items.menu_id')
+                ->where('items.id', '=', Input::get('item_id'))
+                ->select('items.*', 'menus.id AS menu_id', 'menus.name AS menu_name')
                 ->first();
-            dd($items);
-            for ($i = 0; $i < count($items); $i++) {
-                $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
-                try {
-                    $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
-                        ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
-                        ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
-                        ->where('item_sizes.item_id', '=', $items[$i]->id)
-                        ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
-                            'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
-                        ->get();
-                    $items[$i]->size = $items_size;
-                } catch (QueryException $ex) {
-                    Log::error($ex->getMessage());
-                    $items[$i]->size = [];
-                }
+            $items->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items->image_url);
+            try {
+                $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
+                    ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
+                    ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
+                    ->where('item_sizes.item_id', '=', $items->id)
+                    ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
+                        'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
+                    ->get();
+                $items->size = $items_size;
+            } catch (QueryException $ex) {
+                Log::error($ex->getMessage());
+                $items->size = [];
             }
             $tmp_items = Item::find(Input::get('item_id'));
             $total_items_relate = 0;

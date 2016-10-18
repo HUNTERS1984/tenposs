@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\News;
+use App\Models\ShareCodeInfo;
 use App\Models\User;
 use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
@@ -197,6 +198,13 @@ class AppUserController extends Controller
             return $ret_sig;
         //end validate app_id and sig
         try {
+            // them 3 param moi: app_uuid,source,code
+            if (!empty(Input::get('code'))) {
+                $error_code = $this->_topRepository->check_share_code($app['id'], Input::get('code'), Input::get('source'), Input::get('app_uuid'), Input::get('email'));
+                if ($error_code > 1000)
+                    return $this->error($error_code);
+            }
+
             $user = AppUser::where('email', Input::get('email'))->where('app_id', $app['id'])->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
@@ -225,6 +233,17 @@ class AppUserController extends Controller
 
             $profile->save();
 
+            //save info used code
+            if (!empty(Input::get('code'))) {
+                $share_code = ShareCodeInfo::where('code', Input::get('code'))
+                    ->where('app_id', $app['id'])->first();
+                if (count($share_code) > 0) {
+                    $share_code->status = 1;
+                    $share_code->app_uuid = Input::get('app_uuid');
+                    $share_code->email = Input::get('email');
+                    $share_code->save();
+                }
+            }
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
@@ -699,6 +718,41 @@ class AppUserController extends Controller
             return $this->error(9999);
         }
         return $this->output($this->body);
+    }
+
+    public function share_get_code()
+    {
+        $check_items = array('app_id', 'time', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_share_get_code');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        $code = '';
+        try {
+            $code = strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
+            $share_code = new \App\Models\ShareCodeInfo();
+            $share_code->code = $code;
+            $share_code->app_id = $app['id'];
+            $share_code->save();
+        } catch (\Doctrine\DBAL\Query\QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+
+        $this->body['data']['code'] = $code;//strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
+
+        return $this->output($this->body);
+
     }
 
 }
