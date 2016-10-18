@@ -11,4 +11,5 @@ interface TopsRepositoryInterface
     public function list_app();
     public function get_app_info_array($app_app_id);
     public function get_app_info_from_token($token);
+    public function check_share_code($app_id, $code, $source,$app_uuid,$email);
 }

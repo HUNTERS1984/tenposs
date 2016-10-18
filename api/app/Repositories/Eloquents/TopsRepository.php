@@ -6,6 +6,7 @@ use App\Models\App;
 use App\Models\Address;
 use App\Models\News;
 use App\Models\NewCat;
+use App\Models\ShareCodeInfo;
 use App\Models\UserSession;
 use App\Models\Photo;
 use App\Models\PhotoCat;
@@ -19,6 +20,7 @@ use App\Utils\UrlHelper;
 use DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 define("TOP_MAX_ITEM", 4);
 define("TOP_MAX_PHOTO", 9);
@@ -177,8 +179,7 @@ class TopsRepository implements TopsRepositoryInterface
     {
         try {
             return App::where('app_app_id', '=', $app_app_id)->first();
-        }catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             throw $e;
         }
         return null;
@@ -205,8 +206,8 @@ class TopsRepository implements TopsRepositoryInterface
             RedisUtil::getInstance()->set_cache($key, $arr);
             return $arr;
         }
-        
-        return null;       
+
+        return null;
     }
 
     public function get_app_info_from_token($token)
@@ -226,7 +227,7 @@ class TopsRepository implements TopsRepositoryInterface
         if ($session) {
             $user = $session->app_user()->first()->toArray();
             if ($user) {
-                $app_info = App::where('id','=',$user['app_id'])->first()->toArray();
+                $app_info = App::where('id', '=', $user['app_id'])->first()->toArray();
             }
         }
 //        print_r($app_info);die;
@@ -235,5 +236,37 @@ class TopsRepository implements TopsRepositoryInterface
         return $app_info;
     }
 
-    
+
+    public function check_share_code($app_id, $code, $source, $app_uuid, $email)
+    {
+        $error_code = 1000;
+        try {
+            $sharecode = ShareCodeInfo::where('code', $code)
+                ->where('app_id', $app_id)->first();
+          
+            if (count($sharecode) < 1)
+                $error_code = 1015;
+            else {
+                if ($sharecode->status == 1)
+                    $error_code = 1016;
+                else {
+                    //code available
+                    if ($source == 'web') {
+                        $sharecode_source = ShareCodeInfo::where('email', $email)
+                            ->where('app_id', $app_id)->first();
+                        if (count($sharecode_source) > 0)
+                            $error_code = 1017;
+                    } else {
+                        $sharecode_source = ShareCodeInfo::where('app_uuid', $app_uuid)
+                            ->where('app_id', $app_id)->first();
+                        if (count($sharecode_source) > 0)
+                            $error_code = 1018;
+                    }
+                }
+            }
+        } catch (\Doctrine\DBAL\Query\QueryException $e) {
+            Log::error($e->getMessage());
+        }
+        return $error_code;
+    }
 }

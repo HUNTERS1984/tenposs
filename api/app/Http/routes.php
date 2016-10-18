@@ -43,6 +43,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
     Route::get('get_app_by_domain', 'AppUserController@get_app_by_domain');
     Route::get('get_data_web_notification', 'AppUserController@get_data_web_notification');
     Route::get('delete_data_web_notification', 'AppUserController@delete_data_web_notification');
+    Route::get('share_get_code', 'AppUserController@share_get_code');
     // User
     Route::resource('user', 'UserController');
 
@@ -54,6 +55,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
         Route::post('update_profile', 'AppUserController@update_profile');
         Route::post('social_profile', 'AppUserController@social_profile');
         Route::get('get_push_setting', 'AppUserController@get_push_setting');
+        Route::post('coupon_use', 'CouponController@coupon_use');
     });
     Route::post('notification', 'TopController@notification');
     Route::post('notification_app_id', 'TopController@notification_with_app_id');

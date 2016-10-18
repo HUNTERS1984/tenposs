@@ -38,6 +38,11 @@ class Controller extends BaseController
         '1011' => 'Time expire.',
         '1012' => 'Parameter sig not exist.',
         '1013' => 'Parameter sig is not valid.',
+        '1014' => 'Parameter value not exist.',
+        '1015' => 'Share Code not exist.',
+        '1016' => 'Code is used.',
+        '1017' => 'Email have register with share code.',
+        '1018' => 'App have register with share code.',
     );
     protected $body = array(
         'code' => '1000',

@@ -107,7 +107,6 @@ class NewsController extends Controller
                 $total_news = News::where('new_category_id', $category_id)->count();
             else
                 $total_news = News::all()->count();
-
             $news = [];
             if ($total_news > 0) {
                 if ($category_id > 0)

@@ -97,19 +97,26 @@ class CouponController extends Controller
                                         ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                                 $coupon_code = DB::table('rel_app_users_coupons')
                                     ->whereAppUserId($user->id)
-                                    ->whereCouponId($coupons[$i]->id)->get();
-                                if (count($coupon_code) > 0)
+                                    ->whereCouponId($coupons[$i]->id)
+                                    ->where('status', 1)->get();
+                                if (count($coupon_code) > 0) {
                                     $coupons[$i]['code'] = $coupon_code[0]->code;
-                                else
+                                    $coupons[$i]['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $user->id, $coupons[$i]->id, $coupon_code[0]->code, hash("sha256", $user->id . $coupons[$i]->id . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
+
+                                } else {
                                     $coupons[$i]['code'] = '';
+                                    $coupons[$i]['url_scan_qr'] = '';
+                                }
                             } else {
                                 $coupons[$i]['can_use'] = false;
                                 $coupons[$i]['code'] = '';
+                                $coupons[$i]['url_scan_qr'] = '';
                             }
 
                         } else {
                             $coupons[$i]['can_use'] = false;
                             $coupons[$i]['code'] = '';
+                            $coupons[$i]['url_scan_qr'] = '';
                         }
                         $coupons[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons[$i]['image_url']);
 
@@ -180,20 +187,25 @@ class CouponController extends Controller
                                 ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                         $coupon_code = DB::table('rel_app_users_coupons')
                             ->whereAppUserId($user->id)
-                            ->whereCouponId($coupons['id'])->get();
+                            ->whereCouponId($coupons['id'])
+                            ->where('status', 1)->get();
                         if (count($coupon_code) > 0) {
                             $coupons['code'] = $coupon_code[0]->code;
                             $coupons['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $user->id, $coupons['id'], $coupon_code[0]->code, hash("sha256", $user->id . $coupons['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
-                        } else
+                        } else {
                             $coupons['code'] = '';
+                            $coupons['url_scan_qr'] = '';
+                        }
                     } else {
                         $coupons['can_use'] = false;
                         $coupons['code'] = '';
+                        $coupons['url_scan_qr'] = '';
                     }
 
                 } else {
                     $coupons['can_use'] = false;
                     $coupons['code'] = '';
+                    $coupons['url_scan_qr'] = '';
                 }
                 $coupons['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupons['image_url']);
 
@@ -205,6 +217,41 @@ class CouponController extends Controller
         $this->body['data']['coupons'] = $coupons;
         if (count($coupons) > 0) { // set cache reiis
             RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+        return $this->output($this->body);
+
+    }
+
+    public function coupon_use()
+    {
+        $check_items = array('token', 'time', 'app_user_id', 'coupon_id', 'staff_id', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_coupon_use');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+
+        if (!$app)
+            return $this->error(9998);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        try {
+            $coupon = DB::table('rel_app_users_coupons')
+                ->whereAppUserId(Input::get('app_user_id'))
+                ->whereCouponId(Input::get('coupon_id'))->update(
+                    ['status' => 2,
+                        'staff_id' => Input::get('staff_id')]);
+            if ($coupon == 0)
+                return $this->error(1014);
+
+        } catch (QueryException $e) {
+            print_r($e->getMessage());
+            die;
+            return $this->error(9999);
         }
         return $this->output($this->body);
 
