@@ -13,11 +13,9 @@
        
         <div class="bottom-layout">
             <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn btn-block tenposs-button bg-fb">
-                <i class="fa fa-facebook"></i>
                 Facebook ではじめる</a>
                 
             <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn btn-block tenposs-button bg-tw">
-                <i class="fa fa-facebook"></i>
                 Twitter ではじめる</a>
                 
             <a href="{{ route('login.normal') }}" class="btn btn-block tenposs-button bg-mail">

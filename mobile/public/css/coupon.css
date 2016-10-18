@@ -14,11 +14,11 @@
 }
 
 #category .swiper-button-prev {
-    left: 70px;
+    left: 5%;
 }
 
 #category .swiper-button-next {
-    right: 70px;
+    right: 5%;
 }
 
 /* Coupon Detail */
@@ -52,6 +52,10 @@
 @media screen and (max-width:479px){
     .infodetail, .entrydetail {
         padding:20px 0;
+        font-size:16px;
+    }
+    .infodetail, .entrydetail p{
+        font-size:16px;
     }
 }
 
@@ -60,8 +64,11 @@
     position: relative;
 }
 
-.infodetail h3 {
+.infodetail .wrap-title-detail h3 {
     margin: 10px 0;
+    width:70%;
+    display:inline-block;
+    vertical-align: middle;
 }
 
 .infodetail p span {
@@ -72,15 +79,31 @@
     color: red;
 }
 
-.infodetail .news-dateadd {
+/*.wrap-title-detail .infodetail .news-dateadd {
     position: absolute;
     top: 83px;
     right: 20px;
     color: #96a0a4;
+}*/
+
+.infodetail .wrap-title-detail .news-dateadd{
+    display:inline-block;
+    width:29%;
+    vertical-align: middle;
+    color: #96a0a4;
+    text-align: right;
 }
+
 @media screen and (max-width:479px){
-    .infodetail .news-dateadd{
-        font-size:14px;
+    .infodetail .wrap-title-detail h3 {
+        width:63%;
+        font-size:16px;
+        margin:0;
+    }
+    .infodetail .wrap-title-detail .news-dateadd{
+        font-size:12px;
+        width:35%;
+        vertical-align: top;
     }
 }
 
@@ -102,6 +125,12 @@
     color: #fff;
 }
 
+@media screen and (max-width:479px){
+    .infodetail .form-mail .input-group-addon {
+        font-size:20px;
+        min-width: auto;
+    }
+}
 .infodetail .form-mail a {
     color: #fff;
 }
