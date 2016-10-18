@@ -109,7 +109,7 @@ h3,.h3{font-size: 28px;}
 #header img{
     position: absolute;
     padding: 10px;
-    bottom: 24px;
+    bottom: 18px;
     left: 10px;
 }
 @media screen and (max-width:479px){
@@ -117,7 +117,7 @@ h3,.h3{font-size: 28px;}
         transform:scale(0.7);
         -webkit-transform:scale(0.7);
         -moz-transform:scale(0.7);
-        bottom: 20px;
+        bottom: 10px;
     }
     
 }

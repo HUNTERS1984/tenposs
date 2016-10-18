@@ -48,6 +48,15 @@
     color: red;
 }
 
+@media screen and (max-width:479px){
+    .info-productdetail p{
+        margin:10px 0 10px;
+    }
+    .info-productdetail span.price{
+        position:static;
+        font-size:22px;
+    }
+}
 .entry-productdetail {
     padding: 30px 0 0;
 }
