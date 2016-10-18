@@ -35,4 +35,7 @@ return [
     'sig_staff_detail' => array('app_id', 'id'),
     'sig_web_push_current' => array('app_id','key', 'time'),
     'sig_set_push_key' => array('token','client', 'key','time'),
+    'sig_coupon_use' => array('token', 'time', 'app_user_id', 'coupon_id', 'staff_id'),
+    'sig_share_get_code' => array('app_id', 'time'),
+    'sig_social_profile_cancel' => array('token', 'social_type', 'time'),
 ];
