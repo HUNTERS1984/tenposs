@@ -31,11 +31,15 @@ class Controller extends BaseController
 
         $response = json_decode($get);
 
-        if (\App\Utils\Messages::validateErrors($response)) {
+        if ( $response->code == 1000 ) {
             $this->app_info = $response;
             // write file manifest
+            
+            if(!File::exists( public_path($response->data->id) )) {
+                File::makeDirectory( public_path($response->data->id) , 0777, true, true);
+            }
             if( $file = file_get_contents($this->app_info->data->notification->url_manifest) )
-                File::put( public_path('manifest.json') , $file );
+                File::put( public_path($response->data->id.'/manifest.json') , $file );
             
         } else {
             abort(404);

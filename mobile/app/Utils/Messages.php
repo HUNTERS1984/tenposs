@@ -35,6 +35,9 @@ class Messages
          '2001' => "ユーザープロファイルを取得できません",
          '2002' => "プロファイルの成功を更新",
          '2003' => '間違ったメールアドレスまたはパスワード！', //Wrong email or password!
+         '2004' => '社会的に接続することはできません。', //Cannot connect social,
+         '2005' => '社会的成功を接続キャンセル！', //Cancel connect social success!,
+         '2006' => '社会的成功を接続することはできません!', //Cannot connect social success!,
          
     );
     
@@ -45,7 +48,7 @@ class Messages
     }
     
     public static function validateErrors( $response ){
-        if( $response->code == 1000 && count( $response->data)>0 ){
+        if( $response->code == 1000 ){
             return true;
         }
         return false;

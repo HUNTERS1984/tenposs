@@ -11,6 +11,9 @@ use Auth;
 use Validator;
 use MetzWeb\Instagram\Instagram;
 
+use OAuth\OAuth2\Service\Facebook;
+use OAuth\Common\Storage\Session as OAuthSession;
+use OAuth\Common\Consumer\Credentials;
 
 class LoginController extends Controller
 {
@@ -215,8 +218,109 @@ class LoginController extends Controller
         
     }
     
-    public function profile(){
+    public function getSocialConnectCallback(Request $request){
+        $fb = \OAuth::consumer('Facebook', route('social.connect') );
+        $tw = \OAuth::consumer('Twitter', route('social.connect') );
+        
+        $social_id = '';
+        $social_token = '';
+        $name = '';
+        $social_type = '';
+        
+        //Facebook
+        if( $request->has('code') ){
+            $code = $request->get('code');
+            if ( ! is_null($code))
+            {
+                $token = $fb->requestAccessToken($code);
+                $result = json_decode($fb->request('/me'), true);
+                $social_id = $result['id'];
+                $social_token = $token->getAccessToken();
+                $name = $result['name'];
+                $social_type = 1;
+                
+                
+            }else{
+                abort(404);
+            }
+            
+        }
+        //Twitter
+        if( $request->has('oauth_token') &&  $request->has('oauth_verifier') ){
+            $token  = $request->get('oauth_token');
+            $verify = $request->get('oauth_verifier');
+            // if code is provided get user data and sign in
+            if ( ! is_null($token) && ! is_null($verify))
+            {
+                // This was a callback request from twitter, get the token
+                $token = $tw->requestAccessToken($token, $verify);
+                // Send a request with it
+                $result = json_decode($tw->request('account/verify_credentials.json'), true);
+                $social_id = $result['id'];
+                $social_token = $token->getAccessToken();
+                $name = $result['name'];
+                $social_type = 2;
+            }else{
+                abort(404);
+            }
+        }
+        // Update connect social
+        if( $social_id != '' && $social_token != '' ){
+            $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('social_profile',[
+                    'token' => Session::get('user')->token,
+                    'social_type' => $social_type,
+                    'social_id' => $social_id,
+                    'social_token' => $social_token,
+                    'nickname' => $name
+                ],
+                $this->app->app_app_secret);    
+            
+            $response = json_decode($post);
+           
+            if( ! \App\Utils\Messages::validateErrors($response) ){
+                Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
+                return back();
+            }
+            
+            return redirect()->route('profile');
+        }
+        
+        Session::flash('message', \App\Utils\Messages::customMessage( 2004 ));
+        return redirect()->route('profile');
+    }
     
+    public function socialCancelConnect(Request $request, $type){
+        
+        if( in_array( $type, [1,2,3] ) ){
+            $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('social_profile_cancel',[
+                    'token' => Session::get('user')->token,
+                    'social_type' => $type
+                ],
+            $this->app->app_app_secret);    
+            $response = json_decode($post);
+            if( $response->code == 1000 ){
+                Session::flash('message', \App\Utils\Messages::customMessage( 2005, 'alert-success' ));
+                return redirect()->route('profile');
+            }
+        }
+        Session::flash('message', \App\Utils\Messages::customMessage( 2006 ));
+        return redirect()->route('profile');
+    }
+    
+    public function profile(Request $request){
+        
+        $fb = \OAuth::consumer('Facebook', route('social.connect') );
+        $tw = \OAuth::consumer('Twitter', route('social.connect') );
+    
+        $url_fb = $fb->getAuthorizationUri();
+        // get request token
+        $reqTokenTw = $tw->requestRequestToken();
+        // get Authorization Uri sending the request token
+        $url_tw = $tw->getAuthorizationUri(['oauth_token' => $reqTokenTw->getRequestToken()]);
+ 
+        
         $get = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('profile',[
                 'token' => Session::get('user')->token
@@ -224,10 +328,12 @@ class LoginController extends Controller
             $this->app->app_app_secret);    
         
         $response = json_decode($get);
-        
+        //dd($response);
         if( \App\Utils\Messages::validateErrors($response) ){
             return view('profile', 
             [ 
+                'fb_url' => (string)$url_fb,
+                'tw_url' => (string)$url_tw,
                 'instagram_login_url' => $this->instagram->getLoginUrl(),
                 'profile' => $response,
                 'app_info' => $this->app_info
@@ -236,13 +342,29 @@ class LoginController extends Controller
             Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
             return back();
         }
-        
 
     }
     
     public function profilePost( Request $request ){
       
         // save avatar
+        $rules = array(
+            'name' => 'required',
+            'address' => 'required'
+        );
+        
+        $messages = array(
+            'name.required' => '名前のフィールドが必要です。',
+            'address.required' => 'アドレスがnullではないことができます'
+        );
+        
+        $v = Validator::make($request->all(), $rules,$messages);
+        if( $v->fails() ){
+            return back()
+                ->withInput()
+                ->withErrors($v);
+        }
+        
         
         if( $request->hasFile('avatar') ){
             $file = $request->file('avatar');
@@ -253,28 +375,37 @@ class LoginController extends Controller
                 $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
                 $file->move($destinationPath, $fileName); // uploading file to given path
                 $url = 'uploads/' . $fileName;
+                if (function_exists('curl_file_create')) { // php 5.6+
+                    $cFile = curl_file_create( public_path($url) );
+                } else { // 
+                    $cFile = '@' . public_path($url) ;
+                }
+                $params = [
+                    'token' => Session::get('user')->token,
+                    'username' => $request->input('name') ,
+                    'gender' => $request->input('gender'),
+                    'address' => $request->input('address'),
+                    'avatar' => $cFile
+                ];
+                $post = \App\Utils\HttpRequestUtil::getInstance()
+                    ->post_data_file('update_profile',$params,$this->app->app_app_secret);
+                
             }
-        }
-       
-        if (function_exists('curl_file_create')) { // php 5.6+
-            $cFile = curl_file_create( public_path($url) );
-        } else { // 
-            $cFile = '@' . public_path($url) ;
-        }
-       
-        $params = [
+            
+        }else{
+            $params = [
                 'token' => Session::get('user')->token,
                 'username' => $request->input('name') ,
                 'gender' => $request->input('gender'),
                 'address' => $request->input('address'),
-                'avatar' => $cFile
+                'avatar' => ''
             ];
-     
-        $post = \App\Utils\HttpRequestUtil::getInstance()
-            ->post_data_file('update_profile',$params,$this->app->app_app_secret);    
-        
+            $post = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('update_profile',$params,$this->app->app_app_secret);
+        }
+       
         $response = json_decode($post);
- 
+     
         if( $response->code == 1000 ){
             Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
             return back();

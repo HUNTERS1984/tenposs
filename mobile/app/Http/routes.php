@@ -45,9 +45,22 @@ $appRoutes = function(){
             'as'   => 'auth.getSocialAuthCallback'
         ]);
         
+        Route::get('/social/connect',[
+            'uses' => 'LoginController@getSocialConnectCallback',
+            'as'   => 'social.connect',
+            'middleware' => 'auth.custom'
+        ]);
+        
+        Route::get('/social/cancel/{type}',[
+            'uses' => 'LoginController@socialCancelConnect',
+            'as'   => 'social.cancel',
+            'middleware' => 'auth.custom'
+        ]);
+        
         Route::get('/auth/instagram',[
             'uses' => 'LoginController@instagramAuthCallback',
-            'as'   => 'instagram.callback'
+            'as'   => 'instagram.callback',
+            'middleware' => 'auth.custom'
         ]);
         
         Route::post('/setpushkey',[
