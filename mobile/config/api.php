@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'url' => 'http://api.tenposs.local/api/v1/',
+    'url' => 'https://api.ten-po.com/api/v1/',
     'secret_key' => 'Tenposs@123',
     'time_expire' => 5000000,
     //sig
