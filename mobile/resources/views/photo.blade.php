@@ -56,7 +56,7 @@
                                                 @foreach($photo->data->photos as $item)
                                                 <div class="item-photogallery">
                                                     <input type="hidden" name="pagesize{{$item->photo_category_id}}" value="{{$pagesize}}">
-                                                    <a href="{{$item->image_url}}" data-toggle="lightbox" data-gallery="multiimages" data-title="People walking down stairs">
+                                                    <a href="{{$item->image_url}}" data-lightbox="lightbox">
                                                         <img src="{{$item->image_url}}" class="img-responsive" alt="Nayako"/>
                                                     </a>
                                                 </div>
@@ -82,7 +82,8 @@
     <div id="footer"></div><!-- End footer -->
 @stop
 @section('footerJS')
-    <script src="js/ekko-lightbox.min.js"></script>
+    <link rel="stylesheet" href="js/lightbox/css/lightbox.css">
+    <script src="js/lightbox/js/lightbox.min.js"></script>
 	<script type="text/javascript">
         var categorySwiper = new Swiper('#category .swiper-container', {
             speed: 400,
@@ -106,11 +107,9 @@
         categorydetailSwiper.params.control = categorySwiper;
 
         $(document).ready(function ($) {
-            // delegate calls to data-toggle="lightbox"
-            $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function (event) {
-                event.preventDefault();
-                return $(this).ekkoLightbox();
-            });
+           lightbox.option({
+              'showImageNumberLabel': false
+            })
         });
     </script>
     <script type="text/javascript">
