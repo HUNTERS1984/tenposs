@@ -1,22 +1,42 @@
 #user ul{
     list-style: none;
+    padding:0;
 }
 #user ul li{
-    padding: 10px 30px;
+    padding: 20px 30px;
     border-bottom: 1px solid #eee;
     position: relative;
 }
+@media screen and (max-width: 479px){
+    #user ul li{
+        padding:10px 20px;
+    }
+}
 #user ul li:nth-child(n+2){
-    height: 100px;
-    line-height: 100px;
-    padding: 0 0 0 30px;
+    /*height: 100px;*/
+    /*line-height: 100px;*/
+    /*padding: 0 0 0 30px;*/
 }
 #user ul li label{
     width: 240px;
 }
+@media screen and (max-width: 479px){
+    #user ul li label{
+        width:40%;
+        font-size:18px;
+    }
+    #user ul li label.label-title-user{
+        width:50%
+    }
+}
 #user ul li input{
     border: none;
     width: 60%;
+}
+@media screen and (max-width: 479px){
+    #user ul li input, #user ul li select{
+        font-size:18px;
+    }
 }
 #user ul li i.icon-clean{
     width: 28px;
@@ -91,4 +111,12 @@ ul.social{
     margin-top: -28px;
     background: url(../img/icon/instagram.png) left top no-repeat;
     display: block;
+}
+.btn-submit-profile{
+    position:absolute;
+    top:50%;
+    right:0;
+    transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
 }

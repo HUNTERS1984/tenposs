@@ -5,7 +5,6 @@ h3,.h3{font-size: 28px;}
 .font32{
     font-size: 32px;
 }
-@media
 .tenposs-readmore{
     font-size: 32px;
     background: #e2f8f8;
@@ -38,7 +37,11 @@ h3,.h3{font-size: 28px;}
     .tenposs-button{
         white-space: inherit;
         line-height: 26px;
-        font-size:14Gpx;
+        font-size:14px;
+    }
+    .tenposs-button.btn-login{
+        width:80%;
+        margin:20px auto 10px;
     }
 }
 
@@ -353,12 +356,12 @@ h3,.h3{font-size: 28px;}
     margin: 0;
 }
 #side .s_nav li{
-    padding:20px 0 20px 100px;
+    padding:20px 0 20px 80px;
     position:relative;
 }
 #side .s_nav li:before{
     position:absolute;
-    left:40px;
+    left:30px;
     top:50%;
     transform:translateY(-50%);
     -moz-transform:translateY(-50%);
