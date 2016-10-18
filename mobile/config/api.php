@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'url' => 'https://api.ten-po.com/api/v1/',
+    'url' => 'http://api.tenposs.local/api/v1/',
     'secret_key' => 'Tenposs@123',
     'time_expire' => 5000000,
     //sig
@@ -35,4 +35,7 @@ return [
     'sig_staff_detail' => array('app_id', 'id'),
     'sig_web_push_current' => array('app_id','key', 'time'),
     'sig_set_push_key' => array('token','client', 'key','time'),
+    'sig_coupon_use' => array('token', 'time', 'app_user_id', 'coupon_id', 'staff_id'),
+    'sig_share_get_code' => array('app_id', 'time'),
+    'sig_social_profile_cancel' => array('token', 'social_type', 'time'),
 ];
