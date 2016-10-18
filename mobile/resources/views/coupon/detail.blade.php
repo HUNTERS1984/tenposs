@@ -48,9 +48,9 @@
                         </div>
                         <div class="form-mail">
                             <div class="input-group">
+                                <?php $ls_tag = '';?>
                                 @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
-                                    <?php $ls_tag = '';?>
-                                    @foreach($items_detail_data->taglist as $item)
+                                                                       @foreach($items_detail_data->taglist as $item)
                                         <?php $ls_tag .= $item . ',';?>
                                     @endforeach
                                     <?php $ls_tag = rtrim($ls_tag, ",");?>
@@ -69,6 +69,8 @@
                 @else
                     <p>データなし</p>
                 @endif
+
+
             </div><!-- End container fluid -->
         </div><!-- End content -->
 
@@ -85,9 +87,31 @@
                 </p>
             </div>
         @else
+
             <div id="below-content-disable">
+                <div class="qrcode-div " >
+                    <?php echo QrCode::size(250)->generate('Make me a QrCode!');?>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <h4 class="text-center intro"> USER PROMOTION CODE</h4>
+                    <h4 class="text-center"> 40% OFF</h4>
+                    <div class="dropup">
+                        <button class="btn btn-default btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            USER COUPON
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel">
+                            <li>
+                                <a>asdasd</a>
+                            </li>
+                            <li><a>dasdasd</a></li>
+                            <li><a>dasdasd</a></li>
+                            <li><a>dasdasdasd</a></li>
+                        </ul>
+                    </div>
+
+                </div>
                 <p>
-                    このクーポンは使用できません
+                    このクーボンを利用す
                 </p>
             </div>
         @endif

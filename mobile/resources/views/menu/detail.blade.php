@@ -23,6 +23,7 @@
                     <div class="info-productdetail">
                         <div class="container-fluid">
                             <span>ID: {{$items_detail_data->id}}</span>
+                            <span>{{$items_detail_data->menu_name}}</span>
                             <p class="font32"><strong>{{$items_detail_data->title}}</strong></p>
                             <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
                         </div>
