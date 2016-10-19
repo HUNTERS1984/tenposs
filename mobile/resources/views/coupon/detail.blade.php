@@ -103,8 +103,8 @@
         </div>
     </div>
     @if(count($items_detail_data) > 0)
-        {{--        @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)--}}
-        @if(1==1)
+        @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
+            {{--@if(1==1)--}}
             <div id="below-content">
                 <div class="qrcode-div ">
                     @if(array_key_exists('url_scan_qr',$items_detail_data) && $items_detail_data->url_scan_qr)
