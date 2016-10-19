@@ -25,15 +25,15 @@ class VerifyExistApp
             $url = parse_url($url,PHP_URL_HOST);
             $url = strstr(str_replace("www.","",$url), ".",true);
 
-            
+            $url = 'm';
             $post = \App\Utils\HttpRequestUtil::getInstance()
                 ->get_data('get_app_by_domain',[
                     'domain' => $url
                 ],Config::get('api.secret_key_for_domain')
-            );    
-        
+            );
+         
             $response = json_decode($post);
-     
+
             if( \App\Utils\Messages::validateErrors($response) && count($response->data->app_info) > 0 ){
                 $app = DB::table('apps')
                     ->where('app_app_id', $response->data->app_info->app_app_id )

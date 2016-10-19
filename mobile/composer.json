@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "laravel/socialite": "^2.0",
         "cosenary/instagram": "^2.3",
-        "simplesoftwareio/simple-qrcode": "~1"
+        "simplesoftwareio/simple-qrcode": "~1",
+        "oriceon/oauth-5-laravel": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

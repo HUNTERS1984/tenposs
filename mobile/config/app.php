@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Artdarek\OAuth\OAuthServiceProvider::class,
     ],
 
     /*
@@ -202,10 +203,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Str' => Illuminate\Support\Str::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'OAuth'     => Artdarek\OAuth\Facade\OAuth::class,
     ],
 
 ];

@@ -31,6 +31,18 @@ h3,.h3{font-size: 28px;}
     margin-bottom: 35px;
     display: block;
     line-height: 50px;
+    position:relative;
+}
+@media screen and (max-width:479px){
+    .tenposs-button{
+        white-space: inherit;
+        line-height: 26px;
+        font-size:14px;
+    }
+    .tenposs-button.btn-login{
+        width:80%;
+        margin:20px auto 10px;
+    }
 }
 
 .wrap{
@@ -61,7 +73,7 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #page.active-scrollbar{
-        left: 300px;
+        left: 250px;
     }
 }
 .overfog{
@@ -81,12 +93,17 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #page.active-scrollbar .overfog{
-        left:300px;
+        left:250px;
     }
 }
 /* Header */
 #header h1{
-    margin: 30px 0;
+    margin: 20px 0;
+}
+@media screen and (max-width:479px){
+    #header h1{
+        font-size:22px;
+    }
 }
 #header,#below-header{
     position: relative;
@@ -95,8 +112,17 @@ h3,.h3{font-size: 28px;}
 #header img{
     position: absolute;
     padding: 10px;
-    bottom: 28px;
+    bottom: 18px;
     left: 10px;
+}
+@media screen and (max-width:479px){
+    #header img{
+        transform:scale(0.7);
+        -webkit-transform:scale(0.7);
+        -moz-transform:scale(0.7);
+        bottom: 10px;
+    }
+    
 }
 #below-header .h_back-arrow img{
     position: absolute;
@@ -107,6 +133,11 @@ h3,.h3{font-size: 28px;}
 /* Content */
 #content h2{
     margin: 40px 0 26px;
+}
+@media screen and (max-width:479px){
+    #content h2{
+        font-size:24px;
+    }
 }
 /* item product */
 
@@ -243,6 +274,11 @@ h3,.h3{font-size: 28px;}
     width:75%;
     vertical-align: middle;
 }
+@media screen and (max-width:479px){
+    #contact li div.table-cell{
+        font-size:16px;
+    }
+}
 #contact li div.table-cell img{
     /*margin-right: 40px;*/
 }
@@ -285,8 +321,8 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #side{
-        left:-300px;
-        width:300px;
+        left:-250px;
+        width:250px;
     }
 }
 .active-scrollbar #side{
@@ -301,8 +337,15 @@ h3,.h3{font-size: 28px;}
     line-height: 100px;
 }
 @media screen and (max-width:479px){
+    #side .h_side{
+        padding:30px 0 30px 30px;
+    }
     #side .h_side .imageleft .image{
         float:none;
+    }
+    #side .h_side .imageleft p.font32{
+        font-size:24px;
+        line-height: 32px;
     }
 }
 
@@ -313,12 +356,12 @@ h3,.h3{font-size: 28px;}
     margin: 0;
 }
 #side .s_nav li{
-    padding:20px 0 20px 100px;
+    padding:20px 0 20px 80px;
     position:relative;
 }
 #side .s_nav li:before{
     position:absolute;
-    left:40px;
+    left:30px;
     top:50%;
     transform:translateY(-50%);
     -moz-transform:translateY(-50%);

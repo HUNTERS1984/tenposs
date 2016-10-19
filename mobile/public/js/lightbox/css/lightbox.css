@@ -211,7 +211,7 @@ body.lb-disable-scrolling {
   transform:translateX(-50%);
   -moz-transform:translateX(-50%);
   -webkit-transform:translateX(-50%);
-  bottom:-35%;
+  bottom:-25%;
 }
 
 .lb-data .lb-close:hover {

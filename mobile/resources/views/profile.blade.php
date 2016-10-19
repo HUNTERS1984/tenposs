@@ -20,9 +20,9 @@
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
             {{ Session::get('user')->profile->name }}
-            <button type="submit" class="btn pull-right btn-lg" style="background-color:white">
+            <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
             保存
-        </button>
+            </button>
         
             </h1>
         <a href="javascript:void(0)" class="h_control-nav">
@@ -46,7 +46,7 @@
                     
                     <label>
                     <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
-                    <label style="width: 60%;">
+                    <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
                         </a>
@@ -86,7 +86,7 @@
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
-                    Facebook
+                    <span class="hidden-xs">Facebook</span>
                     @if( $profile->data->user->profile->facebook_status == 1 )
                     <a href="#" class="btn">非接続</a>
                     @else    
@@ -98,7 +98,7 @@
                 </li>
                 <li>
                     <i class="icon-twitter"></i>
-                    Twitter
+                    <span class="hidden-xs">Twitter</span>
                     @if( $profile->data->user->profile->twitter_status == 1 )
                     <a href="#" class="btn">非接続</a>
                     @else    
@@ -109,7 +109,7 @@
                 </li>
                 <li>
                     <i class="icon-instagram"></i>
-                    Instagram
+                    <span class="hidden-xs">Instagram</span>
                     @if( $profile->data->user->profile->instagram_status == 1 )
                     <a href="#" class="btn">非接続</a>
                     @else    

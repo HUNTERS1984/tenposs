@@ -104,6 +104,7 @@ class MenusController extends Controller
             ]
             , $this->app->app_app_secret);
 
+        dd($items_detail);
         $load_more_releated = false;
         $items_detail_data = array();
         $items_relate_data = array();
