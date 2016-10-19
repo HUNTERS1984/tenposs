@@ -33,7 +33,8 @@ class AuthController extends Controller
 			'password_confirmation' => 'required|min:3',
             'business_type'=>'required',
             'app_name_register'=>'required',
-            'domain'=>'required|unique:users'
+            'domain'=>'required|unique:users',
+			'domain_type'=>'required'
         ]);
     }
 
@@ -50,7 +51,8 @@ class AuthController extends Controller
             'company'=>$data['company'],
             'tel'=>$data['tel'],
             'fax'=>$data['fax'],
-			'status' => 2
+			'status' => 2,
+			'domain_type'=>$data['domain_type']
         ]);
 //		Auth::logout();
 //		return view('admin::pages.auth.waiting');
