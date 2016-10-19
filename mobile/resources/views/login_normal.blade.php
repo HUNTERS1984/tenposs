@@ -23,7 +23,7 @@
                 <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード" style="height: 60px;"/>
             </div>
            
-            <button class="btn btn-block  tenposs-button" type="submit">ログイン</button>
+            <button class="btn btn-block btn-login tenposs-button" type="submit">ログイン</button>
             
         </form>
         <p class="text-center">

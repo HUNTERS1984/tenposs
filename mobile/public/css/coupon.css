@@ -116,6 +116,13 @@
     line-height: 70px;
     height: 70px;
 }
+@media screen and (max-width: 479px){
+    .infodetail .form-mail .form-control{
+        height: 50px;
+        line-height: 50px;
+        font-size: 18px;
+    }
+}
 
 .infodetail .form-mail .input-group-addon {
     font-size: 24px;
@@ -127,7 +134,7 @@
 
 @media screen and (max-width:479px){
     .infodetail .form-mail .input-group-addon {
-        font-size:20px;
+        font-size:18px;
         min-width: auto;
     }
 }
@@ -163,7 +170,7 @@
     width: 100%;
     padding: 20px;
     text-align: center;
-    background: #5e5e5e;
+    background: #14c8c8;
     color: #fff;
     font-size: 20px;
     margin-bottom: 0;
@@ -178,7 +185,7 @@
     width: inherit;
 }
 
-.image_size_detail {
+/*.image_size_detail {
     width: 1024px;
     height: 1024px;
-}
+}*/
