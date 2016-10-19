@@ -246,6 +246,8 @@ class ItemController extends Controller
             return $this->output($this->body);
         }
         $items = array();
+        $items_relate = array();
+        $total_items_relate = 0;
         try {
 //            $items = \Illuminate\Support\Facades\DB::table('items')
 //                ->where('id', Input::get('item_id'))->get();
@@ -273,8 +275,8 @@ class ItemController extends Controller
                     $items->size = [];
                 }
                 $tmp_items = Item::find(Input::get('item_id'));
-                $total_items_relate = 0;
-                $items_relate = array();
+
+
                 if ($tmp_items) {
                     $tmp_related = $tmp_items->rel_items();
                     if ($tmp_related) {
