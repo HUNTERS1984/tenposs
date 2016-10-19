@@ -1,6 +1,6 @@
 <div id="side">
     <div class="h_side">
-        <div class="imageleft">
+        <div class="imageleft clearfix">
             @if( Session::has('user') )
             <div class="image">
                 <a href="{{ route('profile') }}">

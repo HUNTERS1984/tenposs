@@ -5,6 +5,10 @@
         font-size: {{ $app_info->data->app_setting->font_size }};
         font-family: "{{ $app_info->data->app_setting->font_family }}";
     }
+    #content{
+        padding:10px 15px;
+        font-size:14px;
+    }
 </style>
 <!-- Custom styles for this template -->
 <link href="{{ url('css/setting.css') }}" rel="stylesheet">
@@ -21,10 +25,10 @@
         </a>
     </div>
 </div><!-- End header -->
-<div id="main">    
+<div id="main">
     <div id="content">
         {!! $app_info->data->app_setting->company_info !!}
-    </div>     
+    </div>
     @include('partials.sidemenu')
-</div><!-- End main -->    
+</div><!-- End main -->
 @endsection
