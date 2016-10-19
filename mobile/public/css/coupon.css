@@ -159,11 +159,9 @@
     margin-bottom: 0;
     z-index: 999;
 }
-
 #below-content p span {
     font-size: 16px;
 }
-
 #below-content-disable p {
     position: fixed;
     bottom: 0;
@@ -176,7 +174,6 @@
     margin-bottom: 0;
     z-index: 998;
 }
-
 #page, #below-content-disable, #below-content-disable p {
     max-width: inherit;
 }
