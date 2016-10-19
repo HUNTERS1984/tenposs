@@ -245,6 +245,7 @@ class ItemController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
+        $items = array();
         try {
 //            $items = \Illuminate\Support\Facades\DB::table('items')
 //                ->where('id', Input::get('item_id'))->get();
@@ -256,6 +257,7 @@ class ItemController extends Controller
                 ->select('items.*', 'menus.id AS menu_id', 'menus.name AS menu_name')
                 ->first();
             if (count($items) > 0) {
+
                 $items->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items->image_url);
                 try {
                     $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
