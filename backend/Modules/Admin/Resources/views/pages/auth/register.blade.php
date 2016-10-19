@@ -95,6 +95,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-3 control-label">ドメインタイプ</label>
+                    <div class="col-sm-9">
+                        <select name="domain_type" class="form-control">
+                            <option value="">選択します</option>
+                            <option value="od">ドメインの所有者</option>
+                            <option value="sd">tenpossのサブドメイン</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="inputEmail3" class="col-sm-3 control-label">ドメイン</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="domain" name="domain" value="{{old('domain')}}"

@@ -255,28 +255,30 @@ class ItemController extends Controller
                 ->where('items.id', '=', Input::get('item_id'))
                 ->select('items.*', 'menus.id AS menu_id', 'menus.name AS menu_name')
                 ->first();
-            $items->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items->image_url);
-            try {
-                $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
-                    ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
-                    ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
-                    ->where('item_sizes.item_id', '=', $items->id)
-                    ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
-                        'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
-                    ->get();
-                $items->size = $items_size;
-            } catch (QueryException $ex) {
-                Log::error($ex->getMessage());
-                $items->size = [];
-            }
-            $tmp_items = Item::find(Input::get('item_id'));
-            $total_items_relate = 0;
-            $items_relate = array();
-            if ($tmp_items) {
-                $tmp_related = $tmp_items->rel_items();
-                if ($tmp_related) {
-                    $total_items_relate = $tmp_related->count();
-                    $items_relate = $tmp_related->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
+            if (count($items) > 0) {
+                $items->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items->image_url);
+                try {
+                    $items_size = \Illuminate\Support\Facades\DB::table('item_sizes')
+                        ->leftJoin('item_size_types', 'item_sizes.item_size_type_id', '=', 'item_size_types.id')
+                        ->leftJoin('item_size_categories', 'item_sizes.item_size_category_id', '=', 'item_size_categories.id')
+                        ->where('item_sizes.item_id', '=', $items->id)
+                        ->select('item_sizes.item_size_type_id', 'item_size_types.name AS item_size_type_name',
+                            'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
+                        ->get();
+                    $items->size = $items_size;
+                } catch (QueryException $ex) {
+                    Log::error($ex->getMessage());
+                    $items->size = [];
+                }
+                $tmp_items = Item::find(Input::get('item_id'));
+                $total_items_relate = 0;
+                $items_relate = array();
+                if ($tmp_items) {
+                    $tmp_related = $tmp_items->rel_items();
+                    if ($tmp_related) {
+                        $total_items_relate = $tmp_related->count();
+                        $items_relate = $tmp_related->orderBy('updated_at', 'desc')->skip(0)->take(9)->get()->toArray();
+                    }
                 }
             }
         } catch (\Illuminate\Database\QueryException $e) {

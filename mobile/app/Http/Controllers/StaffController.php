@@ -69,7 +69,7 @@ class StaffController extends Controller
             $staff = \App\Utils\HttpRequestUtil::getInstance()->get_data('staffs',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>1,'pagesize'=>$pagesize],$this->app->app_app_secret);
             $staff_detail = json_decode($staff);
 
-            if(count($news_detail->data->staffs) < $news_detail->data->total_staffs){
+            if(count($staff_detail->data->staffs) < $staff_detail->data->total_staffs){
                 $status = 'green';
             }else{
                 $status = 'red';

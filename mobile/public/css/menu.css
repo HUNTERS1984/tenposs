@@ -146,6 +146,11 @@
 
 #myTab li.active a {
     border: 0;
+    color: #14c8c8;
+}
+#myTab li a {
+    border: 0;
+    color: #505a5e;
 }
 
 #myTab {
