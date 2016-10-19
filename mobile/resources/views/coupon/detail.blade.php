@@ -48,17 +48,21 @@
                         </div>
                         <div class="form-mail">
                             <div class="input-group">
+                                <?php $ls_tag = '';?>
                                 @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
-                                    <?php $ls_tag = '';?>
                                     @foreach($items_detail_data->taglist as $item)
                                         <?php $ls_tag .= $item . ',';?>
                                     @endforeach
                                     <?php $ls_tag = rtrim($ls_tag, ",");?>
                                 @endif
-                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="{{$ls_tag}}"
+                                <input style="text-align: center;" type="text" class="form-control" id="target_copy"
+                                       value="{{$ls_tag}}"
                                        placeholder="ハッシュタグ">
 
-                                <div class="input-group-addon" style="cursor: pointer;"><a style="padding:20px 50px 20px 50px;" href="javascipt:void(0)" id="copy_hashtag">コピー</a>
+                                <div class="input-group-addon" style="cursor: pointer;"><a href="javascipt:void(0)"
+                                                                                           id="copy_hashtag"
+                                                                                           data-toggle="modal"
+                                                                                           data-target="#modal-fullscreen">コピー</a>
                                 </div>
                             </div>
                         </div>
@@ -69,6 +73,8 @@
                 @else
                     <p>データなし</p>
                 @endif
+
+
             </div><!-- End container fluid -->
         </div><!-- End content -->
 
@@ -77,14 +83,58 @@
     <div id="footer">
 
     </div><!-- End footer -->
+
+    <!-- Modal fullscreen -->
+    <div class="modal modal-fullscreen fade" id="modal-fullscreen" tabindex="-1" role="dialog"
+         style="margin-top: 300px;"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div>
+
+                <div class="modal-body" style="text-align: center;">
+                    <img src="{{ url('img/icon/arrow-down.png') }}">
+                    <p style="color: #fff;">
+                        ハッシユタグをコピーしました
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
     @if(count($items_detail_data) > 0)
         @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
+            {{--@if(1==1)--}}
             <div id="below-content">
-                <p>
-                    このクーボンを利用す
-                </p>
+                <div class="qrcode-div ">
+                    @if(array_key_exists('url_scan_qr',$items_detail_data) && $items_detail_data->url_scan_qr)
+                        <?php echo QrCode::size(250)->generate($items_detail_data->url_scan_qr);?>
+                    @else
+                        <?php echo QrCode::size(250)->generate("empty");?>
+                    @endif
+                    <div class="clearfix"></div>
+                    <hr>
+                    <h4 class="text-center intro">プロモーションコードを使用します</h4>
+                    <h4 class="text-center"> 40% OFF</h4>
+                    <div class="dropup">
+                        <button class="btn btn-default btn-block" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                            クーポンを使用します
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel" id="list_staff">
+                            <li>
+                                <a>asdasd</a>
+                            </li>
+                            <li><a>dasdasd</a></li>
+                            <li><a>dasdasd</a></li>
+                            <li><a>dasdasdasd</a></li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         @else
+
             <div id="below-content-disable">
                 <p>
                     このクーポンは使用できません

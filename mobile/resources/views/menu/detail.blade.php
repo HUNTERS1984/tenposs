@@ -3,12 +3,19 @@
     <link href="{{ url('css/menu.css') }}" rel="stylesheet">
 @endsection
 @section('page')
+
     <div id="header">
         <div class="container-fluid">
             <h1 class="aligncenter" style="
-            color: #{{ $app_info->data->app_setting->title_color}};
-            background-color: #{{ $app_info->data->app_setting->header_color}};
-            ">{{ $items_detail_data->title }}</h1>
+                    color: #{{ $app_info->data->app_setting->title_color}};
+                    background-color: #{{ $app_info->data->app_setting->header_color}};
+                    ">
+                @if(count($items_detail_data) > 0)
+                    {{ $items_detail_data->title }}
+                @else
+                    商品詳細
+                @endif
+            </h1>
 
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
@@ -18,11 +25,13 @@
     <div id="main">
         <div id="content">
             @if(count($items_detail_data) > 0)
-                <img class="image_size_detail" src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}"/>
+                <img class="image_size_detail" src="{{$items_detail_data->image_url}}"
+                     alt="{{$items_detail_data->title}}"/>
                 <div class="container-fluid">
                     <div class="info-productdetail">
                         <div class="container-fluid">
                             <span>ID: {{$items_detail_data->id}}</span>
+                            <span>{{$items_detail_data->menu_name}}</span>
                             <p class="font32"><strong>{{$items_detail_data->title}}</strong></p>
                             <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
                         </div>
@@ -82,7 +91,7 @@
                         </div>
 
                         {{--<div class="pad20">--}}
-                            {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
+                        {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
                         {{--</div>--}}
                     </div>
                 </div><!-- End container fluid -->
