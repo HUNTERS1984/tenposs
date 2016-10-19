@@ -13,20 +13,23 @@
 <div id="main">
     <div id="content">
         @include('partials.message')
-        <form action="{{ route('login.normal.post') }}" class="form" method="post">
+        <form action="{{ route('login.normal.post') }}" class="form form-login-normal" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             
              <div class="form-group">
-                <input value="{{ old('email') }}" class="form-control input-lg" type="email" name="email" placeholder="メ一ルアドレス" style="height: 60px;"/>
+                <input value="{{ old('email') }}" class="form-control input-lg" type="email" name="email" placeholder="メ一ルアドレス" />
             </div>
              <div class="form-group">
-                <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード" style="height: 60px;"/>
+                <input value="{{ old('password') }}" class="form-control input-lg" type="password" name="password" placeholder="パスワード" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-block btn-login" type="submit">ログイン</button>
             </div>
            
-            <button class="btn btn-block btn-login tenposs-button" type="submit">ログイン</button>
+            
             
         </form>
-        <p class="text-center">
+        <p class="text-center" style="font-size:14px">
             <a href="{{ route('register') }}">新規会員登録</a>
         </p>
     </div>

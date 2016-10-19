@@ -39,10 +39,6 @@ h3,.h3{font-size: 28px;}
         line-height: 26px;
         font-size:14px;
     }
-    .tenposs-button.btn-login{
-        width:80%;
-        margin:20px auto 10px;
-    }
 }
 
 .wrap{
@@ -341,11 +337,18 @@ h3,.h3{font-size: 28px;}
         padding:30px 0 30px 30px;
     }
     #side .h_side .imageleft .image{
-        float:none;
+        width:30%;
+        margin-right:10px;
     }
     #side .h_side .imageleft p.font32{
-        font-size:24px;
+        font-size:14px;
         line-height: 32px;
+        width:65%;
+        float:left;
+        margin-top:30px;
+    }
+    #side img{
+        max-width:100%;
     }
 }
 
@@ -405,3 +408,20 @@ h3,.h3{font-size: 28px;}
     margin: 10px 0 40px;
 }
 /**/
+
+
+/*LOGIN NORMAL*/
+.form-login-normal{
+    padding:0 15px;
+    margin-top:30px;
+}
+.form-login-normal input{
+    font-size:14px;
+}
+.form-login-normal button.btn-login{
+    font-size:14px;
+    background: #14c8c8;
+    color: #fff;
+    width: 100%;
+    padding:10px 0;
+}
