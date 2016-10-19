@@ -7,11 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use \LINE\LINEBot;
-use LINE\LINEBot\HTTPClient\GuzzleHTTPClient;
-use LINE\LINEBot\Message\MultipleMessages;
-use LINE\LINEBot\Message\RichMessage\Markup;
-
 use File;
 use Session;
 use Log;
@@ -24,7 +19,6 @@ use App\Models\App as AppClient;
 
 use DB;
 use Auth;
-
 use Config;
 use LRedis;
 
@@ -41,8 +35,9 @@ class ChatLineController extends Controller
     const API_REQUEST_TOKEN = 'https://api.line.me/v1/oauth/accessToken';
     const API_REQUEST_PROFILE = 'https://api.line.me/v1/profile';
     const API_VERIFIED_TOKEN = 'https://api.line.me/v1/oauth/verify';
-    const API_BOT_PROFILE = 'https://trialbot-api.line.me/v1/profiles';
+    const API_BOT_PROFILE = 'https://api.line.me/v2/bot/profile/';
     
+
    
     public function __construct(){
     	$this->curl = new \anlutro\cURL\cURL;
@@ -113,39 +108,27 @@ class ChatLineController extends Controller
        
         if( !Auth::check() )
             abort(503);
-            
-        // Get profile BOT
-        $config = [
-            'channelId' =>  Config::get('line.BOT_CHANEL_ID'),
-            'channelSecret' => Config::get('line.BOT_CHANEL_SECRET'),
-            'channelMid' => Config::get('line.BOT_MID'),
-        ];
-        $bot = new LINEBot($config, new GuzzleHTTPClient($config));
         
-        $profile = $bot->getUserProfile([  Config::get('line.BOT_MID') ]);
-       
-        $request = $this->curl->newRequest('get',self::API_BOT_PROFILE,['mids' => Config::get('line.BOT_MID')])
-            ->setHeader('Accept-Charset', 'utf-8')
-            ->setHeader('X-Line-ChannelID', Config::get('line.BOT_CHANEL_ID') )
-            ->setHeader('X-Line-ChannelSecret', Config::get('line.BOT_CHANEL_SECRET') )
-            ->setHeader('X-Line-Trusted-User-With-ACL', Config::get('line.BOT_MID') );
-     
-            
+        // Get profile
+        $requestProfile = $this->curl->newRequest('get','https://api.line.me/v1/profile')
+            ->setHeader('Authorization',  'Bearer '. Config::get('line.BOT_CHANEL_TOKEN')  );
+             
+        $responseProfile = $requestProfile->send();
+        $profile = json_decode($responseProfile->body);
+
         $contacts = DB::table('app_users')
             ->join('apps','app_users.app_id','=','apps.id')
             ->join('users','users.id','=','apps.user_id')
             ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
             //->where('users.id',Auth::user()->id)
-            ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
+            ->select('line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
             ->orderBy('displayName')
             ->paginate(20);
-            
-            //dd($contacts);
-               
+  
         return view('admin::pages.chat.clients',[
             'contacts' => json_encode($contacts),
             'channel' =>  Auth::user()->id.'-'.Config::get('line.BOT_CHANEL_ID'),
-            'profile' => json_encode($profile['contacts'][0])]);
+            'profile' => json_encode( $profile )]);
     }
     
     public function login(){
@@ -189,6 +172,7 @@ class ChatLineController extends Controller
              ->setHeader('Authorization', $lineAccount->token_type.' '.$lineAccount->access_token);
         $response = $request->send();
         $responseData = json_decode(json_encode($response->body));
+        
         
         if( isset( $responseData->statusCode ) && $responseData->statusCode == 401 ){
             return view('admin::pages.chat.login');
@@ -303,7 +287,7 @@ class ChatLineController extends Controller
         }
         // if request LINE login fail
         if( $request->has('errorCode') ){
-            
+            return view('admin::pages.chat.login');
         }
         
     }
