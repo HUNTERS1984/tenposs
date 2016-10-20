@@ -22,42 +22,55 @@
 }
 
 /* Menu detail */
+.wrap-menu-detail{
+    padding:40px 30px 40px;
+}
+
 .info-productdetail {
-    padding: 40px 0 35px;
+    padding:0 20px;
+    margin-bottom:80px;
     position: relative;
 }
 
-.info-productdetail {
-    border-bottom: 1px solid #ddd;
-}
 
-.info-productdetail p {
-    margin: 10px 0 40px;
+
+.info-productdetail .wrap-title-price p {
+    display:inline-block;
+    width:60%;
+    margin:0;
+    text-transform: uppercase;
+}
+.info-productdetail .wrap-title-price span.price{
+    display: inline-block;
+    width: 35%;
+    text-align: right;
+    font-weight: bold;
+    font-size: 36px;
+    color: red;
 }
 
 .info-productdetail span {
     color: #96a0a4;
 }
 
-.info-productdetail span.price {
-    position: absolute;
-    top: 80px;
-    right: 20px;
-    font-weight: bold;
-    font-size: 36px;
-    color: red;
-}
+
 
 @media screen and (max-width:479px){
-    .info-productdetail p{
-        margin:10px 0 10px;
+    .info-productdetail{
+        margin-bottom: 40px;
     }
-    .info-productdetail span.price{
-        position:static;
-        font-size:22px;
+    .info-productdetail .wrap-title-price p{
+        font-size:14px;
+    }
+    .info-productdetail .wrap-title-price span.price{
+        font-size:12px;
+    }
+    .info-productdetail > span{
+        font-size:14px;
     }
 }
 .entry-productdetail {
+    border-top: 1px solid #ddd;
     padding: 30px 0 0;
 }
 
@@ -110,11 +123,19 @@
     font-size:24px;
     padding:5px 0;
 }
+.tab-content .tab-pane{
+    font-size:14px;
+    padding:0 20px;
+}
 @media screen and (max-width:479px){
     .entry-productdetail .content-staffDetail p.title-staff{
         font-size:16px;
     }
+    .tab-content .tab-pane{
+        font-size:14px;
+    }
 }
+
 
 /*.entry-productdetail .option span {
     padding: 22px 10px;
@@ -146,15 +167,15 @@
 
 #myTab li.active a {
     border: 0;
-    color: #14c8c8;
-}
-#myTab li a {
-    border: 0;
-    color: #505a5e;
 }
 
 #myTab {
     border: 0;
+}
+@media screen and (max-width:479px){
+    #myTab li a{
+        font-size:14px;
+    }
 }
 
 .image_size {
