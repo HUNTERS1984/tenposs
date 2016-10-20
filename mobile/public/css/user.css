@@ -20,6 +20,9 @@
 #user ul li label{
     width: 240px;
 }
+#user ul li label.label-title-user{
+    width: 60%;
+}
 @media screen and (max-width: 479px){
     #user ul li label{
         width:40%;

@@ -360,11 +360,16 @@ h3,.h3{font-size: 28px;}
     margin: 0;
 }
 #side .s_nav li{
-    padding:20px 0 20px 80px;
+    padding:30px 0 30px 90px;
     position:relative;
 }
 #side .s_nav li:before{
+    content: '';
     position:absolute;
+    display:block;
+    width:38px;
+    height:38px;
+    background:url('../img/icon/s_icon.png')no-repeat;
     left:30px;
     top:50%;
     transform:translateY(-50%);
@@ -376,9 +381,9 @@ h3,.h3{font-size: 28px;}
     line-height: 100px;*/
     display: block;
     width: 100%;
-    
     color: #fff;
     font-size: 30px;
+    text-transform: capitalize;
 }
 #side .s_nav li a span{
     font-size: 30px;
@@ -390,15 +395,16 @@ h3,.h3{font-size: 28px;}
 #side .s_nav li:hover,#side .s_nav li.active{
    background:#646e72;
 }
-#side .s_nav li.s_icon-home a{}
-#side .s_nav li.s_icon-menu a{background-position: 50px -100px;}
-#side .s_nav li.s_icon-reserve a{background-position: 50px -200px;}
-#side .s_nav li.s_icon-news a{background-position: 50px -300px;}
-#side .s_nav li.s_icon-photo a{background-position: 50px -400px;}
-#side .s_nav li.s_icon-staff a{background-position: 50px -500px;}
-#side .s_nav li.s_icon-coupon a{background-position: 50px -600px;}
-#side .s_nav li.s_icon-chat a{background-position: 50px -700px;}
-#side .s_nav li.s_icon-setting a{background-position: 50px -800px;}
+#side .s_nav li.ti-home:before{background-position:0px -30px;}
+#side .s_nav li.ti-comments:before{background-position: 0px -730px;}
+#side .s_nav li.ti-user:before{background-position: 0px -530px;}
+#side .s_nav li.ti-medall:before{background-position: 0px -630px;}
+#side .s_nav li.ti-settings:before{background-position: 0px -830px;}
+#side .s_nav li.ti-menu-alt:before{background-position: 0px -130px;}
+#side .s_nav li.ti-alarm-clock:before{background-position: 0px -230px;}
+#side .s_nav li.ti-rss:before{background-position: 0px -330px;}
+#side .s_nav li.ti-gallery:before{background-position: 0px -430px;}
+#side .s_nav li.ti-unlock:before{background-position: 0px -930px;}
 /*--------------------*/
 
 /* Footer */
