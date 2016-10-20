@@ -119,6 +119,11 @@ $appRoutes = function(){
             'uses' => 'MobileController@configurationSave']); 
         
         //End
+        
+        // You can use "get" or "post" method below for payment..
+        Route::get('payment', 'PaypalController@postPayment');
+        // This must be get method.
+        Route::get('payment/status', 'PaypalController@getPaymentStatus');
     } );
 };
 Route::group( ['domain' => '{name}.'.env('APP_DOMAIN') ], $appRoutes);
