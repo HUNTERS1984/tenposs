@@ -1,0 +1,13 @@
+.text-left{
+    text-align: left
+}
+
+.text-phone{
+    color: #5693f0;
+    text-decoration: underline
+}
+
+.center-cropped {
+    object-fit: cover; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */
+}

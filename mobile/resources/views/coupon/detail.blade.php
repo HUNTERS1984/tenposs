@@ -37,7 +37,7 @@
                 @if(count($items_detail_data) > 0)
                     <div class="infodetail">
                         <div class="container-fluid">
-                            <p><span>ID: {{$items_detail_data->id}}</span> . <a
+                            <p><span>ID{{$items_detail_data->id}}</span> <span class="dot-middle"></span> <a
                                         href="javascrip:void(0)"> @if(array_key_exists('coupon_type',$items_detail_data))
                                         {{$items_detail_data->coupon_type->name}}
                                     @else
@@ -55,7 +55,7 @@
                                     @endforeach
                                     <?php $ls_tag = rtrim($ls_tag, ",");?>
                                 @endif
-                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="{{$ls_tag}}"
+                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="#{{$ls_tag}}"
                                        placeholder="ハッシュタグ">
 
                                 <div class="input-group-addon" style="cursor: pointer;"><a  href="javascipt:void(0)" id="copy_hashtag">コピー</a>
@@ -64,7 +64,9 @@
                         </div>
                     </div>
                     <div class="entrydetail justify">
+                        <div class="inner-entrydetail">
                         {{$items_detail_data->description}}
+                        </div>
                     </div>
                 @else
                     <p>データなし</p>
@@ -80,18 +82,26 @@
     @if(count($items_detail_data) > 0)
         @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
             <div id="below-content">
-                <p>
+                <a id="apply-cupon">
                     このクーボンを利用す
-                </p>
+                </a>
             </div>
         @else
-            <div id="below-content-disable">
-                <p>
+            <div id="below-content" class="disable">
+                <a id="apply-cupon">
                     このクーポンは使用できません
-                </p>
+                </a>
             </div>
         @endif
     @endif
+    
+    <div id="appy-cupon-success" style="display:none">
+        <div id="appy-cupon-success-inner">
+            <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
+            <p>このクーポンは使用できません</p>
+        </div>
+    </div>
+    
 @endsection
 @section('footerJS')
     <script src="{{ url('js/custom.js') }}"></script>
@@ -102,6 +112,15 @@
                 $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
             });
+            
+            $('#apply-cupon').on('click',function(){
+                $('#appy-cupon-success').show();
+            });
+            
+            $('#appy-cupon-success img').on('click',function(){
+                $('#appy-cupon-success').hide();
+            });
+            
         });
     </script>
 

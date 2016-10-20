@@ -88,7 +88,7 @@
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
-                            <img src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
+                            <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
                             </a>
                         </div>
                         <div class="info clearfix">
@@ -116,9 +116,9 @@
                         <div class="table">
                             <div class="table-cell">
                                 <div class="left-table-cell">
-                                    <img src="img/icon/f_location.png" alt="icon">
+                                    <img src="{{ url('img/icon/f_location.png') }}" alt="icon">
                                 </div>
-                                <div class="right-table-cell">
+                                <div class="right-table-cell text-left">
                                     {{ $contact->title }}
                                 </div>
                             </div>
@@ -128,9 +128,9 @@
                         <div class="table">
                             <div class="table-cell">
                                 <div class="left-table-cell">
-                                    <img src="img/icon/f_time.png" alt="icon">
+                                    <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
                                 </div>
-                                <div class="right-table-cell">
+                                <div class="right-table-cell text-left">
                                     {{ $contact->start_time }} - {{ $contact->end_time }}
                                 </div>
                             </div>
@@ -141,10 +141,10 @@
                         <div class="table">
                             <div class="table-cell">
                                 <div class="left-table-cell">
-                                    <img src="img/icon/f_tel.png" alt="icon">
+                                    <img src="{{ url('img/icon/f_tel.png') }}" alt="icon">
                                 </div>
-                                <div class="right-table-cell">
-                                    <a href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
+                                <div class="right-table-cell text-left">
+                                    <a class="text-phone" href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
                                 </div>
                             </div>
                         </div>

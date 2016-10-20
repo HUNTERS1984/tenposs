@@ -1,6 +1,7 @@
 @extends('master')
 @section('headCSS')
     <link href="{{ url('css/menu.css') }}" rel="stylesheet">
+    <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
 @endsection
 @section('page')
     <div id="header">
@@ -25,7 +26,7 @@
                     @foreach($items_data as $item)
                         <div class="item-coupon imageleft clearfix">
                             <div class="image">
-                                <img src="{{$item->image_url}}" alt="{{$item->title}}"/>
+                                <img class="center-cropped " src="{{$item->image_url}}" alt="{{$item->title}}"/>
                             </div>
                             <div class="info clearfix">
                                 <a href="{{ route('coupon.detail',$item->id)}}">
@@ -37,7 +38,7 @@
                                 </a>
                                 <h3>{{$item->title}}</h3>
                                 <p align="justify">
-                                    {{$item->description}}
+                                    {{ Str::words($item->description,20,'..') }}
                                 </p>
                             </div>
                         </div><!-- End item coupon -->

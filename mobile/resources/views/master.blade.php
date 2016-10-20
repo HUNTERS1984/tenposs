@@ -28,7 +28,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url('css/main.css') }}" rel="stylesheet">
-    
+    <link href="{{ url('css/fix.css') }}" rel="stylesheet">
     @yield('headCSS')
 
     <body>

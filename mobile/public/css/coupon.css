@@ -22,8 +22,6 @@
 }
 
 /* Coupon Detail */
-
-
 .notication {
     position: fixed;
     top: 0;
@@ -47,91 +45,37 @@
 .notication .noti_inside p {
     color: #fff;
 }
-.wrap-coupon-detail{
-    padding:40px 30px 50px;
-}
-.wrap-coupon-detail .infodetail{
-    padding:0px 20px  ;
-    margin-bottom:70px;
-}
-
-.wrap-coupon-detail .form-mail {
-    padding-bottom:75px;
-    border-bottom:1px solid #ccc;
-}
-@media screen and (max-width:479px){
-    .wrap-coupon-detail.form-mail{
-         margin: 30px 0 10px;
-    }
-}
-
-.wrap-coupon-detail .form-mail .input-group{
-    border:none;
-}
-.wrap-coupon-detail .form-mail .form-control {
-    font-size: 24px;
-    line-height: 70px;
-    height: 70px;
-    background:#f4f4f4;
-    border:none;
-
-}
-@media screen and (max-width: 479px){
-    .wrap-coupon-detail .form-mail .form-control{
-        height: 50px;
-        line-height: 50px;
-        font-size: 18px;
-    }
-}
-
-.wrap-coupon-detail .form-mail .input-group-addon {
-    font-size: 24px;
-    min-width: 160px;
-    text-align: center;
-    background: #14c8c8;
-    color: #fff;
-    border:none;
-}
-
-@media screen and (max-width:479px){
-     .wrap-coupon-detail .form-mail .input-group-addon {
-        font-size:18px;
-        min-width: auto;
-    }
-}
-.wrap-coupon-detail .form-mail a {
-    color: #fff;
-}
-.wrap-coupon-detail .entrydetail{
-    padding:15px 20px;
-}
-
 
 .infodetail {
-    padding: 40px 30px;
+    padding: 40px 0;
 }
-
+.entrydetail{
+    margin: 0 -20px 60px -20px ;
+    border-top: 1px solid #c8d2d6;
+    padding: 30px 40px 0;
+}
 @media screen and (max-width:479px){
-    .infodetail, .entrydetail {
+    .infodetail {
         padding:20px 0;
         font-size:16px;
     }
+    
     .infodetail, .entrydetail p{
         font-size:16px;
     }
 }
 
 .infodetail {
-    /*border-bottom: 1px solid #ddd;*/
+   
     position: relative;
 }
 .infodetail h3.title-coupon {
     margin:0;
-    margin-bottom:10px;
+    margin-bottom:5px;
 }
 
 .infodetail .wrap-title-detail h3 {
-    margin:0;
+    margin: 10px 0;
     width:70%;
     display:inline-block;
     vertical-align: middle;
@@ -155,7 +99,7 @@
 .infodetail .wrap-title-detail .news-dateadd{
     display:inline-block;
     width:29%;
-    vertical-align: top;
+    vertical-align: middle;
     color: #96a0a4;
     text-align: right;
 }
@@ -173,51 +117,85 @@
     }
 }
 
-
-
-#below-content {
-    padding-bottom: 100px;
-    width: 100%;
-    position: relative;
+.infodetail .form-mail {
+    margin: 50px 0 10px;
+}
+@media screen and (max-width:479px){
+    .infodetail .form-mail{
+         margin: 30px 0 10px;
+    }
 }
 
-#below-content p {
+.infodetail .form-mail .input-group{
+    border:none;
+}
+
+.infodetail .form-mail .form-control {
+    font-size: 24px;
+    line-height: 70px;
+    height: 70px;
+    background:#f4f4f4;
+    border:none;
+    font-weight: 600;
+}
+@media screen and (max-width: 479px){
+    .infodetail .form-mail .form-control{
+        height: 50px;
+        line-height: 50px;
+        font-size: 18px;
+    }
+}
+
+.infodetail .form-mail .input-group-addon {
+    font-size: 24px;
+    min-width: 160px;
+    text-align: center;
+    background: #14c8c8;
+    color: #fff;
+    border:none;
+}
+
+@media screen and (max-width:479px){
+    .infodetail .form-mail .input-group-addon {
+        font-size:18px;
+        min-width: auto;
+    }
+}
+.infodetail .form-mail a {
+    color: #fff;
+}
+
+#below-content {
+ 
+    width: 100%;
     position: fixed;
     bottom: 0;
-    width: 100%;
     padding: 20px;
     text-align: center;
     background: #14c8c8;
     color: #fff;
-    font-size: 20px;
     margin-bottom: 0;
     z-index: 999;
+    max-width: 750px;
 }
-
-#below-content p span {
-    font-size: 16px;
-}
-
-#below-content-disable{
-    width:100%;
-    position:relative;
-}
-
-#below-content-disable p {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-    text-align: center;
-    background: #ccc;
-    color: #fff;
+#below-content a {
     font-size: 20px;
     margin-bottom: 0;
-    z-index: 999;
+    display: block;
+    font-weight: 600;
+    color: #FFF;
 }
+
+
+#below-content.disable{
+   background: #ccc;
+    
+}
+
+
 @media screen and (max-width:479px){
-    #below-content-disable p{
-        font-size:14px;
+    #below-content a{
+        font-size:18px;
     }
 }
 
@@ -230,7 +208,137 @@
     width: inherit;
 }
 
-/*.image_size_detail {
-    width: 1024px;
-    height: 1024px;
-}*/
+.qrcode-div {
+    background: #14c8c8;
+    position: relative;
+    width:100%;
+    min-height:270px;
+    height: auto;
+    clear:both;
+    padding:10px;
+    border-radius: 4px;
+    border: 1px solid #14c8c8;
+}
+.qrcode-div svg {
+    display: block;
+    margin: 0 auto;
+}
+.qrcode-div h4 {
+    color: #fff;
+    font-weight: 300;
+}
+.qrcode-div h4.intro{
+    color: #fff;
+    font-weight: 300;
+    opacity: .75;
+    font-size: 16px;
+}
+.qrcode-div hr {
+    border-style: dashed;
+}
+.qrcode-div button{
+    color: #14c8c8;
+    border: 0;
+    outline: none;
+}
+.qrcode-div .dropdown-menu {
+    width: 100%;
+}
+.qrcode-div .dropdown-menu li {
+    text-align: center;
+}
+
+
+
+.item-coupon{
+    margin-top: 20px;
+}
+/* image coupon */
+.item-coupon .image{
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px #ddd;
+    -webkit-box-shadow: 1px 1px 2px #ddd;
+    -moz-box-shadow: 0 2px 2px #ddd;
+}
+.item-coupon img{
+    max-width: 220px;
+    width:100%;
+    height: 220px;
+}
+@media screen and (max-width:479px){
+    .item-coupon img{
+        height:100px;
+        max-width:100px;
+    }
+}
+/* info coupon */
+.item-coupon a{
+    display: block;
+    margin: 20px 0 5px;
+}
+@media screen and (max-width:479px){
+    .item-coupon a{
+        font-size:16px;
+        margin: 0;
+    }
+
+}
+.item-coupon h3{
+    color: #505a5e;
+    margin: 20px 0 10px;
+}
+@media screen and (max-width:479px){
+    .item-coupon h3{
+        font-size:18px;
+        margin: 5px 0;
+    }
+}
+.item-coupon p{
+    color: #96a0a4;
+    max-height: 100px;
+    overflow: hidden;
+}
+@media screen and (max-width:479px){
+   .item-coupon p{
+        font-size:14px;
+        max-height: 58px;
+   }
+}
+
+.dot-middle{
+    text-align: center;
+    margin-right: 12px;
+    position: relative;
+}
+.dot-middle:after{
+    content: ".";
+    color: #96a0a4;
+    bottom: 0px;
+    position: absolute;
+    font-size: 37px;
+}
+
+#appy-cupon-success{
+    background: rgba(0,0,0,0.5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+#appy-cupon-success-inner{
+     text-align: center;
+    color: #FFF;
+    margin-top: 40%;
+}
+   
+#appy-cupon-success-inner img{
+   margin-bottom: 20px;
+}
+#appy-cupon-success-inner p{
+    font-weight: 500;
+}
