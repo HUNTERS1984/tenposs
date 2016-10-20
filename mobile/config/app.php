@@ -158,6 +158,8 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Artdarek\OAuth\OAuthServiceProvider::class,
+        
+        Laracasts\Flash\FlashServiceProvider::class,
     ],
 
     /*
@@ -207,6 +209,8 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'OAuth'     => Artdarek\OAuth\Facade\OAuth::class,
+        'Flash' => Laracasts\Flash\Flash::class,
+        
     ],
 
 ];
