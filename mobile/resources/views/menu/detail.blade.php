@@ -30,7 +30,6 @@
                 <div class="container-fluid">
                     <div class="info-productdetail">
                         <div class="container-fluid">
-                            <span>ID: {{$items_detail_data->id}}</span>
                             <span>{{$items_detail_data->menu_name}}</span>
                             <div class="clearfix">
                                 <span class="name">{{$items_detail_data->title}}</span>
