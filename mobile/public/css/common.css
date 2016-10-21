@@ -32,6 +32,7 @@ h3,.h3{font-size: 28px;}
     display: block;
     line-height: 50px;
     position:relative;
+    font-weight: 600;
 }
 @media screen and (max-width:479px){
     .tenposs-button{

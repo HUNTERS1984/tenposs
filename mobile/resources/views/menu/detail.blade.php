@@ -32,8 +32,11 @@
                         <div class="container-fluid">
                             <span>ID: {{$items_detail_data->id}}</span>
                             <span>{{$items_detail_data->menu_name}}</span>
-                            <p class="font32"><strong>{{$items_detail_data->title}}</strong></p>
-                            <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
+                            <div class="clearfix">
+                                <span class="name">{{$items_detail_data->title}}</span>
+                                <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
+                            </div>
+                           
                         </div>
                         <a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">商品購入ペ一ジへ</a>
                     </div>
@@ -48,7 +51,8 @@
                         </div>
                         <div class="tab-content" style="padding-top: 20px; background: #fff;">
                             <div id="tab1" class="tab-pane fade in active">
-                                {{$items_detail_data->description}}
+                                <p>{{$items_detail_data->description}}</p>
+                                
                             </div>
                             <div id="tab2" class="tab-pane fade">
                                 @if(count($items_detail_data->size) > 0)
