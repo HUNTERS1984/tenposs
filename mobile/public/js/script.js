@@ -10,3 +10,14 @@ jQuery('.noti_inside a').click(function(){
 jQuery('.form-mail a').click(function(){
    jQuery('.notication').fadeIn();
 });
+
+jQuery(document).scroll(function () {
+    var y = jQuery(document).scrollTop(),
+        header = $("#header");
+
+    if (y >= 80) {
+        header.addClass('sticky');
+    } else {
+        header.removeClass('sticky');
+    }
+});

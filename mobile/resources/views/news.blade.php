@@ -2,6 +2,7 @@
 
 @section('headCSS')
     <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+    <link href="{{ url('css/news.css') }}" rel="stylesheet">
 @stop
 
 @section('page')

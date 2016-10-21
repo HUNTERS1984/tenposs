@@ -111,14 +111,20 @@ h3,.h3{font-size: 28px;}
     position: absolute;
     padding: 10px;
     bottom: 18px;
-    left: 10px;
+    left: 0;
+    padding-left: 20px;
 }
 @media screen and (max-width:479px){
     #header img{
+        
         transform:scale(0.7);
         -webkit-transform:scale(0.7);
         -moz-transform:scale(0.7);
-        bottom: 10px;
+        bottom: calc(50% - 22px);
+        padding-left: 10px;
+    }
+    #header h1 {
+        margin:12px 0;
     }
     
 }
@@ -266,6 +272,7 @@ h3,.h3{font-size: 28px;}
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     overflow-y: scroll;
+    z-index: 3;
 }
 @media screen and (max-width:479px){
     #side{

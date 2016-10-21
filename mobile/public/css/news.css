@@ -1,0 +1,6 @@
+@media screen and (max-width:479px){
+    #category .swiper-slide{
+        padding: 15px 0;
+        font-size: 18px;
+    }
+}
