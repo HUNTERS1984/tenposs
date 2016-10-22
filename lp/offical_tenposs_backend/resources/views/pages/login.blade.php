@@ -38,7 +38,7 @@
 					<p class="register">もう登録されていますか?　<a href="{{url('signup')}}">ログイン</a></p>
 
 				</form>
-				@include('admin::errors.listerror')
+				@include('layouts.messages')
 			</div>
 		</div>
 		<!-- END WRAP FORM -->

@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+use App\Repositories\ActivationService;
+
 class AuthController extends Controller
 {
     /*
@@ -35,8 +37,9 @@ class AuthController extends Controller
     protected $redirectTo = '/top';
 
     protected $redirectAfterLogout = '/login';
-
-
+    
+    protected $activationService;
+    
     // protected $guard  = 'web';
 
     /**
@@ -44,9 +47,10 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ActivationService $activationService)
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        $this->activationService = $activationService;
     }
 
     /**
@@ -92,9 +96,17 @@ class AuthController extends Controller
         }
 
         // Auth::guard($this->getGuard())->login($this->create($request->all()));
-        $this->create($request->all());
-
-        return redirect($this->redirectPath());
+        $user = $this->create($request->all());
+        try{
+            $this->activationService->sendActivationMail($user);
+        }
+        catch (Exception $e) {
+            Session::flash('status','Please check your email to activation your account.');
+            return back();
+        }
+        
+        Session::flash('status','Please check your email to activation your account.');
+        return back();
     }
 
     public function getLogin(){
@@ -103,8 +115,8 @@ class AuthController extends Controller
 
     public function postLogin(Request $request)
     {
-       $this->validateLogin($request);
-
+        $this->validateLogin($request);
+        
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -130,5 +142,21 @@ class AuthController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request);
+    }
+    public function activateUser( $token ){
+        if ($user = $this->activationService->activateUser($token)) {
+            auth()->login($user);
+            return redirect($this->redirectPath());
+        }
+        abort(404);
+    }
+    public function authenticated(Request $request, $user)
+    {
+        if (!$user->activated) {
+            $this->activationService->sendActivationMail($user);
+            auth()->logout();
+            return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+        }
+        return redirect()->intended($this->redirectPath());
     }
 }
