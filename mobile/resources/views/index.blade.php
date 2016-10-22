@@ -90,13 +90,11 @@
 
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
-                            <div class="crop">
-                                <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
-                                    <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
-                                </a>
-                            </div>
+                            <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
+                            <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
+                            </a>
                         </div>
-                        <div class="info">
+                        <div class="info clearfix">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
                             <!-- <h3>{{ $news->new_category_id }}</h3> -->
                             <p>{{ str_limit($news->description,100,'...') }}</p>

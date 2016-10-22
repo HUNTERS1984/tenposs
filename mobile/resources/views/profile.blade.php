@@ -19,17 +19,17 @@
             color: #{{ $app_info->data->app_setting->title_color}};
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
-            {{ Str::words(Session::get('user')->profile->name,20) }}
+            {{ Session::get('user')->profile->name }}
             <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
             保存
             </button>
-
+        
             </h1>
-        <a href="{{URL::previous()}}" class="">
-            <img src="{{ url('img/icon/h_back-arrow.jpg') }}" alt="nav"/>
+        <a href="javascript:void(0)" class="h_control-nav">
+            <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
         </a>
-
-
+        
+        
     </div>
 </div><!-- End header -->
 <div id="main">
@@ -39,13 +39,13 @@
             <ul>
                 <li>
                     <?php
-                    $avatar = ($profile->data->user->profile->avatar_url != '')
+                    $avatar = ($profile->data->user->profile->avatar_url != '') 
                         ? $profile->data->user->profile->avatar_url
                         : url('img/wall.jpg');
                     ?>
-
-                    <label class="avatar">
-                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover;"></label>
+                    
+                    <label>
+                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
@@ -56,17 +56,17 @@
                 <li>
                     <label>ユーザー名</label>
                     <input type="text" name="name" value="{{ $profile->data->user->profile->name }}"/>
-
+                    
                 </li>
                 <li>
                     <label>パスワード</label>
                     <input readonly type="text" value="******"/>
-
+                    
                 </li>
                 <li>
                     <label>メールアドレス</label>
                     <input type="email" readonly name="email" value="{{ $profile->data->user->email }}"/>
-
+                    
                 </li>
                 <li>
                     <label>性别</label>
@@ -74,56 +74,49 @@
                         <option value="0">男性</option>
                         <option value="1">女性</option>
                         <option value="2">未定義</option>
-                    </select>
-
+                    </select>   
+           
                 </li>
                 <li>
                     <label>住所</label>
                     <input type="text" name="address" value="{{ $profile->data->user->profile->address }}"/>
-
+                   
                 </li>
             </ul>
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
-                    <div class="wrap-ic">
-                        <span >Facebook</span>
-                        @if( $profile->data->user->profile->facebook_status == 1 )
-                        <a href="#" class="btn">非接続</a>
-                        @else
-                        <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
-                           連携
-                        </a>
-                        @endif
-                    </div>
+                    <span class="hidden-xs">Facebook</span>
+                    @if( $profile->data->user->profile->facebook_status == 1 )
+                    <a href="#" class="btn">非接続</a>
+                    @else    
+                    <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
+                       連携
+                    </a>
+                    @endif
+                    
                 </li>
                 <li>
                     <i class="icon-twitter"></i>
-                    <div class="wrap-ic">
-                        <span >Twitter</span>
-                        @if( $profile->data->user->profile->twitter_status == 1 )
-                        <a href="#" class="btn">非接続</a>
-                        @else
-                        <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
-                           連携
-                        </a>
-                        @endif
-                    </div>
+                    <span class="hidden-xs">Twitter</span>
+                    @if( $profile->data->user->profile->twitter_status == 1 )
+                    <a href="#" class="btn">非接続</a>
+                    @else    
+                    <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
+                       連携
+                    </a>
+                    @endif
                 </li>
                 <li>
                     <i class="icon-instagram"></i>
-                    <div class="wrap-ic">
-                        <span >Instagram</span>
-                        @if( $profile->data->user->profile->instagram_status == 1 )
-                        <a href="#" class="btn">非接続</a>
-                        @else
-                        <a href="{{ $instagram_login_url }}" class="btn">
-                           連携
-                        </a>
-                        @endif
-                    </div>
-                    
-
+                    <span class="hidden-xs">Instagram</span>
+                    @if( $profile->data->user->profile->instagram_status == 1 )
+                    <a href="#" class="btn">非接続</a>
+                    @else    
+                    <a href="{{ $instagram_login_url }}" class="btn">
+                       連携
+                    </a>
+                    @endif
                 </li>
             </ul>
         </div>
@@ -137,16 +130,16 @@
 @section('footerJS')
 <script type="text/javascript">
     $(document).ready(function(){
-
-
-
+        
+    
+    
         $('.btn_upload_avatar').click(function () {
             $('.btn_upload_ipt').click();
         });
-
+        
         $(".btn_upload_ipt").change(function () {
             if ( this.files && this.files[0]) {
-
+               
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     //console.log( e.target.result);
