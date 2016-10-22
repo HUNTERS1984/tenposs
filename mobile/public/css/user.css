@@ -1,6 +1,10 @@
+#user{
+    background:#f8f8fa;
+}
 #user ul{
     list-style: none;
     padding:0;
+    background:white;
 }
 #user ul li{
     padding: 20px 30px;
@@ -20,6 +24,9 @@
 #user ul li label{
     width: 240px;
 }
+#user ul li label.avatar img{
+    max-width: 100%;
+}
 #user ul li label.label-title-user{
 	width:60%;
 }
@@ -29,12 +36,21 @@
         font-size:15px;
     }
     #user ul li label.label-title-user{
-        width:50%
+        width:50%;
+        font-size:12px;
+    }
+    #user ul li label.avatar img{
+        max-width: 50%;
     }
 }
 #user ul li input{
     border: none;
     width: 60%;
+    outline: none;
+}
+#user ul li select{
+    border:none;
+    outline: none;
 }
 @media screen and (max-width: 479px){
     #user ul li input, #user ul li select{
@@ -68,9 +84,7 @@ ul.social{
     border-top: 1px solid #eee;
 }
 #user ul.social li{
-    padding: 0 0 0 150px;
-    height: 100px;
-    line-height: 100px;
+    padding: 20px 30px 20px 150px;
 }
 #user ul.social li a{
     background: #e2f8f8;
@@ -86,6 +100,7 @@ ul.social{
     font-size: 24px;
     line-height: 38px;
 }
+
 .icon-face{
     width: 56px;
     height: 56px;
@@ -123,4 +138,41 @@ ul.social{
     transform:translateY(-50%);
     -webkit-transform:translateY(-50%);
     -moz-transform:translateY(-50%);
+}
+@media screen and (max-width:479px){
+    ul.social{
+        margin-top:40px;
+    }
+    #user ul.social li{
+        padding:10px 20px 10px 50px;
+    }
+    ul.social .icon-face, ul.social .icon-twitter, ul.social .icon-instagram{
+        transform:scale(0.7);
+        -webkit-transform:scale(0.7);
+        -moz-transform:scale(0.7);
+        left: 10px;
+    }
+    #user ul.social li .wrap-ic{
+        display:table;
+        height:100%;
+        width: 100%;
+    }
+    #user ul.social li span{
+        padding-left:30px;
+        font-size:12px;
+        line-height: 20px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+    #user ul.social li a{
+        width:auto;
+        height:auto;
+        display: table-cell;
+        vertical-align: middle;
+        position: static;
+        font-size:12px;
+        padding:4px 10px;
+        width: 80px;
+        line-height: 20px;
+    }
 }

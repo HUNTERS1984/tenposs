@@ -9,7 +9,7 @@
     <div class="container-fluid">
         <h1 class="aligncenter">ログイン</h1>
         <a href="{{ route('login') }}">
-            <img src="{{ url('/img/icon/cross.png') }}" alt="arrow"/>
+            <img src="{{ url('img/icon/cross.png') }}" alt="arrow"/>
         </a>
     </div>
 </div><!-- End header -->
