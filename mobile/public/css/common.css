@@ -149,7 +149,7 @@ h3,.h3{font-size: 28px;}
     padding: 0 10px;
     float: left;
     width: 50%;
-    margin-top: 20px;
+    margin-bottom: 25px;
 }
 .item-product img{
     border: 1px solid #eee;
@@ -157,18 +157,22 @@ h3,.h3{font-size: 28px;}
 }
 .item-product p{
     color: #646e72;
-    margin: 20px 0 10px;
+    margin:10px 0 8px;
+    line-height: 26px;
     font-weight: 500;
 }
 @media screen and (max-width:479px){
     .item-product p{
         font-size:18px;
+        margin:8px 0 5px;
+        line-height: 20px;
     }
 }
 .item-product span{
     color: #646e72;
-    margin: 10px 0 20px;
     display: block;
+    font-size:20px;
+    line-height: 26px;
     font-weight: 500;
 }
 @media screen and (max-width:479px){
@@ -179,20 +183,45 @@ h3,.h3{font-size: 28px;}
 .item-product:nth-child(2n+1){
     clear: both;
 }
-/* item Photogallery */
-
+/*PHOTO GALLERY SECTION*/
 .item-photogallery{
-    padding: 0 10px;
     float: left;
     width: 33.33333333%;
-    margin-top: 20px;
+    padding-bottom:33.333333%;
+    position:relative;
+    /*margin-bottom:10px;*/
 }
-.item-photogallery img{
+.item-photogallery .crop{
+    position:absolute;
+    width:100%;
+    height:100%;
+    padding:10px;
+}
+.item-photogallery .crop .inner-crop{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    height:100%;
     border: 1px solid #eee;
     border-radius: 4px;
     box-shadow: 0 2px 2px #ddd;
     -webkit-box-shadow: 1px 1px 2px #ddd;
     -moz-box-shadow: 0 2px 2px #ddd;
+}
+@media screen and (max-width:479px){
+    .item-photogallery .crop{
+        padding:5px;
+    }
+}
+.item-photogallery img{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 
 
@@ -375,18 +404,3 @@ h3,.h3{font-size: 28px;}
 /**/
 
 
-/*LOGIN NORMAL*/
-.form-login-normal{
-    padding:0 15px;
-    margin-top:30px;
-}
-.form-login-normal input{
-    font-size:14px;
-}
-.form-login-normal button.btn-login{
-    font-size:14px;
-    background: #14c8c8;
-    color: #fff;
-    width: 100%;
-    padding:10px 0;
-}

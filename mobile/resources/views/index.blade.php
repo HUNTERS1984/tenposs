@@ -58,25 +58,28 @@
             </div><!-- End recentry -->
             <div id="photogallery">
                 <h2 class="aligncenter">フォトギャラリー</h2>
-                <div class="container-fluid">
-                    <div class="row">
+                <div class="container-photo-section clearfix">
                         @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            
-                            <a href="{{$photo->image_url}}" data-lightbox="lightbox">
-                                <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
-                            </a>
+                            <div class="crop">
+                                <div class="inner-crop">
+                                    <a href="{{$photo->image_url}}" data-lightbox="lightbox">
+                                        <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
+                                    </a>
+                                </div>
+
+                            </div>
+
                         </div>
                         @endforeach
                         @endif
-                    </div>
-                    @if( isset( $app_top->data->photos->data)
+                </div>
+                 @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                         <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
                     @endif
-                </div>
             </div><!-- End photogallery -->
             <div id="news">
                 <h2 class="aligncenter">ニュース</h2>

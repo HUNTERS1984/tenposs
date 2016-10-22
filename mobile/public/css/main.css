@@ -1,5 +1,10 @@
+/*UPDATE LIEM 21/10*/
 .bg-fb{
     background-color: #3b5998 !important;
+    padding:0;
+    padding:10px 0;
+    margin:0;
+    margin-bottom:40px;
 }
 .bg-fb:before{
     content:'';
@@ -14,6 +19,10 @@
 
 .bg-tw{
     background-color: #4da8e0 !important;
+     padding:0;
+    padding:10px 0;
+    margin:0;
+    margin-bottom:40px;
 }
 .bg-tw:before{
     content:'';
@@ -27,6 +36,10 @@
 }
 .bg-mail{
     background-color: #14c8c8 !important;
+     padding:0;
+    padding:10px 0;
+    margin:0;
+    margin-bottom:40px;
 }
 .bg-mail:before{
     content:'';
@@ -38,7 +51,22 @@
     height:40px;
     background:url('../img/icon/ic-mail.png')no-repeat;
 }
+
+.bg-transparent{
+    background-color: rgba(255,255,255,0.3) !important;
+     padding:0;
+    padding:10px 0;
+    margin:0;
+    margin-bottom:40px;
+}
+.bg-transparent.last{
+    margin-bottom:0;
+}
+
 @media screen and (max-width:479px){
+    .bg-fb, .bg-tw, .bg-mail{
+        margin-bottom:20px;
+    }
     .bg-fb:before, .bg-tw:before, .bg-mail:before{
         transform:scale(0.6);
         -webkit-transform:scale(0.6);
@@ -53,9 +81,6 @@
     .bg-mail:before{
         left:-3px;
     }
-}
-.bg-transparent{
-    background-color: rgba(255,255,255,0.3) !important;
 }
 
 #chat{
