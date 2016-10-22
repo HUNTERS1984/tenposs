@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'vni-cooperheavy';
+    src: url('vcooperb-webfont.woff2') format('woff2'),
+         url('vcooperb-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}

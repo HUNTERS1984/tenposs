@@ -1,0 +1,568 @@
+@font-face {
+  font-family: 'vni-cooperheavy';
+  src: url("../fonts/cooperb/vcooperb-webfont.woff2") format("woff2"), url("../fonts/cooperb/vcooperb-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'HiraKakuPro-W3-AlphaNum';
+  src: url("../fonts/HiraKakuPro-W3/HiraKakuPro-W3-AlphaNum.eot?#iefix") format("embedded-opentype"), url("../fonts/HiraKakuPro-W3/HiraKakuPro-W3-AlphaNum.otf") format("opentype"), url("../fonts/HiraKakuPro-W3/HiraKakuPro-W3-AlphaNum.woff") format("woff"), url("../fonts/HiraKakuPro-W3/HiraKakuPro-W3-AlphaNum.ttf") format("truetype"), url("../fonts/HiraKakuPro-W3/HiraKakuPro-W3-AlphaNum.svg#HiraKakuPro-W3-AlphaNum") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'HiraKakuPro-W6-AlphaNum';
+  src: url("../fonts/HiraKakuPro-W6/HiraKakuPro-W6-AlphaNum.eot?#iefix") format("embedded-opentype"), url("../fonts/HiraKakuPro-W6/HiraKakuPro-W6-AlphaNum.otf") format("opentype"), url("../fonts/HiraKakuPro-W6/HiraKakuPro-W6-AlphaNum.woff") format("woff"), url("../fonts/HiraKakuPro-W6/HiraKakuPro-W6-AlphaNum.ttf") format("truetype"), url("../fonts/HiraKakuPro-W6/HiraKakuPro-W6-AlphaNum.svg#HiraKakuPro-W6-AlphaNum") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+* {
+  margin: 0;
+  padding: 0; }
+
+html {
+  font-size: 62.5%; }
+
+body {
+  font-size: 14px;
+  font-size: 1.4rem; }
+
+ul, ol {
+  margin: 0; }
+
+a, a:hover {
+  text-decoration: none !important;
+  outline: none !important; }
+
+h1, h2, h3, h4, p {
+  margin: 0;
+  padding: 0;
+  font-size: 1.4rem; }
+
+.clear {
+  clear: both; }
+
+.bg-blue, .btn-xanhduong {
+  background: #288CDC; }
+
+.btn-hong {
+  background: #F078A0; }
+
+.btn-trang {
+  background: white; }
+
+.btn-me {
+  width: 100%;
+  padding: 8px 0;
+  max-width: 280px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s; }
+  .btn-me:hover, .btn-me:focus {
+    box-shadow: 1px 1px 5px 0 #67747a; }
+
+.header {
+  height: 8rem;
+  padding-top: 2rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000; }
+  .header.bg-color {
+    background: white;
+    border-bottom: 1px solid #CDCDCD;
+    box-shadow: 0 2px 3px 0 #ddd; }
+    .header.bg-color .main-navigation a {
+      color: #686868; }
+  @media screen and (max-width: 767px) {
+    .header {
+      height: auto;
+      padding: 1rem 0; } }
+  @media screen and (max-width: 479px) {
+    .header {
+      background: white;
+      border-bottom: 1px solid #CDCDCD;
+      box-shadow: 0 2px 3px 0 #ddd; }
+      .header .main-navigation a {
+        color: #686868; } }
+  .header .logo img {
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7); }
+    @media screen and (max-width: 767px) {
+      .header .logo img {
+        margin: 0 auto 10px; } }
+    @media screen and (max-width: 479px) {
+      .header .logo img {
+        margin: 0;
+        float: left; } }
+  @media screen and (max-width: 767px) {
+    .header .navbar-header {
+      float: right; }
+      .header .navbar-header .collapse-me {
+        border: 1px solid #CDCDCD;
+        padding: 6px 20px; } }
+  .header .main-navigation {
+    list-style-type: none;
+    text-align: right; }
+    @media screen and (max-width: 767px) {
+      .header .main-navigation {
+        float: none;
+        text-align: center; } }
+    @media screen and (max-width: 479px) {
+      .header .main-navigation {
+        text-align: center; } }
+    .header .main-navigation li {
+      display: inline-block;
+      padding: 10px 15px; }
+      @media screen and (max-width: 979px) {
+        .header .main-navigation li {
+          padding: 10px 6px; } }
+      @media screen and (max-width: 767px) {
+        .header .main-navigation li {
+          padding: 10px 8px; } }
+      @media screen and (max-width: 479px) {
+        .header .main-navigation li {
+          display: block; } }
+      .header .main-navigation li a {
+        display: block;
+        color: white;
+        font-size: 1.4rem;
+        font-family: "HiraKakuPro-W6-AlphaNum";
+        transition: all 0.3s;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -o-transition: all 0.3s; }
+        .header .main-navigation li a:hover, .header .main-navigation li a:focus {
+          text-decoration: underline !important; }
+        @media screen and (max-width: 979px) {
+          .header .main-navigation li a {
+            font-size: 1.2rem; } }
+        @media screen and (max-width: 479px) {
+          .header .main-navigation li a {
+            font-size: 1.2rem;
+            color: #505050; } }
+
+.banner {
+  padding-top: 8rem;
+  background: url("../img/top/bg-top-banner.png") no-repeat;
+  background-size: cover;
+  height: 64rem;
+  overflow: hidden; }
+  @media screen and (max-width: 979px) {
+    .banner {
+      height: auto;
+      padding-top: 12rem; } }
+  .banner .inner-banner {
+    display: table; }
+    .banner .inner-banner .left-banner, .banner .inner-banner .right-banner {
+      display: table-cell;
+      vertical-align: middle;
+      width: 50%;
+      text-align: center; }
+      @media screen and (max-width: 767px) {
+        .banner .inner-banner .left-banner, .banner .inner-banner .right-banner {
+          display: block;
+          width: 100%; } }
+    .banner .inner-banner .right-banner {
+      padding-left: 70px; }
+      @media screen and (max-width: 767px) {
+        .banner .inner-banner .right-banner {
+          padding-left: 0;
+          margin-top: 20px; }
+          .banner .inner-banner .right-banner img {
+            margin: 0 auto; } }
+    .banner .inner-banner .title-banner {
+      font-size: 2.2rem;
+      font-family: "HiraKakuPro-W6-AlphaNum";
+      color: white;
+      margin-bottom: 20px; }
+    .banner .inner-banner p.sub-title-banner {
+      font-size: 1.6rem;
+      font-family: "HiraKakuPro-W3-AlphaNum";
+      color: white;
+      line-height: 2.2rem;
+      margin-bottom: 15px; }
+      @media screen and (max-width: 979px) {
+        .banner .inner-banner p.sub-title-banner {
+          font-size: 1.4rem; } }
+    .banner .inner-banner .btn-me {
+      color: white; }
+
+.section {
+  padding: 80px 0; }
+  @media screen and (max-width: 979px) {
+    .section {
+      padding: 60px 0; } }
+  .section h2.title-section {
+    font-size: 2.2rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    margin-bottom: 80px;
+    text-align: center;
+    color: #288CDC; }
+
+.contact-section {
+  background: url("../img/bg-section-contact.png") no-repeat;
+  background-size: cover;
+  position: relative; }
+  .contact-section .wrap-contact {
+    text-align: center;
+    color: white; }
+    .contact-section .wrap-contact .title-contact {
+      font-family: "HiraKakuPro-W6-AlphaNum";
+      font-size: 2.2rem;
+      margin-bottom: 20px; }
+    .contact-section .wrap-contact p.sub-contact {
+      font-size: 1.2rem;
+      font-family: "HiraKakuPro-W3-AlphaNum"; }
+    .contact-section .wrap-contact .wrap-button-contact {
+      width: 70%;
+      margin: 0 auto;
+      margin-top: 50px; }
+      @media screen and (max-width: 979px) {
+        .contact-section .wrap-contact .wrap-button-contact {
+          float: none; } }
+      @media screen and (max-width: 979px) {
+        .contact-section .wrap-contact .wrap-button-contact {
+          margin-top: 25px; } }
+      .contact-section .wrap-contact .wrap-button-contact a.btn-me {
+        display: inline-block;
+        color: white;
+        font-weight: 600; }
+        .contact-section .wrap-contact .wrap-button-contact a.btn-me.btn-contact-left {
+          float: left; }
+          @media screen and (max-width: 979px) {
+            .contact-section .wrap-contact .wrap-button-contact a.btn-me.btn-contact-left {
+              float: none;
+              margin-bottom: 20px; } }
+        .contact-section .wrap-contact .wrap-button-contact a.btn-me.btn-contact-right {
+          float: right;
+          color: #288CDC; }
+          @media screen and (max-width: 979px) {
+            .contact-section .wrap-contact .wrap-button-contact a.btn-me.btn-contact-right {
+              float: none;
+              margin-bottom: 10px; } }
+        @media screen and (max-width: 979px) {
+          .contact-section .wrap-contact .wrap-button-contact a.btn-me .btn-me {
+            max-width: none;
+            margin-bottom: 10px; } }
+  .contact-section .img-up {
+    position: absolute;
+    left: 50%;
+    bottom: -40px;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    cursor: pointer; }
+
+.middle.page {
+  padding-top: 80px; }
+  @media screen and (max-width: 767px) {
+    .middle.page {
+      padding-top: 12rem; } }
+  @media screen and (max-width: 479px) {
+    .middle.page {
+      padding-top: 8rem; } }
+  .middle.page .static-banner .breadcrum {
+    padding: 15px 0; }
+  .middle.page .static-banner .breadcrum-me {
+    list-style-type: none; }
+    .middle.page .static-banner .breadcrum-me li {
+      display: inline-block;
+      padding: 0 15px;
+      position: relative; }
+      .middle.page .static-banner .breadcrum-me li a {
+        display: block;
+        font-family: "HiraKakuPro-W3-AlphaNum";
+        font-size: 1.4rem;
+        color: #505050; }
+      .middle.page .static-banner .breadcrum-me li:after {
+        content: '>';
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0; }
+      .middle.page .static-banner .breadcrum-me li:last-child:after {
+        content: ''; }
+      .middle.page .static-banner .breadcrum-me li.active a {
+        text-decoration: underline !important; }
+  .middle.page .static-banner .page-banner {
+    display: table;
+    background-size: cover;
+    width: 100%;
+    height: 320px; }
+    .middle.page .static-banner .page-banner .is-table-cell {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center; }
+      .middle.page .static-banner .page-banner .is-table-cell h1.title-page {
+        font-size: 4.2rem;
+        font-family: 'vni-cooperheavy';
+        color: white;
+        font-style: italic;
+        margin-bottom: 30px; }
+      .middle.page .static-banner .page-banner .is-table-cell p.sub-title-page {
+        font-size: 2.2rem;
+        font-family: "HiraKakuPro-W6-AlphaNum";
+        color: white; }
+
+.footer {
+  background: #383838;
+  color: white;
+  padding: 70px 0 120px; }
+  .footer .wrap-nav h3.title-footer {
+    color: #CDCDCD;
+    font-size: 1.8rem;
+    font-style: italic;
+    font-family: 'vni-cooperheavy';
+    margin-bottom: 20px; }
+    @media screen and (max-width: 767px) {
+      .footer .wrap-nav h3.title-footer {
+        text-align: center; } }
+  .footer .wrap-nav ul {
+    list-style-type: none; }
+    @media screen and (max-width: 767px) {
+      .footer .wrap-nav ul {
+        text-align: center; } }
+    .footer .wrap-nav ul li {
+      display: block;
+      margin-bottom: 5px; }
+      .footer .wrap-nav ul li a {
+        display: block;
+        padding: 3px 0;
+        color: white;
+        font-family: "HiraKakuPro-W6-AlphaNum";
+        font-size: 1.2rem; }
+  @media screen and (max-width: 767px) {
+    .footer .wrap-nav {
+      margin-bottom: 30px; } }
+  .footer .wrap-info a.btn-footer {
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    margin-bottom: 20px;
+    color: White;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    font-size: 1.4rem;
+    padding: 8px 0;
+    border-radius: 4px;
+    text-align: center; }
+    @media screen and (max-width: 767px) {
+      .footer .wrap-info a.btn-footer {
+        margin: 0 auto 20px; } }
+  .footer .wrap-info span.line {
+    height: 1px;
+    width: 100%;
+    display: block;
+    background: #CDCDCD;
+    margin-bottom: 20px; }
+  .footer .wrap-info div.wrap-info-hunter {
+    color: #CDCDCD;
+    text-align: center; }
+    .footer .wrap-info div.wrap-info-hunter h1 {
+      font-family: 'vni-cooperheavy';
+      font-size: 2rem;
+      font-style: italic;
+      margin-bottom: 15px; }
+      @media screen and (max-width: 767px) {
+        .footer .wrap-info div.wrap-info-hunter h1 {
+          font-size: 1.8rem; } }
+    .footer .wrap-info div.wrap-info-hunter .wrap-ic {
+      text-align: center; }
+      .footer .wrap-info div.wrap-info-hunter .wrap-ic a {
+        display: inline-block;
+        padding: 0 10px; }
+
+#company {
+  background-image: url("../img/company/company-banner-02.png"); }
+
+.company-section .content-section .wrap-tab {
+  margin-bottom: 50px; }
+  .company-section .content-section .wrap-tab ul.tab-company {
+    text-align: center; }
+    .company-section .content-section .wrap-tab ul.tab-company li {
+      display: inline-block; }
+      .company-section .content-section .wrap-tab ul.tab-company li a {
+        display: block;
+        color: #288CDC;
+        background: #F5F5F5;
+        font-size: 1.4rem;
+        font-family: "HiraKakuPro-W6-AlphaNum";
+        padding: 12px 25px;
+        border-radius: 4px; }
+      .company-section .content-section .wrap-tab ul.tab-company li:hover a, .company-section .content-section .wrap-tab ul.tab-company li.active a {
+        background: #288CDC;
+        color: white; }
+
+.company-section .content-section .block-company {
+  padding: 15px 0;
+  border-bottom: 1px solid #0AF0C8; }
+  .company-section .content-section .block-company.last {
+    border-bottom: none; }
+  .company-section .content-section .block-company p.text-company {
+    font-size: 1.4rem;
+    color: #686868;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    padding-left: 3rem; }
+
+.company-section.company02 h3.title-company, .company-section.company03 h3.title-company {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 25px;
+  text-align: center; }
+
+.company-section.company02 .wrap-top, .company-section.company03 .wrap-top {
+  margin-bottom: 100px; }
+  .company-section.company02 .wrap-top h3.title-company, .company-section.company03 .wrap-top h3.title-company {
+    margin-bottom: 40px; }
+  .company-section.company02 .wrap-top p.sub-title, .company-section.company03 .wrap-top p.sub-title {
+    font-size: 2rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    margin-bottom: 25px;
+    text-align: center; }
+  .company-section.company02 .wrap-top p.content, .company-section.company03 .wrap-top p.content {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868; }
+  .company-section.company02 .wrap-top .wrap-content-company03 p, .company-section.company03 .wrap-top .wrap-content-company03 p {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868;
+    margin-bottom: 20px; }
+
+.company-section.company02 .wrap-articles .wrap-article h3.title-article, .company-section.company03 .wrap-articles .wrap-article h3.title-article {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #505050;
+  margin-bottom: 20px; }
+
+.company-section.company02 .wrap-articles .wrap-article p, .company-section.company03 .wrap-articles .wrap-article p {
+  font-size: 1.4rem;
+  font-family: "HiraKakuPro-W3-AlphaNum";
+  color: #686868;
+  margin-bottom: 10px; }
+
+.company-section.company04 h3.title-company {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 70px;
+  text-align: center; }
+
+.company-section.company04 div.container-img img {
+  margin: 0 auto; }
+
+.company-section.company04 div.each-company {
+  padding: 0 20px;
+  text-align: center;
+  margin-bottom: 20px; }
+  .company-section.company04 div.each-company img {
+    margin: 0 auto 10px; }
+  .company-section.company04 div.each-company h3.name {
+    font-size: 1.6rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    margin-bottom: 10px; }
+  .company-section.company04 div.each-company p.desc {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868; }
+    .company-section.company04 div.each-company p.desc a {
+      color: #686868; }
+  .company-section.company04 div.each-company.join-us img {
+    margin: 0 auto 30px; }
+
+.company-section.company05 .wrap-top {
+  margin-bottom: 20px; }
+  .company-section.company05 .wrap-top h3.title-company {
+    font-size: 1.8rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #288CDC;
+    margin-bottom: 20px;
+    text-align: center; }
+  .company-section.company05 .wrap-top .container-bg {
+    background: url("../img/company/sub/company-sub-07.png") no-repeat;
+    background-size: cover;
+    display: table;
+    height: 240px; }
+    .company-section.company05 .wrap-top .container-bg .is-table-cell {
+      vertical-align: middle;
+      display: table-cell; }
+    .company-section.company05 .wrap-top .container-bg p {
+      font-size: 1.6rem;
+      font-family: "HiraKakuPro-W6-AlphaNum";
+      text-align: center;
+      color: #686868; }
+
+.company-section.company05 .howto {
+  margin-bottom: 80px; }
+  .company-section.company05 .howto h3.title-howto {
+    font-size: 1.8rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #288CDC;
+    margin-bottom: 50px;
+    text-align: center; }
+  .company-section.company05 .howto img {
+    margin: 0 auto; }
+
+.company-section.company05 .wrap-logo h3.title-logo {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 20px;
+  text-align: center; }
+
+.company-section.company05 .wrap-logo p.sub-logo {
+  font-size: 1.6rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #505050;
+  text-align: center; }
+
+.company-section.company05 .wrap-logo .container-logo {
+  margin-top: 20px; }
+  .company-section.company05 .wrap-logo .container-logo .left {
+    width: 49%;
+    float: left; }
+    @media screen and (max-width: 767px) {
+      .company-section.company05 .wrap-logo .container-logo .left {
+        float: none;
+        width: 100%;
+        margin-bottom: 30px; } }
+  .company-section.company05 .wrap-logo .container-logo .right {
+    width: 49%;
+    float: right; }
+    @media screen and (max-width: 767px) {
+      .company-section.company05 .wrap-logo .container-logo .right {
+        float: none;
+        width: 100%; } }
+  .company-section.company05 .wrap-logo .container-logo img {
+    margin-bottom: 20px; }
+  .company-section.company05 .wrap-logo .container-logo a.btn-download {
+    padding: 10px 50px;
+    text-align: center;
+    color: white;
+    position: relative;
+    background: #288CDC;
+    margin-right: 10px;
+    border-radius: 4px; }
+    .company-section.company05 .wrap-logo .container-logo a.btn-download:before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 17px;
+      background: url("../img/company/sub/company-sub-05.png") no-repeat;
+      left: 10px; }
+    .company-section.company05 .wrap-logo .container-logo a.btn-download.last {
+      margin-right: 0; }
+
+.map-section h2.title-section {
+  font-weight: 600;
+  color: #505050;
+  margin-bottom: 60px; }
