@@ -1,0 +1,35 @@
+.text-left{
+    text-align: left
+}
+
+.text-phone{
+    color: #5693f0;
+    text-decoration: underline
+}
+
+.center-cropped {
+    object-fit: cover; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */
+}
+
+.sticky{
+    position: fixed !important;
+    z-index: 2;
+    background: #FFF;
+    width: 100%;
+    max-width: 750px;
+}
+
+#header{
+    box-shadow: 1px 1px 2px 1px #F2F2F2;
+    -webkit-box-shadow: 1px 1px 2px 1px #F2F2F2;
+    -moz-box-shadow: 1px 1px 2px 1px #F2F2F2;
+    -o-box-shadow: 1px 1px 2px 1px #F2F2F2;
+}
+
+@media screen and (max-width:479px){
+    .container-fluid{
+        padding: 0 10px;
+
+    }
+}

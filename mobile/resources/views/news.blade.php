@@ -2,6 +2,7 @@
 
 @section('headCSS')
     <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+    <link href="{{ url('css/news.css') }}" rel="stylesheet">
 @stop
 
 @section('page')
@@ -54,12 +55,12 @@
                                         <div class="item-coupon imageleft clearfix">
                                             <input type="hidden" name="pagesize{{$news_title->new_category_id}}" value="{{$pagesize}}">
                                             <div class="image">
-                                                <img src="{{$news_title->image_url}}" alt="Nakayo"/>
+                                                <img class="center-cropped" src="{{$news_title->image_url}}" alt="Nakayo"/>
                                             </div>
                                             <div class="info clearfix">
                                                 <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
                                                 <h3>{{$news_title->title}}</h3>
-                                                <p>{{Str::words($news_title->description,20)}}</p>
+                                                <p>{{Str::words($news_title->description,20, '..')}}</p>
                                             </div>
                                         </div><!-- End item coupon -->
                                         @endforeach

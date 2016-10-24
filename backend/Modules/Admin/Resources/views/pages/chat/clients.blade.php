@@ -25,7 +25,6 @@
     			</div>
     		</div>
     		<div id="message-wrapper" class="col-lg-9 col-md-9"></div>
-    		<iframe src="https://admin-official.line.me/" frameborder="0" width="100%" height="600"> </iframe>
     	</div>
         
         <div id="room-template" class="hide">

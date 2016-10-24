@@ -46,22 +46,39 @@
     color: #fff;
 }
 
-.infodetail, .entrydetail {
+.infodetail {
     padding: 40px 0;
 }
+.entrydetail{
+    margin: 0 -20px 60px -20px ;
+    border-top: 1px solid #c8d2d6;
+    padding: 30px 40px 0;
+}
 @media screen and (max-width:479px){
-    .infodetail, .entrydetail {
+    
+    .entrydetail{
+        margin: 0 -10px 30px -10px ;
+        border-top: 1px solid #c8d2d6;
+        padding: 30px 20px 0;
+        
+    }
+    .infodetail {
         padding:20px 0;
         font-size:16px;
     }
+    
     .infodetail, .entrydetail p{
-        font-size:16px;
+        font-size:14px;
     }
 }
 
 .infodetail {
-    border-bottom: 1px solid #ddd;
+   
     position: relative;
+}
+.infodetail h3.title-coupon {
+    margin:0;
+    margin-bottom:5px;
 }
 
 .infodetail .wrap-title-detail h3 {
@@ -108,19 +125,31 @@
 }
 
 .infodetail .form-mail {
-    margin: 60px 0 10px;
+    margin: 50px 0 10px;
+}
+@media screen and (max-width:479px){
+    .infodetail .form-mail{
+         margin: 30px 0 10px;
+    }
+}
+
+.infodetail .form-mail .input-group{
+    border:none;
 }
 
 .infodetail .form-mail .form-control {
     font-size: 24px;
     line-height: 70px;
     height: 70px;
+    background:#f8f8fa;
+    border:none;
+    font-weight: 600;
 }
 @media screen and (max-width: 479px){
     .infodetail .form-mail .form-control{
-        height: 50px;
-        line-height: 50px;
-        font-size: 18px;
+        height:40px;
+        line-height: 40px;
+        font-size: 16px;
     }
 }
 
@@ -130,6 +159,7 @@
     text-align: center;
     background: #14c8c8;
     color: #fff;
+    border:none;
 }
 
 @media screen and (max-width:479px){
@@ -143,49 +173,47 @@
 }
 
 #below-content {
-    width: inherit;
-    margin: 10px;
-}
-
-#below-content p {
+ 
+    width: 100%;
     position: fixed;
     bottom: 0;
-    width: 100%;
     padding: 20px;
     text-align: center;
     background: #14c8c8;
     color: #fff;
-    font-size: 20px;
     margin-bottom: 0;
     z-index: 999;
+    max-width: 750px;
 }
-#below-content p span {
-    font-size: 16px;
-}
-#below-content-disable p {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 20px;
-    text-align: center;
-    background: #cccccc;
-    color: #fff;
+#below-content a {
     font-size: 20px;
     margin-bottom: 0;
-    z-index: 998;
+    display: block;
+    font-weight: 600;
+    color: #FFF;
 }
-#page, #below-content-disable, #below-content-disable p {
-    max-width: inherit;
+
+
+#below-content.disable{
+   background: #ccc;
+    
 }
+
+
+@media screen and (max-width:479px){
+    #below-content a{
+        font-size:18px;
+    }
+}
+
+
+/*#page, #below-content-disable, #below-content-disable p {
+    width: inherit;
+}*/
 
 #page, #below-content, #below-content p {
-    max-width: inherit;
+    width: inherit;
 }
-
-/*.image_size_detail {
-    width: 1024px;
-    height: 1024px;
-}*/
 
 .qrcode-div {
     background: #14c8c8;
@@ -225,4 +253,125 @@
 }
 .qrcode-div .dropdown-menu li {
     text-align: center;
+}
+
+
+
+.item-coupon{
+    margin-top: 20px;
+}
+/* image coupon */
+.item-coupon .image{
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px #ddd;
+    -webkit-box-shadow: 1px 1px 2px #ddd;
+    -moz-box-shadow: 0 2px 2px #ddd;
+    margin-right: 25px;
+}
+
+
+.item-coupon img{
+    max-width: 220px;
+    width:100%;
+    height: 220px;
+}
+@media screen and (max-width:479px){
+    .item-coupon img{
+        height:100px;
+        max-width:100px;
+        
+    }
+    .item-coupon .image{
+        margin-right: 10px;
+    }
+}
+/* info coupon */
+.item-coupon a{
+    display: block;
+    margin: 20px 0 5px;
+}
+@media screen and (max-width:479px){
+    .item-coupon a{
+        font-size:14px;
+        margin: 0;
+    }
+
+}
+.item-coupon h3{
+    color: #505a5e;
+    margin: 20px 0 10px;
+    font-size: 24px;
+}
+@media screen and (max-width:479px){
+    .item-coupon h3{
+        font-size:14px;
+        margin: 5px 0;
+    }
+}
+.item-coupon p{
+    color: #96a0a4;
+    max-height: 100px;
+    overflow: hidden;
+}
+@media screen and (max-width:479px){
+   .item-coupon p{
+        font-size:14px;
+        max-height: 58px;
+   }
+}
+
+.dot-middle{
+    text-align: center;
+    margin-right: 12px;
+    position: relative;
+}
+.dot-middle:after{
+    content: ".";
+    color: #96a0a4;
+    bottom: 0px;
+    position: absolute;
+    font-size: 37px;
+}
+@media screen and (max-width:479px){
+   .dot-middle:after{
+        bottom: -5px;
+   }
+}
+
+#appy-cupon-success{
+    background: rgba(0,0,0,0.5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+#appy-cupon-success-inner{
+    text-align: center;
+    color: #FFF;
+    margin-top: 40%;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+   
+#appy-cupon-success-inner img{
+   margin-bottom: 20px;
+}
+#appy-cupon-success-inner p{
+    font-weight: 500;
+}
+@media screen and (max-width:479px){
+   #appy-cupon-success-inner img{
+        width: 60px;
+   }
+   #appy-cupon-success-inner p{
+       font-size: 14px;
+   }
 }

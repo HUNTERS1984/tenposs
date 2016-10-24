@@ -32,16 +32,13 @@ h3,.h3{font-size: 28px;}
     display: block;
     line-height: 50px;
     position:relative;
+    font-weight: 600;
 }
 @media screen and (max-width:479px){
     .tenposs-button{
         white-space: inherit;
         line-height: 26px;
         font-size:14px;
-    }
-    .tenposs-button.btn-login{
-        width:80%;
-        margin:20px auto 10px;
     }
 }
 
@@ -60,6 +57,7 @@ h3,.h3{font-size: 28px;}
 }
 #page{
     max-width: 750px;
+    margin:0 auto;
     overflow: hidden;
     position:relative;
     left:0;
@@ -113,14 +111,20 @@ h3,.h3{font-size: 28px;}
     position: absolute;
     padding: 10px;
     bottom: 18px;
-    left: 10px;
+    left: 0;
+    padding-left: 20px;
 }
 @media screen and (max-width:479px){
     #header img{
+        
         transform:scale(0.7);
         -webkit-transform:scale(0.7);
         -moz-transform:scale(0.7);
-        bottom: 10px;
+        bottom: calc(50% - 22px);
+        padding-left: 10px;
+    }
+    #header h1 {
+        margin:12px 0;
     }
     
 }
@@ -145,7 +149,7 @@ h3,.h3{font-size: 28px;}
     padding: 0 10px;
     float: left;
     width: 50%;
-    margin-top: 20px;
+    margin-bottom: 25px;
 }
 .item-product img{
     border: 1px solid #eee;
@@ -153,17 +157,23 @@ h3,.h3{font-size: 28px;}
 }
 .item-product p{
     color: #646e72;
-    margin: 20px 0 10px;
+    margin:10px 0 8px;
+    line-height: 26px;
+    font-weight: 500;
 }
 @media screen and (max-width:479px){
     .item-product p{
         font-size:18px;
+        margin:8px 0 5px;
+        line-height: 20px;
     }
 }
 .item-product span{
     color: #646e72;
-    margin: 10px 0 20px;
     display: block;
+    font-size:20px;
+    line-height: 26px;
+    font-weight: 500;
 }
 @media screen and (max-width:479px){
     .item-product span{
@@ -173,74 +183,47 @@ h3,.h3{font-size: 28px;}
 .item-product:nth-child(2n+1){
     clear: both;
 }
-/* item Photogallery */
-
+/*PHOTO GALLERY SECTION*/
 .item-photogallery{
-    padding: 0 10px;
     float: left;
     width: 33.33333333%;
-    margin-top: 20px;
+    padding-bottom:33.333333%;
+    position:relative;
+    /*margin-bottom:10px;*/
 }
-.item-photogallery img{
+.item-photogallery .crop{
+    position:absolute;
+    width:100%;
+    height:100%;
+    padding:10px;
+}
+.item-photogallery .crop .inner-crop{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    height:100%;
     border: 1px solid #eee;
     border-radius: 4px;
     box-shadow: 0 2px 2px #ddd;
     -webkit-box-shadow: 1px 1px 2px #ddd;
     -moz-box-shadow: 0 2px 2px #ddd;
 }
-.item-coupon{
-    margin-top: 20px;
+@media screen and (max-width:479px){
+    .item-photogallery .crop{
+        padding:5px;
+    }
 }
-/* image coupon */
-.item-coupon .image{
-    padding: 4px;
-    border-radius: 4px;
-    box-shadow: 0 2px 2px #ddd;
-    -webkit-box-shadow: 1px 1px 2px #ddd;
-    -moz-box-shadow: 0 2px 2px #ddd;
-}
-.item-coupon img{
-    max-width: 220px;
+.item-photogallery img{
+    position:absolute;
     width:100%;
-    height: 220px;
+    height:100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
-@media screen and (max-width:479px){
-    .item-coupon img{
-        height:100px;
-        max-width:100px;
-    }
-}
-/* info coupon */
-.item-coupon a{
-    display: block;
-    margin: 20px 0 5px;
-}
-@media screen and (max-width:479px){
-    .item-coupon a{
-        font-size:16px;
-    }
 
-}
-.item-coupon h3{
-    color: #505a5e;
-    margin: 20px 0 10px;
-}
-@media screen and (max-width:479px){
-    .item-coupon h3{
-        font-size:18px;
-    }
-}
-.item-coupon p{
-    color: #96a0a4;
-    margin-bottom: 10px;
-    max-height: 100px;
-    overflow: hidden;
-}
-@media screen and (max-width:479px){
-   .item-coupon p{
-    font-size:14px;
-   }
-}
 
 /* Contact */
 #contact ul{
@@ -318,6 +301,7 @@ h3,.h3{font-size: 28px;}
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     overflow-y: scroll;
+    z-index: 3;
 }
 @media screen and (max-width:479px){
     #side{
@@ -341,11 +325,18 @@ h3,.h3{font-size: 28px;}
         padding:30px 0 30px 30px;
     }
     #side .h_side .imageleft .image{
-        float:none;
+        width:30%;
+        margin-right:10px;
     }
     #side .h_side .imageleft p.font32{
-        font-size:24px;
+        font-size:14px;
         line-height: 32px;
+        width:65%;
+        float:left;
+        margin-top:30px;
+    }
+    #side img{
+        max-width:100%;
     }
 }
 
@@ -356,11 +347,16 @@ h3,.h3{font-size: 28px;}
     margin: 0;
 }
 #side .s_nav li{
-    padding:20px 0 20px 80px;
+    padding:30px 0 30px 90px;
     position:relative;
 }
 #side .s_nav li:before{
+    content: '';
     position:absolute;
+    display:block;
+    width:38px;
+    height:38px;
+    background:url('../img/icon/s_icon.png')no-repeat;
     left:30px;
     top:50%;
     transform:translateY(-50%);
@@ -372,9 +368,9 @@ h3,.h3{font-size: 28px;}
     line-height: 100px;*/
     display: block;
     width: 100%;
-    
     color: #fff;
     font-size: 30px;
+    text-transform: capitalize;
 }
 #side .s_nav li a span{
     font-size: 30px;
@@ -386,15 +382,16 @@ h3,.h3{font-size: 28px;}
 #side .s_nav li:hover,#side .s_nav li.active{
    background:#646e72;
 }
-#side .s_nav li.s_icon-home a{}
-#side .s_nav li.s_icon-menu a{background-position: 50px -100px;}
-#side .s_nav li.s_icon-reserve a{background-position: 50px -200px;}
-#side .s_nav li.s_icon-news a{background-position: 50px -300px;}
-#side .s_nav li.s_icon-photo a{background-position: 50px -400px;}
-#side .s_nav li.s_icon-staff a{background-position: 50px -500px;}
-#side .s_nav li.s_icon-coupon a{background-position: 50px -600px;}
-#side .s_nav li.s_icon-chat a{background-position: 50px -700px;}
-#side .s_nav li.s_icon-setting a{background-position: 50px -800px;}
+#side .s_nav li.ti-home:before{background-position:0px -30px;}
+#side .s_nav li.ti-comments:before{background-position: 0px -730px;}
+#side .s_nav li.ti-user:before{background-position: 0px -530px;}
+#side .s_nav li.ti-medall:before{background-position: 0px -630px;}
+#side .s_nav li.ti-settings:before{background-position: 0px -830px;}
+#side .s_nav li.ti-menu-alt:before{background-position: 0px -130px;}
+#side .s_nav li.ti-alarm-clock:before{background-position: 0px -230px;}
+#side .s_nav li.ti-rss:before{background-position: 0px -330px;}
+#side .s_nav li.ti-gallery:before{background-position: 0px -430px;}
+#side .s_nav li.ti-unlock:before{background-position: 0px -930px;}
 /*--------------------*/
 
 /* Footer */
@@ -405,3 +402,5 @@ h3,.h3{font-size: 28px;}
     margin: 10px 0 40px;
 }
 /**/
+
+

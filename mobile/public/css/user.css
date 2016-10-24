@@ -20,10 +20,13 @@
 #user ul li label{
     width: 240px;
 }
+#user ul li label.label-title-user{
+	width:60%;
+}
 @media screen and (max-width: 479px){
     #user ul li label{
         width:40%;
-        font-size:18px;
+        font-size:15px;
     }
     #user ul li label.label-title-user{
         width:50%
@@ -35,7 +38,8 @@
 }
 @media screen and (max-width: 479px){
     #user ul li input, #user ul li select{
-        font-size:18px;
+        font-size:15px;
+        width:55%;
     }
 }
 #user ul li i.icon-clean{

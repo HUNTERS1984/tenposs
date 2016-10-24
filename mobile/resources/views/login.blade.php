@@ -12,17 +12,17 @@
     <div id="sign-up-page">
        
         <div class="bottom-layout">
-            <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn btn-block tenposs-button bg-fb">
+            <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn tenposs-button bg-fb">
                 Facebook ではじめる</a>
                 
-            <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn btn-block tenposs-button bg-tw">
+            <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn tenposs-button bg-tw">
                 Twitter ではじめる</a>
                 
-            <a href="{{ route('login.normal') }}" class="btn btn-block tenposs-button bg-mail">
+            <a href="{{ route('login.normal') }}" class="btn tenposs-button bg-mail">
                 <i class="fa fa-facebook"></i>
                 メールアドレスではじめる</a> 
             
-            <a href="{{ route('index') }}" class="btn btn-block tenposs-button bg-transparent">
+            <a href="{{ route('index') }}" class="btn tenposs-button last bg-transparent">
                 <i class="fa fa-facebook"></i>
                 スキップ</a>
         </p>

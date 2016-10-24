@@ -37,44 +37,41 @@
                 @if(count($items_detail_data) > 0)
                     <div class="infodetail">
                         <div class="container-fluid">
-                            <p><span>ID: {{$items_detail_data->id}}</span> . <a
+                            <p><span>ID{{$items_detail_data->id}}</span> <span class="dot-middle"></span> <a
                                         href="javascrip:void(0)"> @if(array_key_exists('coupon_type',$items_detail_data))
                                         {{$items_detail_data->coupon_type->name}}
                                     @else
                                         空の入力
                                     @endif</a></p>
-                            <h3>{{$items_detail_data->title}}</h3>
+                            <h3 class="title-coupon">{{$items_detail_data->title}}</h3>
                             <span class="dateadd">有効期間: {{$items_detail_data->end_date}}</span>
                         </div>
                         <div class="form-mail">
                             <div class="input-group">
-                                <?php $ls_tag = '';?>
                                 @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
+                                    <?php $ls_tag = '';?>
                                     @foreach($items_detail_data->taglist as $item)
                                         <?php $ls_tag .= $item . ',';?>
                                     @endforeach
                                     <?php $ls_tag = rtrim($ls_tag, ",");?>
                                 @endif
-                                <input style="text-align: center;" type="text" class="form-control" id="target_copy"
-                                       value="{{$ls_tag}}"
+                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="#{{$ls_tag}}"
                                        placeholder="ハッシュタグ">
 
-                                <div class="input-group-addon" style="cursor: pointer;"><a href="javascipt:void(0)"
-                                                                                           id="copy_hashtag"
-                                                                                           data-toggle="modal"
-                                                                                           data-target="#modal-fullscreen">コピー</a>
+                                <div class="input-group-addon" style="cursor: pointer;"><a  href="javascipt:void(0)" id="copy_hashtag">コピー</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="entrydetail justify">
-                        {{$items_detail_data->description}}
+                        <div class="inner-entrydetail text-justify">
+                            <p>
+                        {{$items_detail_data->description}}</p>
+                        </div>
                     </div>
                 @else
                     <p>データなし</p>
                 @endif
-
-
             </div><!-- End container fluid -->
         </div><!-- End content -->
 
@@ -83,65 +80,29 @@
     <div id="footer">
 
     </div><!-- End footer -->
-
-    <!-- Modal fullscreen -->
-    <div class="modal modal-fullscreen fade" id="modal-fullscreen" tabindex="-1" role="dialog"
-         style="margin-top: 300px;"
-         aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div>
-
-                <div class="modal-body" style="text-align: center;">
-                    <img src="{{ url('img/icon/arrow-down.png') }}">
-                    <p style="color: #fff;">
-                        ハッシユタグをコピーしました
-                    </p>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
     @if(count($items_detail_data) > 0)
         @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
-            {{--@if(1==1)--}}
             <div id="below-content">
-                <div class="qrcode-div ">
-                    @if(array_key_exists('url_scan_qr',$items_detail_data) && $items_detail_data->url_scan_qr)
-                        <?php echo QrCode::size(250)->generate($items_detail_data->url_scan_qr);?>
-                    @else
-                        <?php echo QrCode::size(250)->generate("empty");?>
-                    @endif
-                    <div class="clearfix"></div>
-                    <hr>
-                    <h4 class="text-center intro">プロモーションコードを使用します</h4>
-                    <h4 class="text-center"> 40% OFF</h4>
-                    <div class="dropup">
-                        <button class="btn btn-default btn-block" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                            クーポンを使用します
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dLabel" id="list_staff">
-                            <li>
-                                <a>asdasd</a>
-                            </li>
-                            <li><a>dasdasd</a></li>
-                            <li><a>dasdasd</a></li>
-                            <li><a>dasdasdasd</a></li>
-                        </ul>
-                    </div>
-
-                </div>
+                <a id="apply-cupon">
+                    このクーボンを利用す
+                </a>
             </div>
         @else
-
-            <div id="below-content-disable">
-                <p>
+            <div id="below-content" class="disable">
+                <a id="apply-cupon">
                     このクーポンは使用できません
-                </p>
+                </a>
             </div>
         @endif
     @endif
+    
+    <div id="appy-cupon-success" style="display:none">
+        <div id="appy-cupon-success-inner">
+            <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
+            <p>このクーポンは使用できません</p>
+        </div>
+    </div>
+    
 @endsection
 @section('footerJS')
     <script src="{{ url('js/custom.js') }}"></script>
@@ -152,6 +113,15 @@
                 $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
             });
+            
+            $('#apply-cupon').on('click',function(){
+                $('#appy-cupon-success').show();
+            });
+            
+            $('#appy-cupon-success img').on('click',function(){
+                $('#appy-cupon-success').hide();
+            });
+            
         });
     </script>
 

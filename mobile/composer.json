@@ -10,7 +10,9 @@
         "laravel/socialite": "^2.0",
         "cosenary/instagram": "^2.3",
         "simplesoftwareio/simple-qrcode": "~1",
-        "oriceon/oauth-5-laravel": "dev-master"
+        "oriceon/oauth-5-laravel": "dev-master",
+        "laracasts/flash": "^2.0",
+        "paypal/rest-api-sdk-php": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
