@@ -105,11 +105,7 @@ h3,.h3{font-size: 28px;}
 }
 #header,#below-header{
     position: relative;
-<<<<<<< HEAD
     border-bottom: 1px solid #bfbfbf
-=======
-    border-bottom: 1px solid #bfbfbf;
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
 }
 #header img{
     position: absolute;
@@ -271,10 +267,7 @@ h3,.h3{font-size: 28px;}
         line-height: 20px;
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
 /* Contact */
 #contact ul{
     list-style: none;
@@ -451,8 +444,6 @@ h3,.h3{font-size: 28px;}
 #footer .tenposs-button{
     margin: 10px 0 40px;
 }
-<<<<<<< HEAD
-=======
 /**/
 /**/
 /*LOGIN NORMAL*/
@@ -469,22 +460,4 @@ h3,.h3{font-size: 28px;}
     color: #fff;
     width: 100%;
     padding:10px 0;
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
-
-/**/
-/*LOGIN NORMAL*/
-.form-login-normal{
-    /*padding:0 15px;*/
-    margin-top:30px;
 }
-.form-login-normal input{
-    font-size:14px;
-}
-.form-login-normal button.btn-login{
-    font-size:14px;
-    background: #14c8c8;
-    color: #fff;
-    width: 100%;
-    padding:10px 0;
-}
-

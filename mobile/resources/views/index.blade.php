@@ -95,10 +95,7 @@
                                     <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
                                 </a>
                             </div>
-<<<<<<< HEAD
-=======
 
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
                         </div>
                         <div class="info">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>

@@ -4,11 +4,7 @@
 #user ul{
     list-style: none;
     padding:0;
-<<<<<<< HEAD
     background:white;
-=======
-	background:white;
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
 }
 #user ul li{
     padding: 20px 30px;
@@ -41,14 +37,10 @@
     }
     #user ul li label.label-title-user{
         width:50%;
-<<<<<<< HEAD
         font-size:12px;
     }
     #user ul li label.avatar img{
         max-width: 50%;
-=======
-		font-size:12px;
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
     }
     #user ul li label.avatar img{
         max-width: 50%;
@@ -57,11 +49,7 @@
 #user ul li input{
     border: none;
     width: 60%;
-<<<<<<< HEAD
     outline: none;
-=======
-	outline: none;
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
 }
 #user ul li select{
     border:none;
