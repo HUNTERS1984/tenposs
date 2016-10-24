@@ -14,7 +14,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
-$app->post('/auth/login', 'Auth\AuthController@postLogin');
+$app->post('/login', 'Auth\AuthController@postLogin');
 $app->get('/token', 'Auth\AuthController@token');
 
 $app->group(['middleware' => 'jwt.auth'], function ($app) {
@@ -34,8 +34,8 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
         ];
     });
 
-    $app->get('/auth/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
-    $app->delete('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@deleteInvalidate');
+    $app->get('/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
+    $app->delete('/invalidate', 'App\Http\Controllers\Auth\AuthController@deleteInvalidate');
 
     $app->post('/set_push_key', 'App\Http\Controllers\StaffController@set_push_key');
     $app->post('/coupon_accept', 'App\Http\Controllers\StaffController@coupon_accept');
