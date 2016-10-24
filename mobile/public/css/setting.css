@@ -1,10 +1,19 @@
+html, body, .wrap{height:100%;}
+.wrap{
+    background:#f8f8fa;
+}
+#header {
+    background:#fff;
+}
 #setting ul{
     list-style: none;
     background: #fff;
     border-bottom: 1px solid #eee;
+    padding:0;
 }
 #setting ul li{
     border-bottom: 1px solid #eee;
+    padding-left:15px;
     position: relative;
     background: #fff url(../img/icon/setting-arrow.jpg) right 30px center no-repeat;
 }
@@ -14,8 +23,10 @@
 #setting ul li a{
     color: #505a5e;
     display: block;
-    height: 100px;
-    line-height: 100px;
+    padding:20px 0;
+    font-size:20px;
+
+    line-height: 24px;
 }
 @media screen and (max-width:479px){
     #setting ul li a{

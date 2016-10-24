@@ -92,8 +92,9 @@ class StaffController extends Controller
             return $this->error(1004);
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        $category_id = Input::get('category_id');
         //create key
-        $key = sprintf(Config::get('api.cache_staff'), Input::get('app_id'), Input::get('category_id'), Input::get('pageindex'), Input::get('pagesize'));
+        $key = sprintf(Config::get('api.cache_staff'), Input::get('app_id'), $category_id, Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
         //check data and return data
@@ -102,10 +103,17 @@ class StaffController extends Controller
             return $this->output($this->body);
         }
         try {
-            $total_staffs = StaffCategory::find(Input::get('category_id'))->staffs()->count();
+            if ($category_id > 0)
+                $total_staffs = StaffCategory::find($category_id)->staffs()->count();
+            else
+                $total_staffs = StaffCategory::all()->staffs()->count();
             $staffs = [];
-            if ($total_staffs > 0)
-                $staffs = StaffCategory::find(Input::get('category_id'))->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+            if ($total_staffs > 0) {
+                if ($category_id > 0)
+                    $staffs = StaffCategory::find($category_id)->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                else
+                    $staffs = StaffCategory::all()->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+            }
             for ($i = 0; $i < count($staffs); $i++) {
                 $staffs[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
             }
@@ -155,7 +163,7 @@ class StaffController extends Controller
             $staffs = Staff::where('id', Input::get('id'))->whereNull('deleted_at')->first();
             if (count($staffs) > 0 && array_key_exists('image_url', $staffs))
                 $staffs['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs['image_url']);
-            
+
         } catch (\Illuminate\Database\QueryException $e) {
             dd($e);
             return $this->error(9999);

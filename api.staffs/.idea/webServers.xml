@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ac27e711-8b6f-41c4-b90f-6dd890ba9ea5" name="htdocs" url="http://api.staffs.tenposs.local">
+        <fileTransfer port="0" mountedRoot="/Applications/XAMPP/xamppfiles/htdocs/tenpossapistaffs" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>

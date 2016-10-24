@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('headCSS')
-    <link href="{{ url('css/menu.css') }}" rel="stylesheet">
+    <link href="{{ url('css/staff.css') }}" rel="stylesheet">
 @stop
 
 @section('page')
@@ -12,21 +12,21 @@
                     background-color: #{{ $app_info->data->app_setting->header_color}};
                     ">
                 {{ $app_info->data->name }}</h1>
-            <a href="javascript:void(0)" class="h_control-nav">
-                <img src="/img/icon/h_nav.png" alt="nav"/>
+            <a href="{{URL::previous()}}" class="h_control-back">
+                <img src="/img/icon/h_back-arrow.jpg" alt="nav"/>
             </a>
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="content">
+        <div id="content" class="staff-detail-page">
             <img src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
-            <div class="container-fluid">
+            <div class="wrap-content-staff-detail">
                 <div class="info-productdetail">
                     <div class="container-fluid">
-                        <span>{{$detail->data->staffs->name}}</span>
-                        <p class="font32"><strong>{{$detail->data->staffs->name}}</strong></p>
+                        <span class="sub-staff-name">{{$detail->data->staffs->name}}</span>
+                        <p class="font32 staff-name"><strong>{{$detail->data->staffs->name}}</strong></p>
                     </div>
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-button">Buy now</a>
+                    <a href="javascript:void(0)" class="btn pad20 tenposs-button btn-buy">Buy now</a>
                 </div>
                 <div class="entry-productdetail">
                     <div class="option">
@@ -36,10 +36,12 @@
                         </ul>
                     </div>
                     <div class="content-staffDetail" id="intro">
-                        <p>{{$detail->data->staffs->introduction}}</p>
-                        @if(str_word_count($detail->data->staffs->introduction) > 40)
-                        <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
-                        @endif
+                        <div class="container-fluid">
+                            <p>{{$detail->data->staffs->introduction}}</p>
+                            @if(str_word_count($detail->data->staffs->introduction) > 40)
+                            <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
+                            @endif
+                        </div>
                     </div>
                     <div class="content-staffDetail" id="info">
                         <div class="container-fluid">

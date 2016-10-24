@@ -19,14 +19,14 @@
             color: #{{ $app_info->data->app_setting->title_color}};
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">
-            {{ Session::get('user')->profile->name }}
+            {{ Str::words(Session::get('user')->profile->name,20) }}
             <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
             保存
             </button>
         
             </h1>
-        <a href="javascript:void(0)" class="h_control-nav">
-            <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
+        <a href="{{URL::previous()}}" class="">
+            <img src="{{ url('img/icon/h_back-arrow.jpg') }}" alt="nav"/>
         </a>
         
         
@@ -44,7 +44,7 @@
                         : url('img/wall.jpg');
                     ?>
                     
-                    <label>
+                    <label class="avatar">
                     <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
@@ -86,37 +86,43 @@
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
-                    <span class="hidden-xs">Facebook</span>
-                    @if( $profile->data->user->profile->facebook_status == 1 )
-                    <a href="#" class="btn">非接続</a>
-                    @else    
-                    <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
-                       連携
-                    </a>
-                    @endif
-                    
+					<div class="wrap-ic">
+                    <span>Facebook</span>
+						@if( $profile->data->user->profile->facebook_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
+
+						   連携
+						</a>
+						@endif
+                    </div>
                 </li>
                 <li>
                     <i class="icon-twitter"></i>
-                    <span class="hidden-xs">Twitter</span>
-                    @if( $profile->data->user->profile->twitter_status == 1 )
-                    <a href="#" class="btn">非接続</a>
-                    @else    
-                    <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
-                       連携
-                    </a>
-                    @endif
+                    <span >Twitter</span>
+					<div class="wrap-ic">
+						@if( $profile->data->user->profile->twitter_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
+						   連携
+						</a>
+						@endif
+					</div>
                 </li>
                 <li>
                     <i class="icon-instagram"></i>
-                    <span class="hidden-xs">Instagram</span>
-                    @if( $profile->data->user->profile->instagram_status == 1 )
-                    <a href="#" class="btn">非接続</a>
-                    @else    
-                    <a href="{{ $instagram_login_url }}" class="btn">
-                       連携
-                    </a>
-                    @endif
+                    <span>Instagram</span>
+					<div class="wrap-ic">
+						@if( $profile->data->user->profile->instagram_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ $instagram_login_url }}" class="btn">
+						   連携
+						</a>
+						@endif
+					</div>
                 </li>
             </ul>
         </div>

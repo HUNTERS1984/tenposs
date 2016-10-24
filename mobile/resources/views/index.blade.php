@@ -58,25 +58,28 @@
             </div><!-- End recentry -->
             <div id="photogallery">
                 <h2 class="aligncenter">フォトギャラリー</h2>
-                <div class="container-fluid">
-                    <div class="row">
+                <div class="container-photo-section clearfix">
                         @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
                         <div class="item-photogallery">
-                            
-                            <a href="{{$photo->image_url}}" data-lightbox="lightbox">
-                                <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
-                            </a>
+                            <div class="crop">
+                                <div class="inner-crop">
+                                    <a href="{{$photo->image_url}}" data-lightbox="lightbox">
+                                        <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
+                                    </a>
+                                </div>
+
+                            </div>
+
                         </div>
                         @endforeach
                         @endif
-                    </div>
-                    @if( isset( $app_top->data->photos->data)
+                </div>
+                 @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                         <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
                     @endif
-                </div>
             </div><!-- End photogallery -->
             <div id="news">
                 <h2 class="aligncenter">ニュース</h2>
@@ -87,11 +90,14 @@
 
                     <div class="item-coupon imageleft clearfix">
                         <div class="image">
-                            <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
-                            <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
-                            </a>
+                            <div class="crop">
+                                <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
+                                    <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
+                                </a>
+                            </div>
+
                         </div>
-                        <div class="info clearfix">
+                        <div class="info">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
                             <!-- <h3>{{ $news->new_category_id }}</h3> -->
                             <p>{{ str_limit($news->description,100,'...') }}</p>
