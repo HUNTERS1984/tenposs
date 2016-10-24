@@ -43,15 +43,9 @@
                         ? $profile->data->user->profile->avatar_url
                         : url('img/wall.jpg');
                     ?>
-<<<<<<< HEAD
 
                     <label class="avatar">
                     <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover;"></label>
-=======
-                    
-                    <label class="avatar">
-                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
->>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
