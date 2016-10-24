@@ -2,6 +2,7 @@
 
 @section('headCSS')
     <link href="{{ url('css/photogallery.css') }}" rel="stylesheet">
+    <link href="{{ url('css/staff.css') }}" rel="stylesheet">
 @stop
 
 @section('page')
@@ -38,9 +39,8 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div><!-- End photogallery -->
-            <div id="category-detail">
+            <div id="category-detail" class="staff-page">
                 <input type="hidden" name="token" value="{{ csrf_token() }}">
-                <div class="container-fluid">
                     <!-- Slider main container -->
                     <div class="swiper-container">
                         <!-- Additional required wrapper -->
@@ -49,17 +49,21 @@
                             @if(isset($staff_detail) && count($staff_detail)>0)
                                 @foreach($staff_detail as $staff)
                                 <div class="swiper-slide">
-                                    <div class="row">
+                                    <div class="container-all-img clearfix">
                                         <div class="load-ajax">
                                             @if( $staff !== null)
                                             @foreach($staff->data->staffs as $item)
-
-                                            <div class="item-photogallery">
-                                            <input type="hidden" name="pagesize{{$item->staff_category_id}}" value="{{$pagesize}}">
-                                                <a href="{{route('staff.detail',$item->id)}}">
-                                                    <img src="{{$item->image_url}}" alt="Nakayo"/>
-                                                </a>
-                                            </div>
+                                                <div class="item-photogallery">
+                                                <input type="hidden" name="pagesize{{$item->staff_category_id}}" value="{{$pagesize}}">
+                                                    <div class="crop">
+                                                        <div class="inner-crop">
+                                                            <a href="{{route('staff.detail',$item->id)}}">
+                                                                <img src="{{$item->image_url}}" alt="Nakayo"/>
+                                                            </a>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
                                             @endforeach
                                             @endif
                                         </div>
@@ -73,7 +77,6 @@
 
                         </div>
                     </div>
-                </div><!-- End photogallery detail -->
 
             </div><!-- End container fluid -->
         </div><!-- End content -->
