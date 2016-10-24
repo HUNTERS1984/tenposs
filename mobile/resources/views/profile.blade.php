@@ -43,9 +43,15 @@
                         ? $profile->data->user->profile->avatar_url
                         : url('img/wall.jpg');
                     ?>
+<<<<<<< HEAD
 
                     <label class="avatar">
                     <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover;"></label>
+=======
+                    
+                    <label class="avatar">
+                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}" width="100px" height="100px" style="border: 2px solid #ddd; object-fit: cover;"></label> 
+>>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
@@ -86,6 +92,7 @@
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
+<<<<<<< HEAD
                     <div class="wrap-ic">
                         <span >Facebook</span>
                         @if( $profile->data->user->profile->facebook_status == 1 )
@@ -95,10 +102,23 @@
                            連携
                         </a>
                         @endif
+=======
+					<div class="wrap-ic">
+                    <span>Facebook</span>
+						@if( $profile->data->user->profile->facebook_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
+
+						   連携
+						</a>
+						@endif
+>>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
                     </div>
                 </li>
                 <li>
                     <i class="icon-twitter"></i>
+<<<<<<< HEAD
                     <div class="wrap-ic">
                         <span >Twitter</span>
                         @if( $profile->data->user->profile->twitter_status == 1 )
@@ -124,6 +144,31 @@
                     </div>
                     
 
+=======
+                    <span >Twitter</span>
+					<div class="wrap-ic">
+						@if( $profile->data->user->profile->twitter_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
+						   連携
+						</a>
+						@endif
+					</div>
+                </li>
+                <li>
+                    <i class="icon-instagram"></i>
+                    <span>Instagram</span>
+					<div class="wrap-ic">
+						@if( $profile->data->user->profile->instagram_status == 1 )
+						<a href="#" class="btn">非接続</a>
+						@else    
+						<a href="{{ $instagram_login_url }}" class="btn">
+						   連携
+						</a>
+						@endif
+					</div>
+>>>>>>> ff900a1858b3dd33f6f4259c9a220f4d9e4a712f
                 </li>
             </ul>
         </div>

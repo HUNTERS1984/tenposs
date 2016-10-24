@@ -38,7 +38,7 @@ class ActivationService
 				 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
 				 $message->to( $user->email )
 					 //->cc()
-					 ->subject('お申し込み受付のお知らせ【TENPOSS】');
+					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
         
