@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use Illuminate\Mail\Mailer;
 use Illuminate\Mail\Message;
+use App\Models\User;
 
 class ActivationService
 {
@@ -53,7 +54,6 @@ class ActivationService
     public function activateUser($token)
     {
         $activation = $this->activationRepo->getActivationByToken($token);
-
         if ($activation === null) {
             return null;
         }

@@ -144,6 +144,7 @@ class AuthController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
+    
     public function activateUser( $token ){
         if ($user = $this->activationService->activateUser($token)) {
             auth()->login($user);
@@ -151,6 +152,7 @@ class AuthController extends Controller
         }
         abort(404);
     }
+    
     public function authenticated(Request $request, $user)
     {
         if (!$user->activated) {
