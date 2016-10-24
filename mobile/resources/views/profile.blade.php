@@ -91,7 +91,7 @@
                         @if( $profile->data->user->profile->facebook_status == 1 )
                         <a href="{{ route('social.cancel',[ 'type' => 1 ]) }}" class="btn">非接続</a>
                         @else
-                        <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
+                        <a href="{{ $url_fb }}" class="btn">
                            連携
                         </a>
                         @endif
@@ -104,7 +104,7 @@
                         @if( $profile->data->user->profile->twitter_status == 1 )
                         <a href="{{ route('social.cancel',[ 'type' => 2 ]) }}" class="btn">非接続</a>
                         @else
-                        <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
+                        <a href="{{ $url_tw }}" class="btn">
                            連携
                         </a>
                         @endif
