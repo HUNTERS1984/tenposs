@@ -89,7 +89,7 @@
                     <div class="wrap-ic">
                         <span >Facebook</span>
                         @if( $profile->data->user->profile->facebook_status == 1 )
-                        <a href="#" class="btn">非接続</a>
+                        <a href="{{ route('social.cancel',[ 'type' => 1 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn">
                            連携
@@ -102,7 +102,7 @@
                     <div class="wrap-ic">
                         <span >Twitter</span>
                         @if( $profile->data->user->profile->twitter_status == 1 )
-                        <a href="#" class="btn">非接続</a>
+                        <a href="{{ route('social.cancel',[ 'type' => 2 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn">
                            連携
@@ -115,7 +115,7 @@
                     <div class="wrap-ic">
                         <span >Instagram</span>
                         @if( $profile->data->user->profile->instagram_status == 1 )
-                        <a href="#" class="btn">非接続</a>
+                        <a href="{{ route('social.cancel',[ 'type' => 3 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ $instagram_login_url }}" class="btn">
                            連携
