@@ -110,7 +110,7 @@ Route::get('company05',function(){
 Route::get('signup',['as'=>'signup','uses'=>'Auth\AuthController@getRegister']);
 Route::post('signup',['as'=>'signup.post','uses'=>'Auth\AuthController@postRegister']);
 
-Route::get('users/authorize_email/{token}', 'Auth\AuthController@activateUser')->name('user.activate');
+Route::get('users/authorize_email/{token}', [ 'as' => 'user.activate', 'uses' => 'Auth\AuthController@activateUser']);
 
 Route::get('login',['as'=>'login','uses'=>'Auth\AuthController@getLogin']);
 Route::post('login',['as'=>'login.post','uses'=>'Auth\AuthController@postLogin']);

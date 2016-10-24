@@ -1,0 +1,9 @@
+{
+	"name": "blog",
+	"slug": "log",
+	"namespace": "Blog",
+	"version": "1.0",
+	"author": "nhienphan",
+	"license": "MIT",
+	"description": "nothing"
+}

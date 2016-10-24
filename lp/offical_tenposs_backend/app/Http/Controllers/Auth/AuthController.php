@@ -6,6 +6,7 @@ use App\Models\User;
 use Validator;
 use Auth;
 use Session;
+use cURL;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -29,13 +30,16 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
-
+    
+    protected $url_register = 'https://auth.ten-po.com/auth/register';
+    protected $url_login = 'https://auth.ten-po.com/auth/login';
+    
     /**
      * Where to redirect users after login / registration.
      *
      * @var string
      */
-    protected $redirectTo = '/top';
+    protected $redirectTo = '/admin';
 
     protected $redirectAfterLogout = '/login';
     
@@ -98,14 +102,23 @@ class AuthController extends Controller
 
         // Auth::guard($this->getGuard())->login($this->create($request->all()));
         $user = $this->create($request->all());
+        // Register to Micro Auth
+      
+        $response = cURL::post($this->url_register, 
+            [
+                'email' => $request->input('email'), 
+                'password' => $request->input('password'),
+                'role' => 'client'
+            ]
+        );
+        
+        
         try{
             $this->activationService->sendActivationMail($user);
         }
         catch (Exception $e) {
-            Session::flash('status','Please check your email to activation your account.');
-            return back();
+           
         }
-        
         Session::flash('status','Please check your email to activation your account.');
         return back();
     }
@@ -132,6 +145,20 @@ class AuthController extends Controller
         $credentials = $this->getCredentials($request);
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+            $response = cURL::post($this->url_login, 
+                [
+                    'email' => $request->input('email'), 
+                    'password' => $request->input('password'),
+                    'role' => 'client'
+                ]
+            );
+            
+            $response = json_decode( $response->body );
+            
+            if( $response->code == 1000 ){
+                Session::put('JWT_token', $response->data);
+            }
+            
             return $this->handleUserWasAuthenticated($request, $throttles);
         }
 
