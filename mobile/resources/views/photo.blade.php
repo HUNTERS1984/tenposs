@@ -50,15 +50,19 @@
                             @if(isset($photo_detail) && count($photo_detail) > 0)
                                 @foreach($photo_detail as $photo)
                                 <div class="swiper-slide">
-                                    <div class="row">
+                                    <div class="wrap-photo-content">
                                         <div class="load-ajax">
                                             @if( $photo !== null)
                                                 @foreach($photo->data->photos as $item)
                                                 <div class="item-photogallery">
                                                     <input type="hidden" name="pagesize{{$item->photo_category_id}}" value="{{$pagesize}}">
-                                                    <a href="{{$item->image_url}}" data-lightbox="lightbox">
-                                                        <img src="{{$item->image_url}}" class="img-responsive" alt="Nayako"/>
-                                                    </a>
+                                                    <div class="crop">
+                                                        <div class="inner-crop">
+                                                             <a href="{{$item->image_url}}" data-lightbox="lightbox">
+                                                                <img src="{{$item->image_url}}" class="img-responsive" alt="Nayako"/>
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 @endforeach
                                             @endif
