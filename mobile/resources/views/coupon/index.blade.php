@@ -26,7 +26,7 @@
                     @foreach($items_data as $item)
                         <div class="item-coupon imageleft clearfix">
                             <div class="image">
-                                <img class="center-cropped " src="{{$item->image_url}}" alt="{{$item->title}}"/>
+                                <a href="{{ route('coupon.detail',$item->id)}}"><img class="center-cropped " src="{{$item->image_url}}" alt="{{$item->title}}"/></a>
                             </div>
                             <div class="info clearfix">
                                 <a href="{{ route('coupon.detail',$item->id)}}">
@@ -36,7 +36,7 @@
                                         空の入力
                                     @endif
                                 </a>
-                                <h3>{{$item->title}}</h3>
+                                <a href="{{ route('coupon.detail',$item->id)}}"><h3>{{$item->title}}</h3></a>
                                 <p align="justify">
                                     {{ Str::words($item->description,20,'..') }}
                                 </p>

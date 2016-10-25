@@ -95,14 +95,14 @@
             </div>
         @endif
     @endif
-    
+
     <div id="appy-cupon-success" style="display:none">
         <div id="appy-cupon-success-inner">
             <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
             <p>このクーポンは使用できません</p>
         </div>
     </div>
-    
+
 @endsection
 @section('footerJS')
     <script src="{{ url('js/custom.js') }}"></script>
@@ -113,15 +113,15 @@
                 $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
             });
-            
+
             $('#apply-cupon').on('click',function(){
                 $('#appy-cupon-success').show();
             });
-            
+
             $('#appy-cupon-success img').on('click',function(){
                 $('#appy-cupon-success').hide();
             });
-            
+
         });
     </script>
 

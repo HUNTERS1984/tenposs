@@ -210,7 +210,7 @@
 
 #myTab li.active, #myTab li:hover {
     border: 1px solid #eeeef1;
-    
+
 }
 
 #myTab li.active a, #myTab li:hover a{
@@ -256,6 +256,6 @@
 @media screen and (max-width: 479px){
     .item-product span, .item-product p {
         font-size: 14px;
-        margin: 10px 0 0px;
+        /*margin: 10px 0 0px;*/
     }
 }
