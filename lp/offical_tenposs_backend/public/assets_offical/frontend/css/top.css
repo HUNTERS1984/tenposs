@@ -1,0 +1,339 @@
+@import "../fonts/cooperb/font.css";
+@import "../fonts/HiraKakuPro-W3/font.css";
+@import "../fonts/HiraKakuPro-W6/font.css";
+@import "common.css";
+.video-section {
+    padding: 50px 0;
+    text-align: center
+}
+
+.video-section h2.title-video {
+    font-family: 'vni-cooperheavy';
+    font-size: 2.8rem;
+    color: #505050;
+    margin-top: 15px;
+    font-style: italic
+}
+
+.search-section {
+    background: url(../img/top/bg-section01.png) no-repeat;
+    background-size: cover
+}
+
+.search-section .wrap-search {
+    color: #fff
+}
+
+.search-section .wrap-search h2.title-search {
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    display: inline-block
+}
+
+@media screen and (max-width: 979px) {
+	.search-section .wrap-search h2.title-search img{
+		max-width:120px;
+	}
+    .search-section .wrap-search h2.title-search {
+        font-size: 1.4rem;
+        margin-bottom: 15px
+    }
+    .search-section .wrap-search h2.title-search span.text-mobile{
+    	display:block;
+    	padding-left:100px;
+    }
+}
+
+.search-section .wrap-search h2.title-search img {
+    display: inline-block;
+    margin-right: 10px
+}
+
+.search-section .wrap-search p.content-search {
+    font-size: 1.6rem;
+    line-height: 2.8rem;
+    letter-spacing: .1rem;
+    font-family: "HiraKakuPro-W6-AlphaNum"
+}
+
+.search-section .wrap-search .wrap-search {
+    margin-top: 50px
+}
+
+.search-section .wrap-search .wrap-search .left-form {
+    width: 67%;
+    float: left
+}
+
+@media screen and (max-width: 767px) {
+    .search-section .wrap-search .wrap-search .left-form {
+        width: 100%;
+        float: none;
+        margin-bottom: 10px
+    }
+}
+
+.search-section .wrap-search .wrap-search .right-form {
+    float: right;
+    width: 30%
+}
+
+@media screen and (max-width: 767px) {
+    .search-section .wrap-search .wrap-search .right-form {
+        width: 60%;
+        float: none;
+        margin: 0 auto
+    }
+}
+
+.search-section .wrap-search .wrap-search .right-form input.btn-search {
+    padding: 6px 15px;
+    height: 34px;
+    background: #288CDC;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center
+}
+
+.function-section h2.title-section {
+    color: #288CDC
+}
+
+.function-section .each-function {
+    margin-bottom: 50px
+}
+
+.function-section .each-function img {
+    margin: 0 auto
+}
+
+.function-section .each-function h3.title-function {
+    font-size: 1.6rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    padding: 30px 0
+}
+
+@media screen and (max-width:767px) {
+    .function-section .each-function h3.title-function {
+        text-align: center
+    }
+}
+
+.function-section .each-function p.content {
+    font-size: 1.4rem;
+    line-height: 2.4rem;
+    letter-spacing: .1rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868
+}
+
+.function-section .btn-me {
+    color: #fff
+}
+
+.img-section h3.title-section {
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    font-size: 2.2rem;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 50px;
+    line-height: 3.8rem;
+    letter-spacing: .2rem
+}
+
+.img-section h3.title-section span {
+    color: #0AF0C8
+}
+
+@media screen and (max-width: 979px) {
+    .img-section h3.title-section {
+        font-size: 1.8rem
+    }
+}
+
+@media screen and (max-width:767px) {
+    .img-section {
+        padding: 60px 15px
+    }
+    .img-section h3.title-section {
+        font-size: 1.4rem;
+        line-height:2.5rem;
+    }
+}
+
+.img-section img {
+    margin: 0 auto
+}
+
+.testimonial-section h2.title-section {
+    color: #288CDC
+}
+
+.testimonial-section .wrap-top-testi {
+    margin-bottom: 40px
+}
+
+.testimonial-section .wrap-top-testi .wrap-img {
+    float: left;
+    width: 20%;
+    padding-top: 30px
+}
+
+.testimonial-section .wrap-top-testi .wrap-img img {
+    margin: 0 auto
+}
+
+.testimonial-section .wrap-top-testi .wrap-text {
+    float: right;
+    width: 80%;
+    padding-left: 50px;
+    position: relative
+}
+
+.testimonial-section .wrap-top-testi .wrap-text span.line {
+    display: block;
+    width: 2px;
+    position: absolute;
+    height: 100%;
+    background: #686868;
+    top: 0;
+    left: 10px
+}
+
+@media screen and (max-width:767px) {
+    .testimonial-section .wrap-top-testi .wrap-img {
+        width: 100%;
+        float: none;
+        padding-top: 0;
+        margin-bottom: 20px
+    }
+    .testimonial-section .wrap-top-testi .wrap-text {
+        float: none;
+        width: 100%;
+        padding-left: 0;
+        padding-top: 10px
+    }
+    .testimonial-section .wrap-top-testi .wrap-text span.line {
+        width: 100%;
+        height: 2px;
+        left: 0;
+        top: 0
+    }
+}
+
+.testimonial-section .wrap-top-testi .wrap-text span.line:after,
+.testimonial-section .wrap-top-testi .wrap-text span.line:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    border: solid transparent;
+    width: 0;
+    height: 0
+}
+
+.testimonial-section .wrap-top-testi .wrap-text span.line:before {
+    border-width: 8px;
+    margin-top: -8px;
+    border-right-color: #505050
+}
+
+.testimonial-section .wrap-top-testi .wrap-text span.line:after {
+    border-right-color: #fff;
+    border-width: 6px;
+    margin-top: -6px
+}
+
+@media screen and (max-width:767px) {
+    .testimonial-section .wrap-top-testi .wrap-text span.line:after,
+    .testimonial-section .wrap-top-testi .wrap-text span.line:before {
+        top: auto;
+        right: auto;
+        left: 50%;
+        bottom: 99%
+    }
+    .testimonial-section .wrap-top-testi .wrap-text span.line:before {
+        border-width: 6px;
+        margin-left: -6px;
+        border-bottom-color: #fff
+    }
+    .testimonial-section .wrap-top-testi .wrap-text span.line:after {
+        border-bottom-color: #505050;
+        border-width: 8px;
+        margin-left: -8px
+    }
+}
+
+.testimonial-section .wrap-top-testi .wrap-text p {
+    color: #686868;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    font-size: 1.2rem
+}
+
+.testimonial-section .wrap-top-testi .wrap-text p.content {
+    margin-bottom: 15px;
+    line-height: 2.1rem;
+    letter-spacing: .1rem
+}
+
+.testimonial-section .wrap-top-testi .wrap-text p.sub {
+    color: #505050
+}
+
+.testimonial-section .wrap-top-testi .wrap-text p.sub span {
+    color: #288CDC
+}
+
+.testimonial-section .wrap-top-testi .wrap-text a {
+    color: #288CDC;
+    display: block
+}
+
+.testimonial-section .wrap-img-mobile img {
+    margin: 0 auto 30px
+}
+
+.testimonial-section .wrap-bottom-testi .each-testi {
+    margin-bottom: 20px
+}
+
+.testimonial-section .wrap-bottom-testi .each-testi p.title-testi {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    margin-bottom: 15px
+}
+
+.testimonial-section .wrap-bottom-testi .each-testi p.title-testi span {
+    color: #288CDC;
+    font-weight: 600
+}
+
+.testimonial-section .wrap-bottom-testi .each-testi p {
+    font-size: 1.2rem;
+    line-height: 2.1rem;
+    letter-spacing: .1rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868
+}
+
+.testimonial-section .carousel-control {
+    background: none
+}
+
+@media screen and (max-width: 767px) {
+    .testimonial-section .carousel-control img {
+        position: absolute;
+        top: 50%
+    }
+    .testimonial-section .carousel-control.left img {
+        left: 10px
+    }
+    .testimonial-section .carousel-control.right img {
+        right: 10px
+    }
+}

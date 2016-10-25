@@ -1,0 +1,192 @@
+@import url(../fonts/cooperb/font.css);
+@import url(../fonts/HiraKakuPro-W3/font.css);
+@import url(../fonts/HiraKakuPro-W6/font.css);
+@import url(common.css);
+
+#company {
+  background-image: url("../img/company/company-banner-02.png"); }
+
+.company-section .content-section .wrap-tab {
+  margin-bottom: 50px; }
+  .company-section .content-section .wrap-tab ul.tab-company {
+    text-align: center; }
+    .company-section .content-section .wrap-tab ul.tab-company li {
+      display: inline-block; }
+      .company-section .content-section .wrap-tab ul.tab-company li a {
+        display: block;
+        color: #288CDC;
+        background: #F5F5F5;
+        font-size: 1.4rem;
+        font-family: "HiraKakuPro-W6-AlphaNum";
+        padding: 12px 22px;
+        border-radius: 4px; }
+      .company-section .content-section .wrap-tab ul.tab-company li:hover a, .company-section .content-section .wrap-tab ul.tab-company li.active a {
+        background: #288CDC;
+        color: white; }
+
+.company-section .content-section .block-company {
+  padding: 15px 0;
+  border-bottom: 1px solid #0AF0C8; }
+  .company-section .content-section .block-company.last {
+    border-bottom: none; }
+  .company-section .content-section .block-company p.text-company {
+    font-size: 1.4rem;
+    color: #686868;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    padding-left: 3rem; }
+
+.company-section.company02 h3.title-company, .company-section.company03 h3.title-company {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 25px;
+  text-align: center; }
+
+.company-section.company02 .wrap-top, .company-section.company03 .wrap-top {
+  margin-bottom: 100px; }
+  .company-section.company02 .wrap-top h3.title-company, .company-section.company03 .wrap-top h3.title-company {
+    margin-bottom: 40px; }
+  .company-section.company02 .wrap-top p.sub-title, .company-section.company03 .wrap-top p.sub-title {
+    font-size: 2rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    margin-bottom: 25px;
+    text-align: center; }
+  .company-section.company02 .wrap-top p.content, .company-section.company03 .wrap-top p.content {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868; }
+  .company-section.company02 .wrap-top .wrap-content-company03 p, .company-section.company03 .wrap-top .wrap-content-company03 p {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868;
+    margin-bottom: 20px; }
+
+.company-section.company02 .wrap-articles h3.title-article, .company-section.company03 .wrap-articles h3.title-article {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #505050;
+  margin-bottom: 20px; }
+
+.company-section.company02 .wrap-articles .wrap-article p.sub-title, .company-section.company03 .wrap-articles .wrap-article p.sub-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #505050; }
+
+.company-section.company02 .wrap-articles .wrap-article p, .company-section.company03 .wrap-articles .wrap-article p {
+  font-size: 1.4rem;
+  font-family: "HiraKakuPro-W3-AlphaNum";
+  color: #686868;
+  margin-bottom: 15px; }
+
+.company-section.company04 h3.title-company {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 70px;
+  text-align: center; }
+
+.company-section.company04 div.container-img img {
+  margin: 0 auto; }
+
+.company-section.company04 div.each-company {
+  padding: 0 20px;
+  text-align: center;
+  margin-bottom: 20px; }
+  .company-section.company04 div.each-company img {
+    margin: 0 auto 10px; }
+  .company-section.company04 div.each-company h3.name {
+    font-size: 1.6rem;
+    line-height: 2.8rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #505050;
+    margin-bottom: 10px; }
+  .company-section.company04 div.each-company p.desc {
+    font-size: 1.4rem;
+    font-family: "HiraKakuPro-W3-AlphaNum";
+    color: #686868; }
+    .company-section.company04 div.each-company p.desc a {
+      color: #686868; }
+  .company-section.company04 div.each-company.join-us img {
+    margin: 0 auto 30px; }
+
+.company-section.company05 .wrap-top {
+  margin-bottom: 20px; }
+  .company-section.company05 .wrap-top h3.title-company {
+    font-size: 1.8rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #288CDC;
+    margin-bottom: 20px;
+    text-align: center; }
+  .company-section.company05 .wrap-top .container-bg {
+    background: url("../img/company/sub/company-sub-07.png") no-repeat;
+    background-size: cover;
+    display: table;
+    height: 240px; }
+    .company-section.company05 .wrap-top .container-bg .is-table-cell {
+      vertical-align: middle;
+      display: table-cell; }
+    .company-section.company05 .wrap-top .container-bg p {
+      font-size: 1.6rem;
+      font-family: "HiraKakuPro-W6-AlphaNum";
+      text-align: center;
+      color: #686868; }
+
+.company-section.company05 .howto {
+  margin-bottom: 80px; }
+  .company-section.company05 .howto h3.title-howto {
+    font-size: 1.8rem;
+    font-family: "HiraKakuPro-W6-AlphaNum";
+    color: #288CDC;
+    margin-bottom: 50px;
+    text-align: center; }
+  .company-section.company05 .howto img {
+    margin: 0 auto; }
+
+.company-section.company05 .wrap-logo h3.title-logo {
+  font-size: 1.8rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #288CDC;
+  margin-bottom: 20px;
+  text-align: center; }
+
+.company-section.company05 .wrap-logo p.sub-logo {
+  font-size: 1.6rem;
+  font-family: "HiraKakuPro-W6-AlphaNum";
+  color: #505050;
+  text-align: center; }
+
+.company-section.company05 .wrap-logo .container-logo {
+  margin-top: 20px; }
+  .company-section.company05 .wrap-logo .container-logo .left {
+    width: 49%;
+    float: left; }
+  .company-section.company05 .wrap-logo .container-logo .right {
+    width: 49%;
+    float: right; }
+  .company-section.company05 .wrap-logo .container-logo img {
+    margin-bottom: 20px; }
+  .company-section.company05 .wrap-logo .container-logo a.btn-download {
+    padding: 10px 50px;
+    text-align: center;
+    color: white;
+    position: relative;
+    background: #288CDC;
+    margin-right: 10px;
+    border-radius: 4px; }
+    .company-section.company05 .wrap-logo .container-logo a.btn-download:before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 17px;
+      background: url("../img/company/sub/company-sub-05.png") no-repeat;
+      left: 10px;
+      top: 10px; }
+    .company-section.company05 .wrap-logo .container-logo a.btn-download.last {
+      margin-right: 0; }
+
+.map-section h2.title-section {
+  font-weight: 600;
+  color: #505050;
+  margin-bottom: 60px; }

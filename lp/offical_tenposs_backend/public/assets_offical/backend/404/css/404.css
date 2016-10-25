@@ -1,0 +1,29 @@
+/*
+HTML 5 Template Name: 
+File: 404 - 22 CSS
+Author: OS Templates
+Author URI: http://www.os-templates.com/
+Licence: <a href="http://www.os-templates.com/template-terms">Website Template Licence</a>
+*/
+body{
+	background:url('images/bg-404.jpg')no-repeat;
+	background-size:cover;
+}
+
+#fof{display:block; width:100%; margin:100px 0; line-height:1.6em; text-align:center;}
+#fof .hgroup{text-transform:uppercase;}
+#fof .hgroup h1{margin-bottom:25px; font-size:120px; line-height: 120px}
+#fof .hgroup h1 span{display:inline-block; padding:2px; border:1px solid #CCCCCC; overflow:hidden;}
+#fof .hgroup h1 span strong{display:inline-block; padding:10px 20px; border:1px solid #CCCCCC; font-weight:normal; background:#84b57a; color:white;}
+#fof .hgroup h2{font-size:60px; line-height: 60px; color:#c11717;}
+#fof .hgroup h2 span{display:block; font-size:30px;}
+#fof p{margin:25px 0 0 0; padding:0; font-size:20px; color:#bb581c; font-weight: 600}
+#fof p:first-child{margin-top:0;}
+a.btn{
+	padding:10px 25px;
+	border-radius:8px;
+	border:1px solid #ccc;
+	background:#e5e5e5;
+	color:#bb581c;
+	text-decoration: none !important
+}
