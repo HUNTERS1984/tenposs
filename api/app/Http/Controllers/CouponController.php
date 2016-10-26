@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\CouponType;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Utils\UrlHelper;
@@ -244,7 +245,8 @@ class CouponController extends Controller
                 ->whereAppUserId(Input::get('app_user_id'))
                 ->whereCouponId(Input::get('coupon_id'))->update(
                     ['status' => 2,
-                        'staff_id' => Input::get('staff_id')]);
+                        'staff_id' => Input::get('staff_id'),
+                        'user_use_date' => Carbon::now()]);
             if ($coupon == 0)
                 return $this->error(1014);
 
