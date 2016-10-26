@@ -84,6 +84,7 @@ class AuthController extends Controller
         $user = new User();
         $user->email = $data['email'];
         $user->password = bcrypt($data['password']);
+        $user->temporary_hash = hash('sha256', date('Y-m-d').str_random(32) );
         $user->save();
         return $user;
     }
