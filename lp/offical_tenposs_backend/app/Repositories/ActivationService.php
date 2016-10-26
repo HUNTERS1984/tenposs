@@ -37,7 +37,7 @@ class ActivationService
 			 array('user' => $user, 'url_authorize' => $url_authorize)
 			 ,function($message) use ( $user ) {
 				 $message->from( config('mail.from')['address'], config('mail.from')['name'] );
-				 $message->to( $user->email )
+				 $message->to( [$user->email, config('mail.admin_email')] )
 					 //->cc()
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   

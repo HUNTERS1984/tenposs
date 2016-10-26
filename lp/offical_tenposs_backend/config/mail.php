@@ -56,7 +56,8 @@ return [
     */
 
     'from' => ['address' => 'no-reply@ten-po.com', 'name' => 'no-reply@ten-po.com'],
-
+    
+    'admin_email' => 'hello@ten-po.com',
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol

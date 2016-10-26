@@ -68,6 +68,7 @@ class RegisterProcessController extends Controller
             $user->tel = $data['tel'];
             $user->fax = $data['fax'];
             $user->status = 2;
+            
             $user->domain_type = $data['domain_type'];
             $user->save();
            
