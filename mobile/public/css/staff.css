@@ -25,16 +25,6 @@
     -webkit-box-shadow: 1px 1px 2px #ddd;
     -moz-box-shadow: 0 2px 2px #ddd;
 }
-.item-photogallery img{
-    position:absolute;
-    width:100%;
-    height:100%;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
 @media screen and (max-width:479px){
 	.item-photogallery .crop{
 		padding:5px;

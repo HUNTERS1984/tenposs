@@ -61,7 +61,7 @@
                                                                 <img src="{{$item->image_url}}" alt="Nakayo"/>
                                                             </a>
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             @endforeach

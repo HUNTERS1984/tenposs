@@ -129,3 +129,7 @@ Route::post('password/reset',['as'=>'password.reset','uses'=>'Auth\PasswordContr
 // 	}
 // 	return "Done";
 // });
+Route::group( [ 
+    'middleware' => ['auth']], function(){
+    	Route::get('/users/register-product',['as' => 'user.register.product', 'uses' => 'RegisterProcessController@registerProduct' ] );	
+    });

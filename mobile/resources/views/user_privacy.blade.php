@@ -16,15 +16,17 @@
             color: #{{ $app_info->data->app_setting->title_color}};
             background-color: #{{ $app_info->data->app_setting->header_color}};
             ">採用情報</h1>
-        <a href="javascript:void(0)" class="h_control-nav">
-            <img src="img/icon/h_nav.png" alt="nav"/>
+        <a href="{{URL::previous()}}" class="">
+            <img src="img/icon/h_back-arrow.jpg" alt="nav"/>
         </a>
     </div>
 </div><!-- End header -->
-<div id="main">    
+<div id="main">
     <div id="content">
-        {!! $app_info->data->app_setting->user_privacy !!}
-    </div>     
+        <div class="wrap-content-config">
+            {!! $app_info->data->app_setting->user_privacy !!}
+        </div>
+    </div>
     @include('partials.sidemenu')
-</div><!-- End main -->    
+</div><!-- End main -->
 @endsection

@@ -41,7 +41,7 @@
                     <?php
                     $avatar = ($profile->data->user->profile->avatar_url != '')
                         ? $profile->data->user->profile->avatar_url
-                        : url('img/wall.jpg');
+                        : url('/img/wall.jpg');
                     ?>
 
                     <label class="avatar">
@@ -122,7 +122,7 @@
                         </a>
                         @endif
                     </div>
-                    
+
 
                 </li>
             </ul>
