@@ -175,7 +175,7 @@ class AuthController extends Controller
     public function activateUser( $token ){
         if ($user = $this->activationService->activateUser($token)) {
             auth()->login($user);
-            return redirect($this->redirectPath());
+            return redirect()->route('user.register.product');
         }
         abort(404);
     }
