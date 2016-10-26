@@ -9,10 +9,12 @@ use App\Models\User;
 use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use App\Models\UserSession;
 use App\Models\AppUser;
@@ -25,6 +27,7 @@ use Mail;
 use App\Address;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
@@ -833,6 +836,46 @@ class AppUserController extends Controller
 
         return $this->output($this->body);
 
+    }
+
+    public function create_virtual_host()
+    {
+
+        $check_items = array('domain', 'domain_type', 'time', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //validate sig
+        $check_sig_items = Config::get('api.sig_create_virtual_host');
+
+        $ret_sig = $this->validate_sig($check_sig_items, Config::get('api.secret_key_for_domain'));
+        if ($ret_sig)
+            return $ret_sig;
+        $domain = '';
+        if (Input::get('domain_type') == 'main')
+            $domain = Input::get('domain');
+        else if (Input::get('domain_type') == 'sub')
+            $domain = Input::get('domain') . '.ten-po.com';
+        if (!empty($domain)) {
+            try {
+                $source_file = public_path('assets/template/apache-host.txt'); // upload path
+                $template = file_get_contents($source_file);
+                $template = str_replace("#domain#", $domain, $template);
+                $dest_file = Config::get('api.path_host_apache_site_available');
+                $newFile = fopen($dest_file . $domain . '.conf', 'w');
+                fwrite($newFile, $template);
+                fclose($newFile);
+            } catch (FileNotFoundException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            } catch (FileException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(1019);
+        }
+        return $this->output($this->body);
     }
 
 }
