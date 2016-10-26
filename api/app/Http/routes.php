@@ -44,6 +44,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
     Route::get('get_data_web_notification', 'AppUserController@get_data_web_notification');
     Route::get('delete_data_web_notification', 'AppUserController@delete_data_web_notification');
     Route::get('share_get_code', 'AppUserController@share_get_code');
+    Route::post('create_virtual_host', 'AppUserController@create_virtual_host');
     // User
     Route::resource('user', 'UserController');
 

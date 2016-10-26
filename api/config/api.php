@@ -29,7 +29,7 @@ return [
     'sig_social_profile' => array('token', 'social_type', 'social_id', 'social_token', 'social_secret', 'nickname', 'time'),
     'sig_staff_category' => array('app_id', 'time', 'store_id'),
     'sig_staffs' => array('app_id', 'time', 'category_id'),
-    'sig_staff_detail' => array('app_id','time', 'id'),
+    'sig_staff_detail' => array('app_id', 'time', 'id'),
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain', 'time'),
@@ -41,6 +41,7 @@ return [
     'sig_coupon_use' => array('token', 'time', 'app_user_id', 'coupon_id', 'staff_id'),
     'sig_share_get_code' => array('app_id', 'time'),
     'sig_social_profile_cancel' => array('token', 'social_type', 'time'),
+    'sig_create_virtual_host' => array('domain', 'domain_type', 'time'),
 
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
@@ -78,4 +79,6 @@ return [
     'secret_key_for_domain' => 'Tenposs@123',
     'secret_key_coupon_use' => 'ASDFghjkl@12345A',
     'url_open_coupon_code' => 'https://ten-po.com/coupon/use/code/%s/%s/%s/%s',
+
+    'path_host_apache_site_available' => '/etc/apache2/sites-available/'
 ];

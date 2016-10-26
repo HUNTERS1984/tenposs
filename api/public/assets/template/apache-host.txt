@@ -1,0 +1,16 @@
+<VirtualHost *:443>
+    ServerName #domain#
+    SSLEngine On
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/tenposs/mobile/public
+    SSLCertificateFile /etc/apache2/ssl/ten-po.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/ten-po.key
+    SSLCACertificateFile /etc/apache2/ssl/ten-po-ca.crt
+
+    <Directory /var/www/html>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error_#domain#.log
+    CustomLog ${APACHE_LOG_DIR}/access_#domain#.log combined
+</VirtualHost>

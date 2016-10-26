@@ -473,3 +473,9 @@ h3,.h3{font-size: 28px;}
     width: 100%;
     padding:10px 0;
 }
+
+/*USER PAGE*/
+.wrap-content-config{
+    padding:10px 15px;
+    font-size:18px;
+}
