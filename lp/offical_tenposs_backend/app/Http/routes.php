@@ -132,4 +132,7 @@ Route::post('password/reset',['as'=>'password.reset','uses'=>'Auth\PasswordContr
 Route::group( [ 
     'middleware' => ['auth']], function(){
     	Route::get('/users/register-product',['as' => 'user.register.product', 'uses' => 'RegisterProcessController@registerProduct' ] );	
+    	Route::post('/users/register-product',['as' => 'user.register.product.post', 'uses' => 'RegisterProcessController@registerProductPost' ] );	
+    	Route::get('/users/get-shop-info',['as' => 'user.getshopinfo', 'uses' => 'RegisterProcessController@getShopInfo' ] );
+    	
     });

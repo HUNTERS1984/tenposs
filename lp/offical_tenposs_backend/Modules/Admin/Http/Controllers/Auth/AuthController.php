@@ -41,9 +41,7 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return Users::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+           
             'business_type'=>$data['business_type'],
             'business_type'=>$data['business_type'],
             'app_name_register'=>$data['app_name_register'],
@@ -52,7 +50,9 @@ class AuthController extends Controller
             'tel'=>$data['tel'],
             'fax'=>$data['fax'],
 			'status' => 2,
-			'domain_type'=>$data['domain_type']
+			'domain_type'=>$data['domain_type'],
+			
+			
         ]);
 //		Auth::logout();
 //		return view('admin::pages.auth.waiting');
