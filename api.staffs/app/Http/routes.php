@@ -39,4 +39,5 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 
     $app->post('/set_push_key', 'App\Http\Controllers\StaffController@set_push_key');
     $app->post('/coupon_accept', 'App\Http\Controllers\StaffController@coupon_accept');
+    $app->get('/list_user_request', 'App\Http\Controllers\StaffController@list_user_request');
 });

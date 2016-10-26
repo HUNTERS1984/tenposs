@@ -42,6 +42,7 @@ class Controller extends BaseController
         '10018' => 'could_not_create_token',
         '10010' => 'The token is invalid',
         '10011' => 'Token is no longer valid because it has expired.',
+        '10012' => 'Token exception.',
         '11002' => 'Token not provided',
     );
     protected $body = array(
