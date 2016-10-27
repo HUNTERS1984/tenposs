@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Validator;
-use Auth;
 use Goutte\Client;
+use App\Models\UserInfos;
 
 class RegisterProcessController extends Controller
 {
@@ -15,25 +15,30 @@ class RegisterProcessController extends Controller
     
     
     public function __construct(){
-        
+       
     }
     
     public function dashboard(Request $request){
         
-        $token = 1;
-        $active = false;
-        
-        if( $active ){
-            $step2 = ['status' => 'panel-success', 'active' => ''];
-            $step3 = ['status' => 'panel-primary', 'active' => 'in'];
-            $step4 = ['status' => 'panel-primary', 'active' => ''];
-        }else{
-            $step2 = ['status' => 'panel-primary', 'active' => 'in'];
-            $step3 = ['status' => 'panel-primary', 'active' => ''];
-            $step4 = ['status' => 'panel-primary', 'active' => ''];
-        }
-      
        
+        $userInfos = UserInfos::find($request->user['sub']);
+        $step2 = ['status' => 'panel-success', 'active' => ''];
+        $step3 = ['status' => 'panel-primary', 'active' => 'in'];
+        $step4 = ['status' => 'panel-primary', 'active' => ''];
+       
+        $visibleStep3 = true;
+        $visibleStep4 = true;
+        
+        if( $userInfos ){
+            $visibleStep3 = false;
+            if( $userInfos->shop_info != '' ){
+                $visibleStep4 = false;
+            }else{
+                $step4 = ['status' => 'panel-primary', 'active' => 'in'];
+            }
+        }
+        
+
         $arrStep = [
             'step1' => ['status' => 'panel-success', 'active' => ''],
             'step2' => $step2,
@@ -42,27 +47,20 @@ class RegisterProcessController extends Controller
             
         ];
         return view('pages.registers.dashboard')
-            ->with('active', $active)
+            ->with('visibleStep3', $visibleStep3)
+            ->with('visibleStep4', $visibleStep4 )
             ->with('step', $arrStep);
         
     }
     
     public function dashboardPost(Request $request){
-        $active = false;
-        if( !$active ){
-            return back()
-                ->with('status','アクティブにするためにあなたの電子メールをチェックしてください。');
-        } 
-         
-        
-        $data = $request->all();
         
         if( !$request->has('shop_info') ){
             
-            $validator = Validator::make(  $data , [
+            $validator = Validator::make(  $request->all()  , [
                 'business_type'=>'required',
-                'app_name_register'=>'required',
-                'domain'=>'required|unique:users',
+                'app_name_register'=>'required|max:255',
+                'domain'=>'required|unique:user_infos',
     			'domain_type'=>'required'
             ]);
             
@@ -73,23 +71,22 @@ class RegisterProcessController extends Controller
     			);
     		}
             
-            $user = Auth::user();
-            $user->business_type = $data['business_type'];
-            $user->app_name_register = $data['app_name_register'];
-            $user->domain = $data['domain'];
-            $user->company = $data['company'];
-            $user->tel = $data['tel'];
-            $user->fax = $data['fax'];
-            $user->status = 2;
-            
-            $user->domain_type = $data['domain_type'];
-            $user->save();
+            $userInfos = new UserInfos();
+            $userInfos->id = $request->user['sub'];
+            $userInfos->business_type = $request->input('business_type');
+            $userInfos->app_name_register = $request->input('app_name_register');
+            $userInfos->domain = $request->input('domain');
+            $userInfos->company = $request->input('company');
+            $userInfos->tel = $request->input('tel');
+            $userInfos->fax = $request->input('fax');
+            $userInfos->domain_type = $request->input('domain_type');
+            $userInfos->save();
            
             return back()
                 ->with('status','Register product success!');
         }else{
             
-            $validator = Validator::make(  $data , [
+            $validator = Validator::make(  $request->all() , [
                 'shop_info'=>'required|active_url',
             ]);
             
@@ -99,9 +96,9 @@ class RegisterProcessController extends Controller
     				$request, $validator
     			);
     		}
-            $user = Auth::user();
-            $user->shop_info = $data['shop_info'];
-            $user->save();
+            $userInfos = UserInfos::find($request->user['sub']);
+            $userInfos->shop_info = $request->input('shop_info');
+            $userInfos->save();
                 
             return back()
                 ->with('status','Add shop info success!');

@@ -71,21 +71,16 @@
 						    </div>
 						    <div id="collapseTwo" class="panel-collapse collapse {{ $step['step2']['active'] }}" role="tabpanel" aria-labelledby="headingTwo">
 						      <div class="panel-body">
-						        @if( !$active )
+						       
 						        	<p>認証用のURLを記載したメールを送信しておりますので、記載されたURLにアクセスしメール認証を完了してください。 認証用のURLの再送信は、以下のボタンより行ってください。</p>
 						       		<p class="text-center">
 						       			<a href="#">承認用メールを再送信する</a>
 						       		</p>
-						       		
-						        @else
-						        	<p class="text-center">
-						       			アカウントアクティブ化
-						       		</p>
-						        @endif
+
 						      </div>
 						    </div>
 						  </div>
-						  
+						  @if( $visibleStep3 )
 						  <div class="panel {{ $step['step3']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingThree">
 						      <h4 class="panel-title">
@@ -169,7 +164,9 @@
 						      </div>
 						    </div>
 						  </div>
+						  @endif
 						  
+						  @if( $visibleStep4 )
 						  <div class="panel {{ $step['step4']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingFour">
 						      <h4 class="panel-title">
@@ -199,6 +196,7 @@
 						      </div>
 						    </div>
 						</div>
+						  @endif
 					</div>	
 				</div>
 			</div>

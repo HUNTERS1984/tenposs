@@ -11,8 +11,7 @@ use Auth;
 use Session;
 use cURL;
 use Mail;
-use Tymon\JWTAuth\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+
 
 class UserController extends Controller
 {
@@ -22,8 +21,8 @@ class UserController extends Controller
     protected $url_register = 'https://auth.ten-po.com/auth/register';
     protected $url_login = 'https://auth.ten-po.com/auth/login';
     
-    public function __construct(JWTAuth $auth){
-        $this->jwt_auth = $auth;
+    public function __construct(){
+        
     }
     
     public function getLogin(){
@@ -55,17 +54,15 @@ class UserController extends Controller
         
         if( $response->code == 1000 ){
             Session::put('jwt_token',$response->data);
-            //$user = $this->jwt_auth->authenticate($response->data);
-            //dd($user);
             return redirect()->route('user.dashboard');
         }
-        
+
         return back()->withErrors('ログインに失敗しました');
  
     }
     
     public function logout(){
-        Session::forget('user');
+        Session::forget('jwt_token');
         return redirect('/');
     }
     
@@ -76,13 +73,10 @@ class UserController extends Controller
     
     public function postRegister(Request $request)
     {
-        
-        
+
         $validator = Validator::make( $request->all() , [
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255',
             'password' => 'required|min:6|confirmed',
-            //'password_confirmation' => 'required|min:6|confirmed',
-            //'agreement' => 'required',
         ]);
 
 
@@ -103,15 +97,12 @@ class UserController extends Controller
         $response = json_decode( $response->body );
         
         if( $response->code == 1000 ){
+            Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
         }
-        
+        return back()->withErrors('登録できません!');
+        /*
         $url_authorize = '';
-        if( $response->code == 1000 ){
-            $url_authorize = route('user.activate', $response->data );
-        }
-
-        // Send email verifined
         Mail::send('emails.register',
 			 array( 'url_authorize' => $url_authorize)
 			 ,function($message) use ( $request ) {
@@ -121,7 +112,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-               
+        */       
         
     }
     
