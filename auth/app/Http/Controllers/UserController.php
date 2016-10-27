@@ -139,5 +139,29 @@ class UserController extends Controller{
         }
         
     }
+
+
+    public function activate(Request $request){
+        $user = JWTAuth::toUser();
+
+        if (!$user)
+            return $this->error(1004);
+
+        if ($user->isRole('admin')) {
+            $user = User::whereEmail(Input::get('email'))->first();
+            if ($user)
+            {
+                $user->active = 1;
+                $user->save();
+                return $this->output($this->body);
+            } else {
+                return $this->error(1004); 
+            }
+            
+        } else {
+            return $this->error(9997);
+        }
+        
+    }
   
 }

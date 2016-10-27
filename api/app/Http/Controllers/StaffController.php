@@ -93,6 +93,7 @@ class StaffController extends Controller
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         $category_id = Input::get('category_id');
+
         //create key
         $key = sprintf(Config::get('api.cache_staff'), Input::get('app_id'), $category_id, Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
@@ -105,14 +106,15 @@ class StaffController extends Controller
         try {
             if ($category_id > 0)
                 $total_staffs = StaffCategory::find($category_id)->staffs()->count();
-            else
-                $total_staffs = StaffCategory::all()->staffs()->count();
+            else {
+                $total_staffs = \Illuminate\Support\Facades\DB::table('staffs')->whereNull('deleted_at')->count();
+            }
             $staffs = [];
             if ($total_staffs > 0) {
                 if ($category_id > 0)
                     $staffs = StaffCategory::find($category_id)->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                 else
-                    $staffs = StaffCategory::all()->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $staffs = Staff::whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
             }
             for ($i = 0; $i < count($staffs); $i++) {
                 $staffs[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
