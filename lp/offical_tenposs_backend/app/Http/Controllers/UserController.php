@@ -90,6 +90,8 @@ class UserController extends Controller
             ]
         );
         
+        $response = json_decode( $response->body );
+        
         if( $response->code == 1000 ){
             return redirect()->route('user.dashboard');
         }
