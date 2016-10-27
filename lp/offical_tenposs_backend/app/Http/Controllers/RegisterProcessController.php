@@ -15,33 +15,46 @@ class RegisterProcessController extends Controller
     
     
     public function __construct(){
-        if( Auth::user()->domain != '' ){
-            return redirect('/');
-        }
+        
     }
     
-    public function registerProduct(Request $request){
-      
+    public function dashboard(Request $request){
         
-        if( Auth::user()->domain == '' ){
+        $token = 1;
+        $active = false;
+        
+        if( $active ){
+            $step2 = ['status' => 'panel-success', 'active' => ''];
             $step3 = ['status' => 'panel-primary', 'active' => 'in'];
             $step4 = ['status' => 'panel-primary', 'active' => ''];
         }else{
-            $step3 = ['status' => 'panel-success', 'active' => ''];
-            $step4 = ['status' => 'panel-primary', 'active' => 'in'];
+            $step2 = ['status' => 'panel-primary', 'active' => 'in'];
+            $step3 = ['status' => 'panel-primary', 'active' => ''];
+            $step4 = ['status' => 'panel-primary', 'active' => ''];
         }
-        
+      
+       
         $arrStep = [
             'step1' => ['status' => 'panel-success', 'active' => ''],
-            'step2' => ['status' => 'panel-success', 'active' => ''],
+            'step2' => $step2,
             'step3' => $step3,
-            'step4' => $step4
+            'step4' => $step4,
             
         ];
-        return view('pages.registers.register_product')->with('step', $arrStep);
+        return view('pages.registers.dashboard')
+            ->with('active', $active)
+            ->with('step', $arrStep);
+        
     }
     
-    public function registerProductPost(Request $request){
+    public function dashboardPost(Request $request){
+        $active = false;
+        if( !$active ){
+            return back()
+                ->with('status','アクティブにするためにあなたの電子メールをチェックしてください。');
+        } 
+         
+        
         $data = $request->all();
         
         if( !$request->has('shop_info') ){

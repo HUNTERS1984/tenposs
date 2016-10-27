@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\App;
 use App\Models\Store;
+use Session;
+
 class Authenticate
+
 {
     /**
      * Handle an incoming request.
@@ -23,10 +26,11 @@ class Authenticate
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->guest('admin/login')->withErrors('Please login');
+                return redirect()->route('login')->withErrors('Please login');
             }
         }
-        $request->user = Auth::user();
+        $request->user = Session::get('user') ;
+        
         if ($request->user) {
             $request->app = App::whereUserId($request->user->id)->first();
             if ($request->app) {

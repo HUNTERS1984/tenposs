@@ -46,16 +46,16 @@ class UserController extends Controller
         $response = json_decode( $response->body );
         
         if( $response->code == 1000 ){
-            Session::put('JWT_token', $response->data);
+            Session::put('user', $response->data);
+            return redirect()->route('user.dashboard');
         }
         
-        
-        
-        
+        return back()->withErrors('ログインに失敗しました');
+ 
     }
     
     public function logout(){
-        Session::forget('JWT_token');
+        Session::forget('user');
         return redirect('/');
     }
     
@@ -67,9 +67,8 @@ class UserController extends Controller
     public function postRegister(Request $request)
     {
         
-        return redirect()->route('user.dashboard');
+        
         $validator = Validator::make( $request->all() , [
-            
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|min:6|confirmed',
@@ -90,6 +89,10 @@ class UserController extends Controller
                 'role' => 'client'
             ]
         );
+        
+        if( $response->code == 1000 ){
+            return redirect()->route('user.dashboard');
+        }
         
         $url_authorize = '';
         if( $response->code == 1000 ){

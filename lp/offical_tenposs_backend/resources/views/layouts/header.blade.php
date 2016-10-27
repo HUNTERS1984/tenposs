@@ -15,7 +15,7 @@
 						<li><a href="{{url('fee')}}">価格</a></li>
 						<li><a href="{{url('faq')}}">よくあるご質問</a></li>
 						<li><a href="{{url('contact')}}">お問い合わせ</a></li>
-						@if( Auth::check() )
+						@if( Session::has('user') )
 						<li><a href="{{url('logout')}}">ログアウト</a></li>
 						@else
 						<li><a href="{{url('login')}}">ログイン</a></li>
