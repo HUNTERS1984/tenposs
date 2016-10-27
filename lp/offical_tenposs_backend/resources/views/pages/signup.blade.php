@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{!! csrf_token() !!}">
 	<title>SIGNUP</title>
+	{{Html::style(asset('assets/frontend').'/css/bootstrap.min.css')}}
+	{{Html::style(asset('assets/frontend').'/css/animate.css')}}
+	{{Html::style(asset('assets/frontend').'/css/signup.css')}}
 </head>
 <body>
 	<div class="page signupLogin">
@@ -21,7 +24,7 @@
 		<div class="container-wrap-form">
 			<h2 class="title-container">さあ、はじめましょう。</h2>
 			<div class="wrap-form">
-				<form action="{{route('signup.post')}}" method="POST" class="formTenposs">
+				<form id="signup-form" action="{{route('signup.post')}}" method="POST" class="formTenposs">
 					{{Form::token()}}
 					<div class="form-group">
 						<label for="email">Eメールアドレス</label>
@@ -33,10 +36,18 @@
 					</div>
 					<div class="form-group">
 						<label for="confirmed_password">パスワード （確認用）</label>
-						<input type="password" class="form-control" name="password_confirmation" placeholder="Password">
+						<input type="password" class="form-control" name="password_confirmation" placeholder="Password Confirm">
 					</div>
+					<div class="form-group">
+						<label for="terms">
+                            <input id="terms" value="1" type="checkbox" class="" name="terms">
+                            <a href="#" data-toggle="modal" data-target="#agreement-modal">規約と条件</a>
+                        </label>
+                        <label for="" id="terms-msg" class="text-danger"></label>
+					</div>
+					
 					<div class="form-group text-center form-group-btn">
-						<input type="submit" name="submit" class="form-control btn-submit btn-xanhduong" value="次へ">
+						<input id="submit" type="submit" class="form-control btn-submit btn-xanhduong" value="次へ">
 					</div>
 					<p class="register">もう登録されていますか?　<a href="{{url('login')}}" >ログイン</a></p>
 					
@@ -46,9 +57,21 @@
 		</div>
 		<!-- END WRAP FORM -->
 	</div>
-
-	{{Html::style(asset('assets/frontend').'/css/bootstrap.min.css')}}
-	{{Html::style(asset('assets/frontend').'/css/animate.css')}}
-	{{Html::style(asset('assets/frontend').'/css/signup.css')}}
+	@include('pages.registers.agreement')
+	{{Html::script(asset('assets/frontend').'/js/jquery-1.11.2.min.js')}}
+	{{Html::script(asset('assets/frontend').'/js/bootstrap.min.js')}}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#submit').on('click', function(e){
+				var agreeBox = $('input#terms');
+			    if ( !agreeBox.is(':checked') ){
+			        $('#terms-msg').text('契約条件に同意してください');
+			        return false;
+			    }
+			})
+			 
+		})
+		
+	</script>
 </body>
 </html>

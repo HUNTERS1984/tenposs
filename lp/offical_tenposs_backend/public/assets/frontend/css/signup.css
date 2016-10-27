@@ -73,3 +73,25 @@ html, body {
     width: 20%; }
     .container-wrap-form .wrap-form-forgot .right-form .btn-submit {
       width: 100%; }
+
+
+#agreement{
+  padding: 45px;
+}
+#agreement #agree-header{
+
+}
+
+#agreement #agree-header hr{
+   width: 80%;
+   border-top: 1px solid #3c90c8;
+   margin: 30px auto 40px auto;
+}
+
+#agree-content #agree-content-inner{
+  border: 1px solid #c8d2d6;
+  background-color: #f8f8fa;
+  border-radius: 20px;
+  padding: 40px;
+  margin:  40px 0;
+}
