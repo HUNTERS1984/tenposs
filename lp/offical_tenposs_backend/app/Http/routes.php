@@ -126,7 +126,11 @@ Route::get('password/reset',['as'=>'password.reset','uses'=>'UserController@rese
 Route::post('password/reset',['as'=>'password.reset','uses'=>'UserController@resetPost']);
 
 
-Route::get('/users/dashboard',['as' => 'user.dashboard', 'uses' => 'RegisterProcessController@dashboard' ] );	
-Route::post('/users/dashboard',['as' => 'user.dashboard.post', 'uses' => 'RegisterProcessController@dashboardPost' ] );	
-Route::get('/users/get-shop-info',['as' => 'user.getshopinfo', 'uses' => 'RegisterProcessController@getShopInfo' ] );
+Route::group(['middleware' => ['web','jwt.auth.custom'] ], function(){
+	Route::get('/users/dashboard',['as' => 'user.dashboard', 'uses' => 'RegisterProcessController@dashboard' ] );	
+	Route::post('/users/dashboard',['as' => 'user.dashboard.post', 'uses' => 'RegisterProcessController@dashboardPost' ] );	
+	Route::get('/users/get-shop-info',['as' => 'user.getshopinfo', 'uses' => 'RegisterProcessController@getShopInfo' ] );
+});
+
+
 

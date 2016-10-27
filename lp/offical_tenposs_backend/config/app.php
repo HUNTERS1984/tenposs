@@ -163,7 +163,7 @@ return [
         Krucas\Notification\NotificationServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
-
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
     ],
 
     /*
@@ -219,8 +219,9 @@ return [
         'Str'      => Illuminate\Support\Str::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Module' => Caffeinated\Modules\Facades\Module::class,
-        'cURL' => anlutro\cURL\Laravel\cURL::class
-
+        'cURL' => anlutro\cURL\Laravel\cURL::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
     ],
 
 ];

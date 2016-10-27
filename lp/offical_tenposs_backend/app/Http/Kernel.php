@@ -29,7 +29,6 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
             \Krucas\Notification\Middleware\NotificationMiddleware::class,
         ],
 
@@ -51,9 +50,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Foundation\Http\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'admin' => \App\Modules\admin\Http\Middleware\RedirectIfNotAdmin::class,
-        'IsLogin' => \Modules\Admin\Http\Middleware\IsLoginMiddleware::class,
-        'IsAccess' => \Modules\Admin\Http\Middleware\IsAccessMiddleware::class,
-        'isAdmin'=> \Modules\Admin\Http\Middleware\IsAdminMiddleware::class,
+        'jwt.auth.custom' => \App\Http\Middleware\AuthJWTCustom::class,
+        'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
     ];
 }

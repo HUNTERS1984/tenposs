@@ -11,12 +11,20 @@ use Auth;
 use Session;
 use cURL;
 use Mail;
+use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserController extends Controller
 {
     //
+    protected $jwt_auth;
+    
     protected $url_register = 'https://auth.ten-po.com/auth/register';
     protected $url_login = 'https://auth.ten-po.com/auth/login';
+    
+    public function __construct(JWTAuth $auth){
+        $this->jwt_auth = $auth;
+    }
     
     public function getLogin(){
         return view('pages.login');
@@ -46,7 +54,9 @@ class UserController extends Controller
         $response = json_decode( $response->body );
         
         if( $response->code == 1000 ){
-            Session::put('user', $response->data);
+            Session::put('jwt_token',$response->data);
+            //$user = $this->jwt_auth->authenticate($response->data);
+            //dd($user);
             return redirect()->route('user.dashboard');
         }
         
