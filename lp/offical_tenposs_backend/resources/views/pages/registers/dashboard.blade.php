@@ -35,25 +35,35 @@
 				<div class="container">
 					@include('layouts.messages')
 					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						@if( $visibleStep1 )
 						  <div class="panel {{ $step['step1']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingOne">
 						      <h4 class="panel-title">
-						        <a role="button" 
+						        <a class="collapsed" 
+						        role="button" 
 						        data-toggle="collapse" 
 						        data-parent="#accordion" 
 						        href="#collapseOne" 
 						        aria-expanded="false" 
 						        aria-controls="collapseOne">
-						          テンポにようこそ
+						          TENPOSSへようこそ
 						        </a>
 						      </h4>
 						    </div>
 						    <div id="collapseOne" class="panel-collapse collapse {{ $step['step1']['active'] }}" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
-						       	テンポにようこそ
+						      	<p>
+						      			TENPOSSへようこそ！ショップ開設ありがとうございます。
+この画面ではショップをオープンするまでの道のりを案内したり、商品が売れた通知やTENPOSSからのキャンペーンのお知らせ、上手にショップを運営するためのヒント等を表示します。
+まずはショップの公開まで進めてみましょう！
+						      	</p>
+						       	<p class="text-center">
+					       			<a href="#">閉じる</a>
+					       		</p>
 						      </div>
 						    </div>
 						  </div>
+						@endif
 						  
 						  <div class="panel {{ $step['step2']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingTwo">
@@ -91,7 +101,7 @@
 						        href="#collapseThree" 
 						        aria-expanded="false" 
 						        aria-controls="collapseThree">
-						          登録製品
+						          アプリ登録
 						        </a>
 						      </h4>
 						    </div>
@@ -157,7 +167,7 @@
 					                    </div>
 					                </div>
 					                <p class="text-center">
-					                	<button type="submit" class="btn btn-primary"> Send </button>
+					                	<button type="submit" class="btn btn-primary"> 登録 </button>
 					                </p>
 					                
 						       	</form>
@@ -190,7 +200,7 @@
 					                   
 					                </div>
 						      		<p class="text-center">
-					                	<button type="submit" class="btn btn-primary"> Finish </button>
+					                	<button type="submit" class="btn btn-primary"> 完了 </button>
 					                </p>
 						      	</form>
 						      </div>

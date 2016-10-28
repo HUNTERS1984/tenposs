@@ -20,12 +20,21 @@ class RegisterProcessController extends Controller
     
     public function dashboard(Request $request){
         
-       
+        
         $userInfos = UserInfos::find($request->user['sub']);
-        $step2 = ['status' => 'panel-success', 'active' => ''];
-        $step3 = ['status' => 'panel-primary', 'active' => 'in'];
+        $step2 = ['status' => 'panel-primary', 'active' => ''];
+        $step3 = ['status' => 'panel-primary', 'active' => ''];
         $step4 = ['status' => 'panel-primary', 'active' => ''];
-       
+        
+        $visibleStep1 = true;
+        // if ($request->session()->get('welcome_registration'))
+        // {   
+        //     $visibleStep1 = false;
+        // } else {
+
+        //     $request->session()->put('welcome_registration', '1');
+        // }
+
         $visibleStep3 = true;
         $visibleStep4 = true;
         
@@ -40,13 +49,14 @@ class RegisterProcessController extends Controller
         
 
         $arrStep = [
-            'step1' => ['status' => 'panel-success', 'active' => ''],
+            'step1' => ['status' => 'panel-primary', 'active' => 'in'],
             'step2' => $step2,
             'step3' => $step3,
             'step4' => $step4,
             
         ];
         return view('pages.registers.dashboard')
+            ->with('visibleStep1', $visibleStep1 )
             ->with('visibleStep3', $visibleStep3)
             ->with('visibleStep4', $visibleStep4 )
             ->with('step', $arrStep);
