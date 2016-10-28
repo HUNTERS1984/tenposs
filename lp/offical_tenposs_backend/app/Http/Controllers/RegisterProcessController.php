@@ -67,7 +67,7 @@ class RegisterProcessController extends Controller
     public function dashboardPost(Request $request){
         
         if( !$request->exists('shop_info') ){
-            
+           
             $validator = Validator::make(  $request->all()  , [
                 'business_type'=>'required',
                 'app_name_register'=>'required|max:255',
@@ -77,9 +77,9 @@ class RegisterProcessController extends Controller
             
             if ($validator->fails())
     		{
-    			$this->throwValidationException(
-    				$request, $validator
-    			);
+    			 return back()
+                    ->withInput()
+                    ->withErrors($validator);
     		}
             
             $userInfos = new UserInfos();
@@ -103,9 +103,9 @@ class RegisterProcessController extends Controller
             
             if ($validator->fails())
     		{
-    			$this->throwValidationException(
-    				$request, $validator
-    			);
+    			 return back()
+                    ->withInput()
+                    ->withErrors($validator);
     		}
             $userInfos = UserInfos::find($request->user['sub']);
             if( !$userInfos  ){
