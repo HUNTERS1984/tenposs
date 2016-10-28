@@ -61,7 +61,7 @@ class UserController extends Controller
                     $user->attachRole($role);
             }
             return $this->error(9996);
-        else {
+        } else {
             try {
                 DB::beginTransaction();
                 $user = new User();
