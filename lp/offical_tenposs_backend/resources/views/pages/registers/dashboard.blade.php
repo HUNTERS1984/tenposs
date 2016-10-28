@@ -53,7 +53,7 @@
 						    <div id="collapseOne" class="panel-collapse collapse {{ $step['step1']['active'] }}" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
 						      	<p>
-						      			TENPOSSへようこそ！ショップ開設ありがとうございます。
+						      			TENPOSSへようこそ！ショップ開設あ	りがとうございます。
 この画面ではショップをオープンするまでの道のりを案内したり、商品が売れた通知やTENPOSSからのキャンペーンのお知らせ、上手にショップを運営するためのヒント等を表示します。
 まずはショップの公開まで進めてみましょう！
 						      	</p>
@@ -191,15 +191,18 @@
 						      		<input type="hidden" name="_token" value="{{ csrf_token() }}" >
 						      		<div class="form-group">
 					                    <label for="" class="col-sm-3 control-label">ショップへのリンク</label>
-					                    <div class="col-sm-9">
+					                    <div class="col-sm-7">
 					                        <input type="text" class="form-control" id="shop_info" name="shop_info"  value=""
-					                               placeholder="">
-					                        <label for="" class="text-muted">http://beauty.hotpepper.jp/slnH000196113/</label>       
+					                               placeholder="beauty.hotpepper.jpまたはtabelog.comのリンクを入力してください">
+					                        <label id"shop_sample" for="" class="text-muted">例えば：http://beauty.hotpepper.jp/slnH000196113/</label>     
 					                    	 <div id="crawled-info"></div>
 					                    </div>
-					                   
+					                    <div class="col-sm-2">
+					                    	<button type="button" id="btn-fetch" class="btn btn-primary"> 取得 </button>
+					                   	</div>
 					                </div>
 						      		<p class="text-center">
+						      			
 					                	<button type="submit" class="btn btn-primary"> 完了 </button>
 					                </p>
 						      	</form>
@@ -233,17 +236,18 @@
 	{{Html::script(asset('assets/frontend').'/js/jquery.viewportchecker.min.js')}}
 	<script>
 		$(document).ready(function(){
-			$('#shop_info').on('keyup',function(){
+			$('#btn-fetch').on('click',function(){
 				$.ajax({
 					url: '{{ route("user.getshopinfo") }}',
 					//dataType: 'json',
-					data: { url : $(this).val() },
+					data: { url : $('#shop_info').val() },
 					headers: {
 						 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
 					success: function(response){
 						console.log(response);
 						$('#crawled-info').html(response);
+						$('#shop_sample').html('');
 					}
 				});
 			})
