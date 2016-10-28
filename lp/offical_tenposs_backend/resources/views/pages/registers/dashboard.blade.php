@@ -65,7 +65,7 @@
 						  </div>
 						@endif
 						  
-						  <div class="panel {{ $step['step2']['status'] }}">
+					<!-- 	  <div class="panel {{ $step['step2']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingTwo">
 						      <h4 class="panel-title">
 						        <a class="collapsed" 
@@ -89,7 +89,7 @@
 
 						      </div>
 						    </div>
-						  </div>
+						  </div> -->
 						  @if( $visibleStep3 )
 						  <div class="panel {{ $step['step3']['status'] }}">
 						    <div class="panel-heading" role="tab" id="headingThree">
