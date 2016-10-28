@@ -54,29 +54,43 @@ class UserController extends Controller
             return $this->error(9999);
         }
 
-        if ($user)
-            return $this->error(9996);
-        try {
-            DB::beginTransaction();
-            $user = new User();
-            $user->email = Input::get('email');
-            $user->active = 1;
-            $user->password = app('hash')->make(Input::get('password'));
-            $user->save();
-
-            $role = Role::whereSlug(Input::get('role'))->first();
-            if ($role)
-                $user->attachRole($role);
-            else {
-                DB::rollBack();
-                return $this->error(1004);
+        if ($user) {
+            if (!$user->isRole(Input::get('role'))) {
+                $role = Role::whereSlug(Input::get('role'))->first();
+                if ($role)
+                    $user->attachRole($role);
             }
+            return $this->error(9996);
+        else {
+            try {
+                DB::beginTransaction();
+                $user = new User();
+                $user->email = Input::get('email');
+                if (Input::get('role') == 'client')
+                    $user->active = 0;
+                else
+                    $user->active = 1;
+                $user->password = app('hash')->make(Input::get('password'));
+                $user->save();
 
-            DB::commit();
-        } catch (\Illuminate\Database\QueryException $e) {
-            DB::rollBack();
-            return $this->error(9999);
+                $role = Role::whereSlug(Input::get('role'))->first();
+                if ($role)
+                    $user->attachRole($role);
+                else {
+                    DB::rollBack();
+                    return $this->error(1004);
+                }
+
+                $user->save();
+
+                DB::commit();
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollBack();
+                return $this->error(9999);
+            }
+             
         }
+           
 
         $user = User::whereEmail(Input::get('email'))->with('roles')->first();
 
@@ -90,7 +104,6 @@ class UserController extends Controller
         } else {
             return $this->error(9995);
         }
-
 
         return $this->output($this->body);
     }
