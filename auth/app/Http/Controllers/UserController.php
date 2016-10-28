@@ -59,8 +59,10 @@ class UserController extends Controller
                 $role = Role::whereSlug(Input::get('role'))->first();
                 if ($role)
                     $user->attachRole($role);
+            } else {
+                return $this->error(9996);
             }
-            return $this->error(9996);
+            
         } else {
             try {
                 DB::beginTransaction();
