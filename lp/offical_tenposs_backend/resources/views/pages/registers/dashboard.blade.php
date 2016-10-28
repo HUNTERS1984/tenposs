@@ -208,6 +208,18 @@
 						</div>
 						  @endif
 					</div>	
+					
+					@if ($visibleStepFinal)
+					<div class="alert alert-info">
+						<div class="text-center">
+							<p>この度はTenpossをお申し込みいただき、ありがとうございます。</p>
+							<p>&nbsp;</p>
+							<p>現時点ではまだお申し込み手続きが完了しておりませんので、管理者から確認する必要があります。</p>
+							<p>&nbsp;</p>
+							<p>確認にかかる時間は1日以内です</p>
+						</div>
+					</div>
+					@endif
 				</div>
 			</div>
 			<!-- END SEARCH -->

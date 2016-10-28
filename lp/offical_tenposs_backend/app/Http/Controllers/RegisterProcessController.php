@@ -38,11 +38,12 @@ class RegisterProcessController extends Controller
 
         $visibleStep3 = true;
         $visibleStep4 = true;
-        
+        $visibleStepFinal = false;
         if( $userInfos ){
             $visibleStep3 = false;
             if( $userInfos->shop_info != '' ){
                 $visibleStep4 = false;
+                $visibleStepFinal = true;
             }else{
                 $step4 = ['status' => 'panel-primary', 'active' => 'in'];
             }
@@ -60,6 +61,7 @@ class RegisterProcessController extends Controller
             ->with('visibleStep1', $visibleStep1 )
             ->with('visibleStep3', $visibleStep3)
             ->with('visibleStep4', $visibleStep4 )
+            ->with('visibleStepFinal', $visibleStepFinal )
             ->with('step', $arrStep);
         
     }
