@@ -78,7 +78,7 @@ Route::group(array('prefix' => 'admin', 'middlewareGroups' => ['web']), function
 
 Route::group(array('prefix' => 'admin',
     'middlewareGroups' => ['web'],
-    'middleware' => ['auth', 'role:admin']
+    'middleware' => ['jwt.auth.custom']
 ), function () {
 
     Route::get('/', array('as' => 'admin.home', function () {

@@ -56,6 +56,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'token' => \App\Http\Middleware\TokenVerifyMiddleware::class,
         'log.query' => \App\Http\Middleware\BeforeAnyDbQueryLog::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'jwt.auth.custom' => \App\Http\Middleware\JWTAuthCustom::class,
     ];
 }
