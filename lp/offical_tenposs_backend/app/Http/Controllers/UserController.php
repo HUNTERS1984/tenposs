@@ -101,7 +101,7 @@ class UserController extends Controller
             return redirect()->route('user.dashboard');
         }
         return back()->withErrors('登録できません!');
-        /*
+        
         $url_authorize = '';
         Mail::send('emails.register',
 			 array( 'url_authorize' => $url_authorize)
@@ -112,7 +112,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-        */       
+           
         
     }
     
