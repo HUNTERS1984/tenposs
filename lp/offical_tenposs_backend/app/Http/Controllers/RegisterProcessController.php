@@ -74,7 +74,9 @@ class RegisterProcessController extends Controller
                 'business_type'=>'required',
                 'app_name_register'=>'required|max:255',
                 'domain'=>'required|unique:user_infos',
-    			'domain_type'=>'required'
+    			'domain_type'=>'required',
+                'tel'=>'required|numeric',
+                'fax'=>'numeric'
             ]);
             
             if ($validator->fails())
@@ -129,10 +131,23 @@ class RegisterProcessController extends Controller
         if( $request->ajax() ){
             $client = new Client();
             $crawler = $client->request('GET', $request->input('url') );
-            $data = '';
-            $crawler->filter('.slnTopImgDescription > p')->each(function ($description) {
-                print $description->text();
+
+            $ret = $crawler->filter('.slnDataTbl')->each(function ($row) {
+                 $key =  $row->filter('th')->each(function ($k) {
+                    return $k->text();
+                 });
+
+                 $data = $row->filter('td')->each(function ($d) {
+                    return $d->text();
+                 });
+
+                 return array_combine($key, $data);
             });
+            echo '<table>';
+            foreach ($ret[0] as $key => $value) {
+                print '<tr><th style="width:30%">'.$key.'</th>'.'<td>'.$value.'</td></tr>';
+            }
+            echo '</table>';
             
         }
         
