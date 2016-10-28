@@ -15,7 +15,7 @@
 						<li><a href="{{url('fee')}}">価格</a></li>
 						<li><a href="{{url('faq')}}">よくあるご質問</a></li>
 						<li><a href="{{url('contact')}}">お問い合わせ</a></li>
-						@if( Session::has('user') )
+						@if( Session::has('jwt_token') )
 						<li><a href="{{url('logout')}}">ログアウト</a></li>
 						@else
 						<li><a href="{{url('login')}}">ログイン</a></li>
