@@ -65,7 +65,7 @@ class RegisterProcessController extends Controller
     
     public function dashboardPost(Request $request){
         
-        if( !$request->has('shop_info') ){
+        if( !$request->exists('shop_info') ){
             
             $validator = Validator::make(  $request->all()  , [
                 'business_type'=>'required',
@@ -95,7 +95,7 @@ class RegisterProcessController extends Controller
             return back()
                 ->with('status','Register product success!');
         }else{
-            
+          
             $validator = Validator::make(  $request->all() , [
                 'shop_info'=>'required|active_url',
             ]);
@@ -107,6 +107,11 @@ class RegisterProcessController extends Controller
     			);
     		}
             $userInfos = UserInfos::find($request->user['sub']);
+            if( !$userInfos  ){
+                return back()
+                    ->with('warning','Please completed Application registration!');
+            }
+           
             $userInfos->shop_info = $request->input('shop_info');
             $userInfos->save();
                 
