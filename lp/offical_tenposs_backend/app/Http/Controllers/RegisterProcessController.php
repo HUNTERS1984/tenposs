@@ -98,7 +98,7 @@ class RegisterProcessController extends Controller
             $userInfos->save();
            
             return back()
-                ->with('status','Register product success!');
+                ->with('status','アプリ登録は完了しました。');
         }else{
           
             $validator = Validator::make(  $request->all() , [
@@ -114,14 +114,14 @@ class RegisterProcessController extends Controller
             $userInfos = UserInfos::find($request->user['sub']);
             if( !$userInfos  ){
                 return back()
-                    ->with('warning','Please completed Application registration!');
+                    ->with('warning','アプリ登録を完了してください');
             }
            
             $userInfos->shop_info = $request->input('shop_info');
             $userInfos->save();
                 
             return back()
-                ->with('status','Add shop info success!');
+                ->with('status','ショップ情報を保存しました。');
         }
         
         
@@ -131,23 +131,47 @@ class RegisterProcessController extends Controller
         if( $request->ajax() ){
             $client = new Client();
             $crawler = $client->request('GET', $request->input('url') );
+            $parse = parse_url($request->input('url'));
+            
+            if ($parse['host'] == 'beauty.hotpepper.jp') {
+                dd($parse['host']);
+                $ret = $crawler->filter('.slnDataTbl')->each(function ($row) {
+                     $key =  $row->filter('th')->each(function ($k) {
+                        return $k->text();
+                     });
 
-            $ret = $crawler->filter('.slnDataTbl')->each(function ($row) {
-                 $key =  $row->filter('th')->each(function ($k) {
-                    return $k->text();
-                 });
+                     $data = $row->filter('td')->each(function ($d) {
+                        return $d->text();
+                     });
 
-                 $data = $row->filter('td')->each(function ($d) {
-                    return $d->text();
-                 });
+                     return array_combine($key, $data);
+                });
+                echo '<table>';
+                foreach ($ret[0] as $key => $value) {
+                    print '<tr><th style="width:35%">'.$key.'</th>'.'<td>'.$value.'</td></tr>';
+                }
+                echo '</table>';
+            } else if ($parse['host'] == 'tabelog.com') {
+                $ret = $crawler->filter('.rd-detail-info')->each(function ($row) {
+                     $key =  $row->filter('th')->each(function ($k) {
+                        return $k->text();
+                     });
 
-                 return array_combine($key, $data);
-            });
-            echo '<table>';
-            foreach ($ret[0] as $key => $value) {
-                print '<tr><th style="width:30%">'.$key.'</th>'.'<td>'.$value.'</td></tr>';
+                     $data = $row->filter('td')->each(function ($d) {
+                        return $d->text();
+                     });
+
+                     return array_combine($key, $data);
+                });
+                echo '<table>';
+                foreach ($ret[0] as $key => $value) {
+                    print '<tr><th style="width:35%">'.$key.'</th>'.'<td>'.$value.'</td></tr>';
+                }
+                echo '</table>';
+            } else {
+                echo 'このリンクをサポートしていません。';
             }
-            echo '</table>';
+            
             
         }
         
