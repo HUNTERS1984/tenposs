@@ -58,7 +58,7 @@
 まずはショップの公開まで進めてみましょう！
 						      	</p>
 						       	<p class="text-center">
-					       			<a href="#">閉じる</a>
+					       			<button onClick="window.location.reload()" class="btn btn-primary" >閉じる</button>
 					       		</p>
 						      </div>
 						    </div>
