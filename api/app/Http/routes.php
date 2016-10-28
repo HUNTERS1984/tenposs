@@ -104,13 +104,6 @@ Route::group(array('prefix' => 'admin',
 
 });
 
-Route::group(array('prefix' => 'admin',
-    'middlewareGroups' => ['web']
-), function () {
-
-    Route::get('verifined/client/{hascode}', array('as' => 'clients.verifined.registration', 'uses' => 'Admin\ClientsController@verifinedApprovedUser'));
-
-});
 
 
 

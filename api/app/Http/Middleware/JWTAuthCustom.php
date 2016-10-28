@@ -41,13 +41,11 @@ class JWTAuthCustom extends BaseMiddleware
             $user = $this->auth->getPayload( $token );
             $request->user = $user->get();
         } catch (TokenExpiredException $e) {
-            return $this->respond('tymon.jwt.expired', 'token_expired', $e->getStatusCode(), [$e]);
+            return redirect()->route('login')->withErrors('Please login');
         } catch (JWTException $e) {
-            return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
+            return redirect()->route('login')->withErrors('Please login');
         }
-
         $this->events->fire('tymon.jwt.valid', $user);
-
         return $next($request);
         
     }
