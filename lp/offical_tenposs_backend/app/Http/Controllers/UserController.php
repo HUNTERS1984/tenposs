@@ -51,7 +51,7 @@ class UserController extends Controller
         );
         
         $response = json_decode( $response->body );
-        dd($response);
+   
         if( $response->code == 1000 ){
             Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
