@@ -226,6 +226,23 @@ class UserController extends Controller
 
     }
 
+    public function approvelist(Request $request)
+    {
+        $user = JWTAuth::toUser();
+
+        if (!$user)
+            return $this->error(1004);
+
+        if ($user->isRole('admin')) {
+            $userlist = User::whereActive(0)->with('roles')->get();
+            $this->body['data'] = $userlist;
+            return $this->output($this->body);
+        } else {
+            return $this->error(9997);
+        }
+
+    }
+
 
     public function activate(Request $request)
     {
