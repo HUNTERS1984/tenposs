@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Validator;
 use Goutte\Client;
+use JWTAuth;
 use App\Models\UserInfos;
 
 class RegisterProcessController extends Controller
@@ -27,13 +28,13 @@ class RegisterProcessController extends Controller
         $step4 = ['status' => 'panel-primary', 'active' => ''];
         
         $visibleStep1 = true;
-        // if ($request->session()->get('welcome_registration'))
-        // {   
-        //     $visibleStep1 = false;
-        // } else {
+        if ($request->session()->get(JWTAuth::getPayload()->toArray()['sub'].'welcome_registration'))
+        {   
+            $visibleStep1 = false;
+        } else {
 
-        //     $request->session()->put('welcome_registration', '1');
-        // }
+            $request->session()->put(JWTAuth::getPayload()->toArray()['sub'].'welcome_registration', '1');
+        }
 
         $visibleStep3 = true;
         $visibleStep4 = true;
