@@ -134,7 +134,6 @@ class RegisterProcessController extends Controller
             $parse = parse_url($request->input('url'));
             
             if ($parse['host'] == 'beauty.hotpepper.jp') {
-                dd($parse['host']);
                 $ret = $crawler->filter('.slnDataTbl')->each(function ($row) {
                      $key =  $row->filter('th')->each(function ($k) {
                         return $k->text();
