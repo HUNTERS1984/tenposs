@@ -6,60 +6,102 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Contracts\UsersRepositoryInterface;
-use App\Repositories\Contracts\AppsRepositoryInterface;
+
 use Validator;
-use Auth;
+use cURL;
 use DB;
 use Mail;
 use Session;
 
 class ClientsController extends Controller
 {
+    protected $url_register = 'https://auth.ten-po.com/auth/register';
+    protected $url_login = 'https://auth.ten-po.com/auth/login';
+    protected $api_approvelist = 'https://auth.ten-po.com/approvelist';
     
-	protected $userRespository;
-    
-    public function __construct(UsersRepositoryInterface $ur,AppsRepositoryInterface $appRepoInterface)
+    public function __construct()
     {
-        $this->userRespository = $ur;
-        $this->appRepo = $appRepoInterface;
+        
     }
     public function index(){
-  
-        return view('admin.clients.index',['users'=>$this->userRespository->paginate(20)]);
+        // Get profile
+        $response = cURL::newRequest('get',$this->api_approvelist)
+            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+           
+        $response = $response->send();
+         
+        $response = json_decode($response->body);
+      
+        if( $response->code == 1000 ){
+            return view('admin.clients.index',['users'=> $response->data ]);
+        }
+        
+        return redirect()->route('login');
+        
     }
 
     public function login(Request $request){
         if($request->isMethod('post')){
             $rules = array(
-                'email' => 'required|email',
+                'email' => 'required|email|max:255',
                 'password' => 'required'
             );
             $v = Validator::make($request->all(),$rules);
             if( $v->fails() ){
                 return back()->withInput()->withErrors($v);
             }
-            $authData = array(
-                'email' =>  $request->input( 'email' ),
-                'password' => $request->input( 'password' ),
+            
+            $response = cURL::post($this->url_login, 
+                [
+                    'email' => $request->input('email'), 
+                    'password' => $request->input('password'),
+                    'role' => 'admin'
+                ]
             );
-            if (Auth::attempt($authData))
-            {
+            
+            $response = json_decode( $response->body );
+            if( $response->code == 1000 ){
+                Session::put('jwt_token',$response->data);
                 return redirect()->route('admin.home');
             }
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Login fail!') );
-            return back()->withInput();
+            
+            return back()->withErrors( $response->message );
+
         }
         return view('admin.login');
     }
 
     public function logout(){
-        Auth::logout();
-        return redirect()->route('admin.login');
+        Session::forget('jwt_token');
+        return redirect()->route('admin.home');
     }
 
     public function show($user_id){
-        return view('admin.clients.show',['user' => \App\Models\User::findOrFail($user_id)]);
+        
+        // Get profile
+        $response = cURL::newRequest('get',$this->api_approvelist)
+            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+           
+        $response = $response->send();
+         
+        $response = json_decode($response->body);
+      
+        if( $response->code == 1000 ){
+            
+    
+            
+            $user =  \App\Helpers\ArrayHelper::ArraySearch($response->data,'id = 40', 1  );
+            
+            dd($user);
+           
+            $user = $response->data[$user_id];
+            $apps = DB::table('apps')->where( 'apps.user_id', $user_id )->get();
+            
+            
+            return view('admin.clients.show',['user'=> $user, 'apps' => $apps  ]);
+        }
+        return redirect()->route('login');
+        
     }
 
     public function approvedUsers(){

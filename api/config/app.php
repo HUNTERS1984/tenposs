@@ -209,7 +209,7 @@ return [
         'Instagram' => Vinkla\Instagram\Facades\Instagram::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        
+        'cURL' => anlutro\cURL\Laravel\cURL::class,
         
     ],
 

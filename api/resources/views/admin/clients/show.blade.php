@@ -63,19 +63,14 @@
                             <tr>
                                 <td>Status</td>
                                 <td>
-                                    @if( $user->status == 2 )
+                                    @if( $user->active == 0 )
                                     <span class="label label-danger">Not active</span>
                                     @else
                                     <span class="label label-success">Active</span>
                                     @endif
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    Roles
-                                </td>
-                                <td>{{ $user->roles()->pluck('name') }}</td>
-                            </tr>
+                            
                             </tbody>
                         </table>
                     </div>
@@ -118,47 +113,7 @@
                         
                     </div>
                 </div>  
-                
-                 <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Roles & Permissions
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td>Role</td>
-                                <td>
-                                    @foreach ( \Spatie\Permission\Models\Role::all() as $role  )
-                                        <?php $checked = '' ?>
-                                        @foreach ( $user->roles()->pluck('id') as $id )
-                                            @if( $id ==  $role->id)
-                                                 <?php $checked = 'checked' ?>
-                                            @endif
-                                            
-                                        @endforeach
-                                        <input type="checkbox" {{ $checked }}  name="roles" value="{{ $role->id }}" > {{ $role->name }} 
-                                    @endforeach
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Permissions</td>
-                                <td>
-                                    @foreach ( \Spatie\Permission\Models\Permission::all() as $pers  )
-                                        <?php $checked = '' ?>
-                                        @foreach ( $user->permissions()->pluck('id') as $id )
-                                            @if( $id ==  $pers->id)
-                                                <?php $checked = 'checked' ?>
-                                            @endif
-                                        @endforeach
-                                        <input type="checkbox" {{ $checked }} name="permissions" value="{{ $pers->id }}" > {{ $pers->name }} 
-                                    @endforeach
-                                </td>
-                            </tr>
-                        </table>
-                        
-                    </div>
-                </div>        
-                
+
             @endif
         </div>
     </div>

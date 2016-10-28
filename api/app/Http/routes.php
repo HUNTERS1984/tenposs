@@ -85,27 +85,23 @@ Route::group(array('prefix' => 'admin',
         return view('admin.dashboard');
     }));
     Route::get('/logout', array('as' => 'admin.logout', 'uses' => 'Admin\ClientsController@logout'));
-
+    
+    // Clients
     Route::get('/clients', array('as' => 'admin.clients', 'uses' => 'Admin\ClientsController@index'));
     Route::get('/clients/{user_id}', array('as' => 'admin.clients.show', 'uses' => 'Admin\ClientsController@show'));
     Route::get('/clients/{user_id}/apps', array('as' => 'admin.clients.apps', 'uses' => 'Admin\AppsController@index'));
-    // Clients
+    Route::get('/clients/approved/list', array('as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers'));
+    Route::post('/clients/approved/process', array('as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess'));
+
+    // Clients/Apps
     Route::get('/clients/{user_id}/apps/create', array('as' => 'admin.clients.apps.create', 'uses' => 'Admin\AppsController@create'));
     Route::post('/clients/{user_id}/apps/create', array('as' => 'admin.clients.apps.store', 'uses' => 'Admin\AppsController@store'));
     Route::get('/clients/{user_id}/apps/{app_id}/edit', array('as' => 'admin.clients.apps.edit', 'uses' => 'Admin\AppsController@edit'));
     Route::post('/clients/{user_id}/apps/{app_id}/edit', array('as' => 'admin.clients.apps.update', 'uses' => 'Admin\AppsController@update'));
     Route::get('/clients/{user_id}/apps/{app_id}/delete', array('as' => 'admin.clients.apps.delete', 'uses' => 'Admin\AppsController@delete'));
-
     Route::get('/clients/{user_id}/apps/{app_id}/setting', array('as' => 'admin.clients.apps.setting', 'uses' => 'Admin\AppsController@setting'));
     Route::post('/clients/{user_id}/apps/{app_id}/upload', array('as' => 'admin.clients.apps.upload', 'uses' => 'Admin\AppsController@upload'));
     Route::post('/clients/{user_id}/apps/{app_id}/upload_web', array('as' => 'admin.clients.apps.uploadweb', 'uses' => 'Admin\AppsController@upload_web'));
-
-    Route::get('/clients/approved/list', array('as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers'));
-    Route::post('/clients/approved/process', array('as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess'));
-
-    Route::resource('roles', 'Admin\RolesController');
-    Route::resource('roles.permission', 'Admin\RolePermissionsController');
-    Route::resource('permissions', 'Admin\PermissionsController');
 
 });
 
