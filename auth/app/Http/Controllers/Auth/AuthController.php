@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Input;
 use Twitter;
 use DB;
 use Bican\Roles\Models\Role;
+use Tymon\JWTAuth\Facades\JWTFactory;
 
 class AuthController extends Controller
 {
@@ -68,7 +69,7 @@ class AuthController extends Controller
             if ($result == false) {
                 return $this->error(9998);
             }
-            $email = $result['id'].'@fb.com';
+            $email = $result['id'] . '@fb.com';
             $password = Input::get('social_token');
         } else if (Input::get('social_type') == 2) {
             $check_items = array('social_token', 'social_secret');
@@ -78,7 +79,7 @@ class AuthController extends Controller
                 return $this->error(9998);
             }
 
-            $email = $result->id.'@tw.com';
+            $email = $result->id . '@tw.com';
             $password = Input::get('social_token');
         } else {
             return $this->error(1004);
@@ -88,15 +89,14 @@ class AuthController extends Controller
         if ($ret)
             return $ret;
 
-        
+
         try {
             $user = User::where('email', $email)->first();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
 
-        if (!$user)
-        {
+        if (!$user) {
             try {
                 DB::beginTransaction();
                 $user = new User();
@@ -105,7 +105,7 @@ class AuthController extends Controller
                 $user->save();
 
                 $role = Role::whereSlug('user')->first();
-                $user->attachRole($role); 
+                $user->attachRole($role);
 
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
@@ -149,13 +149,20 @@ class AuthController extends Controller
         }
 
         $credentials = $this->getCredentials($request);
-        
+
         try {
             $user = User::whereEmail(Input::get('email'))->with('roles')->first();
-
+            if ($user->active != 1)
+                return $this->error(99950);
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug])) {
-                $this->body['data'] = $token;
+//            if ($user && $user->roles && count($user->roles) > 0) {
+////                $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug]);
+//                $customClaims = ['role' => $user->roles[0]->slug];
+//                $payload = JWTFactory::make($customClaims);
+//                $token = \Tymon\JWTAuth\Facades\JWTAuth::encode($payload);
+                $this->body['data'] = (string)$token;
+
                 return $this->output($this->body);
             } else {
                 return $this->error(9995);
@@ -165,7 +172,7 @@ class AuthController extends Controller
             return $this->error(9999);
         }
 
-        
+
     }
 
     /**

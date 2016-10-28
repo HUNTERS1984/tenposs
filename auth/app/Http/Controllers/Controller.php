@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\ResponseFactory;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 
 class Controller extends BaseController
@@ -33,6 +28,10 @@ class Controller extends BaseController
         '1011' => 'Time expire.',
         '1012' => 'Parameter sig not exist.',
         '1013' => 'Parameter sig is not valid.',
+        '99950' => 'Email have not activated.',
+        '99951' => 'Active code not exist.',
+        '99952' => 'Active code expire.',
+        '99953' => 'User not existed.',
     );
     protected $body = array(
         'code' => '1000',
