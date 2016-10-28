@@ -90,7 +90,6 @@ Route::group(array('prefix' => 'admin',
     Route::get('/clients', array('as' => 'admin.clients', 'uses' => 'Admin\ClientsController@index'));
     Route::get('/clients/{user_id}', array('as' => 'admin.clients.show', 'uses' => 'Admin\ClientsController@show'));
     Route::get('/clients/{user_id}/apps', array('as' => 'admin.clients.apps', 'uses' => 'Admin\AppsController@index'));
-    Route::get('/clients/approved/list', array('as' => 'admin.approved.users', 'uses' => 'Admin\ClientsController@approvedUsers'));
     Route::post('/clients/approved/process', array('as' => 'admin.approved.users.process', 'uses' => 'Admin\ClientsController@approvedUsersProcess'));
 
     // Clients/Apps

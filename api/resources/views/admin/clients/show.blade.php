@@ -14,7 +14,7 @@
             @include('admin.partials.message')
             @if( $user )
                 <div class="wrap-btn-content">
-                    @if( $user->status == 2)
+                    @if( $user->active == 0)
                     <a href="#" data-toggle="modal" data-target="#modal-user" class="btn-me btn-hong">Send email approved</a>
                     @else
                     <a href="#" class="btn-me btn-hong">Edit</a>
@@ -36,30 +36,32 @@
                                 <td>Email</td>
                                 <td>{{ $user->email }}</td>
                             </tr>
+                            @if( $userInfos )
                             <tr>
                                 <td>Sex</td>
-                                <td>{{ $user->sex }}</td>
+                                <td>{{ $userInfos->sex }}</td>
                             </tr>
                             <tr>
                                 <td>Birthday</td>
-                                <td>{{ $user->birthday }}</td>
+                                <td>{{ $userInfos->birthday }}</td>
                             </tr>
                             <tr>
                                 <td>Locale</td>
-                                <td>{{ $user->locale }}</td>
+                                <td>{{ $userInfos->locale }}</td>
                             </tr>
                             <tr>
                                 <td>Company</td>
-                                <td>{{ $user->companny }}</td>
+                                <td>{{ $userInfos->company }}</td>
                             </tr>
                             <tr>
                                 <td>Address</td>
-                                <td>{{ $user->address }}</td>
+                                <td>{{ $userInfos->address }}</td>
                             </tr>
                             <tr>
                                 <td>Tel</td>
-                                <td>{{ $user->tel }}</td>
+                                <td>{{ $userInfos->tel }}</td>
                             </tr>
+                            @endif
                             <tr>
                                 <td>Status</td>
                                 <td>
@@ -75,12 +77,49 @@
                         </table>
                     </div>
                 </div>   
+                
+                <div class="panel panel-info">
+                    <div class="panel-heading">Products informations</div>
+                    <div class="panel-body">
+                        <table class="table table-tripped">
+                            <tbody>
+                                @if( $userInfos )
+                                <tr>
+                                    <td>Business_type</td>
+                                    <td>{{ $userInfos->business_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td>App name register</td>
+                                    <td>{{ $userInfos->app_name_register }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Domain</td>
+                                    <td>{{ $userInfos->domain }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Domain type</td>
+                                    <td>{{ $userInfos->domain_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shop info</td>
+                                    <td>{{ $userInfos->shop_info }}</td>
+                                </tr>
+                                @else
+                                 <tr>
+                                    <td colspan="2">Null</td>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>   
+                
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         App informations
                     </div>
                     <div class="panel-body">
-                        @if( !$user->apps->isEmpty() )
+                        @if( $apps )
                         <table class="table">
                             <thead>
                                 <tr>
@@ -90,7 +129,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($user->apps as $app)
+                            @foreach($apps as $app)
                                 
                 				<tr>
                 					<td>{{ $app->name }}</td>

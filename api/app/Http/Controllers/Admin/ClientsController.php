@@ -87,31 +87,25 @@ class ClientsController extends Controller
         $response = json_decode($response->body);
       
         if( $response->code == 1000 ){
-            
-    
-            
-            $user =  \App\Helpers\ArrayHelper::ArraySearch($response->data,'id = 40', 1  );
-            
-            dd($user);
-           
-            $user = $response->data[$user_id];
-            $apps = DB::table('apps')->where( 'apps.user_id', $user_id )->get();
-            
-            
-            return view('admin.clients.show',['user'=> $user, 'apps' => $apps  ]);
+ 
+            $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $user_id );
+            $userInfos =  DB::table('user_infos')
+                ->where('id',$user_id)->first();
+                
+            $apps = DB::table('apps')
+                ->where( 'apps.user_id', $user_id )
+                ->get();
+                
+            return view('admin.clients.show',[
+                'user' => $user, 
+                'userInfos' => $userInfos, 
+                'apps' => $apps  ]);
         }
         return redirect()->route('login');
         
     }
 
-    public function approvedUsers(){
-        if( !Auth::check() ) abort(503);
-        $users = DB::table('users')
-            ->where('status',2)
-            ->where('role','')
-            ->get();
-        return view('admin.clients.approved', ['users' => $users ]);    
-    }
+   
     
     public function approvedUsersProcess(Request $request){
         $user = \App\Models\User::findOrFail( $request->input('user_id') );
