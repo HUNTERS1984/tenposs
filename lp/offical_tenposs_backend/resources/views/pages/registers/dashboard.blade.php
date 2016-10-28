@@ -167,7 +167,7 @@
 					                    </div>
 					                </div>
 					                <p class="text-center">
-					                	<button type="submit" class="btn btn-primary"> Send </button>
+					                	<button type="submit" class="btn btn-primary"> 登録 </button>
 					                </p>
 					                
 						       	</form>
@@ -200,7 +200,7 @@
 					                   
 					                </div>
 						      		<p class="text-center">
-					                	<button type="submit" class="btn btn-primary"> Finish </button>
+					                	<button type="submit" class="btn btn-primary"> 完了 </button>
 					                </p>
 						      	</form>
 						      </div>
