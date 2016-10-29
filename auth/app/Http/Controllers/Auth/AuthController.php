@@ -154,6 +154,7 @@ class AuthController extends Controller
             $user = User::whereEmail(Input::get('email'))->with('roles')->first();
             if ($user->active != 1)
                 return $this->error(99950);
+            $token1 = JWTAuth::attempt($credentials);
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug])) {
 //            if ($user && $user->roles && count($user->roles) > 0) {

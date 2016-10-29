@@ -226,7 +226,6 @@ class UserController extends Controller
 
     }
 
-
     public function activate(Request $request)
     {
         $user = JWTAuth::toUser();
