@@ -3,8 +3,7 @@
 		<img src="{{ url('adcp/images/logo.jpg') }}" class="img-responsive" alt="TenPoss">
 	</a>
 	<p class="pull-right">
-		@if( Auth::check() ) 
-			{{ Auth::user()->email }}
+		@if( Session::has('jwt_token') ) 
 			<a href="{{route('admin.logout')}}">出口</a>
 		@endif
 	</p>

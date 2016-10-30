@@ -51,13 +51,15 @@ class UserController extends Controller
         );
         
         $response = json_decode( $response->body );
-        
+   
         if( $response->code == 1000 ){
             Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
+        }else{
+            return back()->withErrors( $response->message );
         }
 
-        return back()->withErrors('ログインに失敗しました');
+        
  
     }
     
@@ -101,7 +103,7 @@ class UserController extends Controller
             return redirect()->route('user.dashboard');
         }
         return back()->withErrors('登録できません!');
-        /*
+        
         $url_authorize = '';
         Mail::send('emails.register',
 			 array( 'url_authorize' => $url_authorize)
@@ -112,7 +114,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-        */       
+           
         
     }
     

@@ -14,7 +14,7 @@
 	<div class="wrapper-content">
 		<p>&nbsp;</p>
 		<div class="clearfix">
-            <p style="margin-bottom:10px;" class="">Showing {{$users->firstItem()}}/{{$users->lastItem()}} of {{$users->total()}}results</p>
+            <p style="margin-bottom:10px;" class="">{{ count($users) }}results</p>
 			<p>
 				<span class="noted-color bg-red block-20">User not approved</span>
 			</p>
@@ -29,22 +29,18 @@
 				<tr>
 					<th>Name</th>
 					<th>Email</th>
-					<th>Fullname</th>
 					<th>Status</th>
-					<th>Tel</th>
 					<th>Function</th>
 				</tr>
 			</thead>
 			<tbody>
 				@if (count($users) > 0)
 				@foreach($users as $user)
-				<?php $class = ( $user->status == 2 ) ? 'bg-red' : '' ?>
+				<?php $class = ( $user->active == 0 ) ? 'bg-red' : '' ?>
 				<tr class="{{ $class }}">
 					<td><a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">{{ $user->name }}</a></td>
 					<td>{{ $user->email }}</td>
-					<td>{{ $user->fullname }}</td>
-					<td>{{ $user->status }}</td>
-					<td>{{ $user->tel }}</td>
+					<td>{{ $user->active }}</td>
 					<td>
 						<a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">
 							<i class="fa fa-search"></i>
@@ -63,12 +59,6 @@
 			</div>
 		</div>
 		
-		<div class="pagination pull-right">
-			<div class="clearfix">
-				{{ $users->render() }}
-			</div>
-			
-		</div>
 	</div>	<!-- wrap-content-->
 </div>
 <!-- END -->

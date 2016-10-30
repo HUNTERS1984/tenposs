@@ -158,7 +158,7 @@ return [
         Thujohn\Twitter\TwitterServiceProvider::class,
         Vinkla\Instagram\InstagramServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
     ],
 
     /*
@@ -207,6 +207,10 @@ return [
         'Input' => \Illuminate\Support\Facades\Input::class,
         'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
         'Instagram' => Vinkla\Instagram\Facades\Instagram::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'cURL' => anlutro\cURL\Laravel\cURL::class,
+        
     ],
 
 ];

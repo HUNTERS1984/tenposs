@@ -26,6 +26,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 
 
     $app->get('/userlist', 'App\Http\Controllers\UserController@userlist');
+    $app->get('/approvelist', 'App\Http\Controllers\UserController@approvelist');
     $app->get('/profile', 'App\Http\Controllers\UserController@profile');
     $app->get('/activate', 'App\Http\Controllers\UserController@activate');
     $app->get('/user', 'App\Http\Controllers\UserController@profile');

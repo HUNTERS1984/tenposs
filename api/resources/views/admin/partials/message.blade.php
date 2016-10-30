@@ -1,7 +1,13 @@
 <p>&nbsp;</p>
-@if (Session::has('message'))
-    <div class="alert {{ Session::get('message.class') }}">
-        {{ Session::get('message.detail') }}
+@if (Session::has('success'))
+    <div class="alert alert-success }}">
+        {{ Session::get('success') }}
+    </div>
+@endif
+
+@if (Session::has('danger'))
+    <div class="alert alert-danger }}">
+        {{ Session::get('danger') }}
     </div>
 @endif
 
