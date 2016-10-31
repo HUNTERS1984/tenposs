@@ -171,7 +171,6 @@ class ClientsController extends Controller
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
                         });
-                    return response()->json(['success' => true]);
                 }
                 catch(Exception $e){
 
