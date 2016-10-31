@@ -134,7 +134,7 @@ class ClientsController extends Controller
                    
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
-                dd($responseActive);
+     
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
                     
                 }else{
