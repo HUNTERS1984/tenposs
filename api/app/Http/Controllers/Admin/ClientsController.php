@@ -63,7 +63,6 @@ class ClientsController extends Controller
             );
             
             $response = json_decode( $response->body );
-            
             if( !empty($response) &&  isset($response->code) && $response->code == 1000 ){
                 Session::put('jwt_token',$response->data);
                 return redirect()->route('admin.home');
@@ -129,12 +128,16 @@ class ClientsController extends Controller
                     'email' => $user->email
                     ])
                     ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
+                   
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
-    
+              
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
-
+                    
+                }else{
+                    return response()->json(['success' => false, 'msg' => 'Try again!' ]); 
                 }
+                
                 // API create virtual hosts
                 /*
                 $requestCreateVir = cURL::post($this->api_create_vir, 
