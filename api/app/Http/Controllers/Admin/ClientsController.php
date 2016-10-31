@@ -12,6 +12,7 @@ use cURL;
 use DB;
 use Mail;
 use Session;
+use JWTAuth;
 
 class ClientsController extends Controller
 {
@@ -19,7 +20,8 @@ class ClientsController extends Controller
     protected $url_login = 'https://auth.ten-po.com/auth/login';
     protected $api_approvelist = 'https://auth.ten-po.com/approvelist';
     protected $api_active = 'https://auth.ten-po.com/activate';
-
+    protected $api_create_vir = 'https://api.ten-po.com/api/v1/create_virtual_host';
+    
     public function __construct()
     {
         
@@ -27,7 +29,7 @@ class ClientsController extends Controller
     public function index(){
         // Get profile
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
            
         $response = $response->send();
          
@@ -61,12 +63,13 @@ class ClientsController extends Controller
             );
             
             $response = json_decode( $response->body );
-            if( isset($response->code) && $response->code == 1000 ){
+            
+            if( !empty($response) &&  isset($response->code) && $response->code == 1000 ){
                 Session::put('jwt_token',$response->data);
                 return redirect()->route('admin.home');
             }
             
-            return back()->withErrors( $response->message );
+            return back()->withErrors( 'Login fail!' );
 
         }
         return view('admin.login');
@@ -80,11 +83,11 @@ class ClientsController extends Controller
     public function show($user_id){
 
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
            
         $response = $response->send();
         $response = json_decode($response->body);
-        if( isset($response->code) && $response->code == 1000 ){
+        if( !empty($response) && isset($response->code) && $response->code == 1000 ){
  
             $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $user_id );
             $userInfos =  DB::table('user_infos')
@@ -108,11 +111,11 @@ class ClientsController extends Controller
     public function approvedUsersProcess(Request $request){
         // get all users
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
 
         $response = $response->send();
         $response = json_decode($response->body);
-        if( isset($response->code) && $response->code == 1000 ){
+        if( !empty($response) && isset($response->code) && $response->code == 1000 ){
 
             $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $request->input('user_id') );
             if( $user ){
@@ -130,8 +133,23 @@ class ClientsController extends Controller
 
                 }
                 // API create virtual hosts
-
-
+                /*
+                $requestCreateVir = cURL::post($this->api_create_vir, 
+                    [
+                        'domain' => $userInfos->domain, 
+                        'domain_type' => $userInfos->domain_type,
+                        'time' => '',
+                        'sig' => ''
+                    ]
+                );
+                
+                $responseCreateVir = json_decode( $requestCreateVir->body );
+                if( $responseCreateVir->code == 1000 ){
+                    
+                }    
+                */
+    
+    
                 // Send mail to user approved
                 try{
                     $to = $user->email ;
