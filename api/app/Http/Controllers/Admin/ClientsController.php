@@ -247,11 +247,13 @@ class ClientsController extends Controller
                     'app_setting_id' => $appSetting->id,
                     'image_url' =>  'uploads/1.jpg',
                 ]);
-
+                return response()->json(['success' => true ]);
             }
+            
+            
         }
 
-        return response()->json(['success' => 'false', 'msg' => 'Try again!' ]);
+        return response()->json(['success' => false, 'msg' => 'Try again!' ]);
     }
 
 }
