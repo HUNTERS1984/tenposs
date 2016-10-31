@@ -125,10 +125,13 @@ class ClientsController extends Controller
                     ->first();
 
                 // API active user
-                $requestActive = cURL::newRequest('get',$this->api_active)
+                $requestActive = cURL::newRequest('get',$this->api_active,[
+                    'email' => $user->email
+                    ])
                     ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
+    
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
 
                 }
