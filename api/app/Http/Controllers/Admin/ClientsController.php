@@ -102,10 +102,18 @@ class ClientsController extends Controller
                 $responseUserActiveList = $requestUserActiveList->send();
                 $responseUserActiveList = json_decode($responseUserActiveList->body);
                 $user =  \App\Helpers\ArrayHelper::searchObject($responseUserActiveList->data, $user_id );
+                
+                if( !$user ){
+                    abort(503);
+                }
             }
            
             $userInfos =  DB::table('user_infos')
                 ->where('id',$user_id)->first();
+            
+            if( !$userInfos ){
+                return back()->withErrors('Cannot access, Users info not found!');
+            }    
                 
             $apps = DB::table('apps')
                 ->where( 'apps.user_id', $user_id )
