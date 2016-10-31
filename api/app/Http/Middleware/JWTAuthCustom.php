@@ -24,7 +24,7 @@ class JWTAuthCustom extends BaseMiddleware
     public function handle($request, Closure $next)
     {
         if( !Session::has('jwt_token') )
-            return redirect()->route('login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('Please login');
         // Way 1
         $request->headers->set('Authorization', 'Bearer '.Session::get('jwt_token'));
         $token = $this->auth->setRequest($request)->getToken();
@@ -34,16 +34,16 @@ class JWTAuthCustom extends BaseMiddleware
         $token = JWTAuth::getToken();
        
         if (! $token  ) {
-            return redirect()->route('login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('Please login');
         }
 
         try {
             $user = $this->auth->getPayload( $token );
             $request->user = $user->get();
         } catch (TokenExpiredException $e) {
-            return redirect()->route('login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('Please login');
         } catch (JWTException $e) {
-            return redirect()->route('login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('Please login');
         }
         $this->events->fire('tymon.jwt.valid', $user);
         return $next($request);

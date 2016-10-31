@@ -65,6 +65,8 @@ class ClientsController extends Controller
             $response = json_decode( $response->body );
             if( !empty($response) &&  isset($response->code) && $response->code == 1000 ){
                 Session::put('jwt_token',$response->data);
+                Session::put('user',$request->all());
+                
                 return redirect()->route('admin.home');
             }
             
@@ -76,6 +78,7 @@ class ClientsController extends Controller
 
     public function logout(){
         Session::forget('jwt_token');
+        Session::forget('user');
         return redirect()->route('admin.home');
     }
 
@@ -124,14 +127,14 @@ class ClientsController extends Controller
                     ->first();
 
                 // API active user
-                $requestActive = cURL::newRequest('get',$this->api_active,[
-                    'email' => $user->email
+                $requestActive = cURL::newRequest('post',$this->api_active,[
+                    'email' => Session::get('user')['email']
                     ])
                     ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
                    
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
-              
+                dd($responseActive);
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
                     
                 }else{
