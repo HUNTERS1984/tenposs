@@ -126,7 +126,7 @@ class ClientsController extends Controller
 
                 // API active user
                 $requestActive = cURL::newRequest('get',$this->api_active)
-                    ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+                    ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
