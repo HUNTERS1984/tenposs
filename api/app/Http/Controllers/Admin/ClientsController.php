@@ -161,6 +161,7 @@ class ClientsController extends Controller
     
                 // Send mail to user approved
                 try{
+                    /*
                     $to = $user->email ;
 
                     Mail::send('admin.emails.user_approved',
@@ -170,7 +171,7 @@ class ClientsController extends Controller
                             $message->to( $to )
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
-                        });
+                        });*/
                 }
                 catch(Exception $e){
 
@@ -183,13 +184,23 @@ class ClientsController extends Controller
                 $app->app_app_secret = md5(uniqid(rand(), true));
                 $app->description =  'なし';
                 $app->status = 1;
-                $app->business_type = $userInfos->business_type;
                 $app->user_id = $user->id;
+                $app->business_type = $userInfos->business_type;
+                $app->domain_type = $userInfos->domain_type;
+                $app->domain = $userInfos->domain;
                 $app->save();
 
-                // Set default app templates 1
+                // Set default app templates
+                $templates = \App\Models\Template::first();
+                if( empty( $templates ) ){
+                    $templates->name = 'Default Templates';
+                    $templates->save();
+                    
+                }
+                
+                
                 $templateDefaultID = 1;
-
+                
                 $appSetting = new \App\Models\AppSetting;
                 $appSetting->app_id = $app->id;
                 $appSetting->title = 'Default';
@@ -202,7 +213,7 @@ class ClientsController extends Controller
                 $appSetting->menu_font_color = '#5ad29f';
                 $appSetting->menu_font_size = '12';
                 $appSetting->menu_font_family = 'Tahoma';
-                $appSetting->template_id = $templateDefaultID;
+                $appSetting->template_id = $templates->id;
                 $appSetting->top_main_image_url = 'uploads/1.jpg';
                 $appSetting->save();
 
@@ -239,17 +250,18 @@ class ClientsController extends Controller
                 // Create app_stores,rel_apps_stores default
 
                 $stores_default = DB::table('app_stores')->get();
+                if( count($stores_default) > 0 ){
+                    foreach($stores_default as $store){
 
-                foreach($stores_default as $store){
-
-                    DB::table('rel_apps_stores')->insert([
-                        'app_id' => $app->id,
-                        'app_store_id' => $store->id,
-                        'version' => '1.0'
-                    ]);
-
+                        DB::table('rel_apps_stores')->insert([
+                            'app_id' => $app->id,
+                            'app_store_id' => $store->id,
+                            'version' => '1.0'
+                        ]);
+    
+                    }
                 }
-
+              
                 // setting default rel_app_stores
                 DB::table('app_top_main_images')->insert([
                     'app_setting_id' => $appSetting->id,
