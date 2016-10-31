@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="f6234258-7c2b-4850-a579-552297cd15eb" name="htdocs" url="http://point.tenposs.local">
+        <fileTransfer port="0" mountedRoot="/Applications/XAMPP/xamppfiles/htdocs/tenposspoint" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
