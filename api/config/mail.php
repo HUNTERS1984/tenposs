@@ -55,7 +55,7 @@ return [
     */
 
     'from' => ['address' => 'no-reply@ten-po.com', 'name' => 'no-reply@ten-po.com'],
-
+    'admin_email' => 'hello@ten-po.com',
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol
@@ -81,7 +81,7 @@ return [
     */
 
     //To send gmail email, please goto gmail setting https://www.google.com/settings/security/lesssecureapps and active it.
-    'username' => 'mqtest',
+    'username' => env('MAIL_USERNAME'),
 
     /*
     |--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return [
     |
     */
 
-    'password' => 'mq123456',
+    'password' => env('MAIL_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
