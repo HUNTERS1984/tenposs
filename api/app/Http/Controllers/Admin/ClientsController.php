@@ -19,7 +19,10 @@ class ClientsController extends Controller
     protected $url_register = 'https://auth.ten-po.com/auth/register';
     protected $url_login = 'https://auth.ten-po.com/auth/login';
     protected $api_approvelist = 'https://auth.ten-po.com/approvelist';
+    protected $api_userlist = 'https://auth.ten-po.com/userlist';
+    
     protected $api_active = 'https://auth.ten-po.com/activate';
+    protected $api_user_profile = 'https://auth.ten-po.com/profile';
     protected $api_create_vir = 'https://api.ten-po.com/api/v1/create_virtual_host';
     
     public function __construct()
@@ -92,6 +95,15 @@ class ClientsController extends Controller
         if( !empty($response) && isset($response->code) && $response->code == 1000 ){
  
             $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $user_id );
+            
+            if( !$user ){
+                $requestUserActiveList = cURL::newRequest('get',$this->api_userlist)
+                    ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
+                $responseUserActiveList = $requestUserActiveList->send();
+                $responseUserActiveList = json_decode($responseUserActiveList->body);
+                $user =  \App\Helpers\ArrayHelper::searchObject($responseUserActiveList->data, $user_id );
+            }
+           
             $userInfos =  DB::table('user_infos')
                 ->where('id',$user_id)->first();
                 
@@ -128,13 +140,13 @@ class ClientsController extends Controller
 
                 // API active user
                 $requestActive = cURL::newRequest('post',$this->api_active,[
-                    'email' => Session::get('user')['email']
+                    'email' => $user->email
                     ])
                     ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
                    
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
-     
+    
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
                     
                 }else{
@@ -178,6 +190,11 @@ class ClientsController extends Controller
                 }
                 // Create apps setting default
                 // Create app default info
+                $app = \App\Models\App::where('user_id', $user->id)->first();
+                if( !empty( $app ) ){
+                    return response()->json(['success' => true ]);
+                }
+                
                 $app = new \App\Models\App;
                 $app->name = $userInfos->app_name_register;
                 $app->app_app_id = md5(uniqid(rand(), true));
@@ -197,9 +214,7 @@ class ClientsController extends Controller
                     $templates->save();
                     
                 }
-                
-                
-                $templateDefaultID = 1;
+            
                 
                 $appSetting = new \App\Models\AppSetting;
                 $appSetting->app_id = $app->id;
