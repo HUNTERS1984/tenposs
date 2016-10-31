@@ -238,7 +238,7 @@ class ClientsController extends Controller
                 }
                 // Create app_stores,rel_apps_stores default
 
-                $stores_default = DB::tables('app_stores')->all();
+                $stores_default = DB::table('app_stores')->all();
 
                 foreach($stores_default as $store){
 
