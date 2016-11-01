@@ -41,9 +41,10 @@ class NewsController extends Controller
         $stores = $this->request->stores;
         $news = array();
         $list_store = array();
+        $news_cat = array();
         if ($stores != null) {
             $news_cat = $this->new_cat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())
-                ->whereNull('deleted_at')->get();;
+                ->whereNull('deleted_at')->get();
             if (count($news_cat) > 0) {
                 $list_news_cat = $news_cat->pluck('id')->toArray();
 
@@ -72,7 +73,7 @@ class NewsController extends Controller
         return view('admin::pages.news.create',compact('new_cat'));
     }
 
-    public function store(ImageRequest $imgrequest)
+    public function store(Request $request, ImageRequest $imgrequest)
     {
 
         if ($imgrequest->hasFile('image_create')) {
@@ -102,7 +103,7 @@ class NewsController extends Controller
         $this->entity->save();
         RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
         //push notify to all user on app
-        $app_data = App::where('user_id', Auth::user()->id)->first();
+        $app_data = App::where('user_id', $request->user['sub'] )->first();
         $data_push = array(
             'app_id' => $app_data->id,
             'type' => 'news',

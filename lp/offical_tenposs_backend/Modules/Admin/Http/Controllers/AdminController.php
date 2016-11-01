@@ -38,10 +38,10 @@ class AdminController extends Controller
         return view('admin::pages.admin.coupon');
     }
 
-    public function globalpage()
+    public function globalpage(Request $request)
     {
         
-        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
+        $app_data = App::where('user_id', $request->user['sub'])->firstOrFail();
         $component_all = DB::table('components')->whereNotNull('sidemenu')
             ->select('name', 'id','sidemenu_icon')
             ->get();
@@ -116,10 +116,10 @@ class AdminController extends Controller
         return view('admin::pages.admin.staff');
     }
 
-    public function top()
+    public function top(Request $request)
     {
         $all = Component::whereNotNull('top')->pluck('name', 'id');
-        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
+        $app_data = App::where('user_id', $request->user['sub'] )->firstOrFail();
         $app_components = array();
         $available_components = array();
         if (count($all) > 0) {
@@ -180,7 +180,7 @@ class AdminController extends Controller
     public function globalstore(Request $request)
     {
        
-        $app_data = App::where('user_id', Auth::user()->id)->firstOrFail();
+        $app_data = App::where('user_id', $request->user['sub'])->firstOrFail();
         try {
 
             if (count($app_data) > 0) {
@@ -272,9 +272,9 @@ class AdminController extends Controller
     
    
 
-    public function upload()
+    public function upload(Request $request)
     {
-        $app_data = App::where('user_id', Auth::user()->id)->first();
+        $app_data = App::where('user_id', $request->user['sub'])->first();
         //delete cache redis
         RedisControl::delete_cache_redis('top_images');
         if (count($app_data) > 0) {
@@ -288,9 +288,9 @@ class AdminController extends Controller
     }
 
 
-    public function uploaddelete()
+    public function uploaddelete(Request $request)
     {
-        $app_data = App::where('user_id', Auth::user()->id)->first();
+        $app_data = App::where('user_id', $request->user['sub'])->first();
         //delete cache redis
         RedisControl::delete_cache_redis('top_images');
         if (count($app_data) > 0) {
@@ -319,7 +319,7 @@ class AdminController extends Controller
     }
 
 
-    public function topstore()
+    public function topstore(Request $request)
     {
         try {
 
@@ -327,7 +327,7 @@ class AdminController extends Controller
             $list_id = [];
             $list_insert = [];
             if (count($data_component) > 0) {
-                $app_data = App::where('user_id', Auth::user()->id)->first();
+                $app_data = App::where('user_id', $request->user['sub'])->first();
                 if (count($app_data) > 0) {
                     $app = new AppSetting();
                     $app_setting = $app->with('components')->find($app_data->id);
