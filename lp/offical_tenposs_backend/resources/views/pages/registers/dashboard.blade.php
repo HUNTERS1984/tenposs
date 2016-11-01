@@ -113,7 +113,7 @@
 						       		<div class="form-group">
 					                    <label for="inputEmail3" class="col-sm-3 control-label">会社名</label>
 					                    <div class="col-sm-9">
-					                        <input type="text" class="form-control" id="company" name="company" value=""
+					                        <input type="text" class="form-control" id="company" name="company" value="{{ old('company') }}"
 					                               placeholder="ここのために入力し...">
 					                    </div>
 					                </div>
@@ -122,8 +122,8 @@
 					                    <div class="col-sm-9">
 					                        <select name="business_type" class="form-control">
 					                            <option value="">選択します</option>
-					                            <option value="business" >ビジネス</option>
-					                            <option value="other" >他の</option>
+					                            <option value="business" {{ (old('business_type') == 'business') ? 'selected' : '' }}>ビジネス</option>
+					                            <option value="other" {{ (old('business_type') == 'other') ? 'selected' : '' }}>他の</option>
 					                        </select>
 					                    </div>
 					                </div>
@@ -131,7 +131,7 @@
 					                    <label for="inputEmail3" class="col-sm-3 control-label">アプリ名</label>
 					                    <div class="col-sm-9">
 					                        <input type="text" class="form-control" id="app_name_register" name="app_name_register"  
-					                        value=""
+					                        value="{{ old('app_name_register') }}"
 					                               placeholder="ここのために入力し...">
 					                    </div>
 					                </div>
@@ -140,29 +140,29 @@
 					                    <div class="col-sm-9">
 					                        <select name="domain_type" class="form-control">
 					                            <option value="">選択します</option>
-					                            <option value="od" >ドメインの所有者</option>
-					                            <option value="sd" >tenpossのサブドメイン</option>
+					                            <option value="main" {{ (old('domain_type') == 'main') ? 'selected' : '' }}>ドメインの所有者</option>
+					                            <option value="sub" {{ (old('domain_type') == 'sub') ? 'selected' : '' }}>tenpossのサブドメイン</option>
 					                        </select>
 					                    </div>
 					                </div>
 					                <div class="form-group">
 					                    <label for="inputEmail3" class="col-sm-3 control-label">ドメイン</label>
 					                    <div class="col-sm-9">
-					                        <input type="text" class="form-control" id="domain" name="domain" value=""
+					                        <input type="text" class="form-control" id="domain" name="domain" value="{{ old('domain') }}"
 					                               placeholder="ここのために入力し...">
 					                    </div>
 					                </div>
 					                <div class="form-group">
 					                    <label for="inputEmail3" class="col-sm-3 control-label">電話番号</label>
 					                    <div class="col-sm-9">
-					                        <input type="text" class="form-control" id="tel" name="tel" value=""
+					                        <input type="text" class="form-control" id="tel" name="tel" value="{{ old('tel') }}"
 					                               placeholder="ここのために入力し...">
 					                    </div>
 					                </div>
 					                <div class="form-group">
 					                    <label for="inputEmail3" class="col-sm-3 control-label">ファックス</label>
 					                    <div class="col-sm-9">
-					                        <input type="text" class="form-control" id="fax" name="fax" value=""
+					                        <input type="text" class="form-control" id="fax" name="fax" value="{{ old('fax') }}"
 					                               placeholder="ここのために入力し...">
 					                    </div>
 					                </div>

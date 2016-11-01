@@ -17,6 +17,7 @@
 			offset : 150,
 		})
 
+
 		$('.formContact').validate({
 			rules:{
 				'company' : 'required',
@@ -29,9 +30,15 @@
 					'email': true
 				},
 				'reason':'required'
-			}
+			},
+			submitHandler:function(form){
+				$('#modal-confirm').modal('show');
+			},
 		})
 	})
+	function submitForm(){
+		document.forms['form-contact'].submit();
+	}
 	</script>
 @stop
 
@@ -76,7 +83,7 @@
 									</ul>
 								</div>
 								@endif
-								<form action="{{route('postContact')}}" class="formContact" method="POST">
+								<form action="{{route('postContact')}}" class="formContact" method="POST" id="form-contact">
 									{{Form::token()}}
 									<div class="form-group clearfix">
 										<div class="left-form">
@@ -155,8 +162,9 @@
 										<p class="note-form"><a href="{{url('policy')}}" target="_blank">利用規約</a> の内容をご確認・ご同意された上で</p>
 									</div>
 									<div class="form-group text-center">
-										<input type="submit" value="送信する" class="btn-me btn-submit">
+										<input type="submit" id="submit-form" value="送信する" class="btn-me btn-submit">
 									</div>
+
 								</form>
 							</div>
 						</div>
@@ -168,6 +176,26 @@
 
 		@include('layouts.contact-section')
 		<!-- END CONTACT -->
+
+		<!-- MODAL -->
+		<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">お問い合わせする前に...</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p> 内容をご確認の上、「送信する」ボタンを押してください。</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" onclick="submitForm();">送信する</button>
+		        <!-- <label for="submit-form">Confirm</label> -->
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 	</div>
 	<!-- END MIDDLE -->
 @stop

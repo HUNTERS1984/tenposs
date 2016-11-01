@@ -14,21 +14,22 @@
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function(){ return 'Welcome'; });
     // Authentication Routes...
-    $this->get('login', ['middleware' => 'IsLogin', 'uses' => 'Auth\AuthController@showLoginForm']);
-    $this->post('login', 'Auth\AuthController@postLogin');
-    $this->get('logout', 'Auth\AuthController@logout');
+    //$this->get('login', ['middleware' => 'IsLogin', 'uses' => 'Auth\AuthController@showLoginForm']);
+    //$this->post('login', 'Auth\AuthController@postLogin');
+    // $this->get('logout', 'Auth\AuthController@logout');
     $this->get('waiting', 'AdminController@waiting');
 
     // Registration Routes...
-    $this->get('register', ['middleware' => 'IsLogin', 'as' => 'admin.register', 'uses' => 'Auth\AuthController@showRegistrationForm']);
-    $this->post('register', ['middleware' => 'IsLogin', 'as' => 'admin.postRegister', 'uses' => 'Auth\AuthController@register']);
+    //$this->get('register', ['middleware' => 'IsLogin', 'as' => 'admin.register', 'uses' => 'Auth\AuthController@showRegistrationForm']);
+    //$this->post('register', ['middleware' => 'IsLogin', 'as' => 'admin.postRegister', 'uses' => 'Auth\AuthController@register']);
 
     // Password Reset Routes...
-    $this->get('password/reset/{token?}', ['middleware' => 'auth', 'as' => 'admin.resetPassword', 'uses' => 'Auth\PasswordController@showResetForm']);
-    $this->post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
-    $this->post('password/reset', 'Auth\PasswordController@reset');
+    //$this->get('password/reset/{token?}', ['middleware' => 'auth', 'as' => 'admin.resetPassword', 'uses' => 'Auth\PasswordController@showResetForm']);
+    //$this->post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
+    //$this->post('password/reset', 'Auth\PasswordController@reset');
 
-    Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['jwt.auth.custom']], function () {
+        
         Route::get('top', ['as' => 'admin.top', 'uses' => 'AdminController@top']);
         Route::post('top/store', ['as' => 'admin.top.store', 'uses' => 'AdminController@topstore']);
         Route::post('upload', ['as' => 'admin.upload', 'uses' => 'AdminController@upload']);

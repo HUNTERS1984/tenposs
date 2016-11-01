@@ -12,14 +12,19 @@ use cURL;
 use DB;
 use Mail;
 use Session;
+use JWTAuth;
 
 class ClientsController extends Controller
 {
     protected $url_register = 'https://auth.ten-po.com/auth/register';
     protected $url_login = 'https://auth.ten-po.com/auth/login';
     protected $api_approvelist = 'https://auth.ten-po.com/approvelist';
+    protected $api_userlist = 'https://auth.ten-po.com/userlist';
+    
     protected $api_active = 'https://auth.ten-po.com/activate';
-
+    protected $api_user_profile = 'https://auth.ten-po.com/profile';
+    protected $api_create_vir = 'https://api.ten-po.com/api/v1/create_virtual_host';
+    
     public function __construct()
     {
         
@@ -27,7 +32,7 @@ class ClientsController extends Controller
     public function index(){
         // Get profile
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
            
         $response = $response->send();
          
@@ -61,12 +66,14 @@ class ClientsController extends Controller
             );
             
             $response = json_decode( $response->body );
-            if( isset($response->code) && $response->code == 1000 ){
+            if( !empty($response) &&  isset($response->code) && $response->code == 1000 ){
                 Session::put('jwt_token',$response->data);
+                Session::put('user',$request->all());
+                
                 return redirect()->route('admin.home');
             }
             
-            return back()->withErrors( $response->message );
+            return back()->withErrors( 'Login fail!' );
 
         }
         return view('admin.login');
@@ -74,21 +81,39 @@ class ClientsController extends Controller
 
     public function logout(){
         Session::forget('jwt_token');
+        Session::forget('user');
         return redirect()->route('admin.home');
     }
 
     public function show($user_id){
 
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
            
         $response = $response->send();
         $response = json_decode($response->body);
-        if( isset($response->code) && $response->code == 1000 ){
+        if( !empty($response) && isset($response->code) && $response->code == 1000 ){
  
             $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $user_id );
+            
+            if( !$user ){
+                $requestUserActiveList = cURL::newRequest('get',$this->api_userlist)
+                    ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
+                $responseUserActiveList = $requestUserActiveList->send();
+                $responseUserActiveList = json_decode($responseUserActiveList->body);
+                $user =  \App\Helpers\ArrayHelper::searchObject($responseUserActiveList->data, $user_id );
+                
+                if( !$user ){
+                    abort(503);
+                }
+            }
+           
             $userInfos =  DB::table('user_infos')
                 ->where('id',$user_id)->first();
+            
+            if( !$userInfos ){
+                return back()->withErrors('Cannot access, Users info not found!');
+            }    
                 
             $apps = DB::table('apps')
                 ->where( 'apps.user_id', $user_id )
@@ -108,11 +133,11 @@ class ClientsController extends Controller
     public function approvedUsersProcess(Request $request){
         // get all users
         $response = cURL::newRequest('get',$this->api_approvelist)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
 
         $response = $response->send();
         $response = json_decode($response->body);
-        if( isset($response->code) && $response->code == 1000 ){
+        if( !empty($response) && isset($response->code) && $response->code == 1000 ){
 
             $user =  \App\Helpers\ArrayHelper::searchObject($response->data, $request->input('user_id') );
             if( $user ){
@@ -122,18 +147,41 @@ class ClientsController extends Controller
                     ->first();
 
                 // API active user
-                $requestActive = cURL::newRequest('get',$this->api_active)
-                    ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+                $requestActive = cURL::newRequest('post',$this->api_active,[
+                    'email' => $user->email
+                    ])
+                    ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken()  );
+                   
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
+    
                 if( isset($responseActive->code) && $responseActive->code == 1000 ){
-
+                    
+                }else{
+                    return response()->json(['success' => false, 'msg' => 'Try again!' ]); 
                 }
+                
                 // API create virtual hosts
-
-
+                /*
+                $requestCreateVir = cURL::post($this->api_create_vir, 
+                    [
+                        'domain' => $userInfos->domain, 
+                        'domain_type' => $userInfos->domain_type,
+                        'time' => '',
+                        'sig' => ''
+                    ]
+                );
+                
+                $responseCreateVir = json_decode( $requestCreateVir->body );
+                if( $responseCreateVir->code == 1000 ){
+                    
+                }    
+                */
+    
+    
                 // Send mail to user approved
                 try{
+                    /*
                     $to = $user->email ;
 
                     Mail::send('admin.emails.user_approved',
@@ -143,27 +191,39 @@ class ClientsController extends Controller
                             $message->to( $to )
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
-                        });
-                    return response()->json(['success' => true]);
+                        });*/
                 }
                 catch(Exception $e){
 
                 }
                 // Create apps setting default
                 // Create app default info
+                $app = \App\Models\App::where('user_id', $user->id)->first();
+                if( !empty( $app ) ){
+                    return response()->json(['success' => true ]);
+                }
+                
                 $app = new \App\Models\App;
                 $app->name = $userInfos->app_name_register;
                 $app->app_app_id = md5(uniqid(rand(), true));
                 $app->app_app_secret = md5(uniqid(rand(), true));
                 $app->description =  'なし';
                 $app->status = 1;
-                $app->business_type = $userInfos->business_type;
                 $app->user_id = $user->id;
+                $app->business_type = $userInfos->business_type;
+                $app->domain_type = $userInfos->domain_type;
+                $app->domain = $userInfos->domain;
                 $app->save();
 
-                // Set default app templates 1
-                $templateDefaultID = 1;
-
+                // Set default app templates
+                $templates = \App\Models\Template::first();
+                if( empty( $templates ) ){
+                    $templates->name = 'Default Templates';
+                    $templates->save();
+                    
+                }
+            
+                
                 $appSetting = new \App\Models\AppSetting;
                 $appSetting->app_id = $app->id;
                 $appSetting->title = 'Default';
@@ -176,7 +236,7 @@ class ClientsController extends Controller
                 $appSetting->menu_font_color = '#5ad29f';
                 $appSetting->menu_font_size = '12';
                 $appSetting->menu_font_family = 'Tahoma';
-                $appSetting->template_id = $templateDefaultID;
+                $appSetting->template_id = $templates->id;
                 $appSetting->top_main_image_url = 'uploads/1.jpg';
                 $appSetting->save();
 
@@ -212,28 +272,31 @@ class ClientsController extends Controller
                 }
                 // Create app_stores,rel_apps_stores default
 
-                $stores_default = DB::tables('app_stores')->all();
+                $stores_default = DB::table('app_stores')->get();
+                if( count($stores_default) > 0 ){
+                    foreach($stores_default as $store){
 
-                foreach($stores_default as $store){
-
-                    DB::table('rel_apps_stores')->insert([
-                        'app_id' => $app->id,
-                        'app_store_id' => $store->id,
-                        'version' => '1.0'
-                    ]);
-
+                        DB::table('rel_apps_stores')->insert([
+                            'app_id' => $app->id,
+                            'app_store_id' => $store->id,
+                            'version' => '1.0'
+                        ]);
+    
+                    }
                 }
-
+              
                 // setting default rel_app_stores
                 DB::table('app_top_main_images')->insert([
                     'app_setting_id' => $appSetting->id,
                     'image_url' =>  'uploads/1.jpg',
                 ]);
-
+                return response()->json(['success' => true ]);
             }
+            
+            
         }
 
-        return response()->json(['success' => 'false', 'msg' => 'Try again!' ]);
+        return response()->json(['success' => false, 'msg' => 'Try again!' ]);
     }
 
 }

@@ -49,18 +49,14 @@ class UserController extends Controller
                 'role' => 'client'
             ]
         );
-        
         $response = json_decode( $response->body );
-   
-        if( $response->code == 1000 ){
-            Session::put('jwt_token',$response->data);
-            return redirect()->route('user.dashboard');
-        }else{
-            return back()->withErrors( $response->message );
-        }
 
-        
- 
+        if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
+            Session::put('jwt_token',$response->data);
+            return redirect()->route('admin.top');
+        }
+     
+        return back()->withErrors( 'User cannot login' );
     }
     
     public function logout(){
@@ -98,12 +94,16 @@ class UserController extends Controller
         
         $response = json_decode( $response->body );
         
-        if( $response->code == 1000 ){
+        if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
             Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
         }
-        return back()->withErrors('登録できません!');
         
+        if( !empty($response) && isset( $response->code ) && $response->code == 9996 ){
+            return back()->withErrors('ユーザーが存在します!')->withInput();
+        }
+        return back()->withErrors('登録できません!')->withInput();
+        /*
         $url_authorize = '';
         Mail::send('emails.register',
 			 array( 'url_authorize' => $url_authorize)
@@ -114,7 +114,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-           
+        */   
         
     }
     

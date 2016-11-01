@@ -12,6 +12,7 @@
 
 <div class="main-content news">
 	<div class="wrapper-content">
+		 @include('admin.partials.message')
 		<p>&nbsp;</p>
 		<div class="clearfix">
             <p style="margin-bottom:10px;" class="">{{ count($users) }}results</p>

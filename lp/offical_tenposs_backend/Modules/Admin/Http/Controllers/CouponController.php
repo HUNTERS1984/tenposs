@@ -143,7 +143,7 @@ class CouponController extends Controller
 
     }
 
-    public function store()
+    public function store(Request $request)
     {
         //dd($this->request->hashtag); die();
         if ($this->request->image_create != null && $this->request->image_create->isValid()) {
@@ -203,7 +203,7 @@ class CouponController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('coupons');
             //push notify to all user on app
-            $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+            $app_data = App::where('user_id', $request->user['sub'])->first();
             $data_push = array(
                 'app_id' => $app_data->id,
                 'type' => 'coupon',
