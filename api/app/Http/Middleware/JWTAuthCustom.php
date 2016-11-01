@@ -41,7 +41,11 @@ class JWTAuthCustom extends BaseMiddleware
             $user = $this->auth->getPayload( $token );
             $request->user = $user->get();
         } catch (TokenExpiredException $e) {
-            return redirect()->route('admin.login')->withErrors('Please login');
+            
+            $newToken = JWTAuth::refresh($token);
+            Session::put('jwt_token', $newToken);
+            return $next($request);
+            
         } catch (JWTException $e) {
             return redirect()->route('admin.login')->withErrors('Please login');
         }
