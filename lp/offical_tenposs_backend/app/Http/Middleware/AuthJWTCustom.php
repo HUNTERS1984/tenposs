@@ -8,6 +8,8 @@ use Tymon\JWTAuth\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use JWTAuth;
+use App\Models\App;
+use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
 class AuthJWTCustom extends BaseMiddleware
@@ -37,9 +39,24 @@ class AuthJWTCustom extends BaseMiddleware
         try {
             $user = $this->auth->getPayload( $token );
             $request->user = $user->get();
+            if ($request->user) {
+ 
+                $request->app = App::whereUserId($request->user['sub'])->first();
+                
+                if ($request->app) {
+                    $request->stores =  Store::whereAppId($request->app->id)->get();
+                }
+                
+            }
         } catch (TokenExpiredException $e) {
-            return $this->respond('tymon.jwt.expired', 'token_expired', $e->getStatusCode(), [$e]);
+            
+            $newToken = JWTAuth::refresh($token);
+            Session::put('jwt_token', $newToken);
+            return $next($request);
+            
         } catch (JWTException $e) {
+            
+            return redirect()->route('login')->withErrors('Please login');
             return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
         }
 
