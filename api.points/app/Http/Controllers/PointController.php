@@ -41,6 +41,8 @@ class PointController extends Controller
                     ->where('app_app_id', '=', Input::get('app_id'))
                     ->select('auth_user_id', 'app_app_id', 'points', 'miles')->get();
                 if (count($point_info) > 0) {
+                    $point_info[0]->next_points = 0;
+                    $point_info[0]->next_miles = 0;
                     $this->body['data'] = $point_info;
                     return $this->output($this->body);
                 } else
@@ -126,17 +128,18 @@ class PointController extends Controller
 
     public function approve_request_point_for_end_user()
     {
-        $check_items = array('app_id', 'action');
+        $check_items = array('app_id', 'action','user_request_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
+
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
         if ($auth_id > 0) {
             $data = array();
             try {
-                $data = PointRequest::where('user_request_id', '=', $auth_id)
+                $data = PointRequest::where('user_request_id', '=', Input::get('user_request_id'))
                     ->where('app_app_id', Input::get('app_id'))
                     ->where('role_request', 'user')->first();
 
@@ -173,6 +176,7 @@ class PointController extends Controller
                             $point->active = 1;
                             $point->save();
                         }
+                        return $this->output($this->body);
                     } else if (Input::get('action') == 'reject') {
                         $point_info = DB::table('points')->where('auth_user_id', '=', $data->user_request_id)
                             ->where('app_app_id', '=', Input::get('app_id'))->get();
@@ -235,7 +239,7 @@ class PointController extends Controller
 
     public function approve_use_point_for_end_user()
     {
-        $check_items = array('app_id', 'points');
+        $check_items = array('app_id', 'points','user_request_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
