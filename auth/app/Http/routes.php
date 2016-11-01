@@ -19,6 +19,7 @@ $app->post('/auth/login', 'Auth\AuthController@postLogin');
 $app->post('/auth/register', 'UserController@register');
 $app->post('/auth/register_with_active', 'UserController@register_with_active');
 $app->post('/auth/activate_with_code', 'UserController@activate_with_code');
+$app->get('/auth/demo_token', 'Auth\AuthController@demo_token');
 
 $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/auth/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
@@ -31,4 +32,8 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/activate', 'App\Http\Controllers\UserController@activate');
     $app->get('/user', 'App\Http\Controllers\UserController@profile');
     $app->post('/user/delete', 'App\Http\Controllers\UserController@delete');
+});
+
+$app->group(['middleware' => 'jwt.refresh'],function ($app) {
+
 });

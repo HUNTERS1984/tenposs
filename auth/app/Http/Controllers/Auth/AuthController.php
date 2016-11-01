@@ -14,6 +14,7 @@ use Twitter;
 use DB;
 use Bican\Roles\Models\Role;
 use Tymon\JWTAuth\Facades\JWTFactory;
+use Tymon\JWTAuth\Token;
 
 class AuthController extends Controller
 {
@@ -156,14 +157,11 @@ class AuthController extends Controller
                 return $this->error(99950);
             $token1 = JWTAuth::attempt($credentials);
             // Attempt to verify the credentials and create a token for the user
-            if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug])) {
-//            if ($user && $user->roles && count($user->roles) > 0) {
-////                $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug]);
-//                $customClaims = ['role' => $user->roles[0]->slug];
-//                $payload = JWTFactory::make($customClaims);
-//                $token = \Tymon\JWTAuth\Facades\JWTAuth::encode($payload);
+            if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
                 $this->body['data'] = (string)$token;
-
+//                $this->body['data']['token'] = (string)$token;
+//                $refresh_token = JWTAuth::attempt($credentials, ['exp' => 1477801212312, 'id' => $user->id]);
+//                $this->body['data']['refresh_token'] = (string)$refresh_token;
                 return $this->output($this->body);
             } else {
                 return $this->error(9995);
@@ -215,5 +213,17 @@ class AuthController extends Controller
         $this->body['data'] = $newToken;
 
         return $this->output($this->body);
+    }
+
+    public function demo_token()
+    {
+        $refresh_token = Input::get('refresh_token');
+        $token = new Token($refresh_token);
+        $info = JWTAuth::decode($token)->toArray();
+        $user = User::whereId($info['id'])->first();
+
+        $token = JWTAuth::fromUser($user);
+        return $this->body['data']['token'] = $token;
+
     }
 }
