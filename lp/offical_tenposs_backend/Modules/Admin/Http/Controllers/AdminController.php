@@ -118,8 +118,12 @@ class AdminController extends Controller
 
     public function top(Request $request)
     {
+
         $all = Component::whereNotNull('top')->pluck('name', 'id');
-        $app_data = App::where('user_id', $request->user['sub'] )->firstOrFail();
+        $app_data = App::where('user_id', $request->user['sub'] )->first();
+        if( !$app_data ){
+            abort(503);
+        }
         $app_components = array();
         $available_components = array();
         if (count($all) > 0) {
