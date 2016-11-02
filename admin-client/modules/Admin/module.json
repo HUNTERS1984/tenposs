@@ -1,0 +1,8 @@
+{
+	"name": "Admin",
+	"slug": "admin",
+	"namespace": "Admin",
+	"version": "1.0",
+	"description": "This is the description for the Admin module.",
+	"enabled": true
+}
