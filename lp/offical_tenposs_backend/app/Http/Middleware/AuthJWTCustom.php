@@ -39,7 +39,7 @@ class AuthJWTCustom extends BaseMiddleware
         try {
             
             $user = $this->auth->getPayload( $token );
-            
+            Session::put('user', $user);
             $request->user = $user->get();
             if ($request->user) {
  

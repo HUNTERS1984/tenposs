@@ -31,6 +31,10 @@ use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
     public function dashboard(){
         return view('admin.pages.global');
     }
@@ -150,4 +154,98 @@ class AdminController extends Controller
                 'list_font_size' => $list_font_size,
                 'list_font_family' => $list_font_family));
     }
+    
+    public function globalstore(Request $request)
+    {
+       
+        $app_data = App::where('user_id', $request->user['sub'])->firstOrFail();
+        try {
+
+            if (count($app_data) > 0) {
+                // Save app_settings
+                $app_setting = AppSetting::where('app_id', $app_data->id)->firstOrFail();
+                //$app_setting = $app->with('components')->find($app_data->id);
+                $app_setting->app_id = $app_data->id;
+                $app_setting->title = $this->request->input('title');
+                $app_setting->title_color = $this->request->input('title_color');
+                $app_setting->font_size = $this->request->input('font_size');
+                $app_setting->font_family = $this->request->input('font_family');
+                $app_setting->header_color = $this->request->input('header_color');
+                $app_setting->menu_icon_color = $this->request->input('menu_icon_color');
+                $app_setting->menu_background_color = $this->request->input('menu_background_color');
+                $app_setting->menu_font_color = $this->request->input('menu_font_color');
+                $app_setting->menu_font_size = $this->request->input('menu_font_size');
+                $app_setting->menu_font_family = $this->request->input('menu_font_family');
+                $app_setting->company_info = $this->request->input('company_info');
+                $app_setting->user_privacy = $this->request->input('user_privacy');
+                $app_setting->template_id = 1;
+                $app_setting->save();
+                
+                
+                // Save rel_app_settings_sidemenus
+                $data_sidemenus = $this->request->input('data_sidemenus');
+               
+                if (count($data_sidemenus) > 0) {
+                    DB::table('rel_app_settings_sidemenus')
+                        ->where('app_setting_id', $app_setting->id)->delete();
+                    
+                    $i = 1;
+                    $list_insert = array();
+                    foreach ($data_sidemenus as $menu) {
+                        
+                        $list_insert[] = array(
+                            'app_setting_id' => $app_setting->id,
+                            'sidemenu_id' => $menu,
+                            'order' => $i);
+                        $i++;
+                    }
+                     DB::table('rel_app_settings_sidemenus')->insert($list_insert);
+                    
+                }
+                
+                // save app_stores
+                $app_icon = '';
+                $store_image = '';
+                if( $request->hasFile('file') ){
+                    foreach( $request->file('file') as $key => $file ){
+                        if( $file ) {
+                            
+                            $destinationPath = public_path('uploads'); // upload path
+                            $extension = $file->getClientOriginalExtension(); // getting image extension
+                            $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                            $file->move($destinationPath, $fileName); // uploading file to given path
+                 
+                            if( $key === 'app_icon' ){
+                                $app_icon = 'uploads/' . $fileName;
+                            }
+                            if( $key === 'store_image' ){
+                                $store_image = 'uploads/' . $fileName;
+                            }
+                        }
+                    }
+                }
+                
+                
+            
+                $app_stores = DB::table('app_stores')
+                    ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')
+                    ->join('apps','apps.id','=','rel_apps_stores.app_id')
+                    ->where('rel_apps_stores.app_id',$app_data->id)
+                    ->update([
+                        'rel_apps_stores.app_icon_url' => $app_icon,
+                        'rel_apps_stores.store_icon_url' => $store_image
+                    ]);
+           
+                //delete cache redis
+                RedisControl::delete_cache_redis('app_info');
+                //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
+                return back()->with('status', 'Setting successfully');
+            }
+        } catch (QueryException $e) {
+            Log::error("globalstore: " . $e->getMessage());
+            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Setting fail'));
+            return back();
+        }
+    }
+    
 }

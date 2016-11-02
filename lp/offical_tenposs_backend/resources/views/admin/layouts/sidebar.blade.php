@@ -22,10 +22,10 @@
                 <a href="{{ route('admin.client.top') }}"><span>トップ</span></a>
             </li>
             <li>
-                <a href="menu.html"><span>メニュー</span></a>
+                <a href="{{ route('admin.menus.index') }}"><span>メニュー</span></a>
             </li>
             <li>
-                <a href="news.html"><span>ニュース</span></a>
+                <a href="{{ route('admin.news.index') }}"><span>ニュース</span></a>
             </li>
             <li>
                 <a href="coupon.html"><span>クーポン</span></a>

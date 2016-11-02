@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin1'], function () {
     Route::get('/', function(){ return 'Welcome'; });
     // Authentication Routes...
     //$this->get('login', ['middleware' => 'IsLogin', 'uses' => 'Auth\AuthController@showLoginForm']);

@@ -61,6 +61,8 @@ class UserController extends Controller
     
     public function logout(){
         Session::forget('jwt_token');
+        Session::forget('user');
+        
         return redirect('/');
     }
     
