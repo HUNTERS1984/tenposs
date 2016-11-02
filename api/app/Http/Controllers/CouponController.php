@@ -258,4 +258,39 @@ class CouponController extends Controller
         return $this->output($this->body);
 
     }
+
+    public function coupon_use_new()
+    {
+        $check_items = array('token', 'time', 'code', 'staff_id', 'sig');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_coupon_use');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+
+        if (!$app)
+            return $this->error(9998);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        try {
+            $coupon = DB::table('rel_app_users_coupons')
+                ->whereCode(Input::get('code'))->update(
+                    ['status' => 2,
+                        'staff_id' => Input::get('staff_id'),
+                        'user_use_date' => Carbon::now()]);
+            if ($coupon == 0)
+                return $this->error(1014);
+
+        } catch (QueryException $e) {
+            print_r($e->getMessage());
+            die;
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+
+    }
 }
