@@ -27,7 +27,7 @@ $app->withFacades();
 
 class_exists('JWTAuth') or class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTAuth');
 class_exists('JWTFactory') or class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
-class_exists('Paypalpayment') or class_alias(Anouar\Paypalpayment\Facades\PaypalPayment::class, 'Paypalpayment');
+class_exists('PaypalPayment') or class_alias(Anouar\Paypalpayment\Facades\PaypalPayment::class, 'PaypalPayment');
 
 $app->withEloquent();
 

@@ -53,13 +53,17 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
         $app->get('payment','PaymentController@index');
       
         $app->get('payment/{id}','PaymentController@getPayment');
-          
         $app->post('payment','PaymentController@createPayment');
-          
-        $app->put('payment/{id}','PaymentController@updatePayment');
-          
-        $app->delete('payment/{id}','PaymentController@deletePayment');
 
+        $app->post('billingplan','PaymentController@createBillingPlan');
+        $app->get('billingplan','PaymentController@billingPlan');
+        $app->get('billingplan/{id}','PaymentController@getBillingPlan');
+        $app->put('billingplan/{id}','PaymentController@updateBillingPlan');
+
+        $app->post('billingagreement/{plan_id}','PaymentController@createBillingAgreement');
+        $app->get('excecuteagreement','PaymentController@excecuteAgreement');
+
+        $app->get('billingtransactions/{agreement_id}','PaymentController@billingTransactions');
 
     });
 
