@@ -439,6 +439,7 @@ a:hover.btn-1{
   border-radius: 4px;
   padding: 1px;
   border:1px solid #e4e4e8;
+  display: inline-block;
 }
 .tab-header-global .nav-tabs > li.active > a, 
 .tab-header-global .nav-tabs > li.active > a:hover, 
@@ -1145,7 +1146,7 @@ ul.link-top-2 li a.active{
   text-align: left;
   font-size: 95%;
 }
-.wrapp-menu-img .content-menu-img .text-menu a{
+.wrapp-menu-img .content-menu-img .text-menu input{
   width: 100%;
   font-size: 95%;
   height: 36px;
@@ -1161,7 +1162,7 @@ ul.link-top-2 li a.active{
   font-weight: bold;
   color: #1e96d6;
 }
-.wrapp-menu-img .content-menu-img .text-menu a:hover{
+.wrapp-menu-img .content-menu-img .text-menu input:hover{
   border:1px solid #1e96d6;
 }
 /*-- check --*/
@@ -1307,7 +1308,7 @@ ul.link-top-2 li a.active{
 .title-news p{
   padding-top: 10px;
 }
-.title-news a.btn-5{
+.title-news input.btn-5{
   background: #fafafa;
   margin-right: 10px;
   width: 80px;
@@ -1321,7 +1322,7 @@ ul.link-top-2 li a.active{
   border-radius: 4px;
   border:1px solid transparent;
 }
-.title-news a:hover.btn-5{
+.title-news input:hover.btn-5{
   border: 1px solid #1e96d6;
 }
 .des-news{
