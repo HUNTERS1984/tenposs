@@ -13,21 +13,21 @@
         <div class="left"><span>グローバル</span></div>
         <div class="right">
          
-            <button type="submit" class="btn-2">ポ覧</button>
+            <button id="btn_submit_form" type="button" class="btn-2">ポ覧</button>
         </div>
     </div>
     <section class="content">
-        @include('admin.layouts.messages')
+        <div class="col-xs-12">@include('admin.layouts.messages')</div>
         <div class="col-md-12">
             <div class="tab-header-global">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation">
+                    <li role="presentation" class="active">
                         <a href="#tab-global-1" aria-controls="tab-global-1" role="tab" data-toggle="tab">ヘッダー</a>
                     </li>
                     <li role="presentation">
                         <a href="#tab-global-2" aria-controls="tab-global-2" role="tab" data-toggle="tab">サイトメニュー</a>
                     </li>
-                    <li role="presentation" class="active">
+                    <li role="presentation" >
                         <a href="#tab-global-3" aria-controls="tab-global-3" role="tab" data-toggle="tab">Appストア</a>
                     </li>
                 </ul>
@@ -219,7 +219,7 @@
                                 </center>
                             </div>
                             <div class="btn-global-redesign">
-                                <a href="" data-toggle="modal" data-target=".bs-example-modal-lg" class="btn-gb-rd">
+                                <a href="" data-toggle="modal" data-target="#modal-appsplash" class="btn-gb-rd">
                                     顧客管理
                                 </a>
                             </div>
@@ -234,7 +234,7 @@
                                 </center>
                             </div>
                             <div class="btn-global-redesign">
-                                <a href="" data-toggle="modal" data-target=".bs-example-modal-lg" class="btn-gb-rd">
+                                <a href="" data-toggle="modal" data-target="#modal-appsicon" class="btn-gb-rd">
                                     顧客管理
                                 </a>
                             </div>
@@ -244,7 +244,7 @@
             </div>
             <!-- //tab-global-3 -->
 
-            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div id="modal-appsplash" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 <div class="modal-dialog modal-global-redesign-2" role="document">
                     <div class="modal-content">
 
@@ -349,7 +349,119 @@
               </div>
             </div>
             <!-- //modal -->
+            <div id="modal-appsicon" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                        <div class="modal-dialog modal-global-redesign" role="document">
+                            <div class="modal-content">
 
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">フォトギャラリー</h4>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="left-global-redesign">
+                                        <div class="title-left-global-redesign">
+                                            <span>フォトギャラリー</span>
+                                        </div>
+                                        <ul>
+                                            <li class="active">
+                                                <a href="">
+                                                    <img src="images/nav-global-redesign.jpg" alt="">
+                                                    <span>Type 1</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="">
+                                                    <img src="images/nav-global-redesign.jpg" alt="">
+                                                    <span>Type 1</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="">
+                                                    <img src="images/nav-global-redesign.jpg" alt="">
+                                                    <span>Type 1</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="right-global-redesign">
+                                        <form action="">
+                                            <div class="col-md-5 col-xs-12">
+                                                <div class="form-group">
+                                                    <label>タイトルカラー</label>
+                                                    <div class="wrapp-draw">
+                                                        <span class="left">クポン覧クポンタ</span>
+                                                        <input type="text" class="form-control long" id="" placeholder="クポン覧クポ">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>プッシュ通知</label>
+                                                    <input type="text" class="form-control" id="" placeholder="12タイトル">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>タイトルカラー</label>
+                                                    <div class="wrapp-draw">
+                                                        <input type="text" class="form-control middle" id="" placeholder="000000">
+                                                        <img src="images/draw.jpg" class="left" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>タイトルカラー</label>
+                                                    <div class="wrapp-draw">
+                                                        <input type="text" class="form-control middle" id="" placeholder="000000">
+                                                        <img src="images/draw.jpg" class="left" alt="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7 col-xs-12">
+                                                <div class="row">
+                                                <div class="content-right-gl-rd">
+                                                    <div class="pixel-title">256px x 256px</div>
+                                                    <div class="box-256px"></div>
+                                                    <div class="box-bottom-gl-re">
+                                                        <ul class="box-px">
+                                                            <li>
+                                                                <div class="pixel-title">
+                                                                    120px x 120px
+                                                                </div>
+                                                                <div class="box-120px"></div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="pixel-title">
+                                                                    80px x 80px
+                                                                </div>
+                                                                <div class="box-80px"></div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="pixel-title">
+                                                                    60px x 60px
+                                                                </div>
+                                                                <div class="box-60px"></div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <center>
+                                                    <a href="global-redesign-2.html" class="btn-box-px">客管理</a>
+                                                </center>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                                
+
+                            </div>
+                      </div>
+                    </div>
+                    <!-- //modal -->
         <div>
     </section>
 </aside>
@@ -369,7 +481,14 @@
             $('.nav-left li').each(function(index,item){
                 $('#mobile-'+$(item).attr('data-value')).show();
             })*/
-        }
+        };
+        $('#btn_submit_form').click(function () {
+            $('ul.nav-left li').each(function () {
+                var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_sidemenus[]">';
+                $('#form_app_setting').append(tmp);
+            });
+            $('#form_app_setting').submit();
+        });
         $(document).ready(function () {
             $('.nav-left, .nav-right').on('click', 'li', function (e) {
                 e.preventDefault();

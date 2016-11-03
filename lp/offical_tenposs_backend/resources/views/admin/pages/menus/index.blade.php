@@ -37,124 +37,35 @@
             </div>
             <div class="wrapp-menu-img">
                 <div class="row">
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
+                    @if(empty($list_item))
+                        <p>No data</p>
+                    @else
+                        @foreach($list_item as $item)
+                         <div class="col-md-4 col-xs-6">
+                            <div class="content-menu-img">
+                                <a href="{{route('admin.menus.edit',$item->id)}}">
+                                    <img src="{{asset($item->image_url)}}" class="img-responsive" alt="">
+                                </a>
+                                <div class="text-menu">
+                                    <p class="text-title-menu">
+                                        {{$item->title}}
+                                    </p>
+                                    {{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
+                                    {{Form::submit('削除',array('class'=>'','style'=>'width:100%'))}}
+                                    {{Form::close()}}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-6">
-                        <div class="content-menu-img">
-                            <a href="">
-                                <img src="images/img-menu.jpg" class="img-responsive" alt="">
-                            </a>
-                            <div class="text-menu">
-                                <p class="text-title-menu">
-                                    フォトギャラリー
-                                </p>
-                                <a href="">削除</a>
-                            </div>
-                        </div>
-                    </div>
+                            
+                        @endforeach
+
+                    @endif
+                 
                     <div class="page-bottom">
+                        @if(!$list_item->isEmpty())
+                            {{ $list_item->render() }}
+                        @endif
+                        <!--
                         <ul class="pagination"> 
                             <li class="disabled">
                                 <a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a>
@@ -170,6 +81,7 @@
                                 <a href="#" aria-label="Next"><span aria-hidden="true">»</span></a>
                             </li> 
                         </ul>
+                        -->
                     </div>
                 </div>
             </div>

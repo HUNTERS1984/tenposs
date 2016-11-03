@@ -2,8 +2,10 @@
 
 Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], function(){
 	Route::get('/',['as' => 'admin.client.dashboard', 'uses' => 'Admin\AdminController@dashboard' ] );	
-    Route::get('/top',['as' => 'admin.client.top', 'uses' => 'Admin\AdminController@top' ] );
-    Route::get('/global',['as' => 'admin.client.global', 'uses' => 'Admin\AdminController@globalpage' ] );
+    Route::get('top',['as' => 'admin.client.top', 'uses' => 'Admin\AdminController@top' ] );
+    Route::post('top', ['as' => 'admin.client.top.store', 'uses' => 'Admin\AdminController@topstore']);
+    
+    Route::get('global',['as' => 'admin.client.global', 'uses' => 'Admin\AdminController@globalpage' ] );
     Route::post('global', ['as' => 'admin.client.global.store', 'uses' => 'Admin\AdminController@globalstore']);
     // NEWS
     Route::get('news/nextcat', ['as' => 'admin.news.nextcat', 'uses' => 'Admin\NewsController@nextcat']);

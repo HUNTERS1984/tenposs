@@ -6,7 +6,7 @@
                  <img src="{{ url('admin/images/avatar.png') }}" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
-                <p>ユーザーネーム</p>
+                <p>{{ (Session::has('user') ? Session::get('user')->name : 'Welcome' ) }}</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> オンライン</a>
             </div>
         </div>
@@ -15,13 +15,13 @@
             <li class="none">
                 <span>Page</span>
             </li>
-            <li>
+            <li class="{{ (Request::route()->getName() == 'admin.client.global') ? 'active' : '' }}">
                 <a href="{{ route('admin.client.global') }}"><span>グローバル</span></a>
             </li>
-            <li class="active">
+            <li class="{{ (Request::route()->getName() == 'admin.client.top') ? 'active' : '' }}">
                 <a href="{{ route('admin.client.top') }}"><span>トップ</span></a>
             </li>
-            <li>
+            <li class="{{ (Request::route()->getName() == 'admin.menus.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.menus.index') }}"><span>メニュー</span></a>
             </li>
             <li>

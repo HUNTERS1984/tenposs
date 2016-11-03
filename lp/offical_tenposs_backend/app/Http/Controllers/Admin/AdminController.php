@@ -39,7 +39,6 @@ class AdminController extends Controller
         return view('admin.pages.global');
     }
     
-    
     public function top(Request $request){
         $all = Component::whereNotNull('top')->pluck('name', 'id');
         $app_data = App::where('user_id', $request->user['sub'] )->first();
@@ -95,7 +94,6 @@ class AdminController extends Controller
                     'app_components', 
                     'available_components'));
     }
-    
     
     public function globalpage(Request $request)
     {
@@ -243,8 +241,44 @@ class AdminController extends Controller
             }
         } catch (QueryException $e) {
             Log::error("globalstore: " . $e->getMessage());
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Setting fail'));
-            return back();
+            
+            return back()->with('warning', 'Setting fail');
+        }
+    }
+    
+    public function topstore(Request $request)
+    {
+        try {
+
+            $data_component = $this->request->input('data_component');
+            $list_id = [];
+            $list_insert = [];
+            if (count($data_component) > 0) {
+                $app_data = App::where('user_id', $request->user['sub'])->first();
+                if (count($app_data) > 0) {
+                    $app = new AppSetting();
+                    $app_setting = $app->with('components')->find($app_data->id);
+                    $i = 1;
+                    foreach ($data_component as $item) {
+                        $list_id[] = $item;
+                        $list_insert[] = array('app_setting_id' => $app_setting->id,
+                            'component_id' => $item,
+                            'order' => $i);
+                        $i++;
+                    }
+                }
+            }
+            if (count($list_id) > 0)
+                DB::table('rel_app_settings_components')->whereIn('app_setting_id', $list_id)->delete();
+            if (count($list_insert) > 0)
+                DB::table('rel_app_settings_components')->insert($list_insert);
+            //delete cache redis
+            RedisControl::delete_cache_redis('app_info');
+            
+            return back()->with('status', 'Add Side Menu successfully');
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return back()->with('warning', 'Add App Setting fail');
         }
     }
     

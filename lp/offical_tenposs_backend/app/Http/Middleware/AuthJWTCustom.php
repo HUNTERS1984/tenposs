@@ -12,8 +12,13 @@ use App\Models\App;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
+use cURL;
+
+
 class AuthJWTCustom extends BaseMiddleware
+
 {
+    protected $api_user_profile = 'https://auth.ten-po.com/profile';
     /**
      * Handle an incoming request.
      *
@@ -39,12 +44,22 @@ class AuthJWTCustom extends BaseMiddleware
         try {
             
             $user = $this->auth->getPayload( $token );
-            Session::put('user', $user);
+            // call api to get user profile
+            $user_id = $user->get('id');
+            //$user_role = $user->get('role');
+            $requestProfile = cURL::newRequest('get', $this->api_user_profile )
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+             
+            $responseProfile = $requestProfile->send();
+            $profile = json_decode($responseProfile->body);
+            if( $profile->code == 1000 ){
+                Session::put('user', $profile->data );
+            }
+
             $request->user = $user->get();
             if ($request->user) {
  
-                $request->app = App::whereUserId($request->user['sub'])->first();
-                
+                $request->app = App::whereUserId( $user_id )->first();
                 if ($request->app) {
                     $request->stores =  Store::whereAppId($request->app->id)->get();
                 }

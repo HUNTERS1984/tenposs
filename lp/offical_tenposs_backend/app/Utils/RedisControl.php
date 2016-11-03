@@ -21,7 +21,7 @@ class RedisControl
     
     public static function delete_cache_redis($cache_delete_type, $store_id = 0,$category_id = 0)
     {
-        $app_data = App::where('user_id', Session::get('user')['sub'])->first();
+        $app_data = App::where('user_id', Session::get('user')->id )->first();
         $prefix_cache = '';
         switch ($cache_delete_type) {
             case 'news':

@@ -64,7 +64,7 @@ class NewsController extends Controller
             }
             $list_store = $stores->lists('name', 'id');
         }
-        return view('admin::pages.news.index', compact('news', 'list_store','news_cat','list_preview_news'));
+        return view('admin.pages.news.index', compact('news', 'list_store','news_cat','list_preview_news'));
     }
 
     public function create()
