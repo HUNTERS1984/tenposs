@@ -2,7 +2,13 @@
   
 namespace App\Http\Controllers;
   
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Payment;
+use App\Models\BillingPlan;
+use App\Models\BillingAgreement;
 use Illuminate\Http\Request;
 use PaypalPayment;
 use PayPal\Api\Plan;
@@ -16,6 +22,8 @@ use PayPal\Common\PayPalModel;
 use PayPal\Api\Agreement;
 use PayPal\Api\Payer;
 use PayPal\Api\ShippingAddress;
+use PayPal\Api\AgreementStateDescriptor;
+use App\Models\Point;
 
 class PaymentController extends Controller{
     
@@ -44,165 +52,84 @@ class PaymentController extends Controller{
         
         $flatConfig = array_dot($config); // Flatten the array with dots
 
-        $this->_apiContext->setConfig($flatConfig);
+        $this->_apiContext->setConfig($flatConfig); 
     }
 
-    // public function index(){
+    public function createWebhook(Request $request)
+    {
+        $check_items = array('url');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
 
-    //     $Payment =  PaypalPayment::getAll(array('count' => 10, 'start_index' => 0), $this->_apiContext);
-        
-    //     $this->body['data'] = $Payment->toArray();
-    //     return $this->output($this->body);
-        
-  
-    // }
-  
-    // public function getPayment($payment_id){
-  
-    //     $Payment = Paypalpayment::getById($payment_id,$this->_apiContext);
-        
-    //     $this->body['data'] = $Payment->toArray();
-    //     return $this->output($this->body);
-    // }
-  
-    // public function createPayment(Request $request){
-  
-    //     $addr= Paypalpayment::address();
-    //     $addr->setLine1("3909 Witmer Road");
-    //     $addr->setLine2("Niagara Falls");
-    //     $addr->setCity("Niagara Falls");
-    //     $addr->setState("NY");
-    //     $addr->setPostalCode("14305");
-    //     $addr->setCountryCode("US");
-    //     $addr->setPhone("716-298-1822");
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
 
-    //     // ### CreditCard
-    //     $card = Paypalpayment::creditCard();
-    //     $card->setType("visa")
-    //         ->setNumber("4758411877817150")
-    //         ->setExpireMonth("05")
-    //         ->setExpireYear("2019")
-    //         ->setCvv2("456")
-    //         ->setFirstName("Joe")
-    //         ->setLastName("Shopper");
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
 
-    //     // ### FundingInstrument
-    //     // A resource representing a Payer's funding instrument.
-    //     // Use a Payer ID (A unique identifier of the payer generated
-    //     // and provided by the facilitator. This is required when
-    //     // creating or using a tokenized funding instrument)
-    //     // and the `CreditCardDetails`
-    //     $fi = Paypalpayment::fundingInstrument();
-    //     $fi->setCreditCard($card);
+        $webhook = new \PayPal\Api\Webhook();
+        $baseUrl = url();
+        $webhook->setUrl(Input::get('url'));
 
-    //     // ### Payer
-    //     // A resource representing a Payer that funds a payment
-    //     // Use the List of `FundingInstrument` and the Payment Method
-    //     // as 'credit_card'
-    //     $payer = Paypalpayment::payer();
-    //     $payer->setPaymentMethod("credit_card")
-    //         ->setFundingInstruments(array($fi));
+        $webhookEventTypes = array();
+        $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+            '{
+                "name":"PAYMENT.AUTHORIZATION.CREATED"
+            }'
+        );
+        $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+            '{
+                "name":"PAYMENT.AUTHORIZATION.VOIDED"
+            }'
+        );
+        $webhook->setEventTypes($webhookEventTypes);
+        $request = clone $webhook;
 
-    //     $item1 = Paypalpayment::item();
-    //     $item1->setName('Monthly free for POINT function')
-    //             ->setDescription('Monthly free for POINT function')
-    //             ->setCurrency('USD')
-    //             ->setQuantity(1)
-    //             ->setTax(2.5)
-    //             ->setPrice(25);
+        try {
+            $output = $webhook->create($this->_apiContext);
+
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
 
 
-    //     $itemList = Paypalpayment::itemList();
-    //     $itemList->setItems(array($item1));
+    public function createBillingPlan(Request $request)
+    {
+        $check_items = array('service_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
 
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
 
-    //     $details = Paypalpayment::details();
-    //     $details->setShipping("0")
-    //             ->setTax("2.5")
-    //             //total of items prices
-    //             ->setSubtotal("25");
-
-    //     //Payment Amount
-    //     $amount = Paypalpayment::amount();
-    //     $amount->setCurrency("USD")
-    //             // the total is $17.8 = (16 + 0.6) * 1 ( of quantity) + 1.2 ( of Shipping).
-    //             ->setTotal("27.5")
-    //             ->setDetails($details);
-
-    //     // ### Transaction
-    //     // A transaction defines the contract of a
-    //     // payment - what is the payment for and who
-    //     // is fulfilling it. Transaction is created with
-    //     // a `Payee` and `Amount` types
-
-    //     $transaction = Paypalpayment::transaction();
-    //     $transaction->setAmount($amount)
-    //         ->setItemList($itemList)
-    //         ->setDescription("Payment description")
-    //         ->setInvoiceNumber(uniqid());
-
-    //     // ### Payment
-    //     // A Payment Resource; create one using
-    //     // the above types and intent as 'sale'
-
-    //     $payment = Paypalpayment::payment();
-
-    //     $payment->setIntent("sale")
-    //         ->setPayer($payer)
-    //         ->setTransactions(array($transaction));
-
-    //     try {
-    //         // ### Create Payment
-    //         // Create a payment by posting to the APIService
-    //         // using a valid ApiContext
-    //         // The return object contains the status;
-    //         $payment->create($this->_apiContext);
-    //     } catch (\PPConnectionException $ex) {
-    //         return  "Exception: " . $ex->getMessage() . PHP_EOL;
-    //         exit(1);
-    //     }
-
-    //     dd($payment);
-
-
-    //     // $paymentId = $payment->id;
-    //     // $PayerID = $payer->id;
-
-    //     // //dd($payer);
-    //     // $payment = Paypalpayment::getById($paymentId, $this->_apiContext);
-
-    //     // // PaymentExecution object includes information necessary 
-    //     // // to execute a PayPal account payment. 
-    //     // // The payer_id is added to the request query parameters
-    //     // // when the user is redirected from paypal back to your site
-    //     // $execution = Paypalpayment::PaymentExecution();
-    //     // $execution->setPayerId($PayerID);
-
-    //     // //Execute the payment
-    //     // $payment->execute($execution,$this->_apiContext);
-
-  
-    // }
-
-    public function createBillingPlan(Request $request){
-  
         $plan = new Plan();
-        $plan->setName('Point Service Month Plan')
-        ->setDescription('Point Service Month Plan')
+        $plan->setName('Point Service Monthly Plan')
+        ->setDescription('Point Service Monthly Plan')
         ->setType('fixed');
         $paymentDefinition = new PaymentDefinition();
         $paymentDefinition->setName('Regular Payments')
             ->setType('REGULAR')
             ->setFrequency('Month')
-            ->setFrequencyInterval("2")
-            ->setCycles("12")
-            ->setAmount(new Currency(array('value' => 50, 'currency' => 'USD')));
+            ->setFrequencyInterval("1")
+            ->setCycles("1")
+            ->setAmount(new Currency(array('value' => 25, 'currency' => 'USD')));
        
-        $chargeModel = new ChargeModel();
-        $chargeModel->setType('SHIPPING')
-            ->setAmount(new Currency(array('value' => 10, 'currency' => 'USD')));
+        // $chargeModel = new ChargeModel();
+        // $chargeModel->setType('SHIPPING')
+        //     ->setAmount(new Currency(array('value' => 10, 'currency' => 'USD')));
 
-        $paymentDefinition->setChargeModels(array($chargeModel));
+        //$paymentDefinition->setChargeModels(array($chargeModel));
 
         $merchantPreferences = new MerchantPreferences();
         $baseUrl = url();
@@ -212,7 +139,7 @@ class PaymentController extends Controller{
         ->setAutoBillAmount("yes")
         ->setInitialFailAmountAction("CONTINUE")
         ->setMaxFailAttempts("0")
-        ->setSetupFee(new Currency(array('value' => 1, 'currency' => 'USD')));
+        ->setSetupFee(new Currency(array('value' => 25, 'currency' => 'USD')));
 
 
         $plan->setPaymentDefinitions(array($paymentDefinition));
@@ -220,39 +147,128 @@ class PaymentController extends Controller{
         $request = clone $plan;
         try {
             $output = $plan->create($this->_apiContext);
-        } catch (Exception $ex) {
-            dd('error');
-            exit(1);
+
+            $patch = new Patch();
+
+            $value = new PayPalModel('{
+                   "state":"ACTIVE"
+                 }');
+
+            $patch->setOp('replace')
+                ->setPath('/')
+                ->setValue($value);
+            $patchRequest = new PatchRequest();
+            $patchRequest->addPatch($patch);
+
+            $output->update($patchRequest, $this->_apiContext);
+
+            $plan = Plan::get($output->getId(), $this->_apiContext);
+
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
         }
-       
-        $this->body['data'] = $output->toArray();
+
+
+
+        $billingPlan = new BillingPlan();
+        $billingPlan->service_id = Input::get('service_id');
+        $billingPlan->paypal_billing_plan_id = $plan->getId();
+        $billingPlan->save();
+        $this->body['data'] = $plan->toArray();
         return $this->output($this->body);
     }
 
     public function billingPlan(){
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
+
         try {
             $params = array('page_size' => '10');
             $planList = Plan::all($params, $this->_apiContext);
             $this->body['data'] = $planList->toArray();
             return $this->output($this->body);
-        } catch (Exception $ex) {
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             return $this->error(9999);
         }
     }
     
     public function getBillingPlan($id){
+        
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
+
         try {
-            $plan = Plan::get($id, $this->_apiContext);
+
+            $billingPlan = BillingPlan::find($id);
+            if (!$billingPlan)
+            {
+                return $this->error(1004);
+            }
+
+            $plan = Plan::get($billingPlan->paypal_billing_plan_id, $this->_apiContext);
             $this->body['data'] = $plan->toArray();
             return $this->output($this->body);
-        } catch (Exception $ex) {
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             return $this->error(9999);
         }
     }
+    public function deleteBillingPlan($id){
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
+
+        $billingPlan = BillingPlan::find($id);
+        if (!$billingPlan)
+        {
+            return $this->error(1004);
+        }
+
+        try {
+            $plan = Plan::get($billingPlan->paypal_billing_plan_id, $this->_apiContext);
+            $result = $plan->delete($this->_apiContext);
+
+            $billingPlan->delete();
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+
+    }
 
     public function updateBillingPlan($id){
+        
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin') {
+            return $this->error(9997);
+        } 
+
         try {
-            $plan = Plan::get($id, $this->_apiContext);
+
+            $billingPlan = BillingPlan::find($id);
+            if (!$billingPlan)
+            {
+                return $this->error(1004);
+            }
+
+            $plan = Plan::get($billingPlan->paypal_billing_plan_id, $this->_apiContext);
 
             $patch = new Patch();
 
@@ -280,15 +296,24 @@ class PaymentController extends Controller{
 
 
     public function createBillingAgreement($plan_id){
-  
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+
         $agreement = new Agreement();
 
         $agreement->setName('Base Agreement')
             ->setDescription('Basic Agreement')
             ->setStartDate('2019-06-17T9:45:04Z');
         
-        $createdPlan = Plan::get($plan_id, $this->_apiContext);
+        $billingPlan = BillingPlan::find($plan_id);
+        if (!$billingPlan)
+        {
+            return $this->error(1004);
+        }
 
+        $createdPlan = Plan::get($billingPlan->paypal_billing_plan_id, $this->_apiContext);
 
         $plan = new Plan();
         $plan->setId($createdPlan->getId());
@@ -298,63 +323,154 @@ class PaymentController extends Controller{
         $payer->setPaymentMethod('paypal');
         $agreement->setPayer($payer);
         //Add Shipping Address
-        $shippingAddress = new ShippingAddress();
-        $shippingAddress->setLine1('111 First Street')
-            ->setCity('Saratoga')
-            ->setState('CA')
-            ->setPostalCode('95070')
-            ->setCountryCode('US');
-        $agreement->setShippingAddress($shippingAddress);
+        // $shippingAddress = new ShippingAddress();
+        // $shippingAddress->setLine1('111 First Street')
+        //     ->setCity('Saratoga')
+        //     ->setState('CA')
+        //     ->setPostalCode('95070')
+        //     ->setCountryCode('US');
+        // $agreement->setShippingAddress($shippingAddress);
         
         $request = clone $agreement;
        
         try {
             $agreement = $agreement->create($this->_apiContext);
             $approvalUrl = $agreement->getApprovalLink();
+            $billingAgreement = new BillingAgreement();
+            $billingAgreement->billing_plan_id = $plan_id;
+            $query = parse_url($approvalUrl, PHP_URL_QUERY);
+            parse_str($query, $params);
+            $billingAgreement->paypal_token = $params['token'];
+            $billingAgreement->user_id = $auth_id;
+            $billingAgreement->status = 0;
+            $billingAgreement->save();
+
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-            dd($ex);
             return $this->error(9999);
         }
 
-        $this->body['data'] = $agreement->toArray();
+        $this->body['data'] = $billingAgreement->toArray();
+        $this->body['data']['approveUrl'] = $approvalUrl;
         return $this->output($this->body);
   
     }
 
+    public function suspendBillingAgreement($id){
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        $billingAgreement = BillingAgreement::find($id);
+        if (!$billingAgreement)
+        {
+            return $this->error(1004);
+        }
+
+        try {
+
+            $agreementStateDescriptor = new AgreementStateDescriptor();
+            $agreementStateDescriptor->setNote("Suspending the agreement");
+
+            $agreement = Agreement::get($billingAgreement->paypal_billing_agreement_id, $this->_apiContext);
+
+            $agreement->suspend($agreementStateDescriptor, $this->_apiContext);
+
+            $billingAgreement->status = 0;
+            $billingAgreement->save();
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+
+    }
+
+    public function updateBillingAgreement($id){
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        $billingAgreement = BillingAgreement::find($id);
+        if (!$billingAgreement)
+        {
+            return $this->error(1004);
+        }
+
+        try {
+
+            $agreementStateDescriptor = new AgreementStateDescriptor();
+            $agreementStateDescriptor->setNote("Reactivating the agreement");
+
+            $agreement = Agreement::get($billingAgreement->paypal_billing_agreement_id, $this->_apiContext);
+
+            $agreement->reActivate($agreementStateDescriptor, $this->_apiContext);
+
+            $billingAgreement->status = 1;
+            $billingAgreement->save();
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+
+    }
+
+
+    //luong.hong.quan-facilitator-1@mqsolutions.vn/12345678
     public function excecuteAgreement(){
         $agreement = new Agreement();
 
         $token = $_GET['token'];
+
         $agreement = new \PayPal\Api\Agreement();
         try {
             // ## Execute Agreement
             // Execute the agreement by passing in the token
             $agreement->execute($token, $this->_apiContext);
-        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-            dd($ex);
-            return $this->error(9999);
-        }
-
-        try {
             $agreement = Agreement::get($agreement->getId(), $this->_apiContext);
+            
+            $billingAgreement = BillingAgreement::where('paypal_token', '=', $token)->first();
+            $billingAgreement->paypal_billing_agreement_id = $agreement->getId();
+            $billingAgreement->status = 1;
+            $billingAgreement->save();
+
+            $point = Point::where('auth_user_id', '=', $billingAgreement->user_id)->first();
+
+            if (!$point) {
+                $point = new Point();
+                $point->auth_user_id = $billingAgreement->user_id;
+                $point->points = 5000;
+                $point->miles = 0;
+                $point->active = 1;
+                $point->save();
+            } else {
+                $point->points += 5000;
+                $point->save();
+            }
+
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-            dd($ex);
             return $this->error(9999);
         }
 
-        $this->body['data'] = $agreement->toArray();
+        $this->body['data'] = $billingAgreement->toArray();
         return $this->output($this->body);
   
     }
 
-    public function billingTransactions($agreement_id){
+    public function billingTransactions($id){
+
+        $billingAgreement = BillingAgreement::find($id);
+
+        if (!$billingAgreement)
+        {
+            return $this->error(1004);
+        }
 
         $params = array('start_date' => date('Y-m-d', strtotime('-15 years')), 'end_date' => date('Y-m-d', strtotime('+5 days')));
 
         try {
-            $result = Agreement::searchTransactions($agreement_id, $params, $this->_apiContext);
+            $result = Agreement::searchTransactions($billingAgreement->paypal_billing_agreement_id, $params, $this->_apiContext);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-            dd($ex);
             return $this->error(9999);
         }
 
