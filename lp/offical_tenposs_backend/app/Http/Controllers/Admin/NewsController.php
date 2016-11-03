@@ -17,6 +17,8 @@ use Modules\Admin\Http\Requests\ImageRequest;
 use Carbon\Carbon;
 use App\Models\News;
 use App\Models\Store;
+use Session;
+use Log;
 
 define('REQUEST_NEWS_ITEMS', 10);
 
@@ -103,20 +105,21 @@ class NewsController extends Controller
         $this->entity->save();
         RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
         //push notify to all user on app
-        $app_data = App::where('user_id', $request->user['sub'] )->first();
+        $app_data = App::where('user_id', Session::get('user')->id )->first();
         $data_push = array(
             'app_id' => $app_data->id,
             'type' => 'news',
             'data_id' => $this->entity->id,
             'data_title' => '',
             'data_value' => '',
-            'created_by' => Auth::user()->email
+            'created_by' => Session::get('user')->email
         );
         $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
-        if (!$push)
-            Log::info('push fail: ' . json_decode($data_push));
+       
+        //if (!$push)
+            //Log::info('push fail: ' . json_decode($data_push));
         //end push
-        return redirect()->route('admin.news.index')->withSuccess('Add a news successfully');
+        return redirect()->route('admin.news.index')->with('status','Add a news successfully');
 
     }
 
@@ -167,13 +170,13 @@ class NewsController extends Controller
     {
 //        $this->entity->destroy($id);
         News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
-        return redirect()->route('admin.news.index')->withSuccess('Delete the news successfully');
+        return redirect()->route('admin.news.index')->with('status','Delete the news successfully');
     }
 
     public function storeCat(){
         $all = $this->request->all();
         $this->new_cat->create($all);
-        return redirect()->back();
+        return redirect()->back()->with('status','Add Category successful!');
     }
 
     public function nextcat()
