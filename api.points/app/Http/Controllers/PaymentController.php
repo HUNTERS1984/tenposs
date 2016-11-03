@@ -24,6 +24,7 @@ use PayPal\Api\Payer;
 use PayPal\Api\ShippingAddress;
 use PayPal\Api\AgreementStateDescriptor;
 use App\Models\Point;
+use App\Models\PointHistory;
 
 class PaymentController extends Controller{
     
@@ -447,6 +448,14 @@ class PaymentController extends Controller{
                 $point->points += 5000;
                 $point->save();
             }
+
+            $point_history = new PointHistory();
+            $point_history->auth_user_id = $billingAgreement->user_id;
+            $point_history->type = "paypal purchase";
+            $point_history->points = 5000;
+            $point_history->role = 'client';
+            $point_history->save();
+
 
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             return $this->error(9999);
