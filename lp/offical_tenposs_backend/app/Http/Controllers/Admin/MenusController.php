@@ -104,7 +104,7 @@ class MenusController extends Controller
         }
 
 
-        $returnHTML = view('admin::pages.menus.element_item')->with(compact('list_item'))->render();
+        $returnHTML = view('admin.pages.menus.element_item')->with(compact('list_item'))->render();
         return $returnHTML;
     }
 
@@ -135,7 +135,7 @@ class MenusController extends Controller
             
         }
 
-        $returnHTML = view('admin::pages.menus.element_item')->with(compact('list_item'))->render();
+        $returnHTML = view('admin.pages.menus.element_item')->with(compact('list_item'))->render();
         return $returnHTML;
     }
 
@@ -166,7 +166,7 @@ class MenusController extends Controller
             
         }
 
-        $returnHTML = view('admin::pages.menus.element_item_preview')->with(compact('list_item'))->render();
+        $returnHTML = view('admin.pages.menus.element_item_preview')->with(compact('list_item'))->render();
         return $returnHTML;
     }
 
@@ -175,7 +175,7 @@ class MenusController extends Controller
         $menus = $this->menu->select('name','id')->get();
         $item_thumbs = $this->item->select('image_url')->orderBy('id','DESC')->take(8)->get();
         $list_coupons = $this->coupon->lists('title','id')->toArray();
-        return view('admin::pages.menus.create',compact('menus','item_thumbs','list_coupons'));
+        return view('admin.pages.menus.create',compact('menus','item_thumbs','list_coupons'));
 
     }
 
@@ -321,7 +321,7 @@ class MenusController extends Controller
         $size_categories = DB::table('item_size_categories')->get();
         $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
 //        dd($size_categories);
-        return view('admin::pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu',
+        return view('admin.pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu',
             'size_type','size_categories','size_value'));
     }
 

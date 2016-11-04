@@ -31,16 +31,10 @@
                 <a href="coupon.html"><span>クーポン</span></a>
             </li>
             <li>
-                <a href="photo.html"><span>フォトギャラリー</span></a>
+                <a href="{{route('admin.photo-cate.index')}}"><span>フォトギャラリー</span></a>
             </li>
             <li>
-                <a href="staff.html"><span>スタッフ</span></a>
-            </li>
-            <li>
-                <a href="staff.html"><span>スタッフ</span></a>
-            </li>
-            <li>
-                <a href="setting.html"><span>設定</span></a>
+                <a href="{{route('admin.staff.index')}}"><span>スタッフ</span></a>
             </li>
 
             <li class="none">

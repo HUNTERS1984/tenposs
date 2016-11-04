@@ -49,10 +49,11 @@ class AuthJWTCustom extends BaseMiddleware
             //$user_role = $user->get('role');
             $requestProfile = cURL::newRequest('get', $this->api_user_profile )
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
-             
+            
             $responseProfile = $requestProfile->send();
+            
             $profile = json_decode($responseProfile->body);
-            if( $profile->code == 1000 ){
+            if( $profile->code && $profile->code == 1000 ){
                 Session::put('user', $profile->data );
             }
 

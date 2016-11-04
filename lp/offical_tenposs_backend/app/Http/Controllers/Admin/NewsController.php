@@ -72,7 +72,7 @@ class NewsController extends Controller
     public function create()
     {
         $new_cat = $this->new_cat->select('name','id')->get();
-        return view('admin::pages.news.create',compact('new_cat'));
+        return view('admin.pages.news.create',compact('new_cat'));
     }
 
     public function store(Request $request, ImageRequest $imgrequest)
@@ -133,7 +133,7 @@ class NewsController extends Controller
         $news = $this->entity->find($id);
         $list_store = $this->store->lists('name', 'id');
         $new_cat = $this->new_cat->select('name','id')->get();
-        return view('admin::pages.news.edit', compact('news', 'list_store', 'newsAll','new_cat'));
+        return view('admin.pages.news.edit', compact('news', 'list_store', 'newsAll','new_cat'));
     }
 
     public function update(ImageRequest $imgrequest, $id)
@@ -206,7 +206,7 @@ class NewsController extends Controller
 
         }
 
-        $returnHTML = view('admin::pages.news.element_item')->with(compact('list_news'))->render();
+        $returnHTML = view('admin.pages.news.element_item')->with(compact('list_news'))->render();
         return $returnHTML;
     }
 
@@ -235,7 +235,7 @@ class NewsController extends Controller
 
         }
 
-        $returnHTML = view('admin::pages.news.element_item_preview')->with(compact('list_news'))->render();
+        $returnHTML = view('admin.pages.news.element_item_preview')->with(compact('list_news'))->render();
         return $returnHTML;
     }
 
