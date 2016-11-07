@@ -12,7 +12,7 @@
     <div class="wrapp-breadcrumds">
         <div class="left"><span>グローバル</span></div>
         <div class="right">
-            <a id="btn_submit_form" class="btn-2">保存</a>
+            <a href="#" id="btn_submit_form" class="btn-2">保存</a>
         </div>
     </div>
     <section class="content">
@@ -37,10 +37,38 @@
 
             <div role="tabpanel" class="tab-pane active" id="tab-global-1">
                 <div class="col-md-4">
-                    <div class="wrapp-phone">
-                        <center>
-                            <img src="images/phone.jpg" class="img-responsive" alt="">
-                        </center>
+                     <div class="wrapp-phone">
+                        <div class="wrap-content-prview">
+                            <div class="sidebar-preview">
+                                <div class="mobile-side">
+                                    <div id="scroll-global-phone-review-1">
+                                        <div class="h_side">
+                                            <div class="imageleft">
+                                                <div class="image">
+                                                    <img class="img-circle" src="images/icon-user.png" height="35" width="35" alt="">
+                                                </div>
+                                                <p class="font32">User name</p>
+                                            </div>
+                                        </div>
+                                        <ul class="s_nav">
+                                             @if(count($data_component_dest) > 0)
+                                                @foreach ($data_component_dest as $v)
+                                                    <li id="side-item{{$v->id}}" 
+                                                        class="{{$v->sidemenu_icon}}" 
+                                                        data-id="{{$v->id}}" 
+                                                        data-value="{{$v->id}}">
+                                                        <a style="color:#{{$app_settings->menu_font_color}};
+                                                        font_family: '{{ $app_settings->menu_font_family }}';
+                                                        font-size: {{ $app_settings->menu_font_size }}"
+                                                        href="javascript:avoid();">{{$v->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -108,9 +136,37 @@
             <div role="tabpanel" class="tab-pane" id="tab-global-2">
                 <div class="col-md-4">
                     <div class="wrapp-phone">
-                        <center>
-                            <img src="images/phone.jpg" class="img-responsive" alt="">
-                        </center>
+                        <div class="wrap-content-prview">
+                            <div class="sidebar-preview">
+                                <div class="mobile-side">
+                                    <div id="scroll-global-phone-review-1">
+                                        <div class="h_side">
+                                            <div class="imageleft">
+                                                <div class="image">
+                                                    <img class="img-circle" src="images/icon-user.png" height="35" width="35" alt="">
+                                                </div>
+                                                <p class="font32">User name</p>
+                                            </div>
+                                        </div>
+                                        <ul class="s_nav">
+                                             @if(count($data_component_dest) > 0)
+                                                @foreach ($data_component_dest as $v)
+                                                    <li id="side-item{{$v->id}}" 
+                                                        class="{{$v->sidemenu_icon}}" 
+                                                        data-id="{{$v->id}}" 
+                                                        data-value="{{$v->id}}">
+                                                        <a style="color:#{{$app_settings->menu_font_color}};
+                                                        font_family: '{{ $app_settings->menu_font_family }}';
+                                                        font-size: {{ $app_settings->menu_font_size }}"
+                                                        href="javascript:avoid();">{{$v->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -495,6 +551,12 @@
                 $(this).toggleClass('selected');
                 $(this).find('a').toggleClass('active');
             });
+        });
+
+        $('#scroll-global-phone-review-1').slimScroll({
+            height: '374px',
+            size: '5px',
+            BorderRadius: '2px'
         });
         
     </script>
