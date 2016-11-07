@@ -34,6 +34,17 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->post('/user/delete', 'App\Http\Controllers\UserController@delete');
 });
 
-$app->group(['middleware' => 'jwt.refresh'],function ($app) {
+
+$app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app) {
+    $app->get('/test', 'App\Http\Controllers\UserV1Controller@test');
+    $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthV1Controller@postLogin');
+    $app->get('/auth/access_token/{id_code}/{refresh_token}', 'App\Http\Controllers\Auth\AuthV1Controller@access_token');
+});
+
+$app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
+    $app->get('/profile', 'UserV1Controller@profile');
+
+});
+$app->group(['middleware' => 'jwt.refresh'], function ($app) {
 
 });
