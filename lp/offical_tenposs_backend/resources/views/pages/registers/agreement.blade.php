@@ -5,15 +5,10 @@
                 <div id="agreement">
                     <div id="agree-header" class="text-center">
                         <img src="{{ url('assets/frontend/img/logo-agree.jpg') }}"></img>
-                        <p>&nbsp;</p>
-                        <p>年ノヤ光際ナマオム!</p>
-                        <p>教ヒミセカ案68保っ書8庫トヤ関員網め</p>
-                        <hr>
                     </div>
                     
                     
                     <div id="agree-content">
-                        <p class="text-center">楽情学にぴ間着2税ッれぞ文最る存身ワユヱハ手督ホ</p>
                         <div id="agree-content-inner">
                                 <p>HUNTERS株式会社は、お客様の個人情報保護の重要性について認識し、 個人情報の保護に関する法律(以下「個人情報保護法」といいます。)を遵
     守すると共に、以 下のプライバシーポリシー(以下「本プライバシーポリシー」といいます。)に従い、適切な取扱い及び保護に努めます。</p>

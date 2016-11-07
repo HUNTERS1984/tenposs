@@ -12,7 +12,7 @@ class Controller extends BaseController
         '9994' => 'Point is not enought.',
         '9995' => 'Cannot login.',
         '9996' => 'User existed.',
-        '9997' => 'Method is not valid.',
+        '9997' => 'Permission denied.',
         '9998' => 'Token is invalid.',
         '9999' => 'Exception error.',
         '1001' => 'Can not connect to DB.',

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>顧客管理</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" >
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="skin-black">
+    <header class="header">
+        <a href="global.html" class="logo">
+            <center>
+                <img src="images/logo.png" alt="" class="logo-pc">
+                <img src="images/logo-m.png" alt="" class="logo-m">
+            </center>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="navbar-right">
+                <a href="" class="btn-1">ァブリ申請依頼</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+
+        <aside class="left-side sidebar-offcanvas">
+            <section class="sidebar">
+
+                <div class="user-panel">
+                    <div class="pull-left image">
+                         <img src="images/avatar.png" class="img-circle" alt="User Image" />
+                    </div>
+                    <div class="pull-left info">
+                        <p>ユーザーネーム</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> オンライン</a>
+                    </div>
+                </div>
+                        
+                <ul class="sidebar-menu">
+                    <li class="none">
+                        <span>Page</span>
+                    </li>
+                    <li>
+                        <a href="global.html"><span>グローバル</span></a>
+                    </li>
+                    <li>
+                        <a href="top.html"><span>トップ</span></a>
+                    </li>
+                    <li>
+                        <a href="menu.html"><span>メニュー</span></a>
+                    </li>
+                    <li>
+                        <a href="news.html"><span>ニュース</span></a>
+                    </li>
+                    <li>
+                        <a href="coupon.html"><span>クーポン</span></a>
+                    </li>
+                    <li>
+                        <a href="photo.html"><span>フォトギャラリー</span></a>
+                    </li>
+                    <li>
+                        <a href="staff.html"><span>スタッフ</span></a>
+                    </li>
+                    <li>
+                        <a href="mypage.html"><span>マイページ</span></a>
+                    </li>
+                    <li>
+                        <a href="setting.html"><span>設定</span></a>
+                    </li>
+
+                    <li class="none">
+                        <span>Other</span>
+                    </li>
+                    <li>
+                        <a href="push.html"><span>プッシュ通知</span></a>
+                    </li>
+                    <li>
+                        <a href="analytic.html"><span>アクセス解析</span></a>
+                    </li>
+                    <li class="active">
+                        <a href="user.html"><span>顧客管理</span></a>
+                    </li>
+                    <li>
+                        <a href="accept.html"><span>承認管理</span></a>
+                    </li>
+                    <li>
+                        <a href="account.html"><span>アカウント設定</span></a>
+                    </li>
+                    <li>
+                        <a href="help.html"><span>ヘルプ</span></a>
+                    </li>
+                    <li>
+                        <a href="contact.html"><span>お問い合わせ</span></a>
+                    </li>
+                    <li>
+                        <a href="http://pon.cm/" target="_blank" class="img-nav">
+                            <img src="images/pon-nav-bottom.png" alt="">
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        <!-- /.left-side -->
+
+        <aside class="right-side">
+            <div class="wrapp-breadcrumds">
+                <div class="left"><span>顧客管理</span><span class="circle-bre">12</span></div>
+            </div>
+            <section class="content">
+                <div class="col-md-12">
+                  <div class="main-search-btn">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="wrapp_search_btn">
+                            <form class="form-group">
+                                <input type="text" class="form-control has-feedback-left" id="" placeholder="ユーザー名/ハッシュタグを入力してください">
+                                <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
+                            </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="tab-content">
+                    <div class="wrapp_table">
+                            <!-- table -->
+                            <div class="table-responsive">
+                                <table class="table accept_01">
+                                    <thead>
+                                    <tr>
+                                        <th class="center">選択</th>
+                                        <th></th>
+                                        <th class="center">ユーザーネーム</th>
+                                        <th class="center">ユーザーID</th>
+                                        <th class="center">写真</th>
+                                        <th class="center">写真</th>
+                                        <th class="center">写真</th>
+                                        <th class="center">クポン覧クポン</th>
+                                        <th class="center">真を確認</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-1" class="checkbox-custom" name="checkbox-1" type="checkbox">
+                                                    <label for="checkbox-1" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-2" class="checkbox-custom" name="checkbox-2" type="checkbox">
+                                                    <label for="checkbox-2" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-3" class="checkbox-custom" name="checkbox-3" type="checkbox">
+                                                    <label for="checkbox-3" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-4" class="checkbox-custom" name="checkbox-4" type="checkbox">
+                                                    <label for="checkbox-4" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-5" class="checkbox-custom" name="checkbox-5" type="checkbox">
+                                                    <label for="checkbox-5" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                                                                <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-6" class="checkbox-custom" name="checkbox-6" type="checkbox">
+                                                    <label for="checkbox-6" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-7" class="checkbox-custom" name="checkbox-7" type="checkbox">
+                                                    <label for="checkbox-7" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-8" class="checkbox-custom" name="checkbox-8" type="checkbox">
+                                                    <label for="checkbox-8" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-9" class="checkbox-custom" name="checkbox-9" type="checkbox">
+                                                    <label for="checkbox-9" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-10" class="checkbox-custom" name="checkbox-10" type="checkbox">
+                                                    <label for="checkbox-10" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-11" class="checkbox-custom" name="checkbox-11" type="checkbox">
+                                                    <label for="checkbox-11" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="center">
+                                                <div>
+                                                    <input id="checkbox-12" class="checkbox-custom" name="checkbox-12" type="checkbox">
+                                                    <label for="checkbox-12" class="checkbox-custom-label"></label>
+                                                </div>
+                                            </th>
+                                            <td class="center">
+                                                <img src="images/img_table.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="user-management-redesign-2.html" title="" class="blue">
+                                                    ユーザーネーム
+                                                </a>
+                                            </td>
+                                            <td class="center">
+                                                12345678
+                                            </td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">写真</td>
+                                            <td class="center">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                                <img src="images/p-user.png" alt="">
+                                            </td>
+                                            <td class="center">
+                                                <a href="" title="" class="blue-noneline">2016.07.1.12:31</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- //table -->
+                    </div>
+                  </div>
+                </div>
+            </section>
+        </aside>
+        <!-- /.right-side -->
+
+    </div><!-- ./wrapper -->
+
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+</body>
+</html>

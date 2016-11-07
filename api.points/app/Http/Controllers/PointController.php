@@ -13,7 +13,9 @@ use App\Models\Point;
 use App\Models\PointRequest;
 use App\Models\PointRequestHistory;
 use App\Models\PointRequestUse;
+use App\Utils\HttpRequestUtil;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
@@ -38,11 +40,28 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $point_info = DB::table('points')->where('auth_user_id', '=', $auth_id)
-                    ->where('app_app_id', '=', Input::get('app_id'))
-                    ->select('auth_user_id', 'app_app_id', 'points', 'miles')->get();
+//                    ->where('app_app_id', '=', Input::get('app_id'))
+                    ->select('auth_user_id', 'points', 'miles')->get();
                 if (count($point_info) > 0) {
-                    $point_info[0]->next_points = 0;
-                    $point_info[0]->next_miles = 0;
+                    if ($point_info[0]->points > 0) {
+                        $tmp_point = $point_info[0]->points % 100;
+                        $add_point = 100 - $tmp_point;
+                        $point_info[0]->next_points = $point_info[0]->points + $add_point;
+                        if ($add_point > 0) {
+                            $point_setting = DB::table('point_setting')->get();
+                            $miles_to_point = 1;
+                            if (count($point_setting) > 0) {
+                                $miles_to_point = $point_setting[0]->mile_to_point;
+                                $point_info[0]->next_miles = $point_info[0]->miles + ($miles_to_point * $add_point);
+//
+                            } else
+                                $point_info[0]->next_miles = $point_info[0]->miles + ($miles_to_point * $add_point);
+                        } else
+                            $point_info[0]->next_miles = $point_info[0]->miles;
+                    } else {
+                        $point_info[0]->next_points = 0;
+                        $point_info[0]->next_miles = 0;
+                    }
                     $this->body['data'] = $point_info;
                     return $this->output($this->body);
                 } else
@@ -128,7 +147,7 @@ class PointController extends Controller
 
     public function approve_request_point_for_end_user()
     {
-        $check_items = array('app_id', 'action','user_request_id');
+        $check_items = array('app_id', 'action', 'user_request_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -239,7 +258,7 @@ class PointController extends Controller
 
     public function approve_use_point_for_end_user()
     {
-        $check_items = array('app_id', 'points','user_request_id');
+        $check_items = array('app_id', 'points', 'user_request_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -279,6 +298,13 @@ class PointController extends Controller
                 $total_item = PointRequest::all()->count();
                 if ($total_item > 0) {
                     $items = PointRequest::orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+
+                    $token = (string)JWTAuth::parseToken()->getToken();
+                    for ($i = 0; $i < count($items); $i++) {
+                        $data = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.auth_profile_url'), $token);
+                        $items[$i]['email'] = $data->email;
+                    }
+//
                     $this->body['data']['total_item'] = $total_item;
                     $this->body['data']['items'] = $items;
                 }
@@ -312,6 +338,11 @@ class PointController extends Controller
                 $total_item = PointRequestUse::all()->count();
                 if ($total_item > 0) {
                     $items = PointRequestUse::orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $token = (string)JWTAuth::parseToken()->getToken();
+                    for ($i = 0; $i < count($items); $i++) {
+                        $data = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.auth_profile_url'), $token);
+                        $items[$i]['email'] = $data->email;
+                    }
                     $this->body['data']['total_item'] = $total_item;
                     $this->body['data']['items'] = $items;
                 }
