@@ -77,7 +77,6 @@ class AdminController extends Controller
         
         $list_font_size = Config::get('font.size');
         $list_font_family = Config::get('font.family');
-        
         // Get app_stores
         $app_stores = DB::table('app_stores')
             ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')

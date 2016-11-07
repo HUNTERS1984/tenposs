@@ -3,7 +3,7 @@
 @section('main')
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>メニュー</span></div>
+        <div class="left"><span>スタッフ</span></div>
         <div class="right">
             <span class="switch-button">
                 <div class="lcs_wrap">
@@ -33,27 +33,23 @@
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="javascript:avoid()" class="btn-4" data-toggle="modal" data-target="#AddItem">
-                    <i class="glyphicon glyphicon-plus"></i> メニュー追加
+                    <i class="glyphicon glyphicon-plus"></i> スタッフ追加
                 </a>
             </div>
-            <div class="wrapp-menu-img">
+            <div class="wrapp-staff-img">
                 <div class="row">
-                    @if(empty($list_item))
+                    @if(empty($list_staff))
                         <p>No data</p>
                     @else
-                        @foreach($list_item as $item)
+                        @foreach($list_staff as $item)
                          <div class="col-md-4 col-xs-6">
-                            <div class="content-menu-img">
-                                <a href="{{route('admin.menus.edit',$item->id)}}">
+                            <div class="content-staff-img">
+                                <a href="{{route('admin.staff.edit',$item->id)}}">
                                     <img src="{{asset($item->image_url)}}" class="img-responsive" alt="">
                                 </a>
-                                <div class="text-menu">
-                                    <p class="text-title-menu">
-                                        {{$item->title}}
-                                    </p>
-                                    {{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
-                                    {{Form::submit('削除',array())}}
-                                    {{Form::close()}}
+                                <div class="text-staff">
+                                    <a href="{{route('admin.staff.edit',$item->id)}}" class="btn-staff-1">編集</a>
+                                    <a href="{{route('admin.staff.delete',$item->id)}}" class="btn-staff-2">削除</a>
                                 </div>
                             </div>
                         </div>
@@ -63,8 +59,8 @@
                     @endif
                  
                     <div class="page-bottom">
-                        @if(!$list_item->isEmpty())
-                            {{ $list_item->render() }}
+                        @if(!$list_staff->isEmpty())
+                            {{ $list_staff->render() }}
                         @endif
                         <!--
                         <ul class="pagination"> 
@@ -87,10 +83,9 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
         <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
             <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.menus.storeMenu'))}}
+                {{Form::open(array('route'=>'admin.staff.storeCat'))}}
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -118,12 +113,12 @@
 
         <div class="modal fade" id="AddItem" tabindex="-1" role="dialog" aria-labelledby="AddItem">
             <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.menus.storeitem','files'=>true))}}
+                {{Form::open(array('route'=>'admin.staff.storestaff','files'=>true))}}
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddItemTitle">メニュー追加</h4>
+                        <h4 class="modal-title" id="AddItemTitle">スタッフ追加</h4>
                     </div>
                     <div class="modal-body">
                         <div class="col-md-4" align="left">
@@ -135,30 +130,42 @@
                         </div>
                         <div class="col-md-8" align="left">
                             <div class="form-group">
-                                {{Form::label('menu','メニュー')}}
-                                @if(count($menus) > 0)
-                                    {{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
+                                {{Form::label('staff_category_id','カテゴリー')}}
+                                @if(count($staff_cat) > 0)
+                                    {{Form::select('staff_category_id',$staff_cat->pluck('name', 'id'),old('staff_category_id'),['class'=>'form-control'])}}
                                 @endif
                             </div>
                             <div class="form-group">
-                                {{Form::label('title','タイトル')}}
-                                {{Form::text('title',old('title'),['class'=>'form-control'])}}
+                                {{Form::label('name','名')}}
+                                {{Form::text('name',old('name'),['class'=>'form-control'])}}
 
                             </div>
                             <div class="form-group">
-                                {{Form::label('description','説明')}}
-                                {{Form::textarea('description',old('description'),['class'=>'form-control'])}}
+                                {{Form::label('introduction','導入')}}
+                                {{Form::textarea('introduction',old('introduction'),['class'=>'form-control'])}}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('gender','性別')}}
+                                <input type="radio" id="gender" name="gender"
+                                       value="1" {{ old('gender')=="1" ? 'checked='.'"'.'checked'.'"' : '' }} />男性
+                                <input type="radio" id="gender" name="gender"
+                                       value="0" {{ old('gender')=="0" ? 'checked='.'"'.'checked'.'"' : '' }} />女性
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('tel','電話番号')}}
+                                {{Form::text('tel',old('tel'),['class'=>'form-control'])}}
                             </div>
                             <div class="form-group">
                                 {{Form::label('price','価格')}}
                                 {{Form::text('price',old('price'),['class'=>'form-control'])}}
 
-                            </div>
-                            <div class="form-group">
-                                {{Form::label('item_link','URL')}}
-                                {{Form::text('item_link',old('item_link'),['class'=>'form-control'])}}
 
                             </div>
+                            {{--<div class="form-group">--}}
+                            {{--{{Form::label('item_link','URL')}}--}}
+                            {{--{{Form::text('item_link',old('item_link'),['class'=>'form-control'])}}--}}
+
+                            {{--</div>--}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -175,55 +182,10 @@
 @section('footerJS')
 <script type="text/javascript">
     $(document).ready(function () {
-        // $('input.lcs_check').lc_switch();
-        // var category_idx = 0;
-        // var page = 0;
-        // var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
-        //     speed: 400,
-        //     spaceBetween: 0,
-        //     slidesPerView: 1,
-        //     nextButton: '.control-nav-preview .swiper-button-next',
-        //     prevButton: '.control-nav-preview .swiper-button-prev',
-        //     onSlideNextStart: function (swiper) {
-        //         ++category_idx;
-        //         page = 0;
-        //         $.ajax({
-        //             url: "/admin/menus/nextpreview",
-        //             data: {cat: category_idx, page: page}
-        //         }).done(function (data) {
-        //             console.log(data);
-        //             $('.content-preview').html(data);
-
-        //         });
-        //     },
-        //     onSlidePrevStart: function (swiper) {
-        //         --category_idx;
-        //         page = 0;
-        //         // $.ajax({
-        //         //     url: "/admin/menus/nextcat",
-        //         //     data: {cat: category_idx, page: page}
-        //         // }).done(function (data) {
-        //         //     console.log(data);
-        //         //     $('.wrapper-content').html(data);
-        //         // });
-        //         $.ajax({
-        //             url: "/admin/menus/nextpreview",
-        //             data: {cat: category_idx, page: page}
-        //         }).done(function (data) {
-        //             console.log(data);
-        //             $('.content-preview').html(data);
-
-        //         });
-        //     }
-        // });
-
+        
         $('.btn_upload_img.create').click(function () {
             $('.btn_upload_ipt.create').click();
         });
-
-        // $('.tooltip-menu').tooltipster({
-        //     side: ['right', 'left', 'top']
-        // });
 
         function readURL(input) {
             if (input.files && input.files[0]) {

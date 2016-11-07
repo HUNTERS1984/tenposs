@@ -19,6 +19,7 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/auth/login', 'Auth\AuthController@postLogin');
+$app->get('api/v1/excecuteagreement','PaymentController@excecuteAgreement');
 
 $app->group(['middleware' => 'jwt.auth'], function ($app) {
 //    $app->get('/', function () use ($app) {
@@ -48,20 +49,24 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/point/request/list','App\Http\Controllers\PointController@request_list');
     $app->get('/point/use/list','App\Http\Controllers\PointController@use_list');
 
-    $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers'], function($app)
+    $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers','middleware' => 'jwt.auth'], function($app)
     {
         $app->get('payment','PaymentController@index');
       
         $app->get('payment/{id}','PaymentController@getPayment');
         $app->post('payment','PaymentController@createPayment');
 
+        $app->post('webhook','PaymentController@createWebhook');
+
         $app->post('billingplan','PaymentController@createBillingPlan');
         $app->get('billingplan','PaymentController@billingPlan');
         $app->get('billingplan/{id}','PaymentController@getBillingPlan');
         $app->put('billingplan/{id}','PaymentController@updateBillingPlan');
+        $app->delete('billingplan/{id}','PaymentController@deleteBillingPlan');
 
         $app->post('billingagreement/{plan_id}','PaymentController@createBillingAgreement');
-        $app->get('excecuteagreement','PaymentController@excecuteAgreement');
+        $app->delete('billingagreement/{plan_id}','PaymentController@suspendBillingAgreement');
+        $app->put('billingagreement/{plan_id}','PaymentController@updateBillingAgreement');
 
         $app->get('billingtransactions/{agreement_id}','PaymentController@billingTransactions');
 

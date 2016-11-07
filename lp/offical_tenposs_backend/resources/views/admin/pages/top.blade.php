@@ -7,8 +7,7 @@
         <div class="wrapp-breadcrumds">
             <div class="left"><span>トップ</span></div>
             <div class="right">
-                <button class="btn-e" id="btn_submit_form" name="btn_submit_form" type="button">ポ覧</button>
-               
+                <a id="btn_submit_form" class="btn-2">保存</a>
             </div>
         </div>
         <section class="content">
