@@ -390,6 +390,8 @@ class ComposerStaticInitb45e15124693e48f99073515deb2439c
         'AddPointSettingTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_29_221610_add_point_setting_table.php',
         'AddPointTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_29_221119_add_point_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
+        'DeleteColumnAppIdPointSettingTable' => __DIR__ . '/../..',
+        'DeleteColumnAppIdPointTable' => __DIR__ . '/../..' . '/database/migrations/2016_11_06_000158_delete_column_app_id_point_table.php',
         'ExampleTest' => __DIR__ . '/../..' . '/tests/ExampleTest.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',

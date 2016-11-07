@@ -13,6 +13,8 @@ return array(
     'AddPointSettingTable' => $baseDir . '/database/migrations/2016_10_29_221610_add_point_setting_table.php',
     'AddPointTable' => $baseDir . '/database/migrations/2016_10_29_221119_add_point_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
+    'DeleteColumnAppIdPointSettingTable' => $baseDir . '/database/migrations/2016_11_06_000224_delete_column_app_id_point_setting_table.php',
+    'DeleteColumnAppIdPointTable' => $baseDir . '/database/migrations/2016_11_06_000158_delete_column_app_id_point_table.php',
     'ExampleTest' => $baseDir . '/tests/ExampleTest.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
