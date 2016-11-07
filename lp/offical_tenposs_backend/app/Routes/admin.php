@@ -35,11 +35,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('staff/storeCat', ['as' => 'admin.staff.storeCat', 'uses' => 'StaffController@storeCat']);
     Route::resource('staff', 'StaffController');
     // COUPON
-    Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'CouponController@view_more']);
-    Route::get('coupon/approve/{coupon_id}/{post_id}', ['as' => 'admin.coupon.approve', 'uses' => 'CouponController@approve']);
-    Route::get('coupon/unapprove/{coupon_id}/{post_id}', ['as' => 'admin.coupon.unapprove', 'uses' => 'CouponController@unapprove']);
-    Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'CouponController@store_type']);
-    Route::resource('coupon', 'CouponController');
+    Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'Admin\CouponController@view_more']);
+    Route::get('coupon/approve/{coupon_id}/{post_id}', ['as' => 'admin.coupon.approve', 'uses' => 'Admin\CouponController@approve']);
+    Route::get('coupon/unapprove/{coupon_id}/{post_id}', ['as' => 'admin.coupon.unapprove', 'uses' => 'Admin\CouponController@unapprove']);
+    Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'Admin\CouponController@store_type']);
+    Route::resource('coupon', 'Admin\CouponController');
 
     // Categries
     Route::delete('category/deletetype/{id}/{type}', ['as' => 'admin.category.deletetype', 'uses' => 'CategoriesController@destroy']);

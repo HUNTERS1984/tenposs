@@ -24,11 +24,11 @@
             <li class="{{ (Request::route()->getName() == 'admin.menus.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.menus.index') }}"><span>メニュー</span></a>
             </li>
-            <li>
+            <li class="{{ (Request::route()->getName() == 'admin.news.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.news.index') }}"><span>ニュース</span></a>
             </li>
-            <li>
-                <a href="coupon.html"><span>クーポン</span></a>
+            <li class="{{ (Request::route()->getName() == 'admin.coupon.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.coupon.index') }}"><span>クーポン</span></a>
             </li>
             <li>
                 <a href="photo.html"><span>フォトギャラリー</span></a>
