@@ -6,8 +6,7 @@
                     <div id="agree-header" class="text-center">
                         <img src="{{ url('assets/frontend/img/logo-agree.jpg') }}"></img>
                         <p>&nbsp;</p>
-                        
-                        <hr>
+                      
                     </div>
                     
                     
