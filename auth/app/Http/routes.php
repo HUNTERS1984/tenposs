@@ -37,8 +37,8 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app) {
     $app->get('/test', 'App\Http\Controllers\UserV1Controller@test');
-    $app->post('/auth/login', 'App\Http\Controllers\Auth\AuthV1Controller@postLogin');
-    $app->get('/auth/access_token/{id_code}/{refresh_token}', 'App\Http\Controllers\Auth\AuthV1Controller@access_token');
+    $app->post('/auth/login', 'Auth\AuthV1Controller@postLogin');
+    $app->get('/auth/access_token/{id_code}/{refresh_token}', 'Auth\AuthV1Controller@access_token');
 });
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
