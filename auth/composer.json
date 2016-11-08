@@ -14,7 +14,9 @@
         "illuminate/cookie": "^5.3",
         "basicit/lumen-vendor-publish": "^2.0",
         "bican/roles": "^2.1",
-        "thujohn/twitter": "^2.2"
+        "thujohn/twitter": "^2.2",
+        "predis/predis": "^1.1",
+        "illuminate/redis": "5.2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

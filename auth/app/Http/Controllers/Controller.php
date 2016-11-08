@@ -32,6 +32,8 @@ class Controller extends BaseController
         '99951' => 'Active code not exist.',
         '99952' => 'Active code expire.',
         '99953' => 'User not existed.',
+        '99954' => 'Refresh token invalid.',
+        '99955' => 'Auth invalid.',
     );
     protected $body = array(
         'code' => '1000',

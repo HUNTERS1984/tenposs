@@ -76,6 +76,7 @@ $app->routeMiddleware([
     // 'auth'        => App\Http\Middleware\Authenticate::class,
     'jwt.auth'    => Tymon\JWTAuth\Middleware\GetUserFromToken::class,
     'jwt.refresh' => Tymon\JWTAuth\Middleware\RefreshToken::class,
+    'BasicAuth' => App\Http\Middleware\BasicAuthMiddleware::class,
 ]);
 
 /*
@@ -103,7 +104,8 @@ $app->register(Thujohn\Twitter\TwitterServiceProvider::class);
 
 // JWTAuth
 $app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
-
+//Redis
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
