@@ -21,25 +21,25 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('menus/storeMenu', ['as' => 'admin.menus.storeMenu', 'uses' => 'Admin\MenusController@storeMenu']);
     Route::resource('menus', 'Admin\MenusController');
     // PHOTO CATS
-    Route::get('photo-cate/view_more', ['as' => 'admin.photo-cate.view_more', 'uses' => 'PhotoCatController@view_more']);
-    Route::post('photo-cate/storephoto', ['as' => 'admin.photo-cate.storephoto', 'uses' => 'PhotoCatController@storephoto']);
-    Route::get('photo-cate/nextcat', ['as' => 'admin.photo-cate.nextcat', 'uses' => 'PhotoCatController@nextcat']);
-    Route::get('photo-cate/nextpreview', ['as' => 'admin.photo-cate.nextpreview', 'uses' => 'PhotoCatController@nextpreview']);
-    Route::resource('photo-cate', 'PhotoCatController');
+    Route::get('photo-cate/view_more', ['as' => 'admin.photo-cate.view_more', 'uses' => 'Admin\PhotoCatController@view_more']);
+    Route::post('photo-cate/storephoto', ['as' => 'admin.photo-cate.storephoto', 'uses' => 'Admin\PhotoCatController@storephoto']);
+    Route::get('photo-cate/nextcat', ['as' => 'admin.photo-cate.nextcat', 'uses' => 'Admin\PhotoCatController@nextcat']);
+    Route::get('photo-cate/nextpreview', ['as' => 'admin.photo-cate.nextpreview', 'uses' => 'Admin\PhotoCatController@nextpreview']);
+    Route::resource('photo-cate', 'Admin\PhotoCatController');
     // STAFF
-
-    Route::get('staff/view_more', ['as' => 'admin.staff.view_more', 'uses' => 'StaffController@view_more']);
-    Route::get('staff/nextcat', ['as' => 'admin.staff.nextcat', 'uses' => 'StaffController@nextcat']);
-    Route::get('staff/nextpreview', ['as' => 'admin.staff.nextpreview', 'uses' => 'StaffController@nextpreview']);
-    Route::post('staff/storestaff', ['as' => 'admin.staff.storestaff', 'uses' => 'StaffController@storestaff']);
-    Route::post('staff/storeCat', ['as' => 'admin.staff.storeCat', 'uses' => 'StaffController@storeCat']);
-    Route::resource('staff', 'StaffController');
+    Route::get('staff/view_more', ['as' => 'admin.staff.view_more', 'uses' => 'Admin\StaffController@view_more']);
+    Route::get('staff/nextcat', ['as' => 'admin.staff.nextcat', 'uses' => 'Admin\StaffController@nextcat']);
+    Route::get('staff/nextpreview', ['as' => 'admin.staff.nextpreview', 'uses' => 'Admin\StaffController@nextpreview']);
+    Route::post('staff/storestaff', ['as' => 'admin.staff.storestaff', 'uses' => 'Admin\StaffController@storestaff']);
+    Route::post('staff/storeCat', ['as' => 'admin.staff.storeCat', 'uses' => 'Admin\StaffController@storeCat']);
+    Route::get('staff/delete/{id}', ['as' => 'admin.staff.delete', 'uses' => 'Admin\StaffController@delete']);
+    Route::resource('staff', 'Admin\StaffController');
     // COUPON
-    Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'CouponController@view_more']);
-    Route::get('coupon/approve/{coupon_id}/{post_id}', ['as' => 'admin.coupon.approve', 'uses' => 'CouponController@approve']);
-    Route::get('coupon/unapprove/{coupon_id}/{post_id}', ['as' => 'admin.coupon.unapprove', 'uses' => 'CouponController@unapprove']);
-    Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'CouponController@store_type']);
-    Route::resource('coupon', 'CouponController');
+    Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'Admin\CouponController@view_more']);
+    Route::get('coupon/approve/{coupon_id}/{post_id}', ['as' => 'admin.coupon.approve', 'uses' => 'Admin\CouponController@approve']);
+    Route::get('coupon/unapprove/{coupon_id}/{post_id}', ['as' => 'admin.coupon.unapprove', 'uses' => 'Admin\CouponController@unapprove']);
+    Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'Admin\CouponController@store_type']);
+    Route::resource('coupon', 'Admin\CouponController');
 
     // Categries
     Route::delete('category/deletetype/{id}/{type}', ['as' => 'admin.category.deletetype', 'uses' => 'CategoriesController@destroy']);

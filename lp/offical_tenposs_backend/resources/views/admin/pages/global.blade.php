@@ -5,15 +5,14 @@
 <form action="{{ route('admin.client.global.store') }}" 
             id="form_app_setting"
             method="post" 
-            enctype="multipart/form-data">
+            enctype="multipart/form-data" class="form-global-1">
     
   {{ csrf_field() }}   
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
         <div class="left"><span>グローバル</span></div>
         <div class="right">
-         
-            <button id="btn_submit_form" type="button" class="btn-2">ポ覧</button>
+            <a href="#" id="btn_submit_form" class="btn-2">保存</a>
         </div>
     </div>
     <section class="content">
@@ -38,12 +37,41 @@
 
             <div role="tabpanel" class="tab-pane active" id="tab-global-1">
                 <div class="col-md-4">
-                    <div class="wrapp-phone">
-                        <center>
-                            <img src="images/phone.jpg" class="img-responsive" alt="">
-                        </center>
+                     <div class="wrapp-phone">
+                        <div class="wrap-content-prview">
+                            <div class="sidebar-preview">
+                                <div class="mobile-side">
+                                    <div id="scroll-global-phone-review-1">
+                                        <div class="h_side">
+                                            <div class="imageleft">
+                                                <div class="image">
+                                                    <img class="img-circle" src="images/icon-user.png" height="35" width="35" alt="">
+                                                </div>
+                                                <p class="font32">User name</p>
+                                            </div>
+                                        </div>
+                                        <ul class="s_nav">
+                                             @if(count($data_component_dest) > 0)
+                                                @foreach ($data_component_dest as $v)
+                                                    <li id="side-item{{$v->id}}" 
+                                                        class="{{$v->sidemenu_icon}}" 
+                                                        data-id="{{$v->id}}" 
+                                                        data-value="{{$v->id}}">
+                                                        <a style="color:#{{$app_settings->menu_font_color}};
+                                                        font_family: '{{ $app_settings->menu_font_family }}';
+                                                        font-size: {{ $app_settings->menu_font_size }}"
+                                                        href="javascript:avoid();">{{$v->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-md-8">
                     
                         <div class="form-group">
@@ -108,9 +136,37 @@
             <div role="tabpanel" class="tab-pane" id="tab-global-2">
                 <div class="col-md-4">
                     <div class="wrapp-phone">
-                        <center>
-                            <img src="images/phone.jpg" class="img-responsive" alt="">
-                        </center>
+                        <div class="wrap-content-prview">
+                            <div class="sidebar-preview">
+                                <div class="mobile-side">
+                                    <div id="scroll-global-phone-review-1">
+                                        <div class="h_side">
+                                            <div class="imageleft">
+                                                <div class="image">
+                                                    <img class="img-circle" src="images/icon-user.png" height="35" width="35" alt="">
+                                                </div>
+                                                <p class="font32">User name</p>
+                                            </div>
+                                        </div>
+                                        <ul class="s_nav">
+                                             @if(count($data_component_dest) > 0)
+                                                @foreach ($data_component_dest as $v)
+                                                    <li id="side-item{{$v->id}}" 
+                                                        class="{{$v->sidemenu_icon}}" 
+                                                        data-id="{{$v->id}}" 
+                                                        data-value="{{$v->id}}">
+                                                        <a style="color:#{{$app_settings->menu_font_color}};
+                                                        font_family: '{{ $app_settings->menu_font_family }}';
+                                                        font-size: {{ $app_settings->menu_font_size }}"
+                                                        href="javascript:avoid();">{{$v->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -212,22 +268,7 @@
                 <div class="wrapp-global-redesign">
                     <div class="col-md-4">
                         <div class="content-global-redesign">
-                            <div class="title-global-redesign">オンライン</div>
-                            <div class="img-global-redesign">
-                                <center>
-                                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                                </center>
-                            </div>
-                            <div class="btn-global-redesign">
-                                <a href="" data-toggle="modal" data-target="#modal-appsplash" class="btn-gb-rd">
-                                    顧客管理
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="content-global-redesign">
-                            <div class="title-global-redesign">フォトギャラリー</div>
+                            <div class="title-global-redesign">アプリアイコン</div>
                             <div class="img-global-redesign">
                                 <center>
                                     <img src="images/phone.jpg" class="img-responsive" alt="">
@@ -235,7 +276,22 @@
                             </div>
                             <div class="btn-global-redesign">
                                 <a href="" data-toggle="modal" data-target="#modal-appsicon" class="btn-gb-rd">
-                                    顧客管理
+                                    作成依頼
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="content-global-redesign">
+                            <div class="title-global-redesign">ストア用スクリーンショット</div>
+                            <div class="img-global-redesign">
+                                <center>
+                                    <img src="images/phone.jpg" class="img-responsive" alt="">
+                                </center>
+                            </div>
+                            <div class="btn-global-redesign">
+                                <a href="" data-toggle="modal" data-target="#modal-appsplash" class="btn-gb-rd">
+                                    作成依頼
                                 </a>
                             </div>
                         </div>
@@ -252,7 +308,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h4 class="modal-title" id="myModalLabel">フォトギャラリー</h4>
+                            <h4 class="modal-title" id="myModalLabel">ストア用スクリーンショット作成依頼</h4>
                         </div>
 
                         <div class="modal-body">
@@ -260,11 +316,11 @@
                                 <ul class="nav nav-tabs tabs-center">
                                     <li class="active">
                                         <a href="#tab-gb-re-1" aria-controls="tab-gb-re-1" role="tab" data-toggle="tab">
-                                            フォトギャラリー
+                                            スクリーンショット
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#tab-gb-re-2" data-toggle="tab">アカウント設定</a>
+                                        <a href="#tab-gb-re-2" data-toggle="tab">オリジナル作成</a>
                                     </li>
                                 </ul>   
                             </div>                   
@@ -274,9 +330,9 @@
                                 <div role="tabpanel" class="tab-pane active" id="tab-gb-re-1">
                                    <div class="wrapp-form-tab-gb-1">
                                        <form>
-                                            <label>フォントタイプ・フォントファミリ</label>
+                                            <label>ストア用スクリーンショット</label>
                                             <div class="content-tab-3-select-2">
-                                                <label for="">1 項目</label>
+                                                <label for="">1 枚目</label>
                                                 <select name="" id="" class="form-control middle">
                                                     <option value="">オンライン</option>
                                                     <option value="">オンライン</option>
@@ -286,7 +342,7 @@
                                                 </select>
                                             </div>
                                             <div class="content-tab-3-select-2">
-                                                <label for="">2 項目</label>
+                                                <label for="">2 枚目</label>
                                                 <select name="" id="" class="form-control middle">
                                                     <option value="">オンライン</option>
                                                     <option value="">オンライン</option>
@@ -296,7 +352,7 @@
                                                 </select>
                                             </div>
                                             <div class="content-tab-3-select-2">
-                                                <label for="">3 項目</label>
+                                                <label for="">3 枚目</label>
                                                 <select name="" id="" class="form-control middle">
                                                     <option value="">オンライン</option>
                                                     <option value="">オンライン</option>
@@ -306,7 +362,7 @@
                                                 </select>
                                             </div>
                                             <div class="content-tab-3-select-2">
-                                                <label for="">4 項目</label>
+                                                <label for="">4 枚目</label>
                                                 <select name="" id="" class="form-control middle">
                                                     <option value="">オンライン</option>
                                                     <option value="">オンライン</option>
@@ -316,7 +372,7 @@
                                                 </select>
                                             </div>
                                             <div class="content-tab-3-select-2">
-                                                <label for="">5 項目</label>
+                                                <label for="">5 枚目</label>
                                                 <select name="" id="" class="form-control middle">
                                                     <option value="">オンライン</option>
                                                     <option value="">オンライン</option>
@@ -326,7 +382,7 @@
                                                 </select>
                                             </div>  
                                             <div class="btn-tab-gb-1">
-                                                <a href="">オンライン</a> 
+                                                <a href="">作成依頼</a> 
                                             </div>              
                                         </form>
                                    </div>
@@ -338,7 +394,7 @@
                                         <p>
                                             が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入り
                                         </p>    
-                                        <a href="">顧客管理</a>            
+                                        <a href="">作成依頼</a>            
                                     </div>
                                 </div>
                             </div>
@@ -357,14 +413,14 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    <h4 class="modal-title" id="myModalLabel">フォトギャラリー</h4>
+                                    <h4 class="modal-title" id="myModalLabel">アプリアイコン作成依頼</h4>
                                 </div>
 
                                 <div class="modal-body">
 
                                     <div class="left-global-redesign">
                                         <div class="title-left-global-redesign">
-                                            <span>フォトギャラリー</span>
+                                            <span>ロゴの種類を選択</span>
                                         </div>
                                         <ul>
                                             <li class="active">
@@ -392,14 +448,14 @@
                                         <form action="">
                                             <div class="col-md-5 col-xs-12">
                                                 <div class="form-group">
-                                                    <label>タイトルカラー</label>
+                                                    <label>画像アップロード</label>
                                                     <div class="wrapp-draw">
-                                                        <span class="left">クポン覧クポンタ</span>
-                                                        <input type="text" class="form-control long" id="" placeholder="クポン覧クポ">
+                                                        <span class="left">選択されていません</span>
+                                                        <input type="text" class="form-control long" id="" placeholder="ファイルを選択">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>プッシュ通知</label>
+                                                    <label>ロゴのタイトル</label>
                                                     <input type="text" class="form-control" id="" placeholder="12タイトル">
                                                 </div>
                                                 <div class="form-group">
@@ -410,7 +466,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>タイトルカラー</label>
+                                                    <label>背景カラー</label>
                                                     <div class="wrapp-draw">
                                                         <input type="text" class="form-control middle" id="" placeholder="000000">
                                                         <img src="images/draw.jpg" class="left" alt="">
@@ -449,7 +505,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <center>
-                                                    <a href="global-redesign-2.html" class="btn-box-px">客管理</a>
+                                                    <a href="global-redesign-2.html" class="btn-box-px">作成依頼</a>
                                                 </center>
                                             </div>
                                         </form>
@@ -495,6 +551,12 @@
                 $(this).toggleClass('selected');
                 $(this).find('a').toggleClass('active');
             });
+        });
+
+        $('#scroll-global-phone-review-1').slimScroll({
+            height: '374px',
+            size: '5px',
+            BorderRadius: '2px'
         });
         
     </script>

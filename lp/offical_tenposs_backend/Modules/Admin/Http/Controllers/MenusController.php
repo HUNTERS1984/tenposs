@@ -247,6 +247,7 @@ class MenusController extends Controller
 
     public function storeitem()
     {
+
         $rules = [
             'title' => 'required|Max:255',
             'description' => 'required|Min:6',
@@ -255,7 +256,7 @@ class MenusController extends Controller
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
-        {
+        {   
             return redirect()->back()->withInput()->withErrors($v);
         }
 
