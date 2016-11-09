@@ -53,7 +53,7 @@ class UserController extends Controller
 
         if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
             Session::put('jwt_token',$response->data);
-            return redirect()->route('admin.top');
+            return redirect()->route('admin.client.top');
         }
      
         return back()->withErrors( 'User cannot login' );

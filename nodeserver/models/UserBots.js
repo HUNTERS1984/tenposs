@@ -17,10 +17,11 @@ exports.getBot = function(chanel_id, _callback){
 
         connection = mysql.createConnection(mysqlConfig);
         connection.connect();       	
-        connection.query({
+        var query = connection.query({
             sql: sql,
                 values: [chanel_id]
             }, function (error, results, fields) {
+                console.log(query.sql);
                 if(error){
                     connection.end();
                     return false;
