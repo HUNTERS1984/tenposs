@@ -19,12 +19,14 @@
 					<h3 class="title-footer">Other</h3>
 					<ul>
 						<li><a href="{{url('company03')}}">tenpossのはじまり</a></li>
+						<!--
 						<li><a href="{{url('startguide')}}">tenpossスタートガイド</a></li>
 						<li><a href="{{url('intergration02')}}">tenposs連携アプリ</a></li>
 						<li><a href="{{url('company04')}}">tenposs TEAM</a></li>
 						<li><a href="{{url('company05')}}">tenpossブランド資産</a></li>
 						<li><a href="{{url('introduction')}}">tenpossを紹介する</a></li>
 						<li><a href="#">tenposs Market</a></li>
+						-->
 					</ul>
 				</div>
 			</div>
@@ -33,9 +35,11 @@
 					<h3 class="title-footer">About Us</h3>
 					<ul>
 						<li><a href="{{url('company02')}}">運営会社</a></li>
+						<!--
 						<li><a href="{{url('blog')}}">ブログ</a></li>
 						<li><a href="{{url('news')}}">ニュース</a></li>
 						<li><a href="{{url('support')}}">サポート</a></li>
+						-->
 						<li><a href="{{url('agree')}}">利用規約</a></li>
 						<li><a href="{{url('signage')}}">特定商取引に基づく表記</a></li>
 						<li><a href="{{url('policy')}}">プライバシーポリシー</a></li>

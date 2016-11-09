@@ -85,7 +85,7 @@ Route::group(['prefix' => 'admin1'], function () {
 
 
 // CHAT
-
+/*
 Route::group(array('prefix' => 'chat'), function () {
     Route::get('line', array('as' => 'admin.clients.chat', 'uses' => 'ChatLineController@chatAdmin'));
     Route::post('bot', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
@@ -94,7 +94,7 @@ Route::group(array('prefix' => 'chat'), function () {
     Route::get('login', array('as' => 'chat.login', 'uses' => 'ChatLineController@login'));
     Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
     Route::post('contact/seacrch', array('as' => 'chat.seach.contact', 'uses' => 'ChatLineController@searchContact'));
-});
+});*/
 
 Route::get('coupon/use/code/{user_id}/{coupon_id}/{code}/{sig}', array('as' => 'coupon.use.code', 'uses' => 'CouponController@coupon_use_code_view'));
 Route::post('coupon/use/code/approve', array('as' => 'coupon.use.code.approve', 'uses' => 'CouponController@coupon_use_code_approve'));

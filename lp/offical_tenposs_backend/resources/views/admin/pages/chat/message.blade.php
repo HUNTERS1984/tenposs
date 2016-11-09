@@ -16,8 +16,7 @@
               <ul class="messages scrollbar-macosx"></ul>
           </div>
         </div>
-        <div class="panel-footer" style="border-top: 0px;
-    padding: 0px;">
+        <div class="panel-footer" style="border-top: 0px; padding: 0px;">
           <div class="input-group input-message">
               <input type="text" class="form-control message_input" placeholder="メッセージを入力してください...">
               <span class="input-group-btn input-group-addon">

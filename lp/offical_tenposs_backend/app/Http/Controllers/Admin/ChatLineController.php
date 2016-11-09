@@ -30,7 +30,7 @@ class ChatLineController extends Controller
     protected $bot;
     protected $user;
     protected $curl;
-    protected $botService;
+
     protected $loginService;
     
     const API_REQUEST_TOKEN = 'https://api.line.me/v1/oauth/accessToken';
@@ -42,11 +42,6 @@ class ChatLineController extends Controller
    
     public function __construct(){
     	$this->curl = new \anlutro\cURL\cURL;
-    	$this->botService = UserBots::where('user_id', Session::get('user')->id )->first();
-    	if( !$this->botService ){
-    	    abort(503);
-    	}
-    	
     }
 
     /*
@@ -81,7 +76,7 @@ class ChatLineController extends Controller
                     // create room chanel
                     $user = DB::table('line_accounts')
                         ->join('apps','line_accounts.app_user_id','=','apps.id')
-                        ->join('users','users.id','=','apps.user_id')
+                        //->join('users','users.id','=','apps.user_id')
                         ->select('users.id')
                         ->get();
                        
@@ -111,28 +106,33 @@ class ChatLineController extends Controller
     * 
     */
     public function chatAdmin(){
-       
-       
+    
+        $botService = UserBots::where('user_id', Session::get('user')->id )->first();
+    	if( !$botService ){
+    	    return view('admin.pages.chat.clients')->withErrors('Please config your BOT LINE info!' );
+    	}
         // Get profile
-        $bots = 
-        
-        $requestProfile = $this->curl->newRequest('get','https://api.line.me/v1/profile')
-            ->setHeader('Authorization',  'Bearer '. $this->botService->chanel_access_token  );
+        $requestProfile = $this->curl->newRequest('get', self::API_REQUEST_PROFILE )
+            ->setHeader('Authorization',  'Bearer '. $botService->chanel_access_token  );
              
         $responseProfile = $requestProfile->send();
         $profile = json_decode($responseProfile->body);
-       
-        $contacts = DB::table('app_users')
-            ->join('apps','app_users.app_id','=','apps.id')
+        
+        if( !$profile ){
+            return view('admin.pages.chat.clients')->withErrors('Try again!' );
+        }
+    
+        $contacts = DB::table('apps')
+            ->join('app_users','app_users.app_id','=','apps.id')
             ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
-            ->where('app_users.id', Session::get('user')->id )
+            ->where('apps.user_id', Session::get('user')->id )
             ->select('line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
             ->orderBy('displayName')
             ->paginate(20);
-  
+
         return view('admin.pages.chat.clients',[
             'contacts' => json_encode($contacts),
-            'channel' =>  $profile->mid,
+            'channel' =>  $botService->chanel_id,
             'profile' => json_encode( $profile )]);
     }
     
@@ -153,11 +153,11 @@ class ChatLineController extends Controller
             ->where('line_accounts.app_user_id',$app_user->id)
             ->select('mid','pictureUrl','displayName','statusMessage')
             ->get();
-   
+
         if(count($lineAccounts) <= 0 ){
-            return view('admin::pages.chat.login');
+            return view('admin.pages.chat.login');
         }
-        return view('admin::pages.chat.lineaccounts',['datas' => $lineAccounts ]);
+        return view('admin.pages.chat.lineaccounts',['datas' => $lineAccounts ]);
     }
     
     /*
@@ -165,11 +165,12 @@ class ChatLineController extends Controller
     * Login LINE button
     */
     public function verifinedToken($mid){
+      
         if( !Session::has('appuser') ){
             abort(503);
         }
         $lineAccount = LineAccount::where('mid',$mid)->firstOrFail();
-        
+       
         $appuser = Session::get('appuser');
         // $app = AppClient::findOrFail($appuser->app_id);
         
@@ -180,7 +181,7 @@ class ChatLineController extends Controller
         
         
         if( isset( $responseData->statusCode ) && $responseData->statusCode == 401 ){
-            return view('admin::pages.chat.login');
+            return view('admin.pages.chat.login');
         }else{
             $profile = [
                 'mid' => $lineAccount->mid,
@@ -190,18 +191,17 @@ class ChatLineController extends Controller
             
             $app_user = DB::table('app_users')
                 ->join('apps','app_users.app_id','=','apps.id')
-                ->join('users','users.id','=','apps.user_id')
+                ->join('user_bots','user_bots.user_id','=','apps.user_id')
                 ->where('app_users.app_id',$appuser->app_id)
-                ->select('users.id')
+                ->select('user_bots.chanel_id')
                 ->take(1)
-                ->get()
-                ;
+                ->first();
             if(!$app_user)
                 abort(503);
    
-            return view('admin::pages.chat.message',[ 
+            return view('admin.pages.chat.message',[ 
                 'profile' => json_encode($profile), 
-                'channel' => $app_user[0]->id.'-'.Config::get('line.BOT_CHANEL_ID') ]);
+                'channel' => $app_user->chanel_id]);
         }
        
     }
@@ -274,25 +274,27 @@ class ChatLineController extends Controller
                 //$res = $this->bot->sendText($data->mid, 'Welcome to Tenposs');
                 $app_user = DB::table('app_users')
                     ->join('apps','app_users.app_id','=','apps.id')
-                    ->join('users','users.id','=','apps.user_id')
+                    ->join('user_bots','user_bots.user_id','=','apps.user_id')
                     ->where('app_users.app_id',$appuser->app_id)
-                    ->select('users.id')
+                    ->select('user_bots.chanel_id')
                     ->take(1)
-                    ->get();
-                    
+                    ->first();
                 if(!$app_user)
                     abort(503);
-   
-                return view('admin::pages.chat.message',[ 
+       
+                return view('admin.pages.chat.message',[ 
                     'profile' => json_encode($profile), 
-                    'channel' => $app_user[0]->id.'-'.Config::get('line.BOT_CHANEL_ID') ]);
+                    'channel' => $app_user->chanel_id]);
+                    
+
+          
     
             }
             
         }
         // if request LINE login fail
         if( $request->has('errorCode') ){
-            return view('admin::pages.chat.login');
+            return view('admin.pages.chat.login');
         }
         
     }

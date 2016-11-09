@@ -6,13 +6,15 @@
         <div class="left"><span>顧客管理</span><span class="circle-bre">19</span></div>
     </div>
     <section class="content">
+        <div class="col-sm-12">@include('admin.layouts.messages')</div>
+        
         <div class="wrapp-user-chat">
             <div class="left-user-chat">
                 <div class="wrapp_search_user_chat">
                     <form class="form-horizontal">
                         <div class="input-group">
                             <input id="search_input" type="text" class="form-control" placeholder="ユーザーネ">
-                            <a href="" class="input-group-addon">
+                            <a href="javascript:void(0)" class="input-group-addon">
                                 <img src="{{ url('admin/images/search.png') }}" alt="">
                             </a>
                         </div>
@@ -25,10 +27,10 @@
             <div class="right-user-chat">
                 <div class="wrapp-thumb-user-chat">
                     <div class="img-thumb-user-chat">
-                        <img src="" alt="">
+                        <img id="chatting-user-avatar" src="" alt="">
                     </div>
                     <div class="title-thumb-user-chat">
-                        <span></span>
+                        <span id="chatting-user-name"></span>
                     </div>
 
                     <!-- Modal -->
@@ -61,35 +63,23 @@
 
                 <div class="form-middle-user">
                     <div class="con-scroll-right" data-ss-container>
-                        <div id="messages-windows" class="chat-body clearfix">
-                            <div class="answer left">
-                                <div class="avatar">
-                                    <img src="images/user-chat.png" alt="">
-                                </div>
-                                <div class="text">
-                                    までお問い合わせ下さい。
-                                </div>
-                                <div class="time"><span>2:03 PM</span></div>
-                            </div>
-                            
-                        </div>
+                        <div id="messages-windows" class="chat-body clearfix"></div>
                     </div>
                 </div>
                 <div id="message-wrapper"  class="form-text-user">
-                    
-                        <div class="row">
-                            <div class="col-md-1">
-                                <button type="submit" class="btn btn-default">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" id="message_input" class="form-control" placeholder="">
-                            </div>
-                            <div class="col-md-2">
-                                <button id="send_message" type="button" class="btn btn-primary">ポ覧</button>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                            </button>
                         </div>
+                        <div class="col-md-9">
+                            <input type="text" id="message_input" class="form-control" placeholder="">
+                        </div>
+                        <div class="col-md-2">
+                            <button id="send_message" type="button" class="btn btn-primary">ポ覧</button>
+                        </div>
+                    </div>
                     
                 </div>
             </div>
@@ -98,8 +88,6 @@
 </aside>
 <!-- /.right-side -->
 
-
-  
 <div id="members-template" class="hide">   
 	<li id=""  class="">
         <a href="#">
@@ -114,7 +102,6 @@
             </div>
             <div class="right-list-user">
                 <p class="time-user-chat"></p>
-                <p class="count-user-chat"></p>
             </div>
         </a>
     </li>
@@ -138,10 +125,10 @@
 <script type="text/javascript">
 
 var socket;
-var profile = $.parseJSON('<?php echo ($profile) ?>');
-var channel = '{{ $channel }}';
-var noavatar = '{{url("assets/images/noavatar.png")}}';
-var contactsData = $.parseJSON('<?php echo ($contacts) ?>');
+var profile = $.parseJSON('{!! (isset($profile)) ? $profile : "" !!}');
+var channel = '{{ (isset($channel)) ? $channel : "" }}';
+var noavatar = '{{ url("assets/images/noavatar.png") }}';
+var contactsData = $.parseJSON('{!!  (isset($contacts)) ? $contacts : "" !!}');
 
 /*  windows: {
         mid: string,
@@ -233,6 +220,7 @@ function sendMessage(target) {
     drawMessage(message);
     // Send message to server
     var package = {
+        'from' : profile.mid,
         'to': $(closest).attr('data-id'),
         'message': $(closest).find('input').val(),
         'timestamp': d.getTime()/1000
@@ -272,7 +260,7 @@ function connectToChat() {
         $( contactsData.data ).each(function(index, item) {
             for( i in users){
                 if( users[i].mid === item.mid ){
-                    $('#con'+item.mid).find('.media-heading').html('<span class="status on"></span>');
+                    $('#con'+item.mid).find('.right-list-user').html('<p class="count-user-chat"></p>');
                 }
             }
             
@@ -441,11 +429,16 @@ $(document).ready(function(){
     });
     
     // Open windows chat and load history 
-    
     $('.nav-list-user').on('click','li',function(e){
-        console.log('Render windows chat');
+        e.preventDefault();
+        console.log('Open windows chat');
+        // active
         $('.nav-list-user li').removeClass('active');
         $(this).addClass('active');
+        // Set windows avatar and username
+        $('#chatting-user-avatar').attr('src', $(this).find('img').attr('src') );
+        $('#chatting-user-name').text( $(this).find('.users-name').text() );
+        // Set data-mid to windows chat
         $('#message-wrapper').attr('data-id', $(this).attr('id').substr(3) );
         socket.emit('admin.send.history', $(this).attr('id').substr(3) );
     })
