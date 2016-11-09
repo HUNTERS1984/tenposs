@@ -27,7 +27,7 @@ exports.getBot = function(chanel_id, _callback){
                     return false;
                 }else{
                     connection.end();
-                    return _callback(results);
+                    return _callback(results[0]);
                 }
             });
         
