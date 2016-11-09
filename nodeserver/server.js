@@ -211,10 +211,12 @@ io.on('connection', function (socket) {
                         }else{
                             logger.info('Enduser connected: '+ JSON.stringify(user));
                             UserBots.getBot( socket.room, function( userbot ) {
+                                logger.info('BOT profile ');
+                                logger.info(userbot);
                                 if(userbot){
                                     Bot.getProfileByToken(userbot.chanel_access_token, function( botprofile ){
                                         if( botprofile ){
-                                            logger.info('BOT profile ');
+                                           
                                             logger.info(botprofile);
                                             
                                             socket.toUser = botprofile;
