@@ -16,13 +16,15 @@ var EVENT_TYPE = '138311608800106203';
 
 
 exports.getProfileByToken = function( token, _callback ){
-   
+    var body = {};
     var options = {
         uri: API_BOT_PROFILE,
         method: 'GET',
         headers: {
             "Authorization": "Bearer "+token,
         },
+        json: true,
+        body: body
     };
     
     request(options,function(error, response, body){
