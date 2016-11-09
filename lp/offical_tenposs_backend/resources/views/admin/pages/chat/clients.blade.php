@@ -272,9 +272,8 @@ function connectToChat() {
     socket.on('receive.admin.message',function( package ){
         console.log('Receive messages from endusers');
         console.log(package);
-        findWindows( package.windows, function(windows){
-            drawMessage(windows, package.message);
-        });
+        drawMessage(package.message);
+        
     })
 
     socket.on('history',function(package){
@@ -324,20 +323,20 @@ function connectToChat() {
         console.log(package);
         findWindows(package.windows,function( $windows ){
             $(package.history).each(function(index, item){
-                drawMessage($windows, {
+                drawMessage({
                     text: item.message,
                     timestamp: converTimestamp(item.created_at) ,
                     profile: (function(){
-                            if(item.from_mid === profile.mid)
-                                return profile;
-                            else{
-                                return {
-                                    displayName: item.displayName,
-                                    mid: item.mid,
-                                    pictureUrl: item.pictureUrl,
-                                }
+                        if(item.from_mid === profile.mid)
+                            return profile;
+                        else{
+                            return {
+                                displayName: item.displayName,
+                                mid: item.mid,
+                                pictureUrl: item.pictureUrl,
                             }
-                        })()
+                        }
+                    })()
                 });
             })
 

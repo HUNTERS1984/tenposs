@@ -17,24 +17,17 @@ var server  = https.createServer(options, app),
     log4js  = require('log4js');
     
     
-// Models
-const API_SEND_MESSAGE = 'https://trialbot-api.line.me/v1/events';
-var BOT_MID="uaa357d613605ebf36f6366a7ce896180";
-var Messages          = require("./models/Messages");
-var LineAccounts      = require("./models/LineAccounts"); 
-var Apps              = require("./models/Apps"); 
-var Bot               = require("./line/Bot"); 
 
+const API_SEND_MESSAGE  = 'https://trialbot-api.line.me/v1/events';
+// Models
+var Messages            = require("./models/Messages");
+var LineAccounts        = require("./models/LineAccounts"); 
+var Apps                = require("./models/Apps"); 
+var Bot                 = require("./line/Bot"); 
+var UserBots            = require("./models/UserBots");
 
 var userType = ['client','enduser'];
-var toUser = {
-    bot_mid:        config.bot.BOT_MID,
-    pictureUrl:     config.bot.BOT_PICTURE_URL,
-    statusMessage:  config.bot.BOT_STATUS_MESSAGE,
-    displayName:    config.bot.BOT_DISPLAY_NAME
-};
-
-
+// Log
 log4js.loadAppender('file');
 log4js.addAppender(log4js.appenders.file('logs/chat.log'), 'chat');
 var logger = log4js.getLogger('chat');
@@ -72,9 +65,11 @@ redisClient.subscribe('message');
   ...
 ]}
 */
+// Redis
 
+/*
 redisClient.on("message", function (channel, message) {
-    logger.trace('--------------------- Redis ---------------------------');
+    logger.trace('Redis ------------------------------------------------');
     logger.info('Redis receive message: ', message, channel);
     message = JSON.parse(message);
     // Find from is online
@@ -132,8 +127,7 @@ redisClient.on("message", function (channel, message) {
     });
 
 });
-
-
+*/
 
 io.on('connection', function (socket) {
       
@@ -143,58 +137,64 @@ io.on('connection', function (socket) {
             logger.warn('Not found user type connect');
             return;
         }else{
+            // Save info to socket
             socket.room = user.channel;
             socket.user = user;
             socket.join(user.channel);
+            
+            // Package user connected status
             var packageConnected = {
                 user: user,
                 message: user.profile.displayName +' connected!'
             };
+            
+            
             if( user.from === 'client' ){
                 var packageHistory = [];
-                getEnduserMidsOnlineInRoom( user.channel, function(arrMids){
+                // find all enduser are connected 
+                getEnduserMidsOnlineInRoom( socket.room, function(arrMids){
                     logger.info('All are connected'+ JSON.stringify(arrMids) );
                     
                     if( arrMids.length > 0 ){
-                       
                         removeItemArray(arrMids,{
                                 mid: socket.user.profile.mid, 
                                 displayName:  socket.user.profile.displayName
                             },
                             function(newArr){
-                            var count = 0;
-                            for( var i in newArr ){
-                                if( arrMids[i].mid !== socket.user.profile.mid ){
-                                    count++;
-                                    Messages.getMessageClientHistory(
-                                        socket.room,socket.user.profile.mid,
-                                        arrMids[i].mid,20, 
-                                        function(data){
-                                            
-                                            var temp = {
-                                                windows: newArr[i],
-                                                history: data
+                                
+                                /*
+                                var count = 0;
+                                for( var i in newArr ){
+                                    if( arrMids[i].mid !== socket.user.profile.mid ){
+                                        count++;
+                                        Messages.getMessageClientHistory(
+                                            socket.room,socket.user.profile.mid,
+                                            arrMids[i].mid,20, 
+                                            function(data){
+                                                
+                                                var temp = {
+                                                    windows: newArr[i],
+                                                    history: data
+                                                }
+                                                logger.trace('History message client');
+                                                logger.info(temp);
+                                                packageHistory.push(temp);
+                    
+                                                if( count == (arrMids.length) ){
+                                                    // Emit to client data history
+                                                    socket.emit('history',packageHistory);
+                                                }
+                                                
                                             }
-                                            logger.trace('History message client');
-                                            logger.info(temp);
-                                            packageHistory.push(temp);
-                
-                                            if( count == (arrMids.length) ){
-                                                // Emit to client data history
-                                                socket.emit('history',packageHistory);
-                                            }
-                                            
-                                        }
-                                    );
-                                    
+                                        );
+                                        
+                                    }
                                 }
-                            }
-                            // Emit list enduser online
+                                */
+                            // Emit list to client, enduser online
                             socket.emit('receive.admin.getClientOnline',newArr);
                         });
-                        
-                        
-                       
+
                     }
                     
                 } );
@@ -202,56 +202,69 @@ io.on('connection', function (socket) {
                 io.sockets.in(socket.room).emit('receive.user.connected', packageConnected);
                             
             }else{
-                socket.to = toUser;
+                
+                // check exist account
                 LineAccounts.checkExistAccounts( user, 
                     function( exitsUser ){
                         if( !exitsUser ){
                             logger.warn('Enduser LineAccounts not exits'); return;
                         }else{
-                            
-                            logger.info('User connected: '+ JSON.stringify(user));
-                           
-                            // Find client in room are online
-                            findIsClientInRoom(socket.room, 
-                                function( foundClient ){
-                                            if( foundClient ){
-                                                // Send connected message to client
-                                                io.sockets.in(socket.room).emit('receive.admin.connected', packageConnected);
-                                                Messages.getMessageHistory( 
-                                                    foundClient.user.profile.mid, 
-                                                    socket.user.profile.mid, 10, 
-                                                    function( messages ){
-                                                        // Emit to client history message
-                                                        var package = {
-                                                            messages: messages,
-                                                            to: foundClient.user.profile
-                                                        };
-                                                        socket.emit('history', package);
-                                                        // Emit to enduser client are online
-                                                        var packageConnected = {
-                                                            user: foundClient.user,
-                                                            message: foundClient.user.profile.displayName +' online!'
-                                                        };
-                                                        socket.emit('receive.user.connected', packageConnected);
-                                                    }
-                                                )
-                                            }else{
-                                                logger.info('Not found client are online');
-                                                // Emit to enduser message history
-                                                Messages.getMessageHistory( 
-                                                    toUser.bot_mid, 
-                                                    socket.user.profile.mid, 10, 
-                                                    function( messages ){
-                                                        var package = {
-                                                            messages: messages,
-                                                            to: toUser
-                                                        };
-                                                        socket.emit('history', package);
-                                                    }
-                                                )
-                                            }// endif
-                             });
-                                        
+                            logger.info('Enduser connected: '+ JSON.stringify(user));
+                            UserBots.getBot( socket.room, function( userbot ) {
+                                if(userbot){
+                                    Bot.getProfileByToken(userbot.chanel_access_token, function( botprofile ){
+                                        if( botprofile ){
+                                            socket.toUser = botprofile;
+                                            // Find client in room are online
+                                            findIsClientInRoom(socket.room, 
+                                                function( foundClient ){
+                                                    if( foundClient ){
+                                                        // Send to client, enduser connected message
+                                                        io.sockets.in(socket.room).emit('receive.admin.connected', packageConnected);
+                                                        Messages.getMessageHistory( 
+                                                            foundClient.user.profile.mid, 
+                                                            socket.user.profile.mid, 10, 
+                                                            function( messages ){
+                                                                // Emit to client history message
+                                                                var package = {
+                                                                    messages: messages,
+                                                                    to: foundClient.user.profile
+                                                                };
+                                                                socket.emit('history', package);
+                                                                // Emit to enduser client are online
+                                                                var packageConnected = {
+                                                                    user: foundClient.user,
+                                                                    message: foundClient.user.profile.displayName +' online!'
+                                                                };
+                                                                socket.emit('receive.user.connected', packageConnected);
+                                                            }
+                                                        )
+                                                    }else{
+                                                        logger.info('Not found client are online');
+                                                        // Emit to enduser message history
+                                                        Messages.getMessageHistory( 
+                                                            socket.toUser.mid, 
+                                                            socket.user.profile.mid, 10, 
+                                                            function( messages ){
+                                                                var package = {
+                                                                    messages: messages,
+                                                                    to: socket.toUser
+                                                                };
+                                                                socket.emit('history', package);
+                                                            }
+                                                        )
+                                                    }// endif
+                                             });
+                                        }else{
+                                            return;
+                                        }
+                                    })
+                                    
+                                }else{
+                                    return;
+                                }
+                            } );
+                
                         }
                 }) ;
             }
@@ -291,7 +304,7 @@ io.on('connection', function (socket) {
                         socket.user.profile.mid, 
                         mid, 
                         10, function( messages ){
-                          
+                            logger.info( messages );
                             socket.emit('receive.admin.history',  {
                                 history: messages,
                                 windows: {
@@ -339,7 +352,7 @@ io.on('connection', function (socket) {
         Messages.saveMessage(
             socket.room, 
             socket.user.profile.mid, 
-            BOT_MID, package.message, 
+            socket.toUser.mid, package.message, 
             function(inserID){
                 logger.info('Save message success');
             }
@@ -383,7 +396,7 @@ io.on('connection', function (socket) {
         } );
         
         // Save messages
-        Messages.saveMessage(socket.room, BOT_MID, package.to, package.message, function(inserID){
+        Messages.saveMessage(socket.room, package.from, package.to, package.message, function(insertID){
            logger.info('Save admin message success');
         });
         

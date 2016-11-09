@@ -10,8 +10,29 @@ var BOT_PICTURE_URL="http://dl.profile.line-cdn.net//0m019bee3d7251ef5a2c3a7b22a
 var BOT_STATUS_MESSAGE="Welcome";
 
 var API_EVENTS = 'https://trialbot-api.line.me/v1/events';
+var API_BOT_PROFILE = 'https://api.line.me/v2/bot/profile';
 var TO_CHANEL = '1383378250';
 var EVENT_TYPE = '138311608800106203';
+
+
+exports.getProfileByToken = function( token, _callback ){
+   
+    var options = {
+        uri: API_BOT_PROFILE,
+        method: 'GET',
+        headers: {
+            "Authorization": "Bearer "+token,
+        },
+    };
+    
+    request(options,function(error, response, body){
+        if (!error && response.statusCode == 200) {
+            return _callback(body);  
+        }else{
+            return false;
+        }
+    });
+}
 
 exports.sendTextMessage =  function(to, message,_callback){
              
