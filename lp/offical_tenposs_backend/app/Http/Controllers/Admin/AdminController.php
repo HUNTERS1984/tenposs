@@ -69,6 +69,7 @@ class AdminController extends Controller
             
         }
         
+
         $slides = DB::table('app_top_main_images')
             ->where('app_setting_id', $app_settings->id)
             ->get();
@@ -87,10 +88,19 @@ class AdminController extends Controller
             ->join('news','news.new_category_id','=','new_categories.id' )
             ->where('apps.id', $app_data->id)
             ->select('news.*')
-            ->paginate(9);   
+            ->paginate(4);   
+
+        $items = DB::table('apps')
+            ->join('stores','apps.id','=','stores.app_id')
+            ->join('menus','menus.store_id','=','stores.id')
+            ->join('rel_menus_items','menus.id','=','rel_menus_items.menu_id' )
+            ->join('items','items.id','=','rel_menus_items.item_id' )
+            ->where('apps.id', $app_data->id)
+            ->select('items.*')
+            ->paginate(4);
        
         return view('admin.pages.top', 
-        compact(    'slides','photos','news',
+        compact(    'slides','photos','news', 'items',
                     'app_components', 
                     'available_components'));
     }

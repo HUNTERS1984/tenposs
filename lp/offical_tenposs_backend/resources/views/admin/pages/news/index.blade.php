@@ -21,10 +21,51 @@
     <section class="content modal-global-redesign">
         <div class="col-xs-12">@include('admin.layouts.messages')</div>
         <div class="col-md-4">
-            <div class="wrapp-phone">
-                <center>
-                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                </center>
+            <div class="wrap-preview">
+                <div class="wrap-content-prview">
+                    <div class="header-preview">
+                        <a href="javascript:avoid()" class="trigger-preview"><img
+                                    src="/assets/backend/images/nav-icon.png" alt=""></a>
+                        <h2 class="title-prview">ニュース</h2>
+                    </div>
+                    <div class="control-nav-preview">
+                        <!-- Slider main container -->
+                        <div class="swiper-container">
+                            <!-- Additional required wrapper -->
+                            <div class="swiper-wrapper">
+                                <!-- Slides -->
+                                @if(count($news_cat) > 0)
+                                    @foreach($news_cat as $item)
+                                        <div class="swiper-slide">{{$item->name}}</div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <!-- If we need navigation buttons -->
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                    <div class="content-preview" style="height:320px;">
+                        @if(empty($list_preview_news))
+                            No data
+                        @else
+                            @foreach($list_preview_news as $item_thumb)
+                                <div class="each-coupon clearfix">
+                                    <img src="{{asset($item_thumb->image_url)}}"
+                                         class="img-responsive img-prview">
+                                    <div class="inner-preview">
+                                        <p class="title-inner"
+                                           style="font-size:9px; color:#14b4d2">{{$item_thumb->title}}</p>
+                                        <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
+                                        <p class="text-inner"
+                                           style="font-size:9px;">{{Str::words($item_thumb->description,12)}}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
@@ -186,29 +227,63 @@
 @endsection
 
 @section('footerJS')
-<script src="{{ url('admin/js/lc_switch.js') }}" type="text/javascript"></script>
+    {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
+    {{Html::style('admin/js/swiper/swiper.min.css')}}
 <script type="text/javascript">
-    $('.btn_upload_img.create').click(function () {
-        $('.btn_upload_ipt.create').click();
-    });
-
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('.new_img').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    $("#image_create").change(function () {
-        readURL(this);
-    });
     $(document).ready(function () {
-        $('input.lcs_check').lc_switch();        
+        var category_idx = 0;
+        var page = 0;
+        var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
+            speed: 400,
+            spaceBetween: 0,
+            slidesPerView: 1,
+            nextButton: '.control-nav-preview .swiper-button-next',
+            prevButton: '.control-nav-preview .swiper-button-prev',
+            onSlideNextStart: function (swiper) {
+                ++category_idx;
+                page = 0;
+                $.ajax({
+                    url: "/admin/news/nextpreview",
+                    data: {cat: category_idx, page: page}
+                }).done(function (data) {
+                    console.log(data);
+                    $('.content-preview').html(data);
+
+                });
+            },
+            onSlidePrevStart: function (swiper) {
+                --category_idx;
+                page = 0;
+                $.ajax({
+                    url: "/admin/news/nextpreview",
+                    data: {cat: category_idx, page: page}
+                }).done(function (data) {
+                    console.log(data);
+                    $('.content-preview').html(data);
+
+                });
+            }
+        });
+
+        $('.btn_upload_img.create').click(function () {
+            $('.btn_upload_ipt.create').click();
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.new_img').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#image_create").change(function () {
+            readURL(this);
+        });        
     })
 </script>
 @endsection

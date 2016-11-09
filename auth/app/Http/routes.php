@@ -22,21 +22,21 @@ $app->post('/auth/activate_with_code', 'UserController@activate_with_code');
 $app->get('/auth/demo_token', 'Auth\AuthController@demo_token');
 
 $app->group(['middleware' => 'jwt.auth'], function ($app) {
-    $app->get('/auth/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
-    $app->delete('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@deleteInvalidate');
+    $app->get('/auth/refresh', 'Auth\AuthController@getRefresh');
+    $app->delete('/auth/invalidate', 'Auth\AuthController@deleteInvalidate');
 
 
-    $app->get('/userlist', 'App\Http\Controllers\UserController@userlist');
-    $app->get('/approvelist', 'App\Http\Controllers\UserController@approvelist');
-    $app->get('/profile', 'App\Http\Controllers\UserController@profile');
-    $app->post('/activate', 'App\Http\Controllers\UserController@activate');
-    $app->get('/user', 'App\Http\Controllers\UserController@profile');
-    $app->post('/user/delete', 'App\Http\Controllers\UserController@delete');
+    $app->get('/userlist', 'UserController@userlist');
+    $app->get('/approvelist', 'UserController@approvelist');
+    $app->get('/profile', 'UserController@profile');
+    $app->post('/activate', 'UserController@activate');
+    $app->get('/user', 'UserController@profile');
+    $app->post('/user/delete', 'UserController@delete');
 });
 
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app) {
-    $app->get('/test', 'App\Http\Controllers\UserV1Controller@test');
+    $app->get('/test', 'UserV1Controller@test');
     $app->post('/auth/login', 'Auth\AuthV1Controller@postLogin');
     $app->get('/auth/access_token/{id_code}/{refresh_token}', 'Auth\AuthV1Controller@access_token');
 });
