@@ -214,6 +214,9 @@ io.on('connection', function (socket) {
                                 if(userbot){
                                     Bot.getProfileByToken(userbot.chanel_access_token, function( botprofile ){
                                         if( botprofile ){
+                                            logger.info('BOT profile ');
+                                            logger.info(botprofile);
+                                            
                                             socket.toUser = botprofile;
                                             // Find client in room are online
                                             findIsClientInRoom(socket.room, 
@@ -347,6 +350,7 @@ io.on('connection', function (socket) {
         };
         logger.info("Send package to clients");
         logger.info( packageMessages );
+        logger.info( socket.toUser );
         
         // Save message
         Messages.saveMessage(

@@ -2867,7 +2867,7 @@ ul.nav-list-user li .right-list-user p.time-user-chat{
   color: #a3adb1;
 }
 ul.nav-list-user li .right-list-user p.count-user-chat{
-  background: #e4f2fa;
+  background: green;
   width: 20px;
   height: 20px;
   text-align: center;

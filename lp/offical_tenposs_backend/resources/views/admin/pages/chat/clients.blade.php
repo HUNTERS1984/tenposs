@@ -321,27 +321,25 @@ function connectToChat() {
     socket.on('receive.admin.history', function( package ){
         console.log('History client');
         console.log(package);
-        findWindows(package.windows,function( $windows ){
-            $(package.history).each(function(index, item){
-                drawMessage({
-                    text: item.message,
-                    timestamp: converTimestamp(item.created_at) ,
-                    profile: (function(){
-                        if(item.from_mid === profile.mid)
-                            return profile;
-                        else{
-                            return {
-                                displayName: item.displayName,
-                                mid: item.mid,
-                                pictureUrl: item.pictureUrl,
-                            }
+        $('#messages-windows').empty();
+        $(package.history).each(function(index, item){
+            drawMessage({
+                text: item.message,
+                timestamp: moment( parseInt(item.created_at) ).format('LTS') ,
+                profile: (function(){
+                    if(item.from_mid === profile.mid)
+                        return profile;
+                    else{
+                        return {
+                            displayName: item.displayName,
+                            mid: item.mid,
+                            pictureUrl: item.pictureUrl,
                         }
-                    })()
-                });
-            })
+                    }
+                })()
+            });
+        })
 
-	    })
-       
        
     });
 }
