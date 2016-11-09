@@ -2820,7 +2820,7 @@ a.red {
 .list-user{
   clear: both;
   width: 100%;
-  height: 646px; 
+  height: 502px; 
   display: inline-block;
 }
 ul.nav-list-user{
@@ -2906,6 +2906,7 @@ ul.nav-list-user li .right-list-user p.count-user-chat{
   padding: 20px;
   overflow: hidden;
   vertical-align: middle;
+  margin-top:30px;
 }
 .wrapp-user-chat .right-user-chat .form-text-user form.form-inline input.form-control{
   width: 520px;
@@ -2916,12 +2917,12 @@ ul.nav-list-user li .right-list-user p.count-user-chat{
   margin-left: 10px;
 }
 .wrapp-user-chat .right-user-chat .form-middle-user{
-  min-height: 570px;
-  max-height: 570px;
+  min-height: 400px;
+  max-height: 400px;
   padding: 20px 0 20px 15px;
 }
 .wrapp-user-chat .right-user-chat .form-middle-user .con-scroll-right{
-  height: 530px; 
+  height: 400px; 
   width: 100%; 
   display: inline-block;
 }
@@ -3075,7 +3076,7 @@ a:hover.btn-user-poup-log-poup-right{
 
 /*-----chat right-----*/
 .chat-body .answer.right {
-  padding: 0 25px 0 0;
+  padding: 0 58px 0 0;
   text-align: right;
   float: right;
   max-width: 317px;
@@ -3096,7 +3097,7 @@ a:hover.btn-user-poup-log-poup-right{
 .chat-body .answer.right .time {
   padding-right: 12px;
   color: #333333;
-  left: -70px;
+  left: -90px;
 }
 .chat-body .answer.right .time span{
   color: #a0a9ac;

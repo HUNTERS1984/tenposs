@@ -94,6 +94,7 @@
 											<input type="text" name="company" class="form-control" placeholder="例）　株式会社HUNTERS">
 										</div>
 									</div>
+									<!--
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="bussiness">業種</label>
@@ -103,6 +104,7 @@
 											<input type="text" name="bussiness" class="form-control" placeholder="例）　アパレル">
 										</div>
 									</div>
+									-->
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="fullname">名前</label>
@@ -112,6 +114,7 @@
 											<input type="text" name="fullname" class="form-control" placeholder="例）　山田 太郎">
 										</div>
 									</div>
+									<!--
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="nickname">名前（フリガナ）</label>
@@ -121,6 +124,7 @@
 											<input type="text" name="nickname" class="form-control" placeholder="例）　ヤマダ タロウ">
 										</div>
 									</div>
+									
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="phone">電話番号</label>
@@ -130,6 +134,7 @@
 											<input type="text" name="phone" class="form-control" placeholder="例）　03-1234-5678">
 										</div>
 									</div>
+									-->
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="email">メールアドレス　</label>
@@ -139,6 +144,7 @@
 											<input type="text" name="email" class="form-control" placeholder="例）　example@example.com">
 										</div>
 									</div>
+									<!--
 									<div class="form-group clearfix">
 										<div class="left-form">
 											<label for="reason">OLOを利用したい理由</label>
@@ -152,7 +158,7 @@
 											</select>
 										</div>
 									</div>
-
+									-->
 									<div class="form-group clearfix">
 										<div class="right-form">
 											<textarea name="message" class="form-control" rows="5"></textarea>

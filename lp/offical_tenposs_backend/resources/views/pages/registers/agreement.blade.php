@@ -5,20 +5,10 @@
                 <div id="agreement">
                     <div id="agree-header" class="text-center">
                         <img src="{{ url('assets/frontend/img/logo-agree.jpg') }}"></img>
-<<<<<<< HEAD
-=======
-                        <p>&nbsp;</p>
-                        
-                        <hr>
->>>>>>> 7f68ba3f215bfdb5ec9c517fc5adea28b4400264
                     </div>
                     
                     
                     <div id="agree-content">
-<<<<<<< HEAD
-=======
-                        <p class="text-center"></p>
->>>>>>> 7f68ba3f215bfdb5ec9c517fc5adea28b4400264
                         <div id="agree-content-inner">
                                 <p>HUNTERS株式会社は、お客様の個人情報保護の重要性について認識し、 個人情報の保護に関する法律(以下「個人情報保護法」といいます。)を遵
     守すると共に、以 下のプライバシーポリシー(以下「本プライバシーポリシー」といいます。)に従い、適切な取扱い及び保護に努めます。</p>
