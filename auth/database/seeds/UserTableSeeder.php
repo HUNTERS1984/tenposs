@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Bican\Roles\Models\Role;
 use Bican\Roles\Models\Permission;
+use App\User;
 
 class UserTableSeeder extends Seeder
 {
@@ -28,7 +29,7 @@ class UserTableSeeder extends Seeder
         ]);
 
 
-        $user->attachRole($adminRole);
+//        $user->attachRole($adminRole);
 
         Role::create([
             'name' => 'Client',

@@ -21,10 +21,51 @@
     <section class="content modal-global-redesign">
         <div class="col-xs-12">@include('admin.layouts.messages')</div>
         <div class="col-md-4">
-            <div class="wrapp-phone">
-                <center>
-                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                </center>
+            <div class="wrap-preview">
+                <div class="wrap-content-prview">
+                    <div class="header-preview">
+                        <a href="javascript:avoid()" class="trigger-preview"><img
+                                    src="/assets/backend/images/nav-icon.png" alt=""></a>
+                        <h2 class="title-prview">メニュー</h2>
+                    </div>
+                    <div class="control-nav-preview">
+                        <!-- Slider main container -->
+                        <div class="swiper-container">
+                            <!-- Additional required wrapper -->
+                            <div class="swiper-wrapper">
+                                <!-- Slides -->
+                                @if(count($menus) > 0)
+                                    @foreach($menus as $menu)
+                                        <div class="swiper-slide">{{$menu->name}}</div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <!-- If we need navigation buttons -->
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                    <div class="content-preview clearfix">
+                        <div class="row-me fixHeight">
+                            @if(empty($list_preview_item))
+                                <p>No data</p>
+                            @else
+                                @foreach($list_preview_item as $item_thumb)
+                                    <div class="col-xs-6 padding-me">
+                                        <div class="each-menu">
+                                            <img src="{{asset($item_thumb->image_url)}}"
+                                                 class="img-responsive img-item-prview"
+                                                 alt="Item Photo">
+                                            <p style="font-size:11px">{{$item_thumb->title}}</p>
+                                            <p style="font-size:11px">¥{{$item_thumb->price}}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
@@ -173,49 +214,51 @@
 </aside>
 @endsection
 @section('footerJS')
+    {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
+    {{Html::style('admin/js/swiper/swiper.min.css')}}
 <script type="text/javascript">
     $(document).ready(function () {
         // $('input.lcs_check').lc_switch();
-        // var category_idx = 0;
-        // var page = 0;
-        // var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
-        //     speed: 400,
-        //     spaceBetween: 0,
-        //     slidesPerView: 1,
-        //     nextButton: '.control-nav-preview .swiper-button-next',
-        //     prevButton: '.control-nav-preview .swiper-button-prev',
-        //     onSlideNextStart: function (swiper) {
-        //         ++category_idx;
-        //         page = 0;
-        //         $.ajax({
-        //             url: "/admin/menus/nextpreview",
-        //             data: {cat: category_idx, page: page}
-        //         }).done(function (data) {
-        //             console.log(data);
-        //             $('.content-preview').html(data);
+        var category_idx = 0;
+        var page = 0;
+        var categorySwiper = new Swiper('.control-nav-preview .swiper-container', {
+            speed: 400,
+            spaceBetween: 0,
+            slidesPerView: 1,
+            nextButton: '.control-nav-preview .swiper-button-next',
+            prevButton: '.control-nav-preview .swiper-button-prev',
+            onSlideNextStart: function (swiper) {
+                ++category_idx;
+                page = 0;
+                $.ajax({
+                    url: "/admin/menus/nextpreview",
+                    data: {cat: category_idx, page: page}
+                }).done(function (data) {
+                    console.log(data);
+                    $('.content-preview').html(data);
 
-        //         });
-        //     },
-        //     onSlidePrevStart: function (swiper) {
-        //         --category_idx;
-        //         page = 0;
-        //         // $.ajax({
-        //         //     url: "/admin/menus/nextcat",
-        //         //     data: {cat: category_idx, page: page}
-        //         // }).done(function (data) {
-        //         //     console.log(data);
-        //         //     $('.wrapper-content').html(data);
-        //         // });
-        //         $.ajax({
-        //             url: "/admin/menus/nextpreview",
-        //             data: {cat: category_idx, page: page}
-        //         }).done(function (data) {
-        //             console.log(data);
-        //             $('.content-preview').html(data);
+                });
+            },
+            onSlidePrevStart: function (swiper) {
+                --category_idx;
+                page = 0;
+                // $.ajax({
+                //     url: "/admin/menus/nextcat",
+                //     data: {cat: category_idx, page: page}
+                // }).done(function (data) {
+                //     console.log(data);
+                //     $('.wrapper-content').html(data);
+                // });
+                $.ajax({
+                    url: "/admin/menus/nextpreview",
+                    data: {cat: category_idx, page: page}
+                }).done(function (data) {
+                    console.log(data);
+                    $('.content-preview').html(data);
 
-        //         });
-        //     }
-        // });
+                });
+            }
+        });
 
         $('.btn_upload_img.create').click(function () {
             $('.btn_upload_ipt.create').click();
