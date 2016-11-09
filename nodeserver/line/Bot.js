@@ -10,7 +10,7 @@ var BOT_PICTURE_URL="http://dl.profile.line-cdn.net//0m019bee3d7251ef5a2c3a7b22a
 var BOT_STATUS_MESSAGE="Welcome";
 
 var API_EVENTS = 'https://trialbot-api.line.me/v1/events';
-var API_BOT_PROFILE = 'https://api.line.me/v2/bot/profile';
+var API_BOT_PROFILE = 'https://api.line.me/v1/profile';
 var TO_CHANEL = '1383378250';
 var EVENT_TYPE = '138311608800106203';
 
