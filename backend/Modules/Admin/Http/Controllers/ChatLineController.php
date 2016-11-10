@@ -41,21 +41,59 @@ class ChatLineController extends Controller
    
     public function __construct(){
     	$this->curl = new \anlutro\cURL\cURL;
+    	
     }
 
     /*
     * Route: /
     * Handle BOT Server callback
+    
+    (
+            [events] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [type] => message
+                            [replyToken] => 17499a1ab5bc42bd8cc659f65a3fdbc3
+                            [source] => stdClass Object
+                                (
+                                    [userId] => Uafc5a65d7d626e9595397ac43c0bdf7c
+                                    [type] => user
+                                )
+        
+                            [timestamp] => 1478711801747
+                            [message] => stdClass Object
+                                (
+                                    [type] => text
+                                    [id] => 5182111047529
+                                    [text] => Vbfh
+                                )
+        
+                        )
+        
+                )
+        
+        )
     */
+    
     public function index(Request $request){
         
         $data = json_encode( $request->all() ) ;
         $data = json_decode($data);
         if( !$data ){
-            return view('welcome');
+            return 'Success';
         }
- 
-        $data = $data->result[0];
+
+        $data = $data->events[0];
+        // Get profile
+        $requestProfile = $this->curl->newRequest('get','https://api.line.me/v2/bot/profile/'.$data->source->userId )
+            ->setHeader('Authorization',  'Bearer dzF0TyqLD9GglNpsO89eHA3wyKw5rEskMm+8amibXagn3+vELU4mEE839Ns3yCy0Z+EuseUXCht8/4HFbq6cb540pslDjTA6doKCzG6LjqXBzJoD2c0rgYQNgL1hFYiTVPkCiXvRgZ/9qNR34v0a7gdB04t89/1O/w1cDnyilFU=');
+        
+        $responseProfile = $requestProfile->send();
+        $profile = json_decode($responseProfile->body);
+        
+        Log::info(print_r($profile, true));
+        die();
         
         //“138311609000106303”	Received message (example: text, images)
         //“138311609100106403”	Received operation (example: added as friend)
