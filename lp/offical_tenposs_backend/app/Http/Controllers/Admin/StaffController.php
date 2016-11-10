@@ -8,6 +8,7 @@ use App\Models\Staff;
 use App\Models\StaffCat;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Utils\RedisControl;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -187,44 +188,35 @@ class StaffController extends Controller
 
     public function delete($id)
     {
-        $this->staff->destroy($id);
-        return redirect()->back();
+        try {
+            $this->staff = $this->staff->find($id);
+            if ($this->staff) {
+                $this->staff->destroy($id);
+                return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
+            } else {
+                return redirect()->back()->withErrors('Cannot delete the staff');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot delete the staff');
+        }
     }
 
     public function destroy($id)
     {
-        $this->staff->destroy($id);
-        return redirect()->back();
-    }
-
-    public function view_more()
-    {
-        $page_num = $this->request->page;
-        $cat = $this->request->cat;
-
-        $stores = $this->request->stores;
-        $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();;
-
-        $list_store = $stores->lists('name','id');
-        $list_staff = [];
-        if (count($staff_cat) > 0) {
-            $list_staff_cat = $staff_cat->pluck('id')->toArray();
-            if (count ($list_staff_cat) > 0) {
-                $staff_category_id = $list_staff_cat[$cat];
-                $list_item = Staff::where('staff_category_id',$staff_category_id)->orderBy('updated_at','desc')->take(REQUEST_STAFF_ITEMS)->skip($page_num*REQUEST_STAFF_ITEMS)->get();
-                //dd($list_item->toArray());
-                for($i = 0; $i < count($list_item); $i++)
-                {
-                    if ($list_staff[$i]->image_url == null)
-                        $list_staff[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
-                }
+        try {
+            $this->staff = $this->staff->find($id);
+            if ($this->staff) {
+                $this->staff->destroy($id);
+                return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
+            } else {
+                return redirect()->back()->withErrors('Cannot delete the staff');
             }
-
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot delete the staff');
         }
-
-
-        $returnHTML = view('admin.pages.staff.element_item')->with(compact('list_staff'))->render();
-        return $returnHTML;
+        
     }
 
     public function nextcat()
@@ -293,12 +285,8 @@ class StaffController extends Controller
     }
 
     public function storeCat(){
-        $all = $this->request->all();
-//      dd($all);
-        $this->staffcat->create($all);
-        return redirect()->back();
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique:staff_categories|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -312,12 +300,10 @@ class StaffController extends Controller
             ];
             $this->staffcat->create($data);
             //delete cache redis
-//          RedisControl::delete_cache_redis('menus');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add Staff Category successfully') );
-            return redirect()->route('admin.staff.index');
+            RedisControl::delete_cache_redis('staff_cat');
+            return redirect()->route('admin.staff.index')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add Staff Category fail') );
-            return back();
+            return redirect()->back()->withErrors('Cannot create the category');
         }
     }
 
@@ -344,16 +330,14 @@ class StaffController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
-                return back()->withInput();
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Please upload an image') );
-            return back()->withInput();
+            return redirect()->back()->withInput()->withErrors('Please upload an image');
         }
-
+       
         try {
             $item = new Staff();
 //          dd($this->request->all());
@@ -370,11 +354,9 @@ class StaffController extends Controller
 //          RedisControl::delete_cache_redis('menus');
 //          RedisControl::delete_cache_redis('items');
 //          RedisControl::delete_cache_redis('top_items');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add Staff successfully') );
-            return back();
+            return redirect()->route('admin.staff.index')->with('status','Create the staff successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add Staff fail') );
-            return back();
+            return redirect()->back()->withErrors('Cannot create the staff');
         }
     }
 

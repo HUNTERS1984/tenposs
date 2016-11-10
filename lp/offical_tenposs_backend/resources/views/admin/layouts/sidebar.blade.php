@@ -47,7 +47,7 @@
                 <a href="analytic.html"><span>アクセス解析</span></a>
             </li>
             <li>
-                <a href="{{ route('admin.client.chat') }}"><span>顧客管理</span></a>
+                <a href="#"><span>顧客管理</span></a>
             </li>
             <li>
                 <a href="accept.html"><span>承認管理</span></a>

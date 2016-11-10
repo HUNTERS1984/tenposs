@@ -45,7 +45,7 @@ class CouponController extends Controller
         $coupons = array();
         $list_coupon_type = array();
         if (count($list_store) > 0) {
-            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->get();
+            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
             $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->whereNull('deleted_at')->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
             for ($i = 0; $i < count($coupons); $i++) {
                 if ($coupons[$i]->image_url == null)
@@ -63,7 +63,7 @@ class CouponController extends Controller
         $page_num = $this->request->page;
         $list_coupon_type = $this->type->whereIn('store_id', $this->request->stores->pluck('id')->toArray())->lists('id')->toArray();
         $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type)->with('coupon_type')->skip($page_num * REQUEST_COUPON_ITEMS)->take(REQUEST_COUPON_ITEMS)->orderBy('updated_at', 'desc')->get();
-        $returnHTML = view('admin::pages.coupon.element_coupon')->with(compact('coupons'))->render();
+        $returnHTML = view('admin.pages.coupon.element_coupon')->with(compact('coupons'))->render();
         return $returnHTML;
     }
 
@@ -117,35 +117,31 @@ class CouponController extends Controller
 
     }
 
-    public function store_type()
-    {
+
+    public function store_type(){
         $rules = [
-            'title' => 'required|Max:255',
+            'name' => 'required|unique:coupon_types|Max:255',
         ];
-        $v = Validator::make($this->request->all(), $rules);
-        if ($v->fails()) {
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
             return redirect()->back()->withInput()->withErrors($v);
         }
-
-        $data = [
-            'name' => $this->request->title,
-            'store_id' => $this->request->store_id,
-        ];
-
         try {
-            $this->type = $this->type->create($data);
-            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Approve coupon type successfully'));
-            return back();
+            $data = [
+                'name' => $this->request->input('name'),
+                'store_id' => $this->request->input('store_id'),
+            ];
+            $this->type->create($data);
+            return redirect()->route('admin.coupon.index')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Approve coupon type fail'));
-            return back();
+            return redirect()->back()->withErrors('Cannot create the category');
         }
-
     }
+
 
     public function store(Request $request)
     {
-        //dd($this->request->hashtag); die();
         if ($this->request->image_create != null && $this->request->image_create->isValid()) {
             $file = array('image_create' => $this->request->image_create);
             $destinationPath = 'uploads'; // upload path
@@ -155,12 +151,12 @@ class CouponController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withError('Please upload a image ');
+            return redirect()->back()->withInput()->withErrors('Please upload a image ');
         }
 
 
@@ -202,6 +198,7 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_redis('coupons');
+
             //push notify to all user on app
             $app_data = App::where('user_id', $request->user['sub'])->first();
             $data_push = array(
@@ -210,17 +207,17 @@ class CouponController extends Controller
                 'data_id' => $this->entity->id,
                 'data_title' => '',
                 'data_value' => '',
-                'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+                'created_by' => Session::get('user')->email
             );
+        
             $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
             if (!$push)
-                Log::info('push fail: ' . json_decode($data_push));
+                Log::info('push fail: ' . json_decode($push));
             //end push
 
-            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Add coupon successfully'));
-            return back();
+            return redirect()->route('admin.coupon.index')->with('status','Create the coupon successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Add coupon fail'));
+            return redirect()->back()->withInput()->withErrors('Cannot create the coupon');
         }
 
     }
@@ -254,7 +251,7 @@ class CouponController extends Controller
         }
 
 
-        return view('admin::pages.coupon.show', compact('coupon', 'posts'));
+        return view('admin.pages.coupon.show', compact('coupon', 'posts'));
     }
 
     public function edit(Store $store, $id)
@@ -263,7 +260,7 @@ class CouponController extends Controller
         $list_store = $store->lists('name', 'id');
         $coupon = $this->entity->find($id);
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
-        return view('admin::pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon'));
+        return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon'));
     }
 
     public function update($id)
@@ -279,7 +276,7 @@ class CouponController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -340,14 +337,17 @@ class CouponController extends Controller
     public function destroy($id)
     {
         try {
-            $this->entity = $this->entity->find($this->request->input('id'));
-            $this->entity->app_users()->detach();
-            $this->entity->destroy($this->request->input('id'));
-            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Delete coupon successfully'));
-            return back();
+            $this->entity = $this->entity->find($id);
+            if ($this->entity) {
+                $this->entity->app_users()->detach();
+                $this->entity->destroy($id);
+                return redirect()->route('admin.coupon.index')->with('status','Delete the coupon successfully');
+            } else {
+                return redirect()->back()->withErrors('Cannot delete the coupon');
+            }
+            
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Delete coupon fail'));
-            return back();
+            return redirect()->back()->withErrors('Cannot delete the coupon');
         }
     }
 
@@ -358,7 +358,7 @@ class CouponController extends Controller
 
         if ($code_hash != $sig) {
             $is_approve = false;
-            return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+            return view('admin.pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
         }
         try {
             $coupon_code = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
@@ -368,19 +368,19 @@ class CouponController extends Controller
             if (count($coupon_code) > 0) {
                 if ($coupon_code[0]->code != $code) {
                     $is_approve = false;
-                    return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+                    return view('admin.pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
                 }
             } else {
                 $is_approve = false;
-                return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+                return view('admin.pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $is_approve = false;
-            return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+            return view('admin.pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
         }
 
-        return view('admin::pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
+        return view('admin.pages.coupon.code_use', compact('user_id', 'coupon_id', 'code', 'sig', 'is_approve'));
     }
 
     public function coupon_use_code_approve()
@@ -394,7 +394,7 @@ class CouponController extends Controller
         $is_approve_success = true;
         if ($code_hash != $sig) {
             $is_approve_success = false;
-            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+            return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
         }
         try {
             $coupon_code = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
@@ -403,16 +403,16 @@ class CouponController extends Controller
             if (count($coupon_code) > 0) {
                 if ($coupon_code[0]->code != $code) {
                     $is_approve_success = false;
-                    return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+                    return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
                 }
             } else {
                 $is_approve_success = false;
-                return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+                return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $is_approve_success = false;
-            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+            return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
         }
         try {
             \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
@@ -421,9 +421,9 @@ class CouponController extends Controller
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $is_approve_success = false;
-            return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+            return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
         }
-        return view('admin::pages.coupon.code_use_approve', compact('is_approve_success'));
+        return view('admin.pages.coupon.code_use_approve', compact('is_approve_success'));
     }
 }
 

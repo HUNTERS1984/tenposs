@@ -1558,10 +1558,17 @@ ul.link-top-2 li a.active{
 }
 .coupon-content a img{
   border-radius: 4px 4px 0px 0px;
-  max-height: 209px;
+  object-fit: cover;
+  object-position: center;
+  height: 200px;
+  width: 200px;
 } 
 .coupon-content a img:hover{
   opacity: .8;
+  object-fit: cover;
+  object-position: center;
+  height: 200px;
+  width: 200px;
 }
 .title-coupon{
   margin: 10px 0;
@@ -1582,7 +1589,7 @@ ul.link-top-2 li a.active{
   padding-top: 10px;
   margin: 0;
 }
-.title-coupon a.btn-5{
+.title-coupon input.btn-5{
   background: #fafafa;
   margin-right: 10px;
   width: 80px;
@@ -1596,7 +1603,7 @@ ul.link-top-2 li a.active{
   border-radius: 4px;
   border:1px solid transparent;
 }
-.title-coupon a:hover.btn-5{
+.title-coupon input:hover.btn-5{
   border: 1px solid #1e96d6;
 }
 .des-coupon{
@@ -1682,10 +1689,17 @@ ul.link-top-2 li a.active{
 }
 .wrapp-photo-img .content-photo-img a img{
   border-radius: 4px 4px 0 0;
-  min-height: 204px;
+  object-fit: cover;
+  object-position: center;
+  height: 240px;
+  width: 240px;
 }
 .wrapp-photo-img .content-photo-img a img:hover{
   opacity: .8;
+  object-fit: cover;
+  object-position: center;
+  height: 240px;
+  width: 240px;
 }
 .wrapp-photo-img .content-photo-img .text-photo{
   clear: both;
@@ -4886,23 +4900,40 @@ p.yen-cost-3-2-1-black{
 .scrollbar-macosx > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -11px; }
 
 .tenposs-readmore {
-    background: #e2f8f8;
-    color: #14c8c8;
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    line-height: 16px;
-    font-size: 11px;
+  background: #e2f8f8;
+  color: #14c8c8;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 16px;
+  font-size: 11px;
 }
 
 .tenposs-button {
-    background: #14c8c8;
-    color: #fff;
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    line-height: 16px;
-    font-size: 11px;
-    font-weight: 600;
+  background: #14c8c8;
+  color: #fff;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 16px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
+.new_img {
+  border: 1px solid #c8d2d6;
+  box-shadow: 0 0 3px 0 #c8d2d6;
+  margin-bottom: 3px; 
+}
+
+.edit_img {
+  border: 1px solid #c8d2d6;
+  box-shadow: 0 0 3px 0 #c8d2d6;
+  margin-bottom: 3px; 
+}
+.maps {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

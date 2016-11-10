@@ -85,7 +85,7 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
@@ -145,7 +145,7 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;

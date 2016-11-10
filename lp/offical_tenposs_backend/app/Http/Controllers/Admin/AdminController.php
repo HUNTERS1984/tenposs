@@ -99,8 +99,15 @@ class AdminController extends Controller
             ->select('items.*')
             ->paginate(4);
        
+        $contacts = DB::table('apps')
+            ->join('stores','apps.id','=','stores.app_id')
+            ->join('addresses','addresses.store_id','=','stores.id')
+            ->where('apps.id', $app_data->id)
+            ->select('addresses.*')
+            ->paginate(1);
+
         return view('admin.pages.top', 
-        compact(    'slides','photos','news', 'items',
+        compact(    'slides','photos','news', 'items', 'contacts',
                     'app_components', 
                     'available_components'));
     }

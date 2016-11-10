@@ -8,7 +8,7 @@
 		<li><a href="{{route('admin.photo-cate.index')}}">フォトギャラリー</a></li>
 		<li><a href="{{route('admin.staff.index')}}">スタッフ</a></li>
 		<li><a href="{{route('admin.reserve.index')}}">予約</a></li>
-		<li><a href="{{ route('admin.clients.chat') }}">チャット</a></li>
+		<li><a href="#">チャット</a></li>
 		<li><a href="{{URL::to('admin/test-ga')}}">Google分析</a></li>	
 		<li><a href="{{URL::to('admin/logout')}}">ログアウト</a></li>
 	</ul>

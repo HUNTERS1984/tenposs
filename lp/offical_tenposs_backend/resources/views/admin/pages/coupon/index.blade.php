@@ -1,61 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('main')
-
  <aside class="right-side">
-    <!-- Modal -->
-    <div class="modal fade" id="news-add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog-news" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">ニュース追加</h4>
-          </div>
-          <div class="news-edit">
-            <form action="">
-                <div class="modal-body">
-                    <div class="col-md-7">
-                        <div class="form-group">
-                            <label>ストア</label>
-                            <select name="" id="" class="form-control">
-                                <option value="">オンライン</option>
-                                <option value="">オンライン</option>
-                                <option value="">オンライン</option>
-                                <option value="">オンライン</option>
-                                <option value="">オンライン</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>タイトル</label>
-                            <input type="text" class="form-control" id="" placeholder="タイトル">
-                        </div>
-                        <div class="form-group">
-                            <label for="description">説明</label>
-                            <textarea class="form-control" placeholder="説明" name="description" cols="50" rows="7" id="description"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-5">  
-                        <div class="file-preview ">
-                            <center>
-                                <img src="images/male.png" class="img-responsive" alt="">
-                            </center>
-                        </div>
-                        <div class="file-wrapp">
-                            <center>
-                                <input type="file" id="filecount" multiple="multiple" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);"><div class="bootstrap-filestyle input-group"><span class="group-span-filestyle " tabindex="0"><label for="filecount" class="btn btn-danger "><span class="glyphicon glyphicon-folder-open"></span> <span class="buttonText">画像アップロード</span></label></span></div>
-                            </center>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">削除</button>
-                    <button type="button" class="btn btn-primary">保存</button>
-                </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="wrapp-breadcrumds">
         <div class="left"><span>クーポン</span></div>
         <div class="right">
@@ -69,220 +15,103 @@
                     </div>
                 </div>
             </span>
-            <a href="" data-toggle="modal" data-target="#news-add" class="btn-2">ポ覧</a>
+            <a href="#" class="btn-2">保存</a>
         </div>
     </div>
-    <section class="content">
+    <section class="content modal-global-redesign">
+        <div class="col-xs-12">@include('admin.layouts.messages')</div>
         <div class="col-md-4">
-            <div class="wrapp-phone">
-                <center>
-                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                </center>
+            <div class="wrap-preview">
+                <div class="wrap-content-prview">
+                    <div class="header-preview">
+                        <a href="javascript:avoid()" class="trigger-preview"><img
+                                    src="/assets/backend/images/nav-icon.png" alt=""></a>
+                        <h2 class="title-prview">クーポン</h2>
+                    </div>
+                    <div class="content-preview" style="height:340px;overflow: auto;">
+                        @if(empty($coupons))
+                            No data
+                        @else
+                            @foreach($coupons as $coupon)
+                                <div class="each-coupon clearfix">
+                                    <img src="{{asset($coupon->image_url)}}"
+                                         class="img-responsive img-prview">
+                                    <div class="inner-preview">
+                                        <p class="title-inner"
+                                           style="font-size:9px; color:#14b4d2">{{$coupon->title}}</p>
+                                        <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
+                                        <p class="text-inner"
+                                           style="font-size:9px;">{{Str::words($coupon->description,12)}}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                        <a href="#" class="btn tenposs-readmore">もっと見る</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="" class="btn-3">
-                    <i class="glyphicon glyphicon-plus"></i> 項目追加
+                <a href="#" data-toggle="modal" data-target="#AddCouponType" class="btn-3">
+                    <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
-                <a href="" class="btn-4">
-                    <i class="glyphicon glyphicon-plus"></i> メニュー追加
+                <a href="#" data-toggle="modal" data-target="#AddCoupon" class="btn-4">
+                    <i class="glyphicon glyphicon-plus"></i> クーポン追加
                 </a>
             </div>
-            <div class="wrapp-coupon">
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
-                                    </div>
+            <div class="wrapp-news">
+                
+                @if(empty($coupons))
+                        No data
+                    @else
+                        @foreach($coupons as $item)
+                        <div class="coupon-content">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-12">
+                                    <a href="{{route('admin.coupon.edit',$item->id)}}">
+                                        <center>
+                                            <img src="{{ ($item->image_url != '') ? asset($item->image_url) : url('admin/images/img-news.jpg') }}" class="img-responsive" alt="">
+                                        </center>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
+                                <div class="col-md-8 col-xs-12">
+                                    <div class="title-coupon">
+                                        <div class="row">
+                                            <div class="col-md-8 col-xs-12">
+                                                <a href="" class="text-coupon-left">{{$item->title}}</a>
+                                                <p>{{$item->coupon_type->name}}</p>
+                                                <p class="date-copon">有効期間　2016-09-15まで</p>
+                                            </div>
+                                            <div class="col-md-4 col-xs-12">
+                                                 {{Form::open(array('route'=>array('admin.coupon.destroy',$item->id),'method'=>'DELETE'))}}
+                                                <input type="submit" class="btn-5" value="削除"
+                                                       onclick="return confirm('Are you sure you want to delete this item?');">
+                                                {{Form::close()}}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
+                                    <div class="des-coupon col-xs-12">
+                                        <div class="row">
+                                            <p>
+                                                {{ Str::words($item->description, 68) }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="coupon-content">
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <a href="">
-                                <center>
-                                    <img src="images/img-coupon.jpg" class="img-responsive" alt="">
-                                </center>
-                            </a>
-                        </div>
-                        <div class="col-md-8 col-xs-12">
-                            <div class="title-coupon">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-12">
-                                        <a href="" class="text-coupon-left">ュー追加</a>
-                                        <p>クポン覧クポン</p>
-                                        <p class="date-copon">有効期間　2016-09-15まで</p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-12">
-                                        <a href="" class="btn-5">削除</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="des-coupon col-xs-12">
-                                <div class="row">
-                                    <p>
-                                        説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </div>   
+
+                        @endforeach
+                    @endif
+               
+                
+                
                 <div class="page-bottom">
+                    @if(count($coupons) > 0)
+                        {{ $coupons->render() }}
+                    @endif
+                    <!--
                     <ul class="pagination"> 
                         <li class="disabled">
                             <a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a>
@@ -298,16 +127,124 @@
                             <a href="#" aria-label="Next"><span aria-hidden="true">»</span></a>
                         </li> 
                     </ul>
+                    -->
                 </div>
             </div>
         </div>
-    </section>
-    </aside>
-    <!-- /.right-side -->
 
+        <!-- Modal Category -->
+        <div class="modal fade" id="AddCouponType" tabindex="-1" role="dialog" aria-labelledby="AddCouponType">
+            <div class="modal-dialog" role="document">
+                {{Form::open(array('route'=>'admin.coupon.store_type','files'=>true))}}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="AddCouponTypeTitle">カテゴリ追加</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{Form::label('Select Store','ストア')}}
+                            @if(count($list_store) > 0)
+                                {{Form::select('store_id',$list_store->pluck('name', 'id'),old('store_id'),['class'=>'form-control'])}}
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            {{Form::label('Title','タイトル')}}
+                            {{Form::text('name',old('name'),['class'=>'form-control'])}}
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
+                    </div>
+                </div>
+                {{Form::close()}}
+            </div>
+        </div>
+
+        <div class="modal fade" id="AddCoupon" tabindex="-1" role="dialog" aria-labelledby="AddCoupon">
+            <div class="modal-dialog" role="document">
+                {{Form::open(array('route'=>'admin.coupon.store','files'=>true))}}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="AddCouponTitle">クーポン追加</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-4" align="left">
+                            <img class="new_img" src="{{url('/')}}/assets/backend/images/wall.jpg" width="100%">
+                            <button class="btn_upload_img create" type="button"><i class="fa fa-picture-o"
+                                                                                   aria-hidden="true"></i>画像アップロード
+                            </button>
+                            {!! Form::file('image_create',['class'=>'btn_upload_ipt create', 'hidden', 'type' => 'button', 'id' => 'image_create']) !!}
+                        </div>
+                        <div class="col-md-8" align="left">
+                            <div class="form-group">
+                                {{Form::label('Select Coupon Type','クーポンタイプ')}}
+                                @if(count($list_coupon_type) > 0)
+                                    {{Form::select('coupon_type_id',$list_coupon_type->pluck('name', 'id'),old('coupon_type_id'),['class'=>'form-control'])}}
+                                @endif
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('Title','クーポン名')}}
+                                {{Form::text('title',old('title'),['class'=>'form-control'])}}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('Description', '説明')}}
+                                {{Form::textarea('description',old('description'),['class'=>'form-control'])}}
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('Hashtag','ハッシュタグ')}}
+                                {{Form::text('hashtag',old('hashtag'),['class'=>'form-control'])}}
+                            </div>
+
+                            <div class="form-group">
+                                {{Form::label('Start Date','開始日')}}
+                                {{ Form::date('start_date', \Carbon\Carbon::now(),['class'=>'form-control']) }}
+                            </div>
+
+                            <div class="form-group">
+                                {{Form::label('End Date','終了日')}}
+                                {{ Form::date('end_date', \Carbon\Carbon::now(),['class'=>'form-control']) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
+                    </div>
+                </div>
+                {{Form::close()}}
+            </div>
+        </div>
+    </section>
+</aside>
+<!-- /.right-side -->
 @endsection
 
 @section('footerJS')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn_upload_img.create').click(function () {
+            $('.btn_upload_ipt.create').click();
+        });
 
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
+                reader.onload = function (e) {
+                    $('.new_img').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#image_create").change(function () {
+            readURL(this);
+        });        
+    })
+</script>
 @endsection

@@ -63,6 +63,12 @@ class RedisControl
             case 'top_contacts':
                 $prefix_cache = sprintf(Config::get('api.cache_delete_top_contacts'), $app_data->app_app_id);
                 break;
+            case 'staff_cat':
+                $prefix_cache = sprintf(Config::get('api.cache_staff_categories'), $app_data->app_app_id, $store_id);
+                break;
+            case 'news_cat':
+                $prefix_cache = sprintf(Config::get('api.cache_news_cat'), $app_data->app_app_id, $store_id);
+                break;
             default:
                 break;
         }
