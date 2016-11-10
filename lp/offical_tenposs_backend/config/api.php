@@ -80,5 +80,9 @@ return [
     'secret_key_coupon_use' => 'ASDFghjkl@12345A',
     'url_open_coupon_code' => 'https://ten-po.com/coupon/use/code/%s/%s/%s/%s',
 
-    'path_host_apache_site_available' => '/etc/apache2/sites-available/'
+    'path_host_apache_site_available' => '/etc/apache2/sites-available/',
+
+    //notification
+    'url_api_notification_app_id' => 'https://api.ten-po.com/api/v1/notification_app_id',
+    'url_api_notification_app_user_id' => 'https://api.ten-po.com/api/v1/notification'
 ];
