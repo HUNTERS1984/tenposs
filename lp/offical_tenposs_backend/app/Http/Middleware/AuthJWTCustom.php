@@ -18,7 +18,7 @@ use cURL;
 class AuthJWTCustom extends BaseMiddleware
 
 {
-    protected $api_user_profile = 'https://auth.ten-po.com/profile';
+    protected $api_user_profile = 'https://auth.ten-po.com/v1/profile';
     /**
      * Handle an incoming request.
      *
@@ -53,6 +53,7 @@ class AuthJWTCustom extends BaseMiddleware
             $responseProfile = $requestProfile->send();
             
             $profile = json_decode($responseProfile->body);
+           
             if( $profile->code && $profile->code == 1000 ){
                 Session::put('user', $profile->data );
             }
