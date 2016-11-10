@@ -11,7 +11,7 @@ use Auth;
 use Session;
 use cURL;
 use Mail;
-
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
@@ -41,14 +41,15 @@ class UserController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-        
+       
         $response = cURL::post($this->url_login, 
             [
-                'email' => $request->input('email'), 
-                'password' => $request->input('password'),
+                'email' => Input::get('email'), 
+                'password' => Input::get('password'),
                 'role' => 'client'
             ]
         );
+
         $response = json_decode( $response->body );
 
         if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
@@ -56,7 +57,7 @@ class UserController extends Controller
             return redirect()->route('admin.client.top');
         }
      
-        return back()->withErrors( 'User cannot login' );
+        return back()->withErrors( 'ログインできません' );
     }
     
     public function logout(){

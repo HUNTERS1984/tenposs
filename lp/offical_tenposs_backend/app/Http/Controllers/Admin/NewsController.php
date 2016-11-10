@@ -11,6 +11,7 @@ use App\Utils\RedisControl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
 use Modules\Admin\Http\Requests\ImageRequest;
 
 
@@ -87,12 +88,12 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            $image_create = env('ASSETS_BACKEND') . '/images/wall.jpg';
+            return redirect()->back()->withInput()->withErrors('Please upload an image');
         }
         $date = Carbon::now()->toDateString();
 
@@ -148,7 +149,7 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withError('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -163,7 +164,7 @@ class NewsController extends Controller
         $news->save();
         RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
         RedisControl::delete_cache_redis('top_news', intval($this->request->input('new_category_id')));
-        return redirect()->route('admin.news.index')->withSuccess('Update the news successfully');
+        return redirect()->route('admin.news.index')->with('status','Up the news successfully');
     }
 
     public function destroy($id)
@@ -174,9 +175,27 @@ class NewsController extends Controller
     }
 
     public function storeCat(){
-        $all = $this->request->all();
-        $this->new_cat->create($all);
-        return redirect()->back()->with('status','Add Category successful!');
+        $rules = [
+            'name' => 'required|unique:new_categories|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $data = [
+                'name' => $this->request->input('name'),
+                'store_id' => $this->request->input('store_id'),
+            ];
+            $this->new_cat->create($data);
+            //delete cache redis
+            RedisControl::delete_cache_redis('news_cat');
+            return redirect()->route('admin.news.index')->with('status','Create the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot create the category');
+        }
+
     }
 
     public function nextcat()

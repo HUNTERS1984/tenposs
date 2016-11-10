@@ -11,6 +11,7 @@ use App\Utils\UrlHelper;
 use App\Models\Store;
 use App\Models\PhotoCat;
 use App\Models\Photo;
+use Illuminate\Support\Facades\Validator;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
 
@@ -30,7 +31,6 @@ class PhotoCatController extends Controller
 
     public function index()
     {
-
         $stores = $this->request->stores;
 
         $photocat = array();
@@ -144,15 +144,26 @@ class PhotoCatController extends Controller
 
     public function store()
     {
-
-        $this->entity = new PhotoCat();
-        $this->entity->name = $this->request->input('name');
-        $this->entity->store_id = $this->request->input('store_id');
-        //delete cache
-        RedisControl::delete_cache_redis('photo_cat',$this->request->input('store_id'));
-        $this->entity->save();
-
-        return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo category successfully');
+        $rules = [
+            'name' => 'required|unique:photo_categories|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $this->entity = new PhotoCat();
+            $this->entity->name = $this->request->input('name');
+            $this->entity->store_id = $this->request->input('store_id');
+            //delete cache
+            RedisControl::delete_cache_redis('photo_cat',$this->request->input('store_id'));
+            $this->entity->save();
+            
+            return redirect()->route('admin.photo-cate.index')->with('status','Create the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot create the category');
+        }
     }
 
     public function storephoto()
@@ -166,24 +177,27 @@ class PhotoCatController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
-                return back()->withInput();
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Please upload an image') );
-            return back()->withInput();
+            return redirect()->back()->withInput()->withErrors('Please upload an image');
         }
 
-        $photo = new Photo();
-        $photo->image_url = $image_create;
-        $photo->photo_category_id = $this->request->input('photo_category_id');
-        $photo->save();
-        //delete cache
-        RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
-        RedisControl::delete_cache_redis('top_photos');
-        return redirect()->route('admin.photo-cate.index')->withSuccess('Add a photo successfully');
+        try {
+            $photo = new Photo();
+            $photo->image_url = $image_create;
+            $photo->photo_category_id = $this->request->input('photo_category_id');
+            $photo->save();
+            //delete cache
+            RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
+            RedisControl::delete_cache_redis('top_photos');
+            return redirect()->route('admin.photo-cate.index')->with('status','Add the photo successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot create the photo');
+        }
+
     }
 
     public function show($id)
@@ -213,12 +227,12 @@ class PhotoCatController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
-                return back()->withInput();
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
         }
+        
         try {
             $photo = Photo::find($id);
             //dd($photo); die();
@@ -229,7 +243,8 @@ class PhotoCatController extends Controller
             //delete cache
             RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
             RedisControl::delete_cache_redis('top_photos');
-            return redirect()->route('admin.photo-cate.index')->withSuccess('Update photo successfully');
+
+            return redirect()->route('admin.photo-cate.index')->with('status','Update the photo successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update photo fail') );
             return back();
@@ -238,7 +253,17 @@ class PhotoCatController extends Controller
 
     public function destroy($id)
     {
-    	Photo::destroy($id);
-        return redirect()->back();
+        try {
+            $this->photo = $this->photo->find($id);
+            if ($this->photo) {
+                $this->photo->destroy($id);
+                return redirect()->route('admin.photo-cate.index')->with('status','Delete the photo successfully');
+            } else {
+                return redirect()->back()->withErrors('Cannot delete the photo');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot delete the photo');
+        }
     }
 }

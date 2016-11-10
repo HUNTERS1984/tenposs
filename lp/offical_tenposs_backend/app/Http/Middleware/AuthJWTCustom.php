@@ -53,7 +53,7 @@ class AuthJWTCustom extends BaseMiddleware
             $responseProfile = $requestProfile->send();
             
             $profile = json_decode($responseProfile->body);
-           
+            
             if( $profile->code && $profile->code == 1000 ){
                 Session::put('user', $profile->data );
             }

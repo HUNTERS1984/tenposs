@@ -217,12 +217,10 @@ class MenusController extends Controller
         }
     }
 
+
     public function storeMenu(){
-        $all = $this->request->all();
-        $this->menu->create($all);
-        return redirect()->back();
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique:menus|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -237,11 +235,9 @@ class MenusController extends Controller
             $this->menu->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('menus');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add menu successfully') );
-            return redirect()->route('admin.menus.index');
+            return redirect()->route('admin.menus.index')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add menu fail') );
-            return back();
+            return redirect()->back()->withErrors('Cannot create the category');
         }
     }
 
