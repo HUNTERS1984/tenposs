@@ -127,6 +127,7 @@ class ChatLineController extends Controller
                 'profile' => json_encode($LineAccount), 
                 'channel' => $bot->channel_id]);
         }
+        return 'Cannot get lineaccounts';
         
     }
      public function requestFriend() {

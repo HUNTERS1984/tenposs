@@ -80,7 +80,7 @@ exports.BOTSendMessage = function(chanel,to,message, _callback){
     UserBots.getBot( chanel, function( userbot ) {
         
         var body = {
-            'to':to, 
+            'to': to, 
             'messages':{
                 "type": "text",
                 "text": message
@@ -97,6 +97,8 @@ exports.BOTSendMessage = function(chanel,to,message, _callback){
         };
         
         request(options,function(error, response, body){
+            console.log('Send to enduser app');
+            console.log(response);
             if (!error && response.statusCode == 200) {
                 return _callback(body);  
             }else{
