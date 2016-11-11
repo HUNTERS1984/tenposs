@@ -42,36 +42,43 @@ var redisClient = redis.createClient();
 redisClient.subscribe('message');
 
 /*
-{"result":[
-    {
-        "from":"u2ddf2eb3c959e561f6c9fa2ea732e7eb8",
-        "fromChannel":1341301815,
-        "to":["u0cc15697597f61dd8b01cea8b027050e"],
-        "toChannel":1441301333,
-        "eventType":"138311609000106303",
-        "id":"ABCDEF-12345678901",
-        "content": {
-            "location":null,
-            "id":"325708",
-            "contentType":1,
-            "from":"uff2aec188e58752ee1fb0f9507c6529a",
-            "createdTime":1332394961610,
-            "to":["u0a556cffd4da0dd89c94fb36e36e1cdc"],
-            "toType":1,
-            "contentMetadata":null,
-            "text":"Hello, BOT API Server!"
-        }
-    },
-  ...
-]}
+(
+    [events] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [type] => message
+                    [replyToken] => 17499a1ab5bc42bd8cc659f65a3fdbc3
+                    [source] => stdClass Object
+                        (
+                            [userId] => Uafc5a65d7d626e9595397ac43c0bdf7c
+                            [type] => user
+                        )
+
+                    [timestamp] => 1478711801747
+                    [message] => stdClass Object
+                        (
+                            [type] => text
+                            [id] => 5182111047529
+                            [text] => Vbfh
+                        )
+
+                )
+
+        )
+
+)
+
 */
 // Redis
 
-/*
 redisClient.on("message", function (channel, message) {
     logger.trace('Redis ------------------------------------------------');
     logger.info('Redis receive message: ', message, channel);
     message = JSON.parse(message);
+    logger.info(message);
+    
+    
     // Find from is online
     findClientInRoomByMid(message.channel,message.data.content.from, 
         function( fromUser ){
@@ -127,7 +134,7 @@ redisClient.on("message", function (channel, message) {
     });
 
 });
-*/
+
 
 io.on('connection', function (socket) {
       
