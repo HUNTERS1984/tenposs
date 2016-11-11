@@ -1,4 +1,6 @@
 var request = require('request');
+var UserBots            = require("./models/UserBots"),
+    config              = require("./config");
 
 
 
@@ -13,6 +15,7 @@ var API_EVENTS = 'https://trialbot-api.line.me/v1/events';
 var API_BOT_PROFILE = 'https://api.line.me/v1/profile';
 var TO_CHANEL = '1383378250';
 var EVENT_TYPE = '138311608800106203';
+
 
 
 exports.getProfileByToken = function( token, _callback ){
@@ -71,3 +74,38 @@ exports.sendTextMessage =  function(to, message,_callback){
         
             
     }
+    
+exports.BOTSendMessage = function(chanel,to,message, _callback){
+    
+    UserBots.getBot( chanel, function( userbot ) {
+        
+        var body = {
+            'to':to, 
+            'messages':{
+                "type": "text",
+                "text": message
+            }
+        };
+        var options = {
+            uri: 'https://api.line.me/v2/bot/message/push',
+            method: 'POST',
+            headers: {
+                "Authorization": "Bearer "+ userbot.chanel_access_token,
+            },
+            json: true,
+            body: body
+        };
+        
+        request(options,function(error, response, body){
+            if (!error && response.statusCode == 200) {
+                return _callback(body);  
+            }else{
+                return false;
+            }
+        });
+        
+    });
+    
+
+        
+}    

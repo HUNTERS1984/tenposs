@@ -37,63 +37,78 @@ server.listen(3000, function(){
     logger.trace('Server up and running at: 3000');
 });
 
+// Redis handle BOT LINE server
+// Package handle from BOT server request
+/*
+ { channel:
+   { id: 1,
+     user_id: '1',
+     chanel_id: '1484786265',
+     chanel_secret: 'afc9ed782baea14e06817af0a84fdf7b',
+     chanel_access_token: 'dzF0TyqLD9GglNpsO89eHA3wyKw5rEskMm+8amibXagn3+vELU4mEE839Ns3yCy0Z+EuseUXCht8/4HFbq6cb540pslDjTA6doKCzG6LjqXBzJoD2c0rgYQNgL1hFYiTVPkCiXvRgZ/9qNR34v0a7gdB04t89/1O/w1cDnyilFU=',
+     created_at: '-0001-11-30 00:00:00',
+     updated_at: '-0001-11-30 00:00:00' },
+  data:
+   { type: 'message',
+     replyToken: '67012505e98648ffa57c01bbfd8e1f31',
+     source: { userId: 'Uafc5a65d7d626e9595397ac43c0bdf7c', type: 'user' },
+     timestamp: 1478837382047,
+     message: { type: 'text', id: '5188280300562', text: 'Gui' } } }
+
+*/
 
 var redisClient = redis.createClient();
 redisClient.subscribe('message');
-
-/*
-(
-    [events] => Array
-        (
-            [0] => stdClass Object
-                (
-                    [type] => message
-                    [replyToken] => 17499a1ab5bc42bd8cc659f65a3fdbc3
-                    [source] => stdClass Object
-                        (
-                            [userId] => Uafc5a65d7d626e9595397ac43c0bdf7c
-                            [type] => user
-                        )
-
-                    [timestamp] => 1478711801747
-                    [message] => stdClass Object
-                        (
-                            [type] => text
-                            [id] => 5182111047529
-                            [text] => Vbfh
-                        )
-
-                )
-
-        )
-
-)
-
-*/
-// Redis
-
 redisClient.on("message", function (channel, message) {
     logger.trace('Redis ------------------------------------------------');
-    logger.info('Redis receive message: ', message, channel);
     message = JSON.parse(message);
+    logger.info('Message from BOT');
     logger.info(message);
-    
-    
+
     // Find from is online
-    findClientInRoomByMid(message.channel,message.data.content.from, 
+    findClientInRoomByMid(message.channel.chanel_id ,message.data.source.userId, 
         function( fromUser ){
         if( fromUser ){
             // Emit to from user
             fromUser.emit('receive.bot.message',{
-                text: message.data.content.text,
-                timestamp: message.data.content.createdTime,
+                text: message.data.message.text,
+                timestamp: message.data.timestamp,
                 profile: fromUser.user.profile
             });
         }
         
     });
-    
-    // Find to is online
+    findIsClientInRoom( message.channel.chanel_id, function(toUser){
+               
+        LineAccounts.checkExistAccounts( {
+                from: 'enduser',
+                profile: {
+                    mid: message.data.source.userId
+                }
+            },  function( exitsUser ){
+                    if( !exitsUser ){
+                        logger.warn('Enduser LineAccounts not exits'); return;
+                    }else{
+                        toUser.emit('receive.admin.message', {
+                            windows : {
+                                mid: exitsUser.mid,
+                                displayName: exitsUser.displayName
+                            },
+                            message: {
+                                text: message.data.message.text,
+                                timestamp: message.data.timestamp,
+                                profile: {
+                                    mid: exitsUser.mid,
+                                    displayName: exitsUser.displayName,
+                                    pictureUrl: exitsUser.pictureUrl
+                                }
+                            }
+                        }); 
+                    };
+                }
+            );
+    } );
+    /*
     findClientInRoomByMid(
         message.channel,message.data.content.to, 
         function( toUser ){
@@ -129,10 +144,20 @@ redisClient.on("message", function (channel, message) {
         }
     );
     
-    Messages.saveMessage(message.channel, message.data.content.from, BOT_MID, message.data.content.text, function(inserID){
-        logger.info('Save message BOT success');
-    });
-
+    */
+     Bot.getProfileByToken( message.channel.chanel_access_token, function( botprofile ){
+        if( botprofile ){
+           Messages.saveMessage(message.channel.chanel_id,  
+           message.data.source.userId, 
+           botprofile.mid, 
+           message.data.message.text, 
+           function(inserID){
+                logger.info('Save message BOT success');
+            });
+            
+        }
+     });
+    
 });
 
 
@@ -413,7 +438,9 @@ io.on('connection', function (socket) {
            logger.info('Save admin message success');
         });
         
-        Bot.sendTextMessage(
+        
+        Bot.BOTSendMessage(
+            socket.room,
              package.to.split(),
              package.message,function(result){
                 console.log(result);

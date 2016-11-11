@@ -95,13 +95,12 @@ class ChatLineController extends Controller
     * View list line accounts
     */
     public function chatScreen($app_user_id){
-        
+       
         $app_user = AppUser::find($app_user_id);
-        if(!$app_user){
+        if(! $app_user){
             abort(502);
         }
-        Session::put('appuser',$app_user);
-        
+
         $lineAccounts = DB::table('line_accounts')
             ->where('line_accounts.app_user_id',$app_user->id)
             ->select('mid','pictureUrl','displayName','statusMessage')
@@ -116,14 +115,11 @@ class ChatLineController extends Controller
     public function chat($mid){
         $LineAccount = LineAccount::where('mid',$mid )->first();
         if( ! $LineAccount ){
-            if( !Session::has('appuser') ){
-                abort(503);
-            }
-            $appuser = Session::get('appuser');
+
             $bot = DB::table('apps')
                 ->join('app_users','app_users.app_id','=','apps.id')
                 ->join('user_bots','user_bots.user_id','=','apps.user_id')
-                ->where('apps_user.id', $appuser->id )
+                ->where('apps_user.id', $LineAccount->app_user_id )
                 ->select('user_bots.*')
                 ->first();
                 
