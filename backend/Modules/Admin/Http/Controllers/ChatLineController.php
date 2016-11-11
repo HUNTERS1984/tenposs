@@ -112,6 +112,26 @@ class ChatLineController extends Controller
         return view('admin::pages.chat.lineaccounts',['datas' => $lineAccounts ]);
     }
     
+    public function chat($mid){
+        $LineAccount = LineAccount::where('mid',$mid )->first();
+        if( ! $LineAccount ){
+            if( !Session::has('appuser') ){
+                abort(503);
+            }
+            $appuser = Session::get('appuser');
+            $bot = DB::table('apps')
+                ->join('app_users','app_users.app_id','=','apps.id')
+                ->join('user_bots','user_bots.user_id','=','apps.user_id')
+                ->where('apps_user.id', $appuser->id )
+                ->select('user_bots.*')
+                ->first();
+                
+            return view('admin::pages.chat.message',[ 
+                'profile' => json_encode($LineAccount), 
+                'channel' => $bot->channel_id]);
+        }
+        
+    }
     
     /*
     public function login(){

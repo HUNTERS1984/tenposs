@@ -16,7 +16,7 @@
           @foreach($datas as $d)
             <div class="media">
               <div class="media-left">
-                <a href="{{ route('line.verifined.token',['id' => $d->mid ]) }}">
+                <a href="{{ route('chat.line',['mid' => $d->mid ]) }}">
                   <img class="media-object" src="{{ $d->pictureUrl.'/small' }}" alt="{{ $d->displayName }}">
                 </a>
               </div>
