@@ -55,6 +55,7 @@ class ChatLineController extends Controller
         if( !$data ){
             return 'Success';
         }
+        Log::info(print_r($data, true));
         $data = $data->events[0];
         
         $botInfo = UserBots::where('chanel_id',$chanel_id )->first();
@@ -83,7 +84,7 @@ class ChatLineController extends Controller
                 'channel' => $botInfo,
                 'data' => $data
             ); 
-            Log::info(print_r($data, true));
+            
             $redis = LRedis::connection();
             $redis->publish('message', json_encode($arrPackage));
         }
