@@ -49,7 +49,7 @@
 <script type="text/javascript" src="{{ secure_asset('assets/js/jquery-1.11.2.min.js') }} "></script>
 <script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>    
-<script src="{{ url('admin/js/moment.min.js') }}"></script>
+<script src="{{ url('js/moment.min.js') }}"></script>
 <script type="text/javascript">
 
 var socket;
