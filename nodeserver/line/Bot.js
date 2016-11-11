@@ -1,6 +1,6 @@
 var request = require('request');
 var UserBots            = require("./../models/UserBots"),
-    config              = require("./config");
+    config              = require("./../config");
 
 
 
