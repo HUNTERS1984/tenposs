@@ -90,7 +90,7 @@ Route::group(array('prefix' => 'chat'), function () {
     Route::any('bot/{chanel_id}', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
     Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
     Route::get('request', array('as' => 'chat.request', 'uses' => 'ChatLineController@requestFriend'));
-    Route::get('line/{mid}', array('as' => 'chat.line', 'uses' => 'ChatLineController@chat'));
+    Route::get('line/{app_user_id}/{mid}', array('as' => 'chat.line', 'uses' => 'ChatLineController@chat'));
   
     /*
     Route::get('line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'ChatLineController@verifinedToken'));

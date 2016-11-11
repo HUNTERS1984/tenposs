@@ -16,7 +16,7 @@
           @foreach($datas as $d)
             <div class="media">
               <div class="media-left">
-                <a href="{{ route('chat.line',['mid' => $d->mid ]) }}">
+                <a href="{{ route('chat.line',['app_user_id' => $app_user_id, 'mid' => $d->mid ]) }}">
                   <img class="media-object" src="{{ $d->pictureUrl.'/small' }}" alt="{{ $d->displayName }}">
                 </a>
               </div>
