@@ -16,7 +16,7 @@ exports.getMessageHistory = function(from, to, limit, _callback){
                 	" WHERE"+ 
                 	" 	(m.from_mid = ? AND m.to_mid = ?)"+
                 	"	OR (m.to_mid = ?  AND m.from_mid = ?)"+
-                	" ORDER BY created_at DESC"+
+                	" ORDER BY created_at"+
                 	" LIMIT ?";
         connection = mysql.createConnection(mysqlConfig);
         connection.connect();       	
