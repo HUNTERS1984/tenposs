@@ -55,10 +55,8 @@ class ChatLineController extends Controller
             Log::info(print_r($data, true));
             $redis = LRedis::connection();
             $redis->publish('message', json_encode($arrPackage));
-            break;
         }
         
-       
     }
 
     
