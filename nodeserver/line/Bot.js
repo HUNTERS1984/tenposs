@@ -81,10 +81,10 @@ exports.BOTSendMessage = function(chanel,to,message, _callback){
         
         var body = {
             'to': to, 
-            'messages':{
+            'messages':[{
                 "type": "text",
                 "text": message
-            }
+            }]
         };
         var options = {
             uri: 'https://api.line.me/v2/bot/message/push',

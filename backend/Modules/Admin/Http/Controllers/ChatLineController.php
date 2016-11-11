@@ -114,7 +114,7 @@ class ChatLineController extends Controller
     
     public function chat($mid){
         $LineAccount = LineAccount::where('mid',$mid )->first();
-        if( ! $LineAccount ){
+        if( $LineAccount ){
 
             $bot = DB::table('apps')
                 ->join('app_users','app_users.app_id','=','apps.id')
