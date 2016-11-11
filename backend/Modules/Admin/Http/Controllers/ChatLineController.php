@@ -132,6 +132,9 @@ class ChatLineController extends Controller
         }
         
     }
+     public function requestFriend() {
+        return view('admin::pages.chat.requestFriends');
+    }
     
     /*
     public function login(){
@@ -262,8 +265,6 @@ class ChatLineController extends Controller
        
     }
 
-    public function requestFriend($mid) {
-        return view('admin::pages.chat.requestFriends');
-    }
+   
     */
 }
