@@ -28,7 +28,7 @@
           @endforeach
         </div>
         <div class="panel-footer" style="border-top: 0px;padding: 0px;">
-          <a href="{{ route('chat.request) }}" class="btn tenposs-btn">ログイン</a>
+          <a href="{{ route('chat.request') }}" class="btn tenposs-btn">ログイン</a>
         </div>
       </div><!--end panel --> 
     </div><!--end container -->  
