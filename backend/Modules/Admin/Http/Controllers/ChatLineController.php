@@ -127,7 +127,7 @@ class ChatLineController extends Controller
             if( $bot ){
                 return view('admin::pages.chat.message',[ 
                     'profile' => json_encode($LineAccount), 
-                    'channel' => $bot->channel_id]);
+                    'channel' => $bot->chanel_id]);
             }
                 
             return abort(503);
