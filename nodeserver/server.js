@@ -441,7 +441,7 @@ io.on('connection', function (socket) {
         
         Bot.BOTSendMessage(
             socket.room,
-             package.to.split(),
+             package.to,
              package.message,function(result){
                 console.log(result);
             }
