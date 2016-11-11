@@ -1,5 +1,5 @@
 var request = require('request');
-var UserBots            = require("./models/UserBots"),
+var UserBots            = require("./../models/UserBots"),
     config              = require("./config");
 
 
