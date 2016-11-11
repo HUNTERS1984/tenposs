@@ -88,11 +88,13 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(array('prefix' => 'chat'), function () {
     
     Route::any('bot/{chanel_id}', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
+    Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
+    Route::get('request', array('as' => 'chat.request', 'uses' => 'ChatLineController@requestFriend'));
+    /*
     Route::get('line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'ChatLineController@verifinedToken'));
     Route::get('verifined', array('as' => 'chat.authentication', 'uses' => 'ChatLineController@verifined'));
     Route::get('login', array('as' => 'chat.login', 'uses' => 'ChatLineController@login'));
-    Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
-    Route::get('request/{mid}', array('as' => 'chat.request', 'uses' => 'ChatLineController@requestFriend'));
+    */
 });
 
 Route::get('coupon/use/code/{user_id}/{coupon_id}/{code}/{sig}', array('as' => 'coupon.use.code', 'uses' => 'CouponController@coupon_use_code_view'));

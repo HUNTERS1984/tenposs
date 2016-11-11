@@ -56,9 +56,29 @@ class ChatLineController extends Controller
             return 'Success';
         }
         $data = $data->events[0];
- 
+        
         $botInfo = UserBots::where('chanel_id',$chanel_id )->first();
         if( $botInfo ){
+            
+            $LineAccount = LineAccount::where('mid',$data->source->userId )->first();
+            if( ! $LineAccount ){
+                // Save new Line Account info
+                // Get profile
+                $requestProfile = $this->curl->newRequest('get','https://api.line.me/v2/bot/profile/'.$data->source->userId )
+                     ->setHeader('Authorization', 'Bearer '.$botInfo->chanel_access_token);
+                $responseProfile = $requestProfile->send();
+                $profile = json_decode($responseProfile->body);
+                if($profile){
+                    $LineAccount = new LineAccount();
+                    $LineAccount->displayName = $profile->displayName;
+                    $LineAccount->mid = $profile->userId;
+                    $LineAccount->pictureUrl = $profile->pictureUrl;
+                    $LineAccount->statusMessage = $profile->statusMessage;
+                    $LineAccount->save();
+                }
+
+            }
+            
             $arrPackage = array(
                 'channel' => $botInfo,
                 'data' => $data
@@ -69,19 +89,16 @@ class ChatLineController extends Controller
         }
         
     }
-
-    
-    public function login(){
-        return view('admin::pages.chat.login');
-    }
-    
     /*
     * Route: /chat/screen/{app_user_id}
     * View list line accounts
     */
     public function chatScreen($app_user_id){
         
-        $app_user = AppUser::findOrFail($app_user_id);
+        $app_user = AppUser::find($app_user_id);
+        if(!$app_user){
+            abort(502);
+        }
         Session::put('appuser',$app_user);
         
         $lineAccounts = DB::table('line_accounts')
@@ -90,16 +107,17 @@ class ChatLineController extends Controller
             ->get();
    
         if(count($lineAccounts) <= 0 ){
-            return redirect()->route('chat.login');
+            return redirect()->route('chat.request');
         }
         return view('admin::pages.chat.lineaccounts',['datas' => $lineAccounts ]);
     }
     
     
     /*
-    * Route: chat/verifined
-    * Callback LINE authentication
-    */
+    public function login(){
+        return view('admin::pages.chat.login');
+    }
+   
     public function verifined(Request $request){
        
         if( $request->has('code') ){
@@ -118,7 +136,7 @@ class ChatLineController extends Controller
                 'redirect_uri' => url('chat/verifined')
             );
             // Request to get access token
-            $responseToken = $curl->post(self::API_REQUEST_TOKEN, $paramsRequestToken);
+            $responseToken = $this->curl->post(self::API_REQUEST_TOKEN, $paramsRequestToken);
             if($responseToken->statusCode == 200){
              
                 $dataToken = json_decode($responseToken->body);
@@ -181,11 +199,7 @@ class ChatLineController extends Controller
 
         
     }
-    
-    /*
-    * Route: chat/line/verifined/token/{mid}
-    * Login LINE button
-    */
+
     public function verifinedToken($mid){
         if( !Session::has('appuser') ){
             abort(503);
@@ -227,9 +241,9 @@ class ChatLineController extends Controller
         }
        
     }
-    
-    
+
     public function requestFriend($mid) {
         return view('admin::pages.chat.requestFriends');
     }
+    */
 }
