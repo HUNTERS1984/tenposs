@@ -119,7 +119,7 @@ class ChatLineController extends Controller
             $bot = DB::table('apps')
                 ->join('app_users','app_users.app_id','=','apps.id')
                 ->join('user_bots','user_bots.user_id','=','apps.user_id')
-                ->where('apps_user.id', $LineAccount->app_user_id )
+                ->where('app_users.id', $LineAccount->app_user_id )
                 ->select('user_bots.*')
                 ->first();
                 
