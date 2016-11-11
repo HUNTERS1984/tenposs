@@ -27,8 +27,7 @@
             </div>
           @endforeach
         </div>
-        <div class="panel-footer" style="border-top: 0px;
-    padding: 0px;">
+        <div class="panel-footer" style="border-top: 0px;padding: 0px;">
           <a onclick="login()" class="btn tenposs-btn">ログイン</a>
         </div>
       </div><!--end panel --> 

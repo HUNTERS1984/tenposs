@@ -223,7 +223,7 @@ function sendMessage(target) {
         'from' : profile.mid,
         'to': $(closest).attr('data-id'),
         'message': $(closest).find('input').val(),
-        'timestamp': d.getTime()/1000
+        'timestamp': d.getTime()
     };
     console.log(package);
     socket.emit('send.admin.message',package);
@@ -322,18 +322,19 @@ function connectToChat() {
         console.log('History client');
         console.log(package);
         $('#messages-windows').empty();
+        
         $(package.history).each(function(index, item){
             drawMessage({
                 text: item.message,
-                timestamp: moment( parseInt(item.created_at) ).format('LTS') ,
+                timestamp: moment( parseInt(item.created_at) ).format() ,
                 profile: (function(){
                     if(item.from_mid === profile.mid)
                         return profile;
                     else{
                         return {
-                            displayName: item.displayName,
-                            mid: item.mid,
-                            pictureUrl: item.pictureUrl,
+                            displayName: package.windows.displayName,
+                            mid: package.windows.mid,
+                            pictureUrl: package.windows.pictureUrl,
                         }
                     }
                 })()
@@ -408,7 +409,7 @@ $(document).ready(function(){
         var s = $(this).val();
         if (e.which === 13 && s.length > 0) {
             $.ajax({
-               url: '{{ route("chat.seach.contact") }}',
+               url: '{{ route("chat.search.contact") }}',
                type: 'post',
                data:{
                    s : s,

@@ -50,15 +50,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::resource('reserve', 'ReservesController');
     
     // Client chat
-    Route::get('chat/line', array('as' => 'admin.client.chat', 'uses' => 'Admin\ChatLineController@chatAdmin'));
-    Route::post('chat/contact/seacrch', array('as' => 'chat.seach.contact', 'uses' => 'Admin\ChatLineController@searchContact'));
+    Route::get('chat/line', array('as' => 'admin.client.chat', 'uses' => 'Admin\ClientChatLineController@chatAdmin'));
+    Route::post('chat/contact/search', array('as' => 'chat.search.contact', 'uses' => 'Admin\ClientChatLineController@searchContact'));
     
 });
-
-// Enduser chat
-Route::get('chat/screen/{app_user_id}', 'Admin\ChatLineController@chatScreen');
-Route::post('chat/bot', array('as' => 'line.bot', 'uses' => 'Admin\ChatLineController@index'));
-Route::get('chat/line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'Admin\ChatLineController@verifinedToken'));
-Route::get('chat/verifined', array('as' => 'chat.authentication', 'uses' => 'Admin\ChatLineController@verifined'));
-Route::get('chat/login', array('as' => 'chat.login', 'uses' => 'Admin\ChatLineController@login'));
-

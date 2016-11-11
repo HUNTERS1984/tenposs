@@ -16,8 +16,7 @@
               <ul class="messages scrollbar-macosx"></ul>
           </div>
         </div>
-        <div class="panel-footer" style="border-top: 0px;
-    padding: 0px;">
+        <div class="panel-footer" style="border-top: 0px; padding: 0px;">
           <div class="input-group input-message">
               <input type="text" class="form-control message_input" placeholder="メッセージを入力してください...">
               <span class="input-group-btn input-group-addon">
@@ -50,6 +49,7 @@
 <script type="text/javascript" src="{{ secure_asset('assets/js/jquery-1.11.2.min.js') }} "></script>
 <script type="text/javascript" src="{{ secure_asset('assets/plugins/jquery.scrollbar/jquery.scrollbar.min.js') }} "></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>    
+<script src="{{ url('admin/js/moment.min.js') }}"></script>
 <script type="text/javascript">
 
 var socket;
@@ -81,7 +81,7 @@ function connectToChat() {
               for( var i in package.messages ){
                 drawMessage({
                   text: package.messages[i].message,
-                  timestamp: converTimestamp( package.messages[i].created_at ),
+                  timestamp: moment( parseInt(package.messages[i].created_at) ).format() ,
                   profile: (function(id){
                     if( profile.mid === id ){
                       return profile;
@@ -172,7 +172,7 @@ function drawMessage(message){
     $message = $($('.message_template').clone().html());
     $message.addClass(side).find('.text').html(message.text);
     $message.find('.avatar img').attr('src',profileTemp.pictureUrl+'/small')
-    $message.find('.timestamp').text( converTimestamp( d.getTime()/1000 ));
+    $message.find('.timestamp').text( moment(message.timestamp).format('LTS') );
     $messages.append($message);
     $message.addClass('appeared');
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
@@ -207,13 +207,13 @@ function sendMessage(text) {
 
     drawMessage({
         text: text,
-        timestamp: d.getTime()/1000,
+        timestamp: d.getTime(),
         profile: profile
     });
     // Send message to server
     socket.emit('send.user.message',{
         'message': text,
-        'timestamp': d.getTime()/1000
+        'timestamp': d.getTime()
     });
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
@@ -225,13 +225,6 @@ function getMessageText() {
    return $('.message_input').val();
 };
 
-/**
- * timestamp: timestamp
- */ 
-function converTimestamp(timestamp){
-  var d = new Date(timestamp);
-  return d.getHours()+'h:'+d.getMinutes()+'m:'+d.getSeconds()+'s '+d.getDay()+'-'+d.getMonth()+'-'+d.getUTCFullYear();
-}
 
 $(document).ready(function(){
     connectToChat();
