@@ -104,9 +104,9 @@ class NewsController extends Controller
         }
         try {
             if ($category_id > 0)
-                $total_news = News::where('new_category_id', $category_id)->count();
+                $total_news = News::where('new_category_id', $category_id)->whereNull('deleted_at')->count();
             else
-                $total_news = News::all()->count();
+                $total_news = News::whereNull('deleted_at')->count();
             $news = [];
             if ($total_news > 0) {
                 if ($category_id > 0)

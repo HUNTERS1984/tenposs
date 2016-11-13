@@ -105,14 +105,14 @@ class StaffController extends Controller
         }
         try {
             if ($category_id > 0)
-                $total_staffs = StaffCategory::find($category_id)->staffs()->count();
+                $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
             else {
-                $total_staffs = \Illuminate\Support\Facades\DB::table('staffs')->whereNull('deleted_at')->count();
+                $total_staffs = Staff::whereNull('deleted_at')->count();
             }
             $staffs = [];
             if ($total_staffs > 0) {
                 if ($category_id > 0)
-                    $staffs = StaffCategory::find($category_id)->staffs()->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                 else
                     $staffs = Staff::whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
             }
@@ -120,7 +120,6 @@ class StaffController extends Controller
                 $staffs[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
             }
         } catch (\Illuminate\Database\QueryException $e) {
-            dd($e);
             return $this->error(9999);
         }
 

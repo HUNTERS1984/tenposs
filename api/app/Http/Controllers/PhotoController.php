@@ -103,10 +103,18 @@ class PhotoController extends Controller
             return $this->output($this->body);
         }
         try {
-            $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->count();
+            if (Input::get('category_id') > 0)
+                $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
+            else
+                $total_photos = Photo::whereNull('deleted_at')->count();
             $photos = [];
-            if ($total_photos > 0)
-                $photos = Photo::where('photo_category_id', Input::get('category_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+            if ($total_photos > 0) {
+                if (Input::get('category_id') > 0)
+                    $photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                else
+                    $photos = Photo::whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+            }
+                
             for ($i = 0; $i < count($photos); $i++) {
                 $photos[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
             }
