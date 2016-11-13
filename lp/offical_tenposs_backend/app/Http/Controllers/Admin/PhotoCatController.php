@@ -205,7 +205,7 @@ class PhotoCatController extends Controller
 
     }
 
-    public function edit(Store $store,$id)
+    public function edit($id)
     {
         $stores = $this->request->stores;
         $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
@@ -246,8 +246,7 @@ class PhotoCatController extends Controller
 
             return redirect()->route('admin.photo-cate.index')->with('status','Update the photo successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update photo fail') );
-            return back();
+            return redirect()->back()->withErrors('Cannot update the photo');
         }
     }
 

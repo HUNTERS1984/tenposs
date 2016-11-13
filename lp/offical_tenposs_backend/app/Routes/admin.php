@@ -36,9 +36,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::resource('staff', 'Admin\StaffController');
     // COUPON
     Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'Admin\CouponController@view_more']);
-    Route::get('coupon/approve/{coupon_id}/{post_id}', ['as' => 'admin.coupon.approve', 'uses' => 'Admin\CouponController@approve']);
-    Route::get('coupon/unapprove/{coupon_id}/{post_id}', ['as' => 'admin.coupon.unapprove', 'uses' => 'Admin\CouponController@unapprove']);
+    Route::get('coupon/approve_all', ['as' => 'admin.coupon.approve_all', 'uses' => 'Admin\CouponController@approve_all']);
+    Route::post('coupon/approve', ['as' => 'admin.coupon.approve', 'uses' => 'Admin\CouponController@approve']);
+    Route::get('coupon/approve_post/{post_id}', ['as' => 'admin.coupon.approve.post', 'uses' => 'Admin\CouponController@approve_post']);
+    Route::get('coupon/unapprove/{post_id}', ['as' => 'admin.coupon.unapprove.post', 'uses' => 'Admin\CouponController@unapprove_post']);
     Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'Admin\CouponController@store_type']);
+     Route::get('coupon/accept', ['as' => 'admin.coupon.accept', 'uses' => 'Admin\CouponController@accept']);
     Route::resource('coupon', 'Admin\CouponController');
 
     // Categries
@@ -52,5 +55,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     // Client chat
     Route::get('chat/line', array('as' => 'admin.client.chat', 'uses' => 'Admin\ClientChatLineController@chatAdmin'));
     Route::post('chat/contact/search', array('as' => 'chat.search.contact', 'uses' => 'Admin\ClientChatLineController@searchContact'));
-    
+
+    //Help
+    Route::get('help',['as' => 'admin.client.help', 'uses' => 'Admin\AdminController@help' ] );
+
+    //Contact
+    Route::get('contact',['as' => 'admin.client.contact', 'uses' => 'Admin\AdminController@contact' ] );
+    Route::post('contact',['as' => 'admin.client.contact.save', 'uses' => 'Admin\AdminController@saveContact' ] );
 });
+
+// Enduser chat
+Route::get('chat/screen/{app_user_id}', 'Admin\ChatLineController@chatScreen');
+Route::post('chat/bot', array('as' => 'line.bot', 'uses' => 'Admin\ChatLineController@index'));
+Route::get('chat/line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'Admin\ChatLineController@verifinedToken'));
+Route::get('chat/verifined', array('as' => 'chat.authentication', 'uses' => 'Admin\ChatLineController@verifined'));
+Route::get('chat/login', array('as' => 'chat.login', 'uses' => 'Admin\ChatLineController@login'));
+

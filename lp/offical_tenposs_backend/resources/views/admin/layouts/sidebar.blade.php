@@ -50,16 +50,16 @@
                 <a href="#"><span>顧客管理</span></a>
             </li>
             <li>
-                <a href="accept.html"><span>承認管理</span></a>
+                <a href="{{ route('admin.coupon.accept') }}"><span>承認管理</span></a>
             </li>
             <li>
                 <a href="account.html"><span>アカウント設定</span></a>
             </li>
             <li>
-                <a href="help.html"><span>ヘルプ</span></a>
+                <a href="{{route('admin.client.help')}}"><span>ヘルプ</span></a>
             </li>
             <li>
-                <a href="contact.html"><span>お問い合わせ</span></a>
+                <a href="{{route('admin.client.contact')}}"><span>お問い合わせ</span></a>
             </li>
             <li>
                 <a href="http://pon.cm/" target="_blank" class="img-nav">

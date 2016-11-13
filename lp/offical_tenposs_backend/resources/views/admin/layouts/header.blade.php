@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
         </a>
         <div class="navbar-right">
-            <a href="" class="btn-1">クポン覧クポン</a>
+            <a href="" class="btn-1">アプリ申請依頼</a>
         </div>
     </nav>
 </header>

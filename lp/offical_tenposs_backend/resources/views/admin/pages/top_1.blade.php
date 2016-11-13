@@ -4,7 +4,7 @@
         <div class="swiper-wrapper">
             @foreach( $slides as $slide )
             <div class="swiper-slide">
-                <img width="228" src="{{ url($slide->image_url) }}" alt=""/>
+                <img width="100%" src="{{ url($slide->image_url) }}" alt=""/>
             </div>
             @endforeach
           

@@ -264,14 +264,12 @@ class MenusController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-               Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
-               return back()->withInput();
+               return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Please upload an image') );
-            return back()->withInput();
+           return redirect()->back()->withInput()->withErrors('Please upload an image');
         }
 
         try {
@@ -288,11 +286,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Add item successfully') );
-            return back();
+            return redirect()->route('admin.menus.index')->with('status','Add the item successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Add item fail') );
-            return back();
+            return redirect()->back()->withInput()->withErrors('Cannot add the item');;
         }
     }
 
@@ -393,11 +389,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            Session::flash( 'message', array('class' => 'alert-success', 'detail' => 'Update item successfully') );
-            return redirect()->route('admin.menus.index');
+            return redirect()->route('admin.menus.index')->with('status','Update the item successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'Update item fail') );
-            return back();
+            return redirect()->back()->withInput()->withErrors('Cannot update the item');
         }
     }
 

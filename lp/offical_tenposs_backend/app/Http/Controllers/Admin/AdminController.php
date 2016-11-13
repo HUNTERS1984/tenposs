@@ -11,13 +11,14 @@ use Cache;
 use App\Models\App;
 use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
+use App\Models\AdminContacts;
 
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
 use App\Utils\UploadHandler;
 
 use Illuminate\Database\QueryException;
-
+use Validator;
 
 use Analytics;
 use App\Models\Component;
@@ -110,6 +111,36 @@ class AdminController extends Controller
         compact(    'slides','photos','news', 'items', 'contacts',
                     'app_components', 
                     'available_components'));
+    }
+
+    public function help(Request $request){
+        return view('admin.pages.help');
+    }
+
+    public function contact(Request $request){
+        return view('admin.pages.contact');
+    }
+
+    public function saveContact(Request $request){
+        $rules = [
+            'name' => 'required|Max:255',
+            'message' => 'required',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $contact = new AdminContacts();
+            $contact->name = $this->request->input('name');
+            $contact->message = $this->request->input('message');
+
+            $contact->save();
+            return redirect()->route('admin.client.contact')->with('status','Add contact successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('Cannot add contact');
+        }
     }
     
     public function globalpage(Request $request)

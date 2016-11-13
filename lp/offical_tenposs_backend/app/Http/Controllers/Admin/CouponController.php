@@ -67,7 +67,119 @@ class CouponController extends Controller
         return $returnHTML;
     }
 
-    public function approve($coupon_id, $post_id)
+    public function accept()
+    {
+        $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'all_coupon');
+        for ($i = 0; $i < count($posts); $i++) {
+            $app_user = Post::find($posts[$i]->id)->app_user()->first();
+            $posts[$i]->username = $app_user->profile()->first()->name;
+            $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+        }
+
+        $notapproved_posts = Post::whereNull('deleted_at')->whereStatus(false)->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'no_coupon');
+        
+        for ($i = 0; $i < count($notapproved_posts); $i++) {
+            $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
+            $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
+            $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+        }
+
+        $approved_posts = Post::whereNull('deleted_at')->whereStatus(true)->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'yes_coupon');
+        
+        for ($i = 0; $i < count($approved_posts); $i++) {
+            $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
+            $approved_posts[$i]->username = $app_user->profile()->first()->name;
+            $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+        }
+
+        return view('admin.pages.coupon.accept', compact('coupon', 'posts', 'notapproved_posts', 'approved_posts'));
+    }
+
+    public function approve_post($post_id, $return = true)
+    {
+        $post = Post::find($post_id);
+        $app_user = $post->app_user()->first();
+
+        if (!$app_user)
+            return;
+
+        $coupons = DB::table('coupons')
+        ->select('coupons.id')
+        ->join('rel_coupons_tags', 'coupons.id', '=', 'rel_coupons_tags.coupon_id')
+        ->join('rel_posts_tags', 'rel_posts_tags.tag_id', '=', 'rel_coupons_tags.tag_id')
+        ->join('posts', 'posts.id', '=', 'rel_posts_tags.post_id')
+        ->where('posts.id', '=', $post_id)
+        ->where('coupons.end_date', '>=', date('Y-m-d H:i:s'))
+        ->where('coupons.start_date', '<=', date('Y-m-d H:i:s'))
+        ->get();
+
+//           dd($coupons);
+        foreach ($coupons as $coupon) {
+            $coupon_id = $coupon->id;
+            try {
+                $app_user->coupons()->attach($coupon_id);
+                //create code for QR
+                $data_info = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
+                    ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])->get();
+                if (count($data_info) > 0) {
+                    if (empty($data_info[0]->code)) {
+                        \Illuminate\Support\Facades\DB::table('users')
+                            ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])
+                            ->update(['code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
+                    }
+                }
+                //push notify to all user on app
+        //        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+                if (count($app_user) > 0) {
+                    $data_push = array(
+                        'app_user_id' => $app_user->id,
+                        'type' => 'coupon',
+                        'data_id' => $coupon_id,
+                        'data_title' => '',
+                        'data_value' => '',
+                        'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+                    );
+                    $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_user_id'), $data_push);
+                    if (!$push)
+                        Log::info('push fail: ' . json_decode($data_push));
+                    //end push
+                }
+            } catch (\Illuminate\Database\QueryException $e) {
+
+            }
+        }
+        
+        $post->status = true;
+        $post->save(); 
+
+        if ($return)  
+            return redirect()->back()->with('status','Approve the coupon successfully');
+    }
+    public function approve()
+    {
+        $list_store = $this->request->stores;
+        $approve_list = $this->request->data;
+        dd($approve_list);
+        foreach ($approve_list as $post_id) {
+            $this->approve_post($post_id, false);
+        }
+        return json_encode(array('status' => 'success'));    
+    }
+
+    public function approve_all()
+    {
+        $list_store = $this->request->stores;
+        $approve_list = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->pluck('id');
+        foreach ($approve_list as $post_id) {
+            $this->approve_post($post_id, false);
+        }
+        return redirect()->back()->with('status','Approve all coupon successfully');  
+    }
+
+    public function approve_bk($coupon_id, $post_id)
     {
         $app_user = Post::find($post_id)->app_user()->first();
 
@@ -99,8 +211,7 @@ class CouponController extends Controller
             //end push
         }
 
-        Session::flash('message', array('class' => 'alert-success', 'detail' => 'Approve coupon successfully'));
-        return back();
+        return redirect()->back()->with('status','Approve the coupon successfully');
     }
 
     public function unapprove($coupon_id, $post_id)
@@ -109,6 +220,37 @@ class CouponController extends Controller
 
         $app_user->coupons()->detach($coupon_id);
         return redirect()->back();
+    }
+
+    public function unapprove_post($post_id)
+    {
+        $post = Post::find($post_id);
+        $app_user = $post->app_user()->first();
+
+        $coupons = DB::table('coupons')
+        ->select('coupons.id')
+        ->join('rel_coupons_tags', 'coupons.id', '=', 'rel_coupons_tags.coupon_id')
+        ->join('rel_posts_tags', 'rel_posts_tags.tag_id', '=', 'rel_coupons_tags.tag_id')
+        ->join('posts', 'posts.id', '=', 'rel_posts_tags.post_id')
+        ->where('posts.id', '=', $post_id)
+        ->where('coupons.end_date', '>=', date('Y-m-d H:i:s'))
+        ->where('coupons.start_date', '<=', date('Y-m-d H:i:s'))
+        ->get();
+
+//           dd($coupons);
+        foreach ($coupons as $coupon) {
+            $coupon_id = $coupon->id;
+            try {
+                $app_user->coupons()->detach($coupon_id);
+                
+            } catch (\Illuminate\Database\QueryException $e) {
+
+            }
+        }
+        
+        $post->status = false;
+        $post->save();
+        return redirect()->back()->with('status','Unapprove the coupon successfully');
     }
 
 
@@ -254,13 +396,18 @@ class CouponController extends Controller
         return view('admin.pages.coupon.show', compact('coupon', 'posts'));
     }
 
-    public function edit(Store $store, $id)
+    public function edit($id)
     {
+        $list_store = $this->request->stores;
         $all_coupon = $this->entity->all();
-        $list_store = $store->lists('name', 'id');
-        $coupon = $this->entity->find($id);
+
+        $list_coupon_type = array();
+        if (count($list_store) > 0) {
+            $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
+        }
+        $coupon = $this->entity->whereId($id)->with('tags')->first();
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
-        return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon'));
+        return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon', 'list_coupon_type'));
     }
 
     public function update($id)
@@ -283,8 +430,7 @@ class CouponController extends Controller
         }
 
         try {
-            $this->entity = $this->entity->find($this->request->input('id'));
-
+            $this->entity = $this->entity->find($id);
             $this->entity->title = $this->request->input('title');
             $this->entity->description = $this->request->input('description');
             $this->entity->start_date = $this->request->input('start_date');
@@ -296,6 +442,7 @@ class CouponController extends Controller
             }
 
             $this->entity->save();
+
             $tag_list = [];
             if ($this->request->hashtag !== null) {
                 preg_match_all('/#([^\s]+)/', $this->request->hashtag, $matches);
@@ -319,11 +466,9 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_redis('coupons');
-            Session::flash('message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully'));
-            return back();
+            return redirect()->route('admin.coupon.index')->with('status','Edit the coupon successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            Session::flash('message', array('class' => 'alert-danger', 'detail' => 'Edit coupon fail'));
-            return back();
+            return redirect()->back()->withInput()->withErrors('Cannot edit the coupon');
         }
 
         // $coupon = $this->entity->find($id);

@@ -186,7 +186,7 @@
                         <div class="form-group">
                             {{Form::label('Select Coupon Type','クーポンタイプ')}}
                             @if(count($list_coupon_type) > 0)
-                                {{Form::select('coupon_type_id',$list_coupon_type->pluck('name', 'id'),old('store_id'),['class'=>'form-control', 'id' => 'edit_coupon_type_id'])}}
+                                {{Form::select('coupon_type_id',$list_coupon_type->pluck('name', 'id'),old('store_id'),['class'=>'form-control')}}
                             @endif
                         </div>
                         <div class="form-group">

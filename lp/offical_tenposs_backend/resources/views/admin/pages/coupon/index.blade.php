@@ -79,9 +79,9 @@
                                     <div class="title-coupon">
                                         <div class="row">
                                             <div class="col-md-8 col-xs-12">
-                                                <a href="" class="text-coupon-left">{{$item->title}}</a>
+                                                <a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-left">{{$item->title}}</a>
                                                 <p>{{$item->coupon_type->name}}</p>
-                                                <p class="date-copon">有効期間　2016-09-15まで</p>
+                                                <p class="date-copon">有効期間　{{$item->end_date}}まで</p>
                                             </div>
                                             <div class="col-md-4 col-xs-12">
                                                  {{Form::open(array('route'=>array('admin.coupon.destroy',$item->id),'method'=>'DELETE'))}}

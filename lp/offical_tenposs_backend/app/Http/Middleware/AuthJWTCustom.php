@@ -54,8 +54,12 @@ class AuthJWTCustom extends BaseMiddleware
             
             $profile = json_decode($responseProfile->body);
             
-            if( $profile->code && $profile->code == 1000 ){
+            if( isset($profile->code) && $profile->code == 1000 ){
                 Session::put('user', $profile->data );
+            } else {
+                Session::put('jwt_token', null);
+                Session::put('user', null);
+                return redirect()->route('login')->withErrors('Session expired');;
             }
 
             $request->user = $user->get();
