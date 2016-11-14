@@ -40,7 +40,7 @@ class CouponController extends Controller
     }
 
     public function index()
-    {
+    {  
         $list_store = $this->request->stores;
         $coupons = array();
         $list_coupon_type = array();
@@ -69,31 +69,121 @@ class CouponController extends Controller
 
     public function accept()
     {
-        $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'all_coupon');
-        for ($i = 0; $i < count($posts); $i++) {
-            $app_user = Post::find($posts[$i]->id)->app_user()->first();
-            $posts[$i]->username = $app_user->profile()->first()->name;
-            $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+        $search_str = $this->request->input('search_pattern'); 
+        if ($search_str)
+        {
+            $posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->where(function ($query) use ($search_str) {
+                return $query->where('tags.tag', 'LIKE', '%'.$search_str.'%')->orWhere('user_profiles.name', 'LIKE', '%'.$search_str.'%');
+            })
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
 
+            for ($i = 0; $i < count($posts); $i++) {
+                $posts[$i]->tags = Post::find($posts[$i]->id)->tags()->get();
+                if ($posts[$i]->avatar == null)
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
+            }
+
+            $notapproved_posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->where('posts.status', '=', false)
+            ->where(function ($query) use ($search_str) {
+                return $query->where('tags.tag', 'LIKE', '%'.$search_str.'%')->orWhere('user_profiles.name', 'LIKE', '%'.$search_str.'%');
+            })
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+
+            for ($i = 0; $i < count($notapproved_posts); $i++) {
+                $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
+                if ($notapproved_posts[$i]->avatar == null)
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
+            }
+
+            $approved_posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->where('posts.status', '=', true)
+            ->where(function ($query) use ($search_str) {
+                return $query->where('tags.tag', 'LIKE', '%'.$search_str.'%')->orWhere('user_profiles.name', 'LIKE', '%'.$search_str.'%');
+            })
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+
+            for ($i = 0; $i < count($approved_posts); $i++) {
+                $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
+                if ($approved_posts[$i]->avatar == null)
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
+            }
+            
+            $posts->appends($this->request->only('pattern'))->links();
+            $notapproved_posts->appends($this->request->only('pattern'))->links();
+            $approved_posts->appends($this->request->only('pattern'))->links();
+        } else {
+            $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+            for ($i = 0; $i < count($posts); $i++) {
+                $app_user = Post::find($posts[$i]->id)->app_user()->first();
+                $posts[$i]->username = $app_user->profile()->first()->name;
+                $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+                if ($posts[$i]->avatar == null)
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
+
+            }
+
+            $notapproved_posts = Post::whereNull('deleted_at')->whereStatus(false)->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+            
+            for ($i = 0; $i < count($notapproved_posts); $i++) {
+                $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
+                $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
+                $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+                if ($notapproved_posts[$i]->avatar == null)
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
+            }
+
+            $approved_posts = Post::whereNull('deleted_at')->whereStatus(true)->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+            
+            for ($i = 0; $i < count($approved_posts); $i++) {
+                $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
+                $approved_posts[$i]->username = $app_user->profile()->first()->name;
+                $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+
+                if ($approved_posts[$i]->avatar == null)
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                else
+                    $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
+            }
         }
-
-        $notapproved_posts = Post::whereNull('deleted_at')->whereStatus(false)->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'no_coupon');
-        
-        for ($i = 0; $i < count($notapproved_posts); $i++) {
-            $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
-            $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
-            $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-
-        }
-
-        $approved_posts = Post::whereNull('deleted_at')->whereStatus(true)->orderBy('id', 'DESC')->with('tags')->paginate(10, ['*'], 'yes_coupon');
-        
-        for ($i = 0; $i < count($approved_posts); $i++) {
-            $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
-            $approved_posts[$i]->username = $app_user->profile()->first()->name;
-            $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-
-        }
+       
 
         return view('admin.pages.coupon.accept', compact('coupon', 'posts', 'notapproved_posts', 'approved_posts'));
     }
@@ -373,7 +463,7 @@ class CouponController extends Controller
         //         from rel_posts_tags
         //         INNER JOIN posts on rel_posts_tags.post_id=posts.id
         //         where posts.deleted_at is null AND rel_posts_tags.tag_id IN ' . $hashtag_id . 'ORDER BY posts.created_at DESC LIMIT 20'));
-        //$posts = Post::with('tags')->paginate(10);
+        //$posts = Post::with('tags')->paginate(REQUEST_COUPON_ITEMS);
         $posts = Post::whereHas('tags', function ($q) use ($hashtag) {
             $q->whereIn('id', $hashtag);
         })->with('tags')->paginate(20);

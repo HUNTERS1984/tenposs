@@ -25,46 +25,47 @@ class RedisControl
         $prefix_cache = '';
         switch ($cache_delete_type) {
             case 'news':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_news'), $app_data->app_app_id, $store_id);
+                $prefix_cache = sprintf(Config::get('api.cache_news'), $app_data->app_app_id, $store_id);
                 break;
             case 'top_news':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_top_news'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_top_news'), $app_data->app_app_id);
                 break;
             case 'app_detail':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_app_detail'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_app_detail'), $app_data->app_app_id);
                 break;
             case 'app_info':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_app_info'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_app_info'), $app_data->app_app_id);
+                dd($prefix_cache);
                 break;
             case 'top_images':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_top_images'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_top_images'), $app_data->app_app_id);
                 break;
             case 'items':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_items'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_items'), $app_data->app_app_id);
                 break;
             case 'menus':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_menus'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_menus'), $app_data->app_app_id);
                 break;
             case 'photo_cat':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_photo_cat'), $app_data->app_app_id, $store_id);
+                $prefix_cache = sprintf(Config::get('api.cache_photo_cat'), $app_data->app_app_id, $store_id);
                 break;
             case 'photos':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_photos'), $app_data->app_app_id, $category_id);
+                $prefix_cache = sprintf(Config::get('api.cache_photos'), $app_data->app_app_id, $category_id);
                 break;
             case 'reserve':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_reserve'), $app_data->app_app_id, $store_id);
+                $prefix_cache = sprintf(Config::get('api.cache_reserve'), $app_data->app_app_id, $store_id);
                 break;
             case 'coupons':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_coupons'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_coupons'), $app_data->app_app_id);
                 break;
             case 'top_photos':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_top_photos'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_top_photos'), $app_data->app_app_id);
                 break;
             case 'top_items':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_top_items'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_top_items'), $app_data->app_app_id);
                 break;
             case 'top_contacts':
-                $prefix_cache = sprintf(Config::get('api.cache_delete_top_contacts'), $app_data->app_app_id);
+                $prefix_cache = sprintf(Config::get('api.cache_top_contacts'), $app_data->app_app_id);
                 break;
             case 'staff_cat':
                 $prefix_cache = sprintf(Config::get('api.cache_staff_categories'), $app_data->app_app_id, $store_id);

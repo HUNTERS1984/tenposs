@@ -14,7 +14,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::resource('news', 'Admin\NewsController');
     
     // MENUS
-    Route::get('menus/view_more', ['as' => 'admin.menus.view_more', 'uses' => 'Admin\MenusController@view_more']);
+    Route::get('menus/cat', ['as' => 'admin.menus.cat', 'uses' => 'Admin\MenusController@cat']);
     Route::get('menus/nextcat', ['as' => 'admin.menus.nextcat', 'uses' => 'Admin\MenusController@nextcat']);
     Route::get('menus/nextpreview', ['as' => 'admin.menus.nextpreview', 'uses' => 'Admin\MenusController@nextpreview']);
     Route::post('menus/storeitem', ['as' => 'admin.menus.storeitem', 'uses' => 'Admin\MenusController@storeitem']);
@@ -41,7 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('coupon/approve_post/{post_id}', ['as' => 'admin.coupon.approve.post', 'uses' => 'Admin\CouponController@approve_post']);
     Route::get('coupon/unapprove/{post_id}', ['as' => 'admin.coupon.unapprove.post', 'uses' => 'Admin\CouponController@unapprove_post']);
     Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'Admin\CouponController@store_type']);
-     Route::get('coupon/accept', ['as' => 'admin.coupon.accept', 'uses' => 'Admin\CouponController@accept']);
+    Route::get('coupon/accept', ['as' => 'admin.coupon.accept', 'uses' => 'Admin\CouponController@accept']);
     Route::resource('coupon', 'Admin\CouponController');
 
     // Categries
@@ -66,6 +66,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     //Contact
     Route::get('contact',['as' => 'admin.client.contact', 'uses' => 'Admin\AdminController@contact' ] );
     Route::post('contact',['as' => 'admin.client.contact.save', 'uses' => 'Admin\AdminController@saveContact' ] );
+
+    //Cost
+     Route::get('cost/register',['as' => 'admin.cost.register', 'uses' => 'Admin\CostController@register' ] );
+    Route::resource('cost', 'Admin\CostController');
+
 });
 
 // Enduser chat

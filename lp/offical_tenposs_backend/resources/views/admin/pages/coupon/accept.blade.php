@@ -26,11 +26,13 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="wrapp_search_btn">
-                  <form class="form-group">
-                              <input type="text" class="form-control has-feedback-left" id="" placeholder="ユーザー名/ハッシュタグを入力してください">
-                              <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
-                          </form>
-                        </div>
+                    {{Form::open(array('route'=>'admin.coupon.accept', 'class' => 'form-group', 'method' => 'GET'))}}
+                    {{Form::text('search_pattern',old('search_pattern'),['class'=>'form-control has-feedback-left', 'id' => 'searchBox', 'placeholder' => 'ユーザー名/ハッシュタグを入力してください'])}}
+                    <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
+                    
+                    {{Form::button('検索',['class'=>'btn right', 'type' => 'submit'])}}
+                    {{Form::close()}}
+                </div>
               </div>
               <div class="col-md-6">
                 <div class="search-right">
@@ -285,5 +287,7 @@
        $("#tab-accept-1").addClass("active");
        $(".nav-tabs > li:nth-child(1)").addClass("active");
     }
+
+    $('#searchBox').val(getParameterByName('search_pattern'));
 </script>
 @endsection

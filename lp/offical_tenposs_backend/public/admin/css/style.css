@@ -2143,6 +2143,30 @@ a.arrow_down.collapsed span{
   color: #b8c2c6;
   position: absolute;
 }
+
+.wrapp_search_btn form.form-group button.btn.right{
+  float: right;
+  text-align: right;
+  top: 0px;
+  position: absolute;
+  right: 0px;
+  height: 40px;
+  background: #fff;
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid #c8d2d6;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #1e96d6;
+}
+
+.wrapp_search_btn form.form-group button:hover.btn.right{
+  background: #1e96d6;
+  color: #fff;
+  border:1px solid #1585c0;
+}
+
 /*-- //push --*/
 
 /*-- analytic --*/
@@ -3585,6 +3609,27 @@ a:hover.btn-cost-bre{
 .content-cost ul.btn-cost-bottom li:first-child{
   margin-right: 15px;
 }
+.content-cost a{
+  width: 150px;
+  height: 36px;
+  background: #2890e0;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 36px;
+  display: inline-table;
+  border: 1px solid #c8d2d6;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: #fff;
+}
+.content-cost a:hover{
+  background: #1e86d6;
+  color: #fff;
+  border:1px solid #116eb5;
+  box-shadow: 0 0 3px #1e86d6 inset;
+}
+
 .content-cost ul.btn-cost-bottom li a{
   width: 150px;
   height: 36px;

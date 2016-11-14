@@ -70,7 +70,7 @@
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="javascript:avoid()" class="btn-3" data-toggle="modal" data-target="#AddMenu">
+                <a href="{{ route('admin.menus.cat') }}" class="btn-3">
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="javascript:avoid()" class="btn-4" data-toggle="modal" data-target="#AddItem">

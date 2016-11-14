@@ -47,6 +47,9 @@
                 <a href="analytic.html"><span>アクセス解析</span></a>
             </li>
             <li>
+                <a href="{{ route('admin.cost.index') }}"><span>コスト管理</span></a>
+            </li>
+            <li>
                 <a href="#"><span>顧客管理</span></a>
             </li>
             <li>

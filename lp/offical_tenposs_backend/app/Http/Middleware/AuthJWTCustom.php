@@ -44,6 +44,7 @@ class AuthJWTCustom extends BaseMiddleware
         try {
             
             $user = $this->auth->getPayload( $token );
+
             // call api to get user profile
             $user_id = $user->get('id');
             //$user_role = $user->get('role');
@@ -59,7 +60,7 @@ class AuthJWTCustom extends BaseMiddleware
             } else {
                 Session::put('jwt_token', null);
                 Session::put('user', null);
-                return redirect()->route('login')->withErrors('Session expired');;
+                return redirect()->route('login')->withErrors('Session expired');
             }
 
             $request->user = $user->get();
@@ -73,14 +74,19 @@ class AuthJWTCustom extends BaseMiddleware
             }
         } catch (TokenExpiredException $e) {
             
-            $newToken = JWTAuth::refresh($token);
-            Session::put('jwt_token', $newToken);
-            return $next($request);
+            Session::put('jwt_token', null);
+            Session::put('user', null);
+            return redirect()->route('login')->withErrors('Session expired');;
             
         } catch (JWTException $e) {
             
             return redirect()->route('login')->withErrors('Token Signature could not be verified.');
             //return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
+        } catch (TokenBlacklistedException $e) {
+            
+            Session::put('jwt_token', null);
+            Session::put('user', null);
+            return redirect()->route('login')->withErrors('Session expired');;
         }
 
         $this->events->fire('tymon.jwt.valid', $user);

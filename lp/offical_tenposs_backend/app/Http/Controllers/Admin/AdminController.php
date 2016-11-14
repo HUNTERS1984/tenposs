@@ -282,7 +282,6 @@ class AdminController extends Controller
                         'rel_apps_stores.app_icon_url' => $app_icon,
                         'rel_apps_stores.store_icon_url' => $store_image
                     ]);
-           
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
