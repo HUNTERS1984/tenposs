@@ -45,6 +45,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
     Route::get('delete_data_web_notification', 'AppUserController@delete_data_web_notification');
     Route::get('share_get_code', 'AppUserController@share_get_code');
     Route::post('create_virtual_host', 'AppUserController@create_virtual_host');
+    Route::get('app_secret_info', 'TopController@app_secret_info');
     // User
     Route::resource('user', 'UserController');
 
@@ -62,6 +63,7 @@ Route::group(array('prefix' => 'api/v1'), function () {
     });
     Route::post('notification', 'TopController@notification');
     Route::post('notification_app_id', 'TopController@notification_with_app_id');
+    Route::post('notification_with_staffs', 'TopController@notification_with_staffs');
 });
 
 Route::get('user1', 'UserController@index');

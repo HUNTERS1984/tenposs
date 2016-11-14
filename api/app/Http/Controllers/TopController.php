@@ -105,7 +105,7 @@ class TopController extends Controller
                 ->join('rel_apps_stores', 'rel_apps_stores.app_store_id', '=', 'app_stores.id')
                 ->where('rel_apps_stores.app_id', $app['id'])
                 ->select('app_stores.*', 'rel_apps_stores.*')->get();
-            $url = 'https://api.ten-po.com/uploads/'.$app['id'].'/manifest.json';
+            $url = 'https://api.ten-po.com/uploads/' . $app['id'] . '/manifest.json';
             $app_data['notification'] = array("url_manifest" => $url);
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
@@ -268,6 +268,28 @@ class TopController extends Controller
         return $this->output($this->body);
     }
 
+    public function notification_with_staffs(Request $request)
+    {
+        $check_items = array('staff_id', 'type', 'created_by');//Config::get('api.items_notification');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+//        $check_items = Config::get('api.sig_notification');
+//        //validate sig
+//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+//        if ($ret_sig)
+//            return $ret_sig;
+        try {
+            Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(Input::all()));
+//            $process = new NotificationRepository();
+//            $process->process_notify(json_encode(Input::all()));
+        } catch (PredisException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+    }
+
     public function notification_with_app_id(Request $request)
     {
         $check_items = array('app_id', 'type', 'created_by');//Config::get('api.items_notification');
@@ -289,4 +311,44 @@ class TopController extends Controller
         }
         return $this->output($this->body);
     }
+
+    public function app_secret_info()
+    {
+        $check_items = array('app_id', 'time', 'sig');
+        $check_sig_items = Config::get('api.sig_app_secret_info');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        try {
+            // check app_id in database
+            $app = $this->_topRepository->get_app_info(Input::get('app_id'));
+
+            if ($app == null || count($app) == 0)
+                return $this->error(1004);
+            //validate sig
+            $app = $app->toArray();
+            $ret_sig = $this->validate_sig($check_sig_items, "Tenposs@123");
+            if ($ret_sig)
+                return $ret_sig;
+            //creare key redis
+            $key = sprintf(Config::get('api.cache_app_secret_info'), Input::get('app_id'));
+            //get data from redis
+            $data = RedisUtil::getInstance()->get_cache($key);
+
+            //check data and return data
+            if ($data != null) {
+                $this->body = $data;
+                return $this->output($this->body);
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        $this->body['data'] = $app;
+        if ($app != null && count($app) > 0) { // set cache
+            RedisUtil::getInstance()->set_cache($key, $this->body);
+        }
+        return $this->output($this->body);
+    }
+
 }

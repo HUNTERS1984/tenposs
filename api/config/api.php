@@ -11,6 +11,7 @@ return [
     //sig
     'sig_top' => array('app_id', 'time'),
     'sig_appinfo' => array('app_id', 'time'),
+    'sig_app_secret_info' => array('app_id', 'time'),
     'sig_signup' => array('app_id', 'time', 'email', 'password'),
     'sig_social_login' => array('app_id', 'time', 'social_type', 'social_id'),
     'sig_signin' => array('app_id', 'time', 'email'),
@@ -66,6 +67,7 @@ return [
     'cache_news_detail' => 'news_detail_%s_%s', // app_id,id
     'cache_coupons_detail' => 'coupons_detail_%s_%s', // app_id,id
     'cache_app_domain' => 'app_by_domain_%s', // domain
+    'cache_app_secret_info' => 'app_secret_info_%s', // app_id
 
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
     'noti_apple_url' => 'ssl://gateway.sandbox.push.apple.com:2195',
