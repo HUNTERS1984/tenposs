@@ -15,4 +15,8 @@ class CouponType extends Model
     public function coupons(){
         return $this->hasMany(Coupon::class);
     }
+
+    public function store(){
+    	return $this->belongsTo(Store::class);
+    }
 }

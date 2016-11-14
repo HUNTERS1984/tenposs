@@ -9,7 +9,7 @@
     <section class="content">
         <div class="contact_content">
           <h2>お気軽にお問い合わせ下さい。</h2>
-            @include('admin::layouts.message')
+            @include('admin.layouts.messages')
             {{Form::open(array('route'=>'admin.client.contact'))}}
             <div class="form-group">
                 {{Form::text('name',old('name'),['class'=>'form-control', 'placeholder' => '何について'])}}

@@ -11,7 +11,7 @@
         </div>
     </div>
     <section class="content">
-        @include('admin::layouts.message')
+        @include('admin.layouts.messages')
         <div class="col-lg-8">
             <div class="wrapper-content">
                 {{Form::model($item,array('route'=>array('admin.staff.update',$item->id),'method'=>'PUT','files'=>true, 'id' => 'form_app_new'))}}

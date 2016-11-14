@@ -11,7 +11,7 @@
         </div>
     </div>
     <section class="content">
-        @include('admin::layouts.message')
+        @include('admin.layouts.messages')
         <div class="col-lg-8">
             <div class="col-md-12">
                 <div class="tab-header-global">

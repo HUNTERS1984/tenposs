@@ -13,11 +13,10 @@ class StaffCat extends Model
 
     public function staff()
     {
-        $this->hasMany(Staff::class, 'staff_category_id');
+        return $this->hasMany(Staff::class, 'staff_category_id');
     }
 
-    public function store()
-    {
-        $this->belongsTo(Store::class);
+    public function store(){
+         return $this->belongsTo(Store::class);
     }
 }

@@ -14,7 +14,8 @@ use App\Models\Photo;
 use Illuminate\Support\Facades\Validator;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Session;
-
+use DB;
+use Carbon\Carbon;
 
 define('REQUEST_PHOTO_ITEMS',  9);
 class PhotoCatController extends Controller
@@ -160,11 +161,87 @@ class PhotoCatController extends Controller
             RedisControl::delete_cache_redis('photo_cat',$this->request->input('store_id'));
             $this->entity->save();
             
-            return redirect()->route('admin.photo-cate.index')->with('status','Create the category successfully');
+            return redirect()->route('admin.photo-cate.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
         }
     }
+
+    public function cat()
+    {
+        $stores = $this->request->stores;
+        $list_photo_cat = array();
+        $list_store = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $list_photo_cat = PhotoCat::orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->paginate(REQUEST_PHOTO_ITEMS);
+        }
+        //dd($list_store);
+        return view('admin.pages.photocats.cat',compact('list_photo_cat', 'list_store'));
+    }
+
+
+    public function editCat($id)
+    {   
+        $stores = $this->request->stores;
+        $list_store = array();
+
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $photo_cat = PhotoCat::find($id);
+        }
+        return view('admin.pages.photocats.editcat',compact('photo_cat', 'list_store'));
+       
+    }
+
+    public function updateCat($id)
+    {   
+        $rules = [
+            'name' => 'required|unique:photo_categories|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $name = $this->request->input('name');
+            $item = PhotoCat::find($id);
+            $item->name = $name;
+            $item->store_id = $this->request->input('store_id');
+            $item->save();
+
+            return redirect()->route('admin.photo-cate.cat')->with('status','Update the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+        }
+    }
+
+
+    public function deleteCat()
+    {
+        $del_list = $this->request->data;
+
+        if (!$del_list && count($del_list) < 1 )
+        {
+            return json_encode(array('status' => 'fail')); 
+        }
+        try {
+            DB::beginTransaction();
+            foreach ($del_list as $id) {
+                PhotoCat::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                Photo::where('photo_category_id', $id)->update(['deleted_at' => Carbon::now()]);
+            }
+            DB::commit();
+            return json_encode(array('status' => 'success')); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return json_encode(array('status' => 'fail')); 
+        }
+
+       
+    }
+
 
     public function storephoto()
     {

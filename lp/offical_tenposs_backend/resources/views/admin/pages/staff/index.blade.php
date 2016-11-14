@@ -68,7 +68,7 @@
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="javascript:avoid()" class="btn-3" data-toggle="modal" data-target="#AddMenu">
+                <a href="{{ route('admin.staff.cat') }}" class="btn-3">
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="javascript:avoid()" class="btn-4" data-toggle="modal" data-target="#AddItem">
@@ -120,33 +120,6 @@
                         -->
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
-            <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.staff.storeCat'))}}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddMenuLabel">カテゴリ追加</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            {{Form::label('Select Store','ストア')}}
-                            {{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
-
-                        </div>
-                        <div class="form-group">
-                            {{Form::label('Name', 'タイトル')}}
-                            {{Form::text('name',old('name'),['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
-                    </div>
-                </div>
-                {{Form::close()}}
             </div>
         </div>
 

@@ -3,9 +3,9 @@
 @section('main')
 <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>メニュー</span></div>
+        <div class="left"><span>スタッフ</span></div>
         <div class="right">
-            <a href="{{ route('admin.menus.index') }}" class="btn-1">戻る</a>
+            <a href="{{ route('admin.staff.index') }}" class="btn-1">戻る</a>
         </div>
     </div>
     <section class="content modal-global-redesign">
@@ -33,28 +33,28 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($menus as $menu)
+                        @foreach($list_staff_cat as $cat)
                             <tr>
                                 <th width="15%" scope="row" class="center">
                                     <div>
-                                        <input id="{{$menu->id}}" class="checkbox-custom" name="checkbox-1" type="checkbox">
-                                        <label for="{{$menu->id}}" class="checkbox-custom-label"></label>
+                                        <input id="{{$cat->id}}" class="checkbox-custom" name="checkbox-1" type="checkbox">
+                                        <label for="{{$cat->id}}" class="checkbox-custom-label"></label>
                                     </div>
                                 </th>
                                 
-                                <td width="35%">{{$menu->name}}</td>
+                                <td width="35%">{{$cat->name}}</td>
                                 <td width="35%">
-                                    {{ $menu->store->name }}
+                                    {{ $cat->store->name }}
                                 </td>
                                
-                                <td width="15%" class="center"><a href="{{route('admin.menus.editcat',['menu_id'=>$menu->id])}}" title="">編集</a></td>
+                                <td width="15%" class="center"><a href="{{route('admin.staff.editcat',['staff_id'=>$cat->id])}}" title="">編集</a></td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
-                @if(count($menus) > 0)
-                    {{ $menus->render() }}
+                @if(count($list_staff_cat) > 0)
+                    {{ $list_staff_cat->render() }}
                 @endif
                 <!-- //table -->
             </div>
@@ -84,7 +84,7 @@
 
         <div class="modal fade" id="AddMenu" tabindex="-1" role="dialog" aria-labelledby="AddMenuLabel">
             <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.menus.storeMenu'))}}
+                {{Form::open(array('route'=>'admin.staff.storeCat'))}}
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -131,7 +131,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/admin/menus/deletecat",
+                    url: "/admin/staff/deletecat",
                     data: {data: del_list}
                 }).done(function (data) {
                     ret = JSON.parse(data);

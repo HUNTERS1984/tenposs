@@ -68,7 +68,7 @@
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="#" data-toggle="modal" data-target="#AddCat" class="btn-3">
+                <a href="{{ route('admin.photo-cate.cat') }}" class="btn-3">
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="#" data-toggle="modal" data-target="#AddImage" class="btn-4">
@@ -103,36 +103,6 @@
                     </div>
             </div>    <!-- wrap-content-->
         </div>
-        <!-- Modal Category -->
-        <div class="modal fade" id="AddCat" tabindex="-1" role="dialog" aria-labelledby="AddCatLabel">
-            <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.photo-cate.store'))}}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddCatLabel">カテゴリ追加</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            {{Form::label('store','ストア')}}
-                            @if(count($list_store)  > 0)
-                                {{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
-                            @endif
-                        </div>
-                        <div class="form-group">
-                            {{Form::label('title','タイトル')}}
-                            {{Form::text('name',old('name'),['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
-                    </div>
-                </div>
-                {{Form::close()}}
-            </div>
-        </div>
-
 
         <div class="modal fade" id="AddImage" tabindex="-1" role="dialog" aria-labelledby="AddImage">
             <div class="modal-dialog" role="document">

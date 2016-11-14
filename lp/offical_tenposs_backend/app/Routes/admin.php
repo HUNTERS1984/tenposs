@@ -8,6 +8,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('global',['as' => 'admin.client.global', 'uses' => 'Admin\AdminController@globalpage' ] );
     Route::post('global', ['as' => 'admin.client.global.store', 'uses' => 'Admin\AdminController@globalstore']);
     // NEWS
+    Route::get('news/cat', ['as' => 'admin.news.cat', 'uses' => 'Admin\NewsController@cat']);
+    Route::get('news/editcat/{menu_id}', ['as' => 'admin.news.editcat', 'uses' => 'Admin\NewsController@editCat']);
+    Route::put('news/updatecat/{menu_id}', ['as' => 'admin.news.updatecat', 'uses' => 'Admin\NewsController@updateCat']);
+    Route::post('news/deletecat', ['as' => 'admin.news.deletecat', 'uses' => 'Admin\NewsController@deleteCat']);
     Route::get('news/nextcat', ['as' => 'admin.news.nextcat', 'uses' => 'Admin\NewsController@nextcat']);
     Route::get('news/nextpreview', ['as' => 'admin.news.nextpreview', 'uses' => 'Admin\NewsController@nextpreview']);
     Route::post('news/storeCat', ['as' => 'admin.news.storeCat', 'uses' => 'Admin\NewsController@storeCat']);
@@ -24,12 +28,20 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('menus/storeMenu', ['as' => 'admin.menus.storeMenu', 'uses' => 'Admin\MenusController@storeMenu']);
     Route::resource('menus', 'Admin\MenusController');
     // PHOTO CATS
+    Route::get('photo-cate/cat', ['as' => 'admin.photo-cate.cat', 'uses' => 'Admin\PhotoCatController@cat']);
+    Route::get('photo-cate/editcat/{menu_id}', ['as' => 'admin.photo-cate.editcat', 'uses' => 'Admin\PhotoCatController@editCat']);
+    Route::put('photo-cate/updatecat/{menu_id}', ['as' => 'admin.photo-cate.updatecat', 'uses' => 'Admin\PhotoCatController@updateCat']);
+    Route::post('photo-cate/deletecat', ['as' => 'admin.photo-cate.deletecat', 'uses' => 'Admin\PhotoCatController@deleteCat']);
     Route::get('photo-cate/view_more', ['as' => 'admin.photo-cate.view_more', 'uses' => 'Admin\PhotoCatController@view_more']);
     Route::post('photo-cate/storephoto', ['as' => 'admin.photo-cate.storephoto', 'uses' => 'Admin\PhotoCatController@storephoto']);
     Route::get('photo-cate/nextcat', ['as' => 'admin.photo-cate.nextcat', 'uses' => 'Admin\PhotoCatController@nextcat']);
     Route::get('photo-cate/nextpreview', ['as' => 'admin.photo-cate.nextpreview', 'uses' => 'Admin\PhotoCatController@nextpreview']);
     Route::resource('photo-cate', 'Admin\PhotoCatController');
     // STAFF
+    Route::get('staff/cat', ['as' => 'admin.staff.cat', 'uses' => 'Admin\StaffController@cat']);
+    Route::get('staff/editcat/{menu_id}', ['as' => 'admin.staff.editcat', 'uses' => 'Admin\StaffController@editCat']);
+    Route::put('staff/updatecat/{menu_id}', ['as' => 'admin.staff.updatecat', 'uses' => 'Admin\StaffController@updateCat']);
+    Route::post('staff/deletecat', ['as' => 'admin.staff.deletecat', 'uses' => 'Admin\StaffController@deleteCat']);
     Route::get('staff/view_more', ['as' => 'admin.staff.view_more', 'uses' => 'Admin\StaffController@view_more']);
     Route::get('staff/nextcat', ['as' => 'admin.staff.nextcat', 'uses' => 'Admin\StaffController@nextcat']);
     Route::get('staff/nextpreview', ['as' => 'admin.staff.nextpreview', 'uses' => 'Admin\StaffController@nextpreview']);
@@ -38,6 +50,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('staff/delete/{id}', ['as' => 'admin.staff.delete', 'uses' => 'Admin\StaffController@delete']);
     Route::resource('staff', 'Admin\StaffController');
     // COUPON
+    Route::get('coupon/cat', ['as' => 'admin.coupon.cat', 'uses' => 'Admin\CouponController@cat']);
+    Route::get('coupon/editcat/{menu_id}', ['as' => 'admin.coupon.editcat', 'uses' => 'Admin\CouponController@editCat']);
+    Route::put('coupon/updatecat/{menu_id}', ['as' => 'admin.coupon.updatecat', 'uses' => 'Admin\CouponController@updateCat']);
+    Route::post('coupon/deletecat', ['as' => 'admin.coupon.deletecat', 'uses' => 'Admin\CouponController@deleteCat']);
     Route::get('coupon/view_more', ['as' => 'admin.coupon.view_more', 'uses' => 'Admin\CouponController@view_more']);
     Route::get('coupon/approve_all', ['as' => 'admin.coupon.approve_all', 'uses' => 'Admin\CouponController@approve_all']);
     Route::post('coupon/approve', ['as' => 'admin.coupon.approve', 'uses' => 'Admin\CouponController@approve']);

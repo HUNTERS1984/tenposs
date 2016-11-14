@@ -20,6 +20,7 @@ use App\Models\News;
 use App\Models\Store;
 use Session;
 use Log;
+use DB;
 
 define('REQUEST_NEWS_ITEMS', 10);
 
@@ -191,7 +192,7 @@ class NewsController extends Controller
             $this->new_cat->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('news_cat');
-            return redirect()->route('admin.news.index')->with('status','Create the category successfully');
+            return redirect()->route('admin.news.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
         }
@@ -237,7 +238,7 @@ class NewsController extends Controller
         $stores = $this->request->stores;
         $news_cat = $this->new_cat->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 //        $list_store = $stores->lists('name','id');
-        //dd($menus->pluck('id')->toArray());
+        //dd($news->pluck('id')->toArray());
         $list_news = [];
         if (count($news_cat) > 0) {
             $list_news_cat = $news_cat->pluck('id')->toArray();
@@ -256,6 +257,81 @@ class NewsController extends Controller
 
         $returnHTML = view('admin.pages.news.element_item_preview')->with(compact('list_news'))->render();
         return $returnHTML;
+    }
+
+    public function cat()
+    {
+        $stores = $this->request->stores;
+        $list_news = array();
+        $list_store = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $list_news_cat = NewsCat::orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->paginate(REQUEST_NEWS_ITEMS);
+        }
+        //dd($list_store);
+        return view('admin.pages.news.cat',compact('list_news_cat', 'list_store'));
+    }
+
+
+    public function editCat($id)
+    {   
+        $stores = $this->request->stores;
+        $list_store = array();
+
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $news_cat = NewsCat::find($id);
+        }
+        return view('admin.pages.news.editcat',compact('news_cat', 'list_store'));
+       
+    }
+
+    public function updateCat($id)
+    {   
+        $rules = [
+            'name' => 'required|unique:new_categories|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $name = $this->request->input('name');
+            $item = NewsCat::find($id);
+            $item->name = $name;
+            $item->store_id = $this->request->input('store_id');
+            $item->save();
+
+            return redirect()->route('admin.news.cat')->with('status','Update the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+        }
+    }
+
+
+    public function deleteCat()
+    {
+        $del_list = $this->request->data;
+
+        if (!$del_list && count($del_list) < 1 )
+        {
+            return json_encode(array('status' => 'fail')); 
+        }
+        try {
+            DB::beginTransaction();
+            foreach ($del_list as $id) {
+                NewsCat::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                News::where('new_category_id', $id)->update(['deleted_at' => Carbon::now()]);
+            }
+            DB::commit();
+            return json_encode(array('status' => 'success')); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return json_encode(array('status' => 'fail')); 
+        }
+
+       
     }
 
 

@@ -15,8 +15,7 @@ class NewsCat extends Model
         $this->hasMany(News::class,'new_category_id');
     }
 
-    public function stores()
-    {
-        $this->belongsTo(Store::class);
+    public function store(){
+         return $this->belongsTo(Store::class);
     }
 }

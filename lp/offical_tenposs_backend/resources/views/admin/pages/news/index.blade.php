@@ -70,7 +70,7 @@
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="#" data-toggle="modal" data-target="#AddCategory" class="btn-3">
+                <a href="{{ route('admin.news.cat') }}" class="btn-3">
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="#" data-toggle="modal" data-target="#AddNews" class="btn-4">
@@ -151,34 +151,6 @@
             </div>
         </div>
 
-        <!-- Modal Category -->
-        <div class="modal fade" id="AddCategory" tabindex="-1" role="dialog" aria-labelledby="AddCategoryLabel">
-            <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.news.storeCat'))}}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddCategoryLabel">カテゴリ追加</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            {{Form::label('Select Store','ストア')}}
-                            {{Form::select('store_id',$list_store,old('store_id'),['class'=>'form-control'])}}
-
-                        </div>
-                        <div class="form-group">
-                            {{Form::label('Name', 'タイトル')}}
-                            {{Form::text('name',old('name'),['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
-                    </div>
-                </div>
-                {{Form::close()}}
-            </div>
-        </div>
         <!-- Modal -->
         <div class="modal fade" id="AddNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">

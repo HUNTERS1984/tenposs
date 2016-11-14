@@ -16,6 +16,7 @@ use Modules\Admin\Http\Requests\ImageRequest;
 
 use App\Models\Users;
 use Carbon\Carbon;
+use DB;
 
 define('REQUEST_STAFF_ITEMS',  9);
 class StaffController extends Controller
@@ -298,11 +299,87 @@ class StaffController extends Controller
             $this->staffcat->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('staff_cat');
-            return redirect()->route('admin.staff.index')->with('status','Create the category successfully');
+            return redirect()->route('admin.staff.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
         }
     }
+
+    public function cat()
+    {
+        $stores = $this->request->stores;
+        $list_staff = array();
+        $list_store = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $list_staff_cat = StaffCat::orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->paginate(REQUEST_STAFF_ITEMS);
+        }
+        //dd($list_store);
+        return view('admin.pages.staff.cat',compact('list_staff_cat', 'list_store'));
+    }
+
+
+    public function editCat($id)
+    {   
+        $stores = $this->request->stores;
+        $list_store = array();
+
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $staff_cat = StaffCat::find($id);
+        }
+        return view('admin.pages.staff.editcat',compact('staff_cat', 'list_store'));
+       
+    }
+
+    public function updateCat($id)
+    {   
+        $rules = [
+            'name' => 'required|unique:staff_categories|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $name = $this->request->input('name');
+            $item = StaffCat::find($id);
+            $item->name = $name;
+            $item->store_id = $this->request->input('store_id');
+            $item->save();
+
+            return redirect()->route('admin.staff.cat')->with('status','Update the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+        }
+    }
+
+
+    public function deleteCat()
+    {
+        $del_list = $this->request->data;
+
+        if (!$del_list && count($del_list) < 1 )
+        {
+            return json_encode(array('status' => 'fail')); 
+        }
+        try {
+            DB::beginTransaction();
+            foreach ($del_list as $id) {
+                StaffCat::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                Staff::where('staff_category_id', $id)->update(['deleted_at' => Carbon::now()]);
+            }
+            DB::commit();
+            return json_encode(array('status' => 'success')); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return json_encode(array('status' => 'fail')); 
+        }
+
+       
+    }
+
 
     public function storestaff()
     {

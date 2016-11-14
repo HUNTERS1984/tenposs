@@ -53,7 +53,7 @@
         </div>
         <div class="col-md-8">
             <div class="btn-menu">
-                <a href="#" data-toggle="modal" data-target="#AddCouponType" class="btn-3">
+                <a href="{{ route('admin.coupon.cat') }}" class="btn-3">
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="#" data-toggle="modal" data-target="#AddCoupon" class="btn-4">
@@ -129,37 +129,6 @@
                     </ul>
                     -->
                 </div>
-            </div>
-        </div>
-
-        <!-- Modal Category -->
-        <div class="modal fade" id="AddCouponType" tabindex="-1" role="dialog" aria-labelledby="AddCouponType">
-            <div class="modal-dialog" role="document">
-                {{Form::open(array('route'=>'admin.coupon.store_type','files'=>true))}}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddCouponTypeTitle">カテゴリ追加</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            {{Form::label('Select Store','ストア')}}
-                            @if(count($list_store) > 0)
-                                {{Form::select('store_id',$list_store->pluck('name', 'id'),old('store_id'),['class'=>'form-control'])}}
-                            @endif
-                        </div>
-                        <div class="form-group">
-                            {{Form::label('Title','タイトル')}}
-                            {{Form::text('name',old('name'),['class'=>'form-control'])}}
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        {{Form::submit('保存',['class'=>'btn btn-primary btn_submit_form'])}}
-                    </div>
-                </div>
-                {{Form::close()}}
             </div>
         </div>
 

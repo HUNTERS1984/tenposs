@@ -10,7 +10,7 @@
         </div>
     </div>
     <section class="content">
-        @include('admin::layouts.message')
+        @include('admin.layouts.messages')
         {{Form::model($news,array('route'=>array('admin.news.update',$news->id),'method'=>'PUT','files'=>true, 'id'=>'form_app_new'))}}
         <div class="col-lg-8">
             <div class="wrapper-content">

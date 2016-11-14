@@ -23,6 +23,8 @@ use Session;
 use App\Jobs\InstagramHashtagJob;
 use DB;
 use Validator;
+use Carbon\Carbon;
+
 
 define('REQUEST_COUPON_ITEMS', 10);
 
@@ -365,12 +367,86 @@ class CouponController extends Controller
                 'store_id' => $this->request->input('store_id'),
             ];
             $this->type->create($data);
-            return redirect()->route('admin.coupon.index')->with('status','Create the category successfully');
+            return redirect()->route('admin.coupon.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
         }
     }
 
+
+    public function cat()
+    {
+        $stores = $this->request->stores;
+        $list_store = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $list_coupon_cat = CouponType::orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->paginate(REQUEST_COUPON_ITEMS);
+        }
+        //dd($list_store);
+        return view('admin.pages.coupon.cat',compact('list_coupon_cat', 'list_store'));
+    }
+
+
+    public function editCat($id)
+    {   
+        $stores = $this->request->stores;
+        $list_store = array();
+
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $coupon_cat = CouponType::find($id);
+        }
+        return view('admin.pages.coupon.editcat',compact('coupon_cat', 'list_store'));
+       
+    }
+
+    public function updateCat($id)
+    {   
+        $rules = [
+            'name' => 'required|unique:coupon_types|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $name = $this->request->input('name');
+            $item = CouponType::find($id);
+            $item->name = $name;
+            $item->store_id = $this->request->input('store_id');
+            $item->save();
+
+            return redirect()->route('admin.coupon.cat')->with('status','Update the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+        }
+    }
+
+
+    public function deleteCat()
+    {
+        $del_list = $this->request->data;
+
+        if (!$del_list && count($del_list) < 1 )
+        {
+            return json_encode(array('status' => 'fail')); 
+        }
+        try {
+            DB::beginTransaction();
+            foreach ($del_list as $id) {
+                CouponType::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                Coupon::where('coupon_type_id', $id)->update(['deleted_at' => Carbon::now()]);
+            }
+            DB::commit();
+            return json_encode(array('status' => 'success')); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return json_encode(array('status' => 'fail')); 
+        }
+
+       
+    }
 
     public function store(Request $request)
     {

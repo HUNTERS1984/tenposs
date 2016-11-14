@@ -131,6 +131,11 @@ class MenusController extends Controller
     public function deleteCat()
     {
         $del_list = $this->request->data;
+
+        if (!$del_list && count($del_list) < 1 )
+        {
+            return json_encode(array('status' => 'fail')); 
+        }
         try {
             DB::beginTransaction();
             foreach ($del_list as $id) {
@@ -142,7 +147,7 @@ class MenusController extends Controller
             return json_encode(array('status' => 'success')); 
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-            return json_encode(array('status' => 'false')); 
+            return json_encode(array('status' => 'fail')); 
         }
 
        
