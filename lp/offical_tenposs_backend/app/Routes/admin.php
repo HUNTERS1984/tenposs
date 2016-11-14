@@ -58,7 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     
     //Accoutn setting
     Route::get('account',['as' => 'admin.client.account', 'uses' => 'Admin\AdminController@account' ] );
-    
+    Route::post('account',['as' => 'admin.client.account.save', 'uses' => 'Admin\AdminController@accountSave' ] );
+
     //Help
     Route::get('help',['as' => 'admin.client.help', 'uses' => 'Admin\AdminController@help' ] );
 

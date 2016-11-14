@@ -53,7 +53,7 @@
                 <a href="{{ route('admin.coupon.accept') }}"><span>承認管理</span></a>
             </li>
             <li>
-                <a href="account.html"><span>アカウント設定</span></a>
+                <a href="{{ route('admin.client.account') }}"><span>アカウント設定</span></a>
             </li>
             <li>
                 <a href="{{route('admin.client.help')}}"><span>ヘルプ</span></a>

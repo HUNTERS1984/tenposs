@@ -12,6 +12,7 @@ use App\Models\App;
 use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
 use App\Models\AdminContacts;
+use App\Models\UserInfos;
 
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
@@ -329,5 +330,42 @@ class AdminController extends Controller
             return back()->with('warning', 'Add App Setting fail');
         }
     }
-    
+
+    public function account(){
+        $user_info = UserInfos::find( Session::get('user')->id );
+        if(!$user_info){
+            return abort(503,'User info not found' );
+        }
+
+        return view('admin.pages.users.account', ['user' => $user_info]);
+    }
+
+    public function accountSave(Request $request){
+
+        $filePath = '';
+        if( $request->hasFile('avatar') ) {
+            $file = $request->file('avatar');
+            $destinationPath = public_path('uploads/avatar'); // upload path
+            $extension = $file->getClientOriginalExtension(); // getting image extension
+            $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            $file->move($destinationPath, $fileName); // uploading file to given path
+            $filePath = 'uploads/avatar/'.$fileName;
+        }
+        $user_info = UserInfos::find(Session::get('user')->id );
+        if(!$user_info){
+            return abort(503,'User info not found' );
+        }
+        $user_info->business_form = $request->input('business_form');
+        $user_info->business_category = $request->input('business_category');
+        $user_info->brand_name = $request->input('brand_name');
+        $user_info->street_address = $request->input('street_address');
+        $user_info->tel = $request->input('tel');
+        $user_info->business_hours = $request->input('business_hours');
+        $user_info->regular_holiday = $request->input('regular_holiday');
+        $user_info->testimonial = $request->input('testimonial');
+        $user_info->avatar = $filePath;
+        $user_info->save();
+
+        return back()->with('status','Saved successful!');
+    }
 }
