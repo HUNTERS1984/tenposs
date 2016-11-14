@@ -35,7 +35,6 @@ class RedisControl
                 break;
             case 'app_info':
                 $prefix_cache = sprintf(Config::get('api.cache_app_info'), $app_data->app_app_id);
-                dd($prefix_cache);
                 break;
             case 'top_images':
                 $prefix_cache = sprintf(Config::get('api.cache_top_images'), $app_data->app_app_id);
