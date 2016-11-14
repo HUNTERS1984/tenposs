@@ -15,6 +15,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     
     // MENUS
     Route::get('menus/cat', ['as' => 'admin.menus.cat', 'uses' => 'Admin\MenusController@cat']);
+    Route::get('menus/editcat/{menu_id}', ['as' => 'admin.menus.editcat', 'uses' => 'Admin\MenusController@editCat']);
+    Route::put('menus/updatecat/{menu_id}', ['as' => 'admin.menus.updatecat', 'uses' => 'Admin\MenusController@updateCat']);
+    Route::post('menus/deletecat', ['as' => 'admin.menus.deletecat', 'uses' => 'Admin\MenusController@deleteCat']);
     Route::get('menus/nextcat', ['as' => 'admin.menus.nextcat', 'uses' => 'Admin\MenusController@nextcat']);
     Route::get('menus/nextpreview', ['as' => 'admin.menus.nextpreview', 'uses' => 'Admin\MenusController@nextpreview']);
     Route::post('menus/storeitem', ['as' => 'admin.menus.storeitem', 'uses' => 'Admin\MenusController@storeitem']);

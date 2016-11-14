@@ -5,7 +5,7 @@
     <div class="wrapp-breadcrumds">
         <div class="left"><span>メニュー</span></div>
         <div class="right">
-            <a href="{{ URL::previous() }}" class="btn-1">戻る</a>
+            <a href="{{ route('admin.menus.index') }}" class="btn-1">戻る</a>
         </div>
     </div>
     <section class="content">
@@ -15,7 +15,47 @@
                 <a href="javascript:avoid()" class="btn-3" data-toggle="modal" data-target="#AddMenu">
                   <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
+                <a href="#" class="btn-4" id="btn_delete">選択した項目を削除</a>
             </div>
+            <div class="wrapp_table">
+
+                <!-- table -->
+                <div class="table-responsive">
+                    <table class="table accept_01">
+                        <thead>
+                        <tr>
+                            <th class="center">選択</th>
+                            <th>カテゴリ</th>
+                            <th>ストア</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($menus as $menu)
+                            <tr>
+                                <th width="15%" scope="row" class="center">
+                                    <div>
+                                        <input id="{{$menu->id}}" class="checkbox-custom" name="checkbox-1" type="checkbox">
+                                        <label for="{{$menu->id}}" class="checkbox-custom-label"></label>
+                                    </div>
+                                </th>
+                                
+                                <td width="35%">{{$menu->name}}</td>
+                                <td width="35%">
+                                    {{ $menu->store->name }}
+                                </td>
+                               
+                                <td width="15%" class="center"><a href="{{route('admin.menus.editcat',['menu_id'=>$menu->id])}}" title="">編集</a></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @if(count($menus) > 0)
+                    {{ $menus->render() }}
+                @endif
+                <!-- //table -->
+            </div>
+
         </div>
     </section>
     <!-- Modal -->
@@ -56,7 +96,25 @@
     {{Html::script('assets/backend/js/script.js')}}
     <script type="text/javascript">
         $(document).ready(function () {
-            
+            var del_list = [];
+            $('#btn_delete').click(function () {
+                $("input[type=checkbox]:checked").each(function(){
+                    del_list.push($(this).attr('id'));
+                });
+
+                console.log(del_list);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/menus/deletecat",
+                    data: {data: del_list}
+                }).done(function (data) {
+                    ret = JSON.parse(data);
+                    if (ret.status == 'success')
+                        location.reload();
+                });
+
+            });
         })
 
     </script>

@@ -252,7 +252,7 @@ class CouponController extends Controller
     {
         $list_store = $this->request->stores;
         $approve_list = $this->request->data;
-        dd($approve_list);
+       
         foreach ($approve_list as $post_id) {
             $this->approve_post($post_id, false);
         }

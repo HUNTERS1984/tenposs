@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Validator;
 use Session;
+use Carbon\Carbon;
 
 
 define('REQUEST_MENU_ITEMS',  9);
@@ -76,36 +77,75 @@ class MenusController extends Controller
         return view('admin.pages.menus.index',compact('menus','list_item','list_preview_item', 'list_store'));
     }
 
-    public function view_more()
+    public function cat()
     {
-        $page_num = $this->request->page;
-        $cat = $this->request->cat;
-
         $stores = $this->request->stores;
-        $menus = $this->menu->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
-        $list_store = $stores->lists('name','id');
-        //dd($menus->pluck('id')->toArray());
-        $list_item = [];
-        if (count($menus) > 0) {
-            $list_menu = $menus->pluck('id')->toArray();
-            if (count ($list_menu) > 0) {
-                $menu_id = $list_menu[$cat];
-                $list_item = Item::whereHas('menus', function ($query) use ($menu_id) {
-                    $query->where('menu_id', '=', $menu_id);
-                })->whereNull('deleted_at')->orderBy('updated_at','desc')->take(REQUEST_MENU_ITEMS)->skip($page_num*REQUEST_MENU_ITEMS)->get();
-                //dd($list_item->toArray());
-                for($i = 0; $i < count($list_item); $i++)
-                {
-                    if ($list_item[$i]->image_url == null)
-                        $list_item[$i]->image_url = env('ASSETS_BACKEND').'/images/wall.jpg';
-                }
-            }
+        $menus = array();
+        $list_store = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->paginate(REQUEST_MENU_ITEMS);
+        }
+        //dd($list_store);
+        return view('admin.pages.menus.cat',compact('menus', 'list_store'));
+    }
 
+
+    public function editCat($menu_id)
+    {   
+        $stores = $this->request->stores;
+        $list_store = array();
+
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $menu = $this->menu->find($menu_id);
+        }
+        return view('admin.pages.menus.editcat',compact('menu', 'list_store'));
+       
+    }
+
+    public function updateCat($menu_id)
+    {   
+        $rules = [
+            'name' => 'required|unique:menus|Max:255',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $name = $this->request->input('name');
+            $item = Menus::find($menu_id);
+            $item->name = $name;
+            $item->store_id = $this->request->input('store_id');
+            $item->save();
+
+            return redirect()->route('admin.menus.cat')->with('status','Update the category successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+        }
+    }
+
+
+    public function deleteCat()
+    {
+        $del_list = $this->request->data;
+        try {
+            DB::beginTransaction();
+            foreach ($del_list as $id) {
+                Menus::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+                $list_id = Menus::find($id)->items()->get()->pluck('id')->toArray();
+                Item::whereIn('id', $list_id)->update(['deleted_at' => Carbon::now()]);
+            }
+            DB::commit();
+            return json_encode(array('status' => 'success')); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return json_encode(array('status' => 'false')); 
         }
 
-
-        $returnHTML = view('admin.pages.menus.element_item')->with(compact('list_item'))->render();
-        return $returnHTML;
+       
     }
 
     public function nextcat()
@@ -235,7 +275,7 @@ class MenusController extends Controller
             $this->menu->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('menus');
-            return redirect()->route('admin.menus.index')->with('status','Create the category successfully');
+            return redirect()->back()->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
         }
