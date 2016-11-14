@@ -526,6 +526,7 @@
 
 @section('footerJS')
     {{Html::script('admin/js/jscolor.js')}}
+    {{Html::script('admin/js/mobile-reviews.js')}}
     <script type="text/javascript">
         function moveTo(from, to) {
                 
@@ -537,6 +538,8 @@
             $('.nav-left li').each(function(index,item){
                 $('#mobile-'+$(item).attr('data-value')).show();
             })*/
+            
+            MobileView.updateMenuListItems( $('ul.nav-left li' ) );
         };
         $('#btn_submit_form').click(function () {
             $('ul.nav-left li').each(function () {
@@ -558,6 +561,8 @@
             size: '5px',
             BorderRadius: '2px'
         });
+        
+        
         
     </script>
 @endsection
