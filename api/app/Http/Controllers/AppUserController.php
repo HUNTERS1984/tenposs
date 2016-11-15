@@ -705,10 +705,10 @@ class AppUserController extends Controller
         try {
             //$app_info = User::where('domain', Input::get('domain'))->with('apps')->first();
             $app_info = App\Models\App::where('domain', Input::get('domain'))->first();
+            $rs_data = $app_info;
             if (count($app_info) > 0) {
                 //if (count($app_info['apps']) > 0)
                     //$rs_data = $app_info['apps'][0];
-                    $rs_data = $app_info;
             }
 
         } catch (QueryException $e) {
