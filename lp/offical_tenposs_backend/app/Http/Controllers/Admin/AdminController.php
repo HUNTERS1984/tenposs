@@ -17,13 +17,13 @@ use App\Models\UserInfos;
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
 use App\Utils\UploadHandler;
+use App\Utils\UrlHelper;
 
 use Illuminate\Database\QueryException;
 use Validator;
 
 use Analytics;
 use App\Models\Component;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +48,7 @@ class AdminController extends Controller
             abort(503);
         }
         $app_components = array();
+        $top_images = array();
         $available_components = array();
         if (count($all) > 0) {
 //            $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
@@ -55,6 +56,11 @@ class AdminController extends Controller
             $app_settings = $app->firstOrFail();
 
             if ($app_settings != null) {
+
+                $top_images = AppTopMainImage::where('app_setting_id', '=', $app_settings->id)->get();
+                for ($i = 0; $i < count($top_images); $i++) {
+                    $top_images[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$top_images[$i]->image_url);
+                }
                 $app_components = $app->first()
                     ->components()
                     ->whereNotNull('top')
@@ -65,11 +71,10 @@ class AdminController extends Controller
                 } else {
                     $available_components = $all->toArray();
                 }
-            }
-            
-            
+            }     
             
         }
+        
         
 
         $slides = DB::table('app_top_main_images')
@@ -110,7 +115,7 @@ class AdminController extends Controller
 
         return view('admin.pages.top', 
         compact(    'slides','photos','news', 'items', 'contacts',
-                    'app_components', 
+                    'app_components', 'top_images',
                     'available_components'));
     }
 
@@ -297,36 +302,82 @@ class AdminController extends Controller
     public function topstore(Request $request)
     {
         try {
+            $app_setting = null;
+            $app_data = App::where('user_id', $request->user['sub'])->first();
+            if (count($app_data) > 0) {
+                $app = new AppSetting();
+                $app_setting = $app->with('components')->find($app_data->id);
+                if (!$app_setting)
+                    return back()->with('warning', 'Add App Setting fail');
+            } else {
+                return back()->with('warning', 'Add App Setting fail');
+            }
+
+            DB::beginTransaction();
+
+            AppTopMainImage::where('app_setting_id', '=', $app_setting->id)->delete();
+            if ($this->request->current_image) {
+                foreach ($this->request->current_image as $image_file) {
+                    if ($image_file != null) {
+                        $top_image = new AppTopMainImage();
+                        $top_image->image_url= parse_url($image_file, PHP_URL_PATH);
+                        $top_image->app_setting_id = $app_setting->id;
+                        $top_image->save();
+                    }
+                }
+            }
+            
+
+            if ($this->request->image_viewer != null) {
+                foreach ($this->request->image_viewer as $image_file) {
+                    if ($image_file != null && $image_file->isValid()) {
+                        $file = array('image_create' => $image_file);
+                        $destinationPath = 'uploads'; // upload path
+                        $extension = $image_file->getClientOriginalExtension(); // getting image extension
+                        //$fileName = md5($image_file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                        $fileName = $image_file->getClientOriginalName();
+                        $allowedMimeTypes = ['image/jpeg','image/gif','image/png','image/bmp','image/svg+xml'];
+                        $contentType = mime_content_type($image_file->getRealPath());
+
+                        if(! in_array($contentType, $allowedMimeTypes) ){
+                            return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                        }
+                        $image_file->move($destinationPath, $fileName); // uploading file to given path
+                        
+                        $top_image = new AppTopMainImage();
+                        $top_image->image_url= $destinationPath . '/' . $fileName;
+                        $top_image->app_setting_id = $app_setting->id;
+                        $top_image->save();
+                    } 
+                }
+                
+            }
+            
 
             $data_component = $this->request->input('data_component');
             $list_id = [];
             $list_insert = [];
-            if (count($data_component) > 0) {
-                $app_data = App::where('user_id', $request->user['sub'])->first();
-                if (count($app_data) > 0) {
-                    $app = new AppSetting();
-                    $app_setting = $app->with('components')->find($app_data->id);
-                    $i = 1;
-                    foreach ($data_component as $item) {
-                        $list_id[] = $item;
-                        $list_insert[] = array('app_setting_id' => $app_setting->id,
-                            'component_id' => $item,
-                            'order' => $i);
-                        $i++;
-                    }
-                }
+            $i = 1;
+            foreach ($data_component as $item) {
+                $list_id[] = $item;
+                $list_insert[] = array('app_setting_id' => $app_setting->id,
+                    'component_id' => $item,
+                    'order' => $i);
+                $i++;
             }
+
             if (count($list_id) > 0)
                 DB::table('rel_app_settings_components')->whereIn('app_setting_id', $list_id)->delete();
             if (count($list_insert) > 0)
                 DB::table('rel_app_settings_components')->insert($list_insert);
             //delete cache redis
             RedisControl::delete_cache_redis('app_info');
-            
-            return back()->with('status', 'Add Side Menu successfully');
+            DB::commit();
+            return back()->with('status', 'Setting successfully');
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-            return back()->with('warning', 'Add App Setting fail');
+            DB::rollBack();
+            return back()->with('warning', 'Setting fail');
         }
     }
 

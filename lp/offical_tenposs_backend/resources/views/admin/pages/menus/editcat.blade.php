@@ -3,7 +3,12 @@
 @section('main')
 <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>メニュー</span></div>
+        <div class="left">
+            <span>メニュー</span>
+            <strong>
+                メニューメニューの登緑・編集が可能
+            </strong>
+        </div>
         <div class="right">
             <a href="{{ route('admin.menus.cat') }}" class="btn-1">戻る</a>
             <a href="#" class="btn-2" id="btn_submit_form">保存</a>

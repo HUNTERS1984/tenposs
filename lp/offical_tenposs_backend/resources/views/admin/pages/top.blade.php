@@ -1,11 +1,17 @@
 @extends('admin.layouts.master')
 
 @section('main')
-<form class="form-top" id="form_app_setting" method="post" action="{{ route('admin.client.top.store') }}">
+{{Form::open(array('route'=>'admin.client.top.store','files'=>true, 'id'=>'form_app_setting', 'class' => 'form-top', 'method' => 'POST' ))}}
     {{ csrf_field() }}
     <aside class="right-side">
         <div class="wrapp-breadcrumds">
-            <div class="left"><span>トップ</span></div>
+            <div class="left">
+                <span>トップ</span>
+                <strong>
+                    トップページのメインビジュアル、トップページ表示頭目の編集が可能
+                </strong>
+            </div>
+
             <div class="right">
                 <a href="#" id="btn_submit_form" class="btn-2">保存</a>
             </div>
@@ -38,15 +44,17 @@
             <div class="col-md-8">
                 
                     <div class="form-group">
-                        <label>オンライン</label>
-                        <select name="" id="" class="form-control short">
-                            <option value="">オンライン</option>
-                            <option value="">オンライン</option>
-                            <option value="">オンライン</option>
-                            <option value="">オンライン</option>
-                            <option value="">オンライン</option>
-                        </select>
-                        <a href="" class="link-top-1" title="">+ ユーザーネーム</a>
+                        <label>メインビジュアル</label>
+
+                        <div class="input_fields_wrap">
+                            <?php $i=0?>
+                            @foreach ($top_images as $image)
+                            <div><input type="text" class="form-control" name="current_image[{{$i}}]" value="{{$image->image_url}}"><a href="#" class="remove_field"><span aria-hidden="true" style="font-size:25px;vertical-align: middle;"> ×</span></a></div>
+                            <?php $i++?>
+                            @endforeach
+                            </br>
+                        </div>
+                        <a href="" id="add_file" class="link-top-1" title="">+ ファイルを追加する </a>
                     </div>
                     <div class="form-group arrow-select">
                         <label>トップページ表示項目</label>
@@ -92,12 +100,14 @@
         </section>
 
     </aside>
-</form>
+{{Form::close()}}
 @endsection    
 
 @section('footerJS')
     {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
     {{Html::style('admin/js/swiper/swiper.min.css')}}
+    {{Html::script('admin/js/jquery-filestyle.min.js')}}
+    {{Html::style('admin/css/jquery-filestyle.min.css')}}
     {{Html::script('admin/js/plugins/jquery.scrollbar/jquery.scrollbar.min.js')}}
     {{Html::script('admin/js/plugins/maps/jquery.googlemap.js')}}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrEF9NEPkuxtYouSqVqNj3KSoX__7Rm8g"></script>
@@ -118,6 +128,8 @@
 
     }
     $(document).ready(function () {
+        
+
         $('.scroller').scrollbar();
         $('.nav-left, .nav-right').on('click', 'li', function (e) {
             e.preventDefault();
@@ -151,6 +163,22 @@
               text: item.title
             });
         });
+
+        var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+        var add_button      = $("#add_file"); //Add button ID
+        
+        var x = 1; //initlal text box count
+
+        $(add_button).click(function(e){ //on add input button click
+            e.preventDefault();
+            x++;
+            $(wrapper).append('<div><input type="file" class="form-control short" style="display:inline" name="image_viewer['+x+']" class="jfilestyle" data-buttonText="" ><a href="#" class="remove_field"><span aria-hidden="true" style="font-size:25px; vertical-align: middle;"> ×</span></a></div>'); //add input box
+            $(":file").jfilestyle({buttonText: "ファイルを選択"});
+        });
+        
+        $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+            e.preventDefault(); $(this).parent('div').remove();
+        })
         
         
         

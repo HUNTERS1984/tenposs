@@ -42,27 +42,28 @@ class AuthJWTCustom extends BaseMiddleware
         $token = JWTAuth::getToken();
 
         try {
-            
             $user = $this->auth->getPayload( $token );
 
             // call api to get user profile
             $user_id = $user->get('id');
             //$user_role = $user->get('role');
-            $requestProfile = cURL::newRequest('get', $this->api_user_profile )
+            if (Session::get('user') == null) {
+                $requestProfile = cURL::newRequest('get', $this->api_user_profile )
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
             
-            $responseProfile = $requestProfile->send();
-            
-            $profile = json_decode($responseProfile->body);
-            
-            if( isset($profile->code) && $profile->code == 1000 ){
-                Session::put('user', $profile->data );
-            } else {
-                Session::put('jwt_token', null);
-                Session::put('user', null);
-                return redirect()->route('login')->withErrors('Session expired');
+                $responseProfile = $requestProfile->send();
+                
+                $profile = json_decode($responseProfile->body);
+                
+                if( isset($profile->code) && $profile->code == 1000 ){
+                    Session::put('user', $profile->data );
+                } else {
+                    Session::put('jwt_token', null);
+                    Session::put('user', null);
+                    return redirect()->route('login')->withErrors('Session expired');
+                }
             }
-
+            
             $request->user = $user->get();
             if ($request->user) {
  

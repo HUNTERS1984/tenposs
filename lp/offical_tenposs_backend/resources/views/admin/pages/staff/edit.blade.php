@@ -4,7 +4,12 @@
 <aside class="right-side">
     
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>スタッフ</span></div>
+        <div class="left">
+            <span>スタッフ</span>
+            <strong>
+                スタッフの登録・編集が可能
+            </strong>
+        </div>
         <div class="right">
             <a href="{{ URL::previous() }}" class="btn-1">戻る</a>
             <a href="#" class="btn-2" id="btn_submit_form">保存</a>

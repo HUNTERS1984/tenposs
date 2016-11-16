@@ -3,7 +3,12 @@
 @section('main')
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>フォトギャラリー</span></div>
+        <div class="left">
+            <span>フォトギャラリー</span>
+            <strong>
+                フォトギャラリーの登録・編集が可能
+            </strong>
+        </div>
         <div class="right">
             <span class="switch-button">
                 <div class="lcs_wrap">
