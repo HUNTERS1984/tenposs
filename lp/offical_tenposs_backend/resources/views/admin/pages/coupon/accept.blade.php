@@ -3,7 +3,7 @@
 @section('main')
  <aside class="right-side">
             <div class="wrapp-breadcrumds">
-                <div class="left"><span>承認管理</span><span class="circle-bre">12</span></div>
+                <div class="left"><span>承認管理</span><span class="circle-bre">{{ count($posts) }}</span></div>
                 <div class="left">
                   <div class="tab-header-accept">
                       <ul class="nav nav-tabs" role="tablist">
@@ -20,7 +20,7 @@
                   </div>
                 </div>
             </div>
-            <section class="content">
+    <section class="content">   
         <div class="col-md-12">
           <div class="main-search-btn">
             <div class="row">
@@ -36,8 +36,12 @@
               </div>
               <div class="col-md-6">
                 <div class="search-right">
-                  <a href="#" class="btn-s-1" id="btn_approve">選択したユーザーを承認</a>
-                  <a href="{{route('admin.coupon.approve_all')}}" class="btn-s-2" onclick="return confirm('Are you sure?')">すべてのユーザーを承認</a>
+                  <a href="javascript:avoid()" class="btn-s-1" data-toggle="modal" data-target="#ApproveConfirm">
+                      <i class="glyphicon glyphicon-plus"></i> 選択したユーザーを承認
+                  </a>
+                  <a href="javascript:avoid()" class="btn-s-2" data-toggle="modal" data-target="#ApproveConfirmAll">
+                      <i class="glyphicon glyphicon-plus"></i> すべてのユーザーを承認
+                  </a>
                 </div>
               </div>
             </div>
@@ -241,8 +245,48 @@
             </div>
           </div>
         </div>
-            </section>
-        </aside>
+        <div class="modal fade" id="ApproveConfirm" tabindex="-1" role="dialog" aria-labelledby="ApproveConfirmLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="ApproveConfirmLabel">本当に承認しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center><a href="#" id="btn_approve" style="color:red; font-weight:bold;">承認</a></center>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="ApproveConfirmAll" tabindex="-1" role="dialog" aria-labelledby="ApproveConfirmAllLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="ApproveConfirmAllLabel">本当にすべて承認しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center><a href="{{route('admin.coupon.approve_all')}}" id="btn_approve" style="color:red; font-weight:bold;">承認</a></center>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+</aside>
 <!-- /.right-side -->
 @endsection
 

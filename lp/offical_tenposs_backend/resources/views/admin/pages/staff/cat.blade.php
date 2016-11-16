@@ -3,7 +3,12 @@
 @section('main')
 <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>スタッフ</span></div>
+        <div class="left">
+            <span>スタッフ</span>
+            <strong>
+                スタッフの登録・編集が可能
+            </strong>
+        </div>
         <div class="right">
             <a href="{{ route('admin.staff.index') }}" class="btn-1">戻る</a>
         </div>

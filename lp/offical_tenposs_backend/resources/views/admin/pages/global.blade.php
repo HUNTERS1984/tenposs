@@ -10,7 +10,12 @@
   {{ csrf_field() }}   
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>グローバル</span></div>
+        <div class="left">
+            <span>グローバル</span>
+            <strong>
+                ヘッダータサイドメニューの編集とアフリ申請が可能
+            </strong>
+        </div>
         <div class="right">
             <a href="#" id="btn_submit_form" class="btn-2">保存</a>
         </div>
