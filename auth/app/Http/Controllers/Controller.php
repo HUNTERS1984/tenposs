@@ -34,6 +34,7 @@ class Controller extends BaseController
         '99953' => 'User not existed.',
         '99954' => 'Refresh token invalid.',
         '99955' => 'Auth invalid.',
+        '99956' => 'Password not math.',
     );
     protected $body = array(
         'code' => '1000',

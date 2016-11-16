@@ -43,6 +43,7 @@ $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
     $app->get('/profile', 'UserV1Controller@profile');
+    $app->post('/auth/changepassword', 'UserV1Controller@change_password');
 
 });
 $app->group(['middleware' => 'jwt.refresh'], function ($app) {

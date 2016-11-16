@@ -9,8 +9,10 @@ use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Bican\Roles\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use DB;
+use Illuminate\Support\Facades\Log;
 use JWTAuth;
 
 class UserV1Controller extends Controller
@@ -54,5 +56,28 @@ class UserV1Controller extends Controller
         return $this->output($this->body);
     }
 
+    public function change_password()
+    {
+        $check_items = array('old_password', 'new_password');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $user = \Tymon\JWTAuth\Facades\JWTAuth::toUser();
+        if (!$user)
+            return $this->error(1004);
+
+        if (!Hash::check(Input::get('old_password'), $user->password))
+            return $this->error(99956);
+        try {
+            $user_data = User::find($user->id);
+            $user_data->password = app('hash')->make(Input::get('new_password'));
+            $user_data->save();
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+    }
 
 }
