@@ -21,7 +21,7 @@ use App\Utils\UrlHelper;
 
 use Illuminate\Database\QueryException;
 use Validator;
-
+use cURL;
 use Analytics;
 use App\Models\Component;
 use Illuminate\Support\Facades\Auth;
@@ -393,6 +393,7 @@ class AdminController extends Controller
     public function accountSave(Request $request){
 
         $filePath = '';
+        $warning = [];
         if( $request->hasFile('avatar') ) {
             $file = $request->file('avatar');
             $destinationPath = public_path('uploads/avatar'); // upload path
@@ -403,8 +404,40 @@ class AdminController extends Controller
         }
         $user_info = UserInfos::find(Session::get('user')->id );
         if(!$user_info){
-            return abort(503,'User info not found' );
+            return abort(503);
         }
+
+        if( $request->has('password') ){
+            $validator = Validator::make( $request->all() , [
+                'password' => 'required|min:6',
+                'password_confirmation' => 'required|min:6',
+            ]);
+
+            if ( $validator->fails() ) {
+                return back()
+                    ->withInput()
+                    ->withErrors($validator);
+            }
+            $requestUpdatePassWord = cURL::newRequest('post', 'https://auth.ten-po.com/v1/auth/changepassword',
+                [
+                    'old_password' => $request->input('password'),
+                    'new_password' => $request->input('password_confirmation'),
+                ])
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+            $responseUpdatePassWord = $requestUpdatePassWord->send();
+            $responseUpdatePassWord = json_decode($responseUpdatePassWord->body);
+
+            if( !empty($responseUpdatePassWord)
+                && isset( $responseUpdatePassWord->code )
+                && $responseUpdatePassWord->code == 1000 ){
+                $status[] = 'Update password success!';
+            }else{
+                $warning[] = 'Update password fail!';
+            }
+
+        }
+
+
         $user_info->business_form = $request->input('business_form');
         $user_info->business_category = $request->input('business_category');
         $user_info->brand_name = $request->input('brand_name');
@@ -413,9 +446,13 @@ class AdminController extends Controller
         $user_info->business_hours = $request->input('business_hours');
         $user_info->regular_holiday = $request->input('regular_holiday');
         $user_info->testimonial = $request->input('testimonial');
-        $user_info->avatar = $filePath;
+        if( $filePath != '' )
+            $user_info->avatar = $filePath;
         $user_info->save();
 
-        return back()->with('status','Saved successful!');
+        $status[] = 'Update account setting success!';
+        return back()
+            ->with('warning',$warning )
+            ->with('status',$status);
     }
 }
