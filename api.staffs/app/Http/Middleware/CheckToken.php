@@ -22,9 +22,9 @@ class CheckToken extends BaseMiddleware
         if (!$token = $this->auth->setRequest($request)->getToken()) {
             return $this->respond('tymon.jwt.absent', 'token_not_provided', 400);
         }
-      
         try {
             $this->auth->parseToken();
+           
         } catch (TokenExpiredException $e) {
             return new JsonResponse(['code' => 10011,
                 'message' => $e->getMessage(),

@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use App\Utils\UrlHelper;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -62,11 +63,38 @@ class StaffController extends Controller
             return $this->error(2002);
         try {
             $data_token = JWTAuth::parseToken()->getPayload();
-            if (array_key_exists('staff_id', $data_token->get('data')))
-                DB::table('rel_app_users_coupons')->where('staff_id', $data_token->get('data')['staff_id'])
+            if ($data_token->get('id')) {
+
+                $data = DB::table('rel_app_users_coupons')->where('staff_id', $data_token->get('id'))
                     ->where('coupon_id', Input::get('coupon_id'))
-                    ->update(['status' => $status]);
-            else
+                    ->where('code', Input::get('code'))
+                    ->where('status', 2)
+                    ->select('app_user_id', 'user_use_date')->first();
+                if ($data) {
+                    try {
+                        DB::beginTransaction();
+                        DB::table('rel_app_users_coupons')->where('staff_id', $data_token->get('id'))
+                            ->where('coupon_id', Input::get('coupon_id'))
+                            ->where('code', Input::get('code'))
+                            ->where('status', 2)
+                            ->update(['status' => $status]);
+                        DB::table('coupon_approve_history')->insert([
+                            'app_user_id' => $data->app_user_id,
+                            'coupon_id' => Input::get('coupon_id'),
+                            'staff_id' => $data_token->get('id'),
+                            'action' => Input::get('action'),
+                            'user_use_date' => $data->user_use_date,
+                            'action_date' => Carbon::now()
+                        ]);
+                        DB::commit();
+                    } catch (QueryException $e) {
+                        DB::rollBack();
+                        Log::error($e->getMessage());
+                        return $this->error(9999);
+                    }
+                } else
+                    return $this->error(1020);
+            } else
                 return $this->error(1019);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -81,20 +109,21 @@ class StaffController extends Controller
             $list_user = array();
             $total_data = 0;
             $data_token = JWTAuth::parseToken()->getPayload();
-            if (array_key_exists('staff_id', $data_token->get('data'))) {
+//            print_r($data_token->get('id'));die;
+            if ($data_token->get('id')) {
                 $total_data = DB::table('coupons')
                     ->join('rel_app_users_coupons', 'coupons.id', 'rel_app_users_coupons.coupon_id')
                     ->join('user_profiles', 'user_profiles.app_user_id', 'rel_app_users_coupons.app_user_id')
-                    ->where('rel_app_users_coupons.staff_id', '=', $data_token->get('data')['staff_id'])
+                    ->where('rel_app_users_coupons.staff_id', '=', $data_token->get('id'))
                     ->where('rel_app_users_coupons.status', '=', 2)
                     ->count();
                 if ($total_data > 0) {
                     $list_user = DB::table('coupons')
                         ->join('rel_app_users_coupons', 'coupons.id', 'rel_app_users_coupons.coupon_id')
                         ->join('user_profiles', 'user_profiles.app_user_id', 'rel_app_users_coupons.app_user_id')
-                        ->where('rel_app_users_coupons.staff_id', '=', $data_token->get('data')['staff_id'])
+                        ->where('rel_app_users_coupons.staff_id', '=', $data_token->get('id'))
                         ->where('rel_app_users_coupons.status', '=', 2)
-                        ->select('rel_app_users_coupons.coupon_id', 'rel_app_users_coupons.app_user_id', 'coupons.title'
+                        ->select('rel_app_users_coupons.coupon_id', 'rel_app_users_coupons.code', 'rel_app_users_coupons.app_user_id', 'coupons.title'
                             , 'coupons.description', 'coupons.image_url', 'user_profiles.name', 'rel_app_users_coupons.user_use_date')
                         ->get();
                     for ($i = 0; $i < count($list_user); $i++) {
