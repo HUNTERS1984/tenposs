@@ -57,7 +57,7 @@ class NewsController extends Controller
             return $this->output($this->body);
         }
         try {
-            $app = NewCat::where('store_id', Input::get('store_id'))->whereNull('deleted_at')->select(['id', 'name'])->get()->toArray();
+            $app = NewCat::where('store_id', Input::get('store_id'))->whereNull('deleted_at')->orderBy('id', 'desc')->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
