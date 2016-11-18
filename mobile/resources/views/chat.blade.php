@@ -9,10 +9,9 @@
 @endsection
 @section('page')
  <div id="header">
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
-                background-color: #{{ $app_info->data->app_setting->header_color }};
                 ">チャット</h1>
  
         <a href="javascript:void(0)" class="h_control-nav">

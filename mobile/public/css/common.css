@@ -222,7 +222,7 @@ h3,.h3{font-size: 28px;}
     left: 0;
     right: 0;
     margin: auto;
-    object-fit: none; /* Do not scale the image */
+    object-fit: over; /* Do not scale the image */
     object-position: center; /* Center the image within the element */
 }
 

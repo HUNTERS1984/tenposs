@@ -42,7 +42,7 @@
 
                             <ol class="timeline_cost">
                                 <li class="timeline__step">
-                                    <span class="timeline__step-title-top">今契約終了月</span>
+                                    <span class="timeline__step-title-top">契約開始了月</span>
                                     <input class="timeline__step-radio" id="" name="" type="radio">        
                                     <span class="timeline__step-title-bottom">2016.10</span>
                                     <i class="timeline__step-marker"></i>
@@ -243,6 +243,17 @@
 
 @section('footerJS')
 <script type="text/javascript">
-  
+    $(document).ready(function () {
+        $('#btn_approve').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/admin/coupon/approve",
+                data: {data: approve_list}
+            }).done(function (data) {
+                location.reload();
+            });
+
+        });
+    })
 </script>
 @endsection

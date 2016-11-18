@@ -16,11 +16,15 @@ use Modules\Admin\Http\Requests\ImageRequest;
 
 use App\Models\Users;
 use Carbon\Carbon;
+use cURL;
+
 
 
 class CostController extends Controller
 {
     protected $request;
+
+    protected $api_regiser_billingplan= 'https://auth.ten-po.com/v1/profile';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -36,6 +40,10 @@ class CostController extends Controller
         return view('admin.pages.cost.register');
     }
 
+    public function payment()
+    {
+        
+    }
     
 
 }
