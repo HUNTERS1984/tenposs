@@ -216,7 +216,6 @@ h3,.h3{font-size: 28px;}
 .item-photogallery img{
     position:absolute;
     width:100%;
-    height:100%;
     top: 0;
     bottom: 0;
     left: 0;
@@ -253,13 +252,20 @@ h3,.h3{font-size: 28px;}
     left: 0;
     right: 0;
     margin: auto;
-    object-fit: none; /* Do not scale the image */
+    object-fit: over; /* Do not scale the image */
     object-position: center; /* Center the image within the element */
 }
 #news .item-coupon .info{
     float:left;
     width: 70%;
     padding-left:20px;
+}
+
+#main #banner img{
+    object-fit: cover;
+    object-position: center;
+    height: 240px;
+    width: 100%;
 }
 @media screen and (max-width:479px){
     #news .item-coupon .info a{
