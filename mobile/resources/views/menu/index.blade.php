@@ -56,7 +56,7 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        <p>データなし</p>
+                                        <p style="text-align: center;">データなし</p>
                                     @endif
 
                                 </div>

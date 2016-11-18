@@ -22,7 +22,7 @@
                 <div class="swiper-wrapper">
                     <!-- Slides -->
                     <div class="swiper-slide"><img class="image_size_detail" src="{{$items_detail_data->image_url}}"
-                                                   alt="{{$items_detail_data->title}}"/></div>
+                                                   alt="{{$items_detail_data->title}}" width="100%"/></div>
 
                 </div>
                 <!-- If we need pagination -->
