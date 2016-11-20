@@ -14,12 +14,11 @@
 <form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
     <input type="hidden" value="{{ csrf_token() }}" name="_token">
 <div id="header">
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
         <h1 class="aligncenter" style="
-            color: #{{ $app_info->data->app_setting->title_color}};
-            background-color: #{{ $app_info->data->app_setting->header_color}};
+                color: #{{ $app_info->data->app_setting->title_color }};
             ">
-            {{ Str::words(Session::get('user')->profile->name,20) }}
+            {{ Str::words(Session::get('user')->profile->name,20) }}</h1>
             <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
             保存
             </button>

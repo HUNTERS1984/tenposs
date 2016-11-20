@@ -57,7 +57,7 @@ class PhotoController extends Controller
             return $this->output($this->body);
         }
         try {
-            $app = PhotoCat::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
+            $app = PhotoCat::where('store_id', Input::get('store_id'))->whereNull('deleted_at')->orderBy('id', 'desc')->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }

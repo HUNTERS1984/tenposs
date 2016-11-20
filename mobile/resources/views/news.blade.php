@@ -7,10 +7,9 @@
 
 @section('page')
 	<div id="header">
-        <div class="container-fluid">
-            <h1 class="aligncenter" style="
-            color: #{{ $app_info->data->app_setting->title_color}};
-            background-color: #{{ $app_info->data->app_setting->header_color}};
+    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
+        <h1 class="aligncenter" style="
+                color: #{{ $app_info->data->app_setting->title_color }};
             ">ニュース</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="img/icon/h_nav.png" alt="nav"/>
@@ -59,7 +58,7 @@
                                             </div>
                                             <div class="info clearfix">
                                                 <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
-                                                <h3>{{$news_title->title}}</h3>
+                                                <!-- <h3>{{$news_title->title}}</h3> -->
                                                 <p>{{Str::words($news_title->description,20, '..')}}</p>
                                             </div>
                                         </div><!-- End item coupon -->

@@ -87,7 +87,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('contact',['as' => 'admin.client.contact.save', 'uses' => 'Admin\AdminController@saveContact' ] );
 
     //Cost
-     Route::get('cost/register',['as' => 'admin.cost.register', 'uses' => 'Admin\CostController@register' ] );
+    Route::get('cost/register',['as' => 'admin.cost.register', 'uses' => 'Admin\CostController@register' ] );
+    Route::post('cost/payment',['as' => 'admin.cost.payment', 'uses' => 'Admin\CostController@payment' ] );
     Route::resource('cost', 'Admin\CostController');
     
     //push

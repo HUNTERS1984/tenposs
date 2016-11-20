@@ -61,7 +61,7 @@ class ItemController extends Controller
             return $this->output($this->body);
         }
         try {
-            $menus = Menu::where('store_id', Input::get('store_id'))->select(['id', 'name'])->orderBy('id', 'desc')->get()->toArray();
+            $menus = Menu::where('store_id', Input::get('store_id'))->whereNull('deleted_at')->select(['id', 'name'])->orderBy('id', 'desc')->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }

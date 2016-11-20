@@ -5,10 +5,9 @@
 @section('page')
 
     <div id="header">
-        <div class="container-fluid">
+        <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
             <h1 class="aligncenter" style="
-                    color: #{{ $app_info->data->app_setting->title_color}};
-                    background-color: #{{ $app_info->data->app_setting->header_color}};
+                color: #{{ $app_info->data->app_setting->title_color }};
                     ">
                 @if(count($items_detail_data) > 0)
                     {{ $items_detail_data->title }}

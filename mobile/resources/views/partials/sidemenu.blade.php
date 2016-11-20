@@ -1,5 +1,7 @@
 <div id="side">
-    <div class="h_side">
+    <div class="h_side" style="
+            background: #{{ $app_info->data->app_setting->menu_background_color}}
+        ">
         <div class="imageleft clearfix">
             @if( Session::has('user') )
             <div class="image">

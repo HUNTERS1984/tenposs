@@ -58,7 +58,7 @@ class StaffController extends Controller
             return $this->output($this->body);
         }
         try {
-            $staff_categories = StaffCategory::where('store_id', Input::get('store_id'))->select(['id', 'name'])->get()->toArray();
+            $staff_categories = StaffCategory::where('store_id', Input::get('store_id'))->whereNull('deleted_at')->orderBy('id', 'desc')->select(['id', 'name'])->get()->toArray();
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }

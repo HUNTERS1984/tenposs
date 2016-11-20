@@ -282,7 +282,7 @@
     max-width: 220px;
     width:100%;
     height: 220px;
-    object-fit: none; /* Do not scale the image */
+    object-fit: over; /* Do not scale the image */
     object-position: center; /* Center the image within the element */
 }
 @media screen and (max-width:479px){

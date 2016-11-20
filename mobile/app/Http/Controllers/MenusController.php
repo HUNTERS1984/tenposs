@@ -15,6 +15,7 @@ class MenusController extends Controller
     //
     public function index()
     {
+
         $page_number = $this->request->page;
         $menu_id = $this->request->menu_id;
         $app_info = $this->app_info;
@@ -35,7 +36,7 @@ class MenusController extends Controller
                         $page_number = 1;
                     $items = HttpRequestUtil::getInstance()->get_data('items',
                         ['app_id' => $this->app->app_app_id,
-                            'menu_id' => 2,
+                            'menu_id' => $menu_id,
                             'pageindex' => $page_number,
                             'pagesize' => TOTAL_ITEMS],
                         $this->app->app_app_secret);

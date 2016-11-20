@@ -6,10 +6,9 @@
 
 @section('page')
 	<div id="header">
-        <div class="container-fluid">
-            <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color}};
-                background-color: #{{ $app_info->data->app_setting->header_color}};
+    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
+        <h1 class="aligncenter" style="
+                color: #{{ $app_info->data->app_setting->title_color }};
                 ">
                 {{$detail->data->news->title}}</h1>
             <a href="javascript:void(0)" class="h_control-nav">
