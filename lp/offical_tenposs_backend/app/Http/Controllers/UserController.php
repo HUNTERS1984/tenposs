@@ -46,7 +46,7 @@ class UserController extends Controller
             'email' => Input::get('email'),
             'password' => Input::get('password'),
             'role' => 'client'
-        ])->setHeader('Authorization',  'Basic '. base64_encode( env('API_AUTH_USER').':'.env('API_AUTH_PASSWORD') ));
+        ])->setHeader('Authorization',  'Basic '. base64_encode( config('jwt.jwt_admin').':'.config('jwt.jwt_admin_password') ));
 
 
         $responseLogin = $requestLogin->send();
