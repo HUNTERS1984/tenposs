@@ -107,4 +107,7 @@ return [
     'cache_delete_staff_categories' => 'staff_categories_%s_%s', // app_id,store_id
     'cache_delete_news_cat' => 'news_cat_%s_%s', // app_id,store_id
 
+    //notification new
+    'url_api_notification' => 'https://apinotification.ten-po.com/v1/user/notification',
+
 ];

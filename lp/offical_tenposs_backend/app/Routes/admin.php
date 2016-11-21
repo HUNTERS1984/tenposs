@@ -90,7 +90,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('cost/register',['as' => 'admin.cost.register', 'uses' => 'Admin\CostController@register' ] );
     Route::post('cost/payment',['as' => 'admin.cost.payment', 'uses' => 'Admin\CostController@payment' ] );
     Route::resource('cost', 'Admin\CostController');
-
+    
+    //push
+    Route::get('push',['as' => 'admin.push.index', 'uses' => 'Admin\NotificationController@index' ] );
+    Route::post('push',['as' => 'admin.push.index', 'uses' => 'Admin\NotificationController@index' ] );
+    Route::post('push/store',['as' => 'admin.push.store', 'uses' => 'Admin\NotificationController@store' ] );
+    Route::get('push/edit/{id}',['as' => 'admin.push.edit', 'uses' => 'Admin\NotificationController@edit' ] );
+//    Route::resource('push', 'Admin\NotificationController');
 });
 
 // Enduser chat
