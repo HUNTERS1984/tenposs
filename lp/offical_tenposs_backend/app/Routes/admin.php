@@ -93,7 +93,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     
     //push
     Route::get('push',['as' => 'admin.push.index', 'uses' => 'Admin\NotificationController@index' ] );
-
+    Route::post('push',['as' => 'admin.push.index', 'uses' => 'Admin\NotificationController@index' ] );
+    Route::post('push/store',['as' => 'admin.push.store', 'uses' => 'Admin\NotificationController@store' ] );
+    Route::get('push/edit/{id}',['as' => 'admin.push.edit', 'uses' => 'Admin\NotificationController@edit' ] );
+//    Route::resource('push', 'Admin\NotificationController');
 });
 
 // Enduser chat

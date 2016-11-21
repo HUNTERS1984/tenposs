@@ -18,6 +18,9 @@ Route::get('/', function () {
 Route::get('top',function(){
 	return view('pages.top');
 });
+Route::get('top2',function(){
+	return view('pages.top');
+});
 
 Route::get('agree',function(){
 	return view('pages.agree');
@@ -131,6 +134,4 @@ Route::group(['middleware' => ['jwt.auth.custom'] ], function(){
 	Route::post('/users/dashboard',['as' => 'user.dashboard.post', 'uses' => 'RegisterProcessController@dashboardPost' ] );	
 	Route::get('/users/get-shop-info',['as' => 'user.getshopinfo', 'uses' => 'RegisterProcessController@getShopInfo' ] );
 });
-
-
 

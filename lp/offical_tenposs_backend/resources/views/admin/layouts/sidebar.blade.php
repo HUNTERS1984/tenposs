@@ -41,7 +41,7 @@
                 <span>Other</span>
             </li>
             <li>
-                <a href="push.html"><span>プッシュ通知</span></a>
+                <a href="{{route('admin.push.index')}}"><span>プッシュ通知</span></a>
             </li>
             <li>
                 <a href="analytic.html"><span>アクセス解析</span></a>
