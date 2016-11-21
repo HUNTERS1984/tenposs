@@ -9,6 +9,7 @@ use App\Http\Requests;
 use Cache;
 
 use App\Models\App;
+use App\Models\AppStores;
 use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
 use App\Models\AdminContacts;
@@ -454,5 +455,26 @@ class AdminController extends Controller
         return back()
             ->with('warning',$warning )
             ->with('status',$status);
+    }
+
+    public function globalSaveAppIcon(Request $request){
+        dd($request->stores);
+        $img = $request->input('app_icon');
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+
+        $file = public_path('uploads/app_icons/') . uniqid() . '.png';
+        $success = file_put_contents($file, $data);
+        if( $success ){
+            $app_store = AppStores::find( $request->stores->id );
+            if( !$app_store ){
+                $app_store = new AppStores();
+                $app_store->
+            }
+
+        }
+
+        print $success ? $file : 'Unable to save the file.';
     }
 }
