@@ -243,7 +243,13 @@
                                                         <h2>{{$item->title}}</h2>
                                                         <div class="des_deliver">
                                                             <span class="des_push">{{$item->title}}</span>
-                                                            <span class="deliver_push">定期配信</span>
+                                                            @if($item->time_type == 1)
+                                                                <span class="deliver_push">今</span>
+                                                            @elseif($item->time_type == 2)
+                                                                <span class="deliver_push">定期配信</span>
+                                                            @elseif($item->time_type == 3)
+                                                            <span class="deliver_push">意図されました</span>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <a href="javascript:void(0);" onclick="clickEditPush({{$item->id}})"
