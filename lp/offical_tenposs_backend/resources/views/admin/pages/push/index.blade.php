@@ -278,16 +278,4 @@
 
 @section('footerJS')
     {{Html::script('admin/js/push.js')}}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#idcollapsed').on('hidden.bs.collapse', function (e) {
-                alert('Event fired on #');
-            });
-            $('#idcollapsed').on('show.bs.collapse', function (e) {
-                alert('Event fired on #1111');
-            });
-
-
-        })
-    </script>
 @endsection
