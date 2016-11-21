@@ -429,11 +429,12 @@
                                         </div>
                                         <ul>
                                             <li class="active">
-                                                <a href="">
+                                                <a href="#">
                                                     <img src="images/nav-global-redesign.jpg" alt="">
                                                     <span>Type 1</span>
                                                 </a>
                                             </li>
+                                            <!--
                                             <li>
                                                 <a href="">
                                                     <img src="images/nav-global-redesign.jpg" alt="">
@@ -446,6 +447,7 @@
                                                     <span>Type 1</span>
                                                 </a>
                                             </li>
+                                            -->
                                         </ul>
                                     </div>
 
@@ -456,25 +458,29 @@
                                                     <label>画像アップロード</label>
                                                     <div class="wrapp-draw">
                                                         <span class="left">選択されていません</span>
-                                                        <input type="text" class="form-control long" id="" placeholder="ファイルを選択">
+                                                        <input type="file" name="app_ico_image" class="form-control long" id="app-ico-image" placeholder="ファイルを選択">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>ロゴのタイトル</label>
-                                                    <input type="text" class="form-control" id="" placeholder="12タイトル">
+                                                    <input name="app_ico_title" type="text" class="form-control " id="app-ico-title" placeholder="12タイトル">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>タイトルカラー</label>
                                                     <div class="wrapp-draw">
-                                                        <input type="text" class="form-control middle" id="" placeholder="000000">
-                                                        <img src="images/draw.jpg" class="left" alt="">
+                                                        <input  name="app_ico_title_color" id="app-ico-title-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_title_color(this)'}" placeholder="000000">
+                                                        <img onclick="document.getElementById('app-ico-title-color').jscolor.show()"
+                                                             src="/assets/backend/images/draw.jpg"
+                                                             class="left">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>背景カラー</label>
                                                     <div class="wrapp-draw">
-                                                        <input type="text" class="form-control middle" id="" placeholder="000000">
-                                                        <img src="images/draw.jpg" class="left" alt="">
+                                                        <input name="app_ico_bg_color" id="app-ico-bg-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_bg_color(this)'}" placeholder="000000">
+                                                        <img onclick="document.getElementById('app-ico-bg-color').jscolor.show()"
+                                                             src="/assets/backend/images/draw.jpg"
+                                                             class="left">
                                                     </div>
                                                 </div>
                                             </div>
@@ -482,26 +488,39 @@
                                                 <div class="row">
                                                 <div class="content-right-gl-rd">
                                                     <div class="pixel-title">256px x 256px</div>
-                                                    <div class="box-256px"></div>
+                                                    <div id="app-ico-canvas-holder" class="app-logo-review box-256px">
+                                                        <p class="app_logo_title">ICO TITLE</p>
+                                                        <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
+                                                    </div>
+
                                                     <div class="box-bottom-gl-re">
                                                         <ul class="box-px">
                                                             <li>
                                                                 <div class="pixel-title">
                                                                     120px x 120px
                                                                 </div>
-                                                                <div class="box-120px"></div>
+                                                                <div class="app-logo-review box-120px">
+                                                                    <p class="app_logo_title">ICO TITLE</p>
+                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
+                                                                </div>
                                                             </li>
                                                             <li>
                                                                 <div class="pixel-title">
                                                                     80px x 80px
                                                                 </div>
-                                                                <div class="box-80px"></div>
+                                                                <div class="app-logo-review box-80px">
+                                                                    <p class="app_logo_title">ICO TITLE</p>
+                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
+                                                                </div>
                                                             </li>
                                                             <li>
                                                                 <div class="pixel-title">
                                                                     60px x 60px
                                                                 </div>
-                                                                <div class="box-60px"></div>
+                                                                <div class="app-logo-review box-60px">
+                                                                    <p class="app_logo_title">ICO TITLE</p>
+                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
+                                                                </div>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -509,9 +528,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
-                                                <center>
-                                                    <a href="global-redesign-2.html" class="btn-box-px">作成依頼</a>
-                                                </center>
+                                                <p class="text-center">
+                                                    <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
+                                                    <div class="hidden" id="app-ico-canvas"></div>
+                                                </p>
                                             </div>
                                         </form>
                                     </div>
@@ -532,7 +552,9 @@
 @section('footerJS')
     {{Html::script('admin/js/jscolor.js')}}
     {{Html::script('admin/js/mobile-reviews.js')}}
+    {{Html::script('admin/js/html2canvas.js')}}
     <script type="text/javascript">
+
         function moveTo(from, to) {
                 
             $('ul.' + from + ' li.selected').remove().appendTo('ul.' + to);
@@ -559,6 +581,9 @@
                 $(this).toggleClass('selected');
                 $(this).find('a').toggleClass('active');
             });
+
+
+
         });
 
         $('#scroll-global-phone-review-1').slimScroll({
@@ -566,8 +591,62 @@
             size: '5px',
             BorderRadius: '2px'
         });
-        
-        
-        
+
+        $('#app-ico-title').on('keyup',function(e){
+            if( $(this).val() != '' ){
+                $('.app-logo-review p').text( $(this).val().trim().substring(0,8) );
+            }
+            else
+                $('.app-logo-review p').text( 'ICO TITLE' );
+        });
+
+        function change_app_ico_title_color(input){
+            $('.app-logo-review p').css({'color':'#' + input});
+        }
+        function change_app_ico_bg_color(input){
+            $('.app-logo-review').css({'background-color':'#' + input});
+        }
+
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.app-logo-review img').attr('src', e.target.result);
+
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#app-ico-image").change(function () {
+            readURL(this);
+        });
+
+        $('#convert-to-canvas').on('click',function(e){
+            e.preventDefault();
+            $('#app-ico-canvas').empty();
+            html2canvas(document.getElementById('app-ico-canvas-holder'), {
+                onrendered: function(canvas) {
+                    document.getElementById('app-ico-canvas').appendChild(canvas);
+                    $('canvas').attr('id','canvas-id-file');
+                    var canvas = document.getElementById('canvas-id-file');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('admin.client.global.save.app.icon') }}",
+                        data: {
+                            app_icon: canvas.toDataURL()
+                        }
+                    }).done(function(o) {
+                            console.log('saved');
+                            // If you want the file to be visible in the browser
+                            // - please modify the callback in javascript. All you
+                            // need is to return the url to the file, you just saved
+                            // and than put the image in your browser.
+                        });
+                }
+            });
+        })
+
     </script>
 @endsection

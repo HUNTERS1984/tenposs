@@ -1,12 +1,16 @@
 <?php
 
 Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], function(){
+    // TOP
     Route::get('/',['as' => 'admin.client.dashboard', 'uses' => 'Admin\AdminController@dashboard' ] );	
     Route::get('top',['as' => 'admin.client.top', 'uses' => 'Admin\AdminController@top' ] );
     Route::post('top', ['as' => 'admin.client.top.store', 'uses' => 'Admin\AdminController@topstore']);
-    
+
+    //GLOBAL
     Route::get('global',['as' => 'admin.client.global', 'uses' => 'Admin\AdminController@globalpage' ] );
     Route::post('global', ['as' => 'admin.client.global.store', 'uses' => 'Admin\AdminController@globalstore']);
+    Route::post('global/save-app-icon', ['as' => 'admin.client.global.save.app.icon', 'uses' => 'Admin\AdminController@globalSaveAppIcon']);
+
     // NEWS
     Route::get('news/cat', ['as' => 'admin.news.cat', 'uses' => 'Admin\NewsController@cat']);
     Route::get('news/editcat/{menu_id}', ['as' => 'admin.news.editcat', 'uses' => 'Admin\NewsController@editCat']);

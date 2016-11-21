@@ -19,7 +19,7 @@ class UserController extends Controller
     protected $jwt_auth;
     
     protected $url_register = 'https://auth.ten-po.com/auth/register';
-    protected $url_login = 'https://auth.ten-po.com/auth/login';
+    protected $url_login = 'https://auth.ten-po.com/v1/auth/login';
     
     public function __construct(){
         
@@ -41,22 +41,21 @@ class UserController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-       
-        $response = cURL::post($this->url_login, 
-            [
-                'email' => Input::get('email'), 
-                'password' => Input::get('password'),
-                'role' => 'client'
-            ]
-        );
 
-        $response = json_decode( $response->body );
+        $requestLogin = cURL::newRequest('post', $this->url_login,[
+            'email' => Input::get('email'),
+            'password' => Input::get('password'),
+            'role' => 'client'
+        ])->setHeader('Authorization',  'Basic '. base64_encode( env('API_AUTH_USER').':'.env('API_AUTH_PASSWORD') ));
 
-        if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
-            Session::put('jwt_token',$response->data);
+
+        $responseLogin = $requestLogin->send();
+        $responseLogin = json_decode($responseLogin->body);
+
+        if( !empty($responseLogin) && isset( $responseLogin->code ) && $responseLogin->code == 1000 ){
+            Session::put('jwt_token',$responseLogin->data);
             return redirect()->route('admin.client.top');
         }
-     
         return back()->withErrors( 'ログインできません' );
     }
     
