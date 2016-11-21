@@ -467,12 +467,13 @@ class AdminController extends Controller
         $file = public_path('uploads/app_icons/') . uniqid() . '.png';
         $success = file_put_contents($file, $data);
         if( $success ){
+            /*
             $app_store = AppStores::find( $request->stores->id );
             if( !$app_store ){
                 $app_store = new AppStores();
                 $app_store->
             }
-
+            */
         }
 
         print $success ? $file : 'Unable to save the file.';
