@@ -74,7 +74,7 @@ class PhotoController extends Controller
     public function index(Request $request)
     {
 
-        $check_items = array('app_id', 'pageindex', 'pagesize', 'time', 'sig');
+        $check_items = array('app_id', 'category_id','pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)

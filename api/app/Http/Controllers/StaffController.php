@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use App\Models\StaffCategory;
+use App\Models\Store;
 use Mail;
 use App\Address;
 use DB;
@@ -104,18 +105,32 @@ class StaffController extends Controller
             return $this->output($this->body);
         }
         try {
-            if ($category_id > 0)
-                $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
-            else {
-                $total_staffs = Staff::whereNull('deleted_at')->count();
-            }
             $staffs = [];
-            if ($total_staffs > 0) {
-                if ($category_id > 0)
+            if ($category_id > 0) {
+                $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
+                if ($total_staffs > 0) {
                     $staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-                else
-                    $staffs = Staff::whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-            }
+                }
+            } 
+            else {
+                $total_staffs = 0;
+                $stores = Store::whereAppId($app['id'])->get();
+
+                if ($stores) {
+                    $staff_cat = StaffCategory::whereIn('store_id', $stores->pluck('id')->toArray())->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+
+                    if (count($staff_cat) > 0) {
+                        $total_staffs = Staff::whereIn('staff_category_id',$staff_cat->pluck('id')->toArray())->whereNull('deleted_at')->count();            
+                    }
+                    if ($total_staffs > 0)
+                    {
+                        $staffs = Staff::whereIn('staff_category_id',$staff_cat->pluck('id')->toArray())->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('updated_at', 'desc')->get()->toArray();
+                    }        
+
+                }
+                    
+            } 
+
             for ($i = 0; $i < count($staffs); $i++) {
                 $staffs[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs[$i]['image_url']);
             }
@@ -166,7 +181,6 @@ class StaffController extends Controller
                 $staffs['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs['image_url']);
 
         } catch (\Illuminate\Database\QueryException $e) {
-            dd($e);
             return $this->error(9999);
         }
 
