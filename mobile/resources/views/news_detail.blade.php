@@ -19,8 +19,8 @@
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="content">
-            <img src="{{$detail->data->news->image_url}}" style="width:100%" alt=""/>
+        <div id="content" class="item-detail">
+            <img class="center-cropped" src="{{$detail->data->news->image_url}}" alt=""/>
             <div class="container-fluid">
                 @if(isset($detail))
                 <div class="infodetail">

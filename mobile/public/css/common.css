@@ -145,15 +145,25 @@ h3,.h3{font-size: 28px;}
 }
 /* item product */
 
+.item-detail img{
+    width: 100%; 
+    height: 100vmin;
+}
+
 .item-product{
     padding: 0 5px;
     float: left;
     width: 50%;
     margin-bottom: 25px;
 }
+
+
+
 .item-product img{
     border: 1px solid #eee;
     border-radius: 4px;
+    width: 50vmin; 
+    height: 50vmin;
 }
 .item-product p{
     color: #646e72;

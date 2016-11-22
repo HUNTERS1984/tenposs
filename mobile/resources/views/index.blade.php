@@ -45,7 +45,7 @@
                             @foreach( $app_top->data->items->data as $item )
                         <div class="item-product">
                             <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
-                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
+                                <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
                             </a>
                             <p>{{ $item->title }}</p>
                             <span>¥{{number_format($item->price, 0, '', ',')}}</span>
