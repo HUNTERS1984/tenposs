@@ -48,7 +48,7 @@
                                 <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
                             </a>
                             <p>{{ $item->title }}</p>
-                            <span>$ {{ $item->price }}</span>
+                            <span>¥{{number_format($item->price, 0, '', ',')}}</span>
                         </div>
                             @endforeach
                         @endif
@@ -114,7 +114,7 @@
                 </script>
                  @if( isset( $app_top->data->contact->data)
                             && count($app_top->data->contact->data) > 0 )
-                        @foreach( $app_top->data->contact->data as $contact )
+                @foreach( $app_top->data->contact->data as $contact )
                 <div id="map-{{$contact->id}}" class="maps"></div>
                 <ul class="list-location">
                     <li>

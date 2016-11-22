@@ -170,4 +170,7 @@ return [
 
     ],
 
+    'jwt_admin' => env('API_AUTH_USER', 'tenposs'),
+    'jwt_admin_password' => env('API_AUTH_PASSWORD', 'Tenposs@123'),
+
 ];

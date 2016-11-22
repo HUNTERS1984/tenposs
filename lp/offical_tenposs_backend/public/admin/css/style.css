@@ -5008,3 +5008,53 @@ p.yen-cost-3-2-1-black{
   display:inline;
   width:95%;
 }
+
+ .box-256px .app_logo_title{
+    margin-top: 30px;
+    font-size: 20px;
+}
+.box-120px .app_logo_title{
+    margin-top: 10px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.box-80px .app_logo_title{
+    margin-top: 10px;
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+.box-60px .app_logo_title{
+    margin-top: 8px;
+    font-size: 7px;
+    margin-bottom: 2px;
+}
+
+.box-256px .app_logo_review{
+    margin-top: 5px;
+    max-width: 150px;
+    width: 150px;
+    max-height: 150px;
+    overflow: hidden;
+}
+
+.box-120px .app_logo_review{
+    margin-top: 0px;
+    width: 68px;
+    max-width: 68px;
+    max-height: 68px;
+    overflow: hidden;
+}
+.box-80px .app_logo_review{
+    margin-top: 0px;
+    width: 42px;
+    max-width: 42px;
+    max-height: 42px;
+    overflow: hidden;
+}
+.box-60px .app_logo_review{
+    margin-top: 0px;
+    width: 30px;
+    max-width: 30px;
+    max-height: 30px;
+    overflow: hidden;
+}

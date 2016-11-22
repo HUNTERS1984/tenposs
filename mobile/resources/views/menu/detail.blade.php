@@ -32,7 +32,7 @@
                             <span class="cat">{{$items_detail_data->menu_name}}</span>
                             <div class="clearfix">
                                 <span class="name">{{$items_detail_data->title}}</span>
-                                <span class="price">$ {{number_format($items_detail_data->price, 0, '', '.')}}</span>
+                                <span class="price">¥{{number_format($items_detail_data->price, 0, '', ',')}}</span>
                             </div>
                            
                         </div>

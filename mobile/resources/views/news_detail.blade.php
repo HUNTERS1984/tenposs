@@ -10,7 +10,9 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
                 ">
+                @if(isset($detail))
                 {{$detail->data->news->title}}</h1>
+                 @endif
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="/img/icon/h_nav.png" alt="nav"/>
             </a>

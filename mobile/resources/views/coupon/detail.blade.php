@@ -57,7 +57,7 @@
                                 <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="#{{$ls_tag}}"
                                        placeholder="ハッシュタグ">
 
-                                <div class="input-group-addon" style="cursor: pointer;"><a  href="javascipt:void(0)" id="copy_hashtag">コピー</a>
+                                <div class="input-group-addon" style="cursor: pointer;" id="copy_hashtag"><a  href="javascipt:void(0)">コピー</a>
                                 </div>
                             </div>
                         </div>
@@ -95,8 +95,15 @@
         @endif
     @endif
 
+    <div id="appy-copy-success" style="display:none">
+        <div class="appy-cupon-success-inner">
+            <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
+            <p>ハッシュタグをコピーしました</p>
+        </div>
+    </div>
+
     <div id="appy-cupon-success" style="display:none">
-        <div id="appy-cupon-success-inner">
+        <div class="appy-cupon-success-inner">
             <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
             <p>このクーポンは使用できません</p>
         </div>
@@ -107,20 +114,23 @@
     <script src="{{ url('js/custom.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $(document).on("click", "#copy_hashtag", function () {
-//                alert(1);
+            $(document).on("click", "#copy_hashtag", function () {               
                 $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
+                $('#appy-copy-success').show();
             });
 
             $('#apply-cupon').on('click',function(){
                 $('#appy-cupon-success').show();
             });
 
-            $('#appy-cupon-success img').on('click',function(){
-                $('#appy-cupon-success').hide();
+            $('#appy-copy-success').on('click',function(){
+                $('#appy-copy-success').hide();
             });
 
+            $('#appy-cupon-success').on('click',function(){
+                $('#appy-cupon-success').hide();
+            });
         });
     </script>
 
