@@ -44,7 +44,7 @@
                     ?>
 
                     <label class="avatar">
-                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover;"></label>
+                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover; width: 120px; height: 120px;"></label>
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更

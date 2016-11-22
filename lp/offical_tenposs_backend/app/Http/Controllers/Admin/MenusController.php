@@ -443,8 +443,13 @@ class MenusController extends Controller
     public function destroy($id)
     {
         $item = $this->item->find($id);
-        $item->menus()->detach();
-    	$this->item->destroy($id);
+        if ($item) {
+            $item->menus()->detach();
+        	$item->destroy($id);
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
+        }
         return redirect()->back();
     }
 }
