@@ -458,24 +458,47 @@ class AdminController extends Controller
     }
 
     public function globalSaveAppIcon(Request $request){
-        dd($request->stores);
+
         $img = $request->input('app_icon');
         $img = str_replace('data:image/png;base64,', '', $img);
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
+        $file_name = uniqid() . '.png';
+        $file = public_path('uploads/app_icons/') . $file_name;
 
-        $file = public_path('uploads/app_icons/') . uniqid() . '.png';
         $success = file_put_contents($file, $data);
         if( $success ){
-            /*
-            $app_store = AppStores::find( $request->stores->id );
-            if( !$app_store ){
-                $app_store = new AppStores();
-                $app_store->
+            //get all app_stores
+            $app_stores = AppStores::all();
+            if( $app_stores ){
+                // get all rel_app_stores
+                $rel_app_stores = DB::table('rel_apps_stores')
+                       ->where('app_id', $request->app->id )->get();
+                // update app_icon_url
+                if( count($rel_app_stores) > 0 ){
+                    foreach( $rel_app_stores as $real_app_store ){
+                        DB::table('rel_apps_stores')
+                            ->where('app_id', $request->app->id )
+                            ->update(
+                                array( 'app_icon_url' => 'uploads/app_icons/'.$file_name )
+                            );
+                    }
+                }else{ // Create new
+                    foreach( $app_stores as $item ){
+                        DB::table('rel_apps_stores')
+                            ->insert(array(
+                                'app_id' => $request->app->id,
+                                'app_store_id' => $item->id,
+                                'app_icon_url' => 'uploads/app_icons/'.$file_name
+                            ));
+                    }
+                }
+
+
             }
-            */
+            return response()->json(array( 'success' => true, 'msg' => 'Set app icon success' ));
         }
 
-        print $success ? $file : 'Unable to save the file.';
+        return response()->json(array( 'success' => false, 'msg' => 'Set app icon fail' ));
     }
 }

@@ -338,53 +338,28 @@
                                             <label>ストア用スクリーンショット</label>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">1 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <input type="file" name="splash_image[]" class="form-control middle" style="display: inline-block"/>
+
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">2 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <input type="file" name="splash_image[]" class="form-control middle" style="display: inline-block"/>
+
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">3 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <input type="file" name="splash_image[]" class="form-control middle" style="display: inline-block"/>
+
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">4 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <input type="file" name="splash_image[]" class="form-control middle" style="display: inline-block"/>
+
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">5 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <input type="file" name="splash_image[]" class="form-control middle" style="display: inline-block"/>
+
                                             </div>  
                                             <div class="btn-tab-gb-1">
                                                 <a href="">作成依頼</a> 
@@ -529,7 +504,9 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <p class="text-center">
+
                                                     <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
+                                                    <p id="response-msg" class="text-center"></p>
                                                     <div class="hidden" id="app-ico-canvas"></div>
                                                 </p>
                                             </div>
@@ -636,9 +613,14 @@
                         url: "{{ route('admin.client.global.save.app.icon') }}",
                         data: {
                             app_icon: canvas.toDataURL()
-                        }
-                    }).done(function(o) {
-                            console.log('saved');
+                        },
+                        dataType: 'json'
+                    }).done(function( response ) {
+                            if( response.success ){
+                                $('#response-msg').addClass('text-success').text( response.msg );
+                            }else{
+                                $('#response-msg').addClass('text-danger').text( response.msg );
+                            }
                             // If you want the file to be visible in the browser
                             // - please modify the callback in javascript. All you
                             // need is to return the url to the file, you just saved
