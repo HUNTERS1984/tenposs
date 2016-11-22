@@ -8,8 +8,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 
-define('PAGESIZE', 20);
-define('STEPSHOW', 3);
+define('PAGESIZE', 18);
 
 class PhotoController extends Controller
 {
@@ -39,7 +38,9 @@ class PhotoController extends Controller
                         $photoDetail_decode = json_decode($photoDetail);
                         if($photoDetail_decode->data->photos != null){
 			                array_push($photo_detail,$photoDetail_decode);
-			            }
+			            } else {
+                            array_push($photo_detail, null);
+                        }
         		}
         	}
         }
@@ -50,10 +51,10 @@ class PhotoController extends Controller
         if($request->ajax()){
             $pagesize = $request->input('pagesize');
             $cate_id = $request->input('cate');
-            $pagesize = $pagesize + STEPSHOW;
-            $photo = \App\Utils\HttpRequestUtil::getInstance()->get_data('photo',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>1,'pagesize'=>$pagesize],$this->app->app_app_secret);
+            $pagesize = $pagesize + PAGESIZE;
+            $photo = \App\Utils\HttpRequestUtil::getInstance()->get_data('photo',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>$pagesize/PAGESIZE,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
             $photo_detail = json_decode($photo);
-            if(count($photo_detail->data->photos) < $photo_detail->data->total_photos){
+            if($pagesize < $photo_detail->data->total_photos){
                 $status = 'green';
             }else{
                 $status = 'red';
