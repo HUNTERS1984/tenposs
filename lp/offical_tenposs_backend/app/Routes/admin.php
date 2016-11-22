@@ -97,6 +97,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('push/store',['as' => 'admin.push.store', 'uses' => 'Admin\NotificationController@store' ] );
     Route::get('push/edit/{id}',['as' => 'admin.push.edit', 'uses' => 'Admin\NotificationController@edit' ] );
 //    Route::resource('push', 'Admin\NotificationController');
+    //analytics
+    Route::get('analytic',['as' => 'admin.analytic.google', 'uses' => 'Admin\AnalyticController@google_analytic' ] );
+    Route::get('analytic_coupon',['as' => 'admin.analytic.coupon', 'uses' => 'Admin\AnalyticController@coupon_analytic' ] );
+    Route::get('analytic_store',['as' => 'admin.analytic.store', 'uses' => 'Admin\AnalyticController@store_analytic' ] );
+    Route::get('get_data',['as' => 'admin.analytic.data', 'uses' => 'Admin\AnalyticController@get_data' ] );
+
 });
 
 // Enduser chat

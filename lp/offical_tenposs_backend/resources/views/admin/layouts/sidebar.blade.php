@@ -44,7 +44,7 @@
                 <a href="{{route('admin.push.index')}}"><span>プッシュ通知</span></a>
             </li>
             <li>
-                <a href="analytic.html"><span>アクセス解析</span></a>
+                <a href="{{route('admin.analytic.google')}}"><span>アクセス解析</span></a>
             </li>
             <li>
                 <a href="{{ route('admin.cost.index') }}"><span>コスト管理</span></a>
