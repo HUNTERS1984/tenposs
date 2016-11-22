@@ -20,7 +20,7 @@
             @else
             <div class="image">
                 <a href="{{ route('login') }}">
-                <img class="img-circle" src="{{ url('/img/icon-user.jpg') }}" alt=""/>
+                <img class="img-circle" src="{{ url('/img/icon/icon-user.png') }}" alt=""/>
                 </a>
             </div>
             <p class="font32"><a href="{{ route('login') }}">ログイン</a></p>
