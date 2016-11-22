@@ -158,7 +158,9 @@ class PhotoCatController extends Controller
             $this->entity->name = $this->request->input('name');
             $this->entity->store_id = $this->request->input('store_id');
             //delete cache
-            RedisControl::delete_cache_redis('photo_cat',$this->request->input('store_id'));
+            RedisControl::delete_cache_redis('photo_cat');
+            RedisControl::delete_cache_redis('photos');
+            RedisControl::delete_cache_redis('top_photos');
             $this->entity->save();
             
             return redirect()->route('admin.photo-cate.cat')->with('status','Create the category successfully');
@@ -210,7 +212,9 @@ class PhotoCatController extends Controller
             $item->name = $name;
             $item->store_id = $this->request->input('store_id');
             $item->save();
-
+            RedisControl::delete_cache_redis('photo_cat');
+            RedisControl::delete_cache_redis('photos');
+            RedisControl::delete_cache_redis('top_photos');
             return redirect()->route('admin.photo-cate.cat')->with('status','Update the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update the category');
@@ -233,6 +237,9 @@ class PhotoCatController extends Controller
                 Photo::where('photo_category_id', $id)->update(['deleted_at' => Carbon::now()]);
             }
             DB::commit();
+            RedisControl::delete_cache_redis('photo_cat');
+            RedisControl::delete_cache_redis('photos');
+            RedisControl::delete_cache_redis('top_photos');
             return json_encode(array('status' => 'success')); 
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
@@ -268,7 +275,7 @@ class PhotoCatController extends Controller
             $photo->photo_category_id = $this->request->input('photo_category_id');
             $photo->save();
             //delete cache
-            RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
+            RedisControl::delete_cache_redis('photos');
             RedisControl::delete_cache_redis('top_photos');
             return redirect()->route('admin.photo-cate.index')->with('status','Add the photo successfully');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -318,7 +325,7 @@ class PhotoCatController extends Controller
                 $photo->image_url = $image_edit;
             $photo->save();
             //delete cache
-            RedisControl::delete_cache_redis('photos',0,$this->request->input('photo_category_id'));
+            RedisControl::delete_cache_redis('photos');
             RedisControl::delete_cache_redis('top_photos');
 
             return redirect()->route('admin.photo-cate.index')->with('status','Update the photo successfully');
@@ -333,6 +340,8 @@ class PhotoCatController extends Controller
             $this->photo = $this->photo->find($id);
             if ($this->photo) {
                 $this->photo->destroy($id);
+                RedisControl::delete_cache_redis('photos');
+                RedisControl::delete_cache_redis('top_photos');
                 return redirect()->route('admin.photo-cate.index')->with('status','Delete the photo successfully');
             } else {
                 return redirect()->back()->withErrors('Cannot delete the photo');
