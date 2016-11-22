@@ -8,7 +8,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 
-define('PAGESIZE', 20);
+define('PAGESIZE', 18);
 
 class NewsController extends Controller
 {

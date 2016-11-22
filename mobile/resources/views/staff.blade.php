@@ -47,6 +47,7 @@
                             <!-- Slides -->
                             @if(isset($staff_detail) && count($staff_detail)>0)
                                 @foreach($staff_detail as $staff)
+                                @if($staff)
                                 <div class="swiper-slide">
                                     <div class="container-all-img clearfix">
                                         <div class="load-ajax">
@@ -67,10 +68,16 @@
                                             @endif
                                         </div>
                                     </div>
-                                    @if($pagesize > 20)
+                                    @if (count($staff->data->staffs) ==  $pagesize)
                                     <a href="#" class="btn tenposs-readmore">もっと見る</a>
                                     @endif
                                 </div>
+                                @else
+                                <div class="swiper-slide">
+                                    <p style="text-align: center; margin-top:20px">データなし</p>
+                                </div>
+                                @endif
+
                                 @endforeach
                             @endif
 
@@ -112,7 +119,7 @@
 
     <script type="text/javascript">
     $(document).ready(function(){
-        $(".tenposs-readmor").on('click',function(e){
+        $(".tenposs-readmore").on('click',function(e){
             e.preventDefault();
             $.ajax({
                 url: "{{route('staff.ajax')}}",
@@ -123,9 +130,7 @@
                     $(".swiper-slide-active .load-ajax").append(data.msg).fadeIn();
                     $('input[name="pagesize'+cateid+'"]').val(data.pagesize);
                     if(data.status == 'red'){
-                        // $('a.tenposs-readmore').removeClass('more').addClass('nomore').text('No more');
-                        // $('a.tenposs-readmore').replaceWith("<button class='btn tenposs-readmore' type='button'>No More</button>");
-                        alert('No more to load');
+                        $('.swiper-slide-active a.tenposs-readmore').hide();
                     }
                 }
             })
