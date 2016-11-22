@@ -117,11 +117,11 @@ class NewsController extends Controller
             } 
             else {
                 $total_news = 0;
-                $stores = Store::whereAppId(Input::get('app_id'))->get();
+                $stores = Store::whereAppId($app['id'])->get();
 
                 if ($stores) {
                     $news_cat = NewCat::whereIn('store_id', $stores->pluck('id')->toArray())->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
-                   
+
                     if (count($news_cat) > 0) {
                         $total_news = News::whereIn('new_category_id',$news_cat->pluck('id')->toArray())->whereNull('deleted_at')->count();            
                     }
