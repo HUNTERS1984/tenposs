@@ -298,7 +298,6 @@
 /* info coupon */
 .item-coupon a{
     display: block;
-    margin: 20px 0 5px;
 }
 @media screen and (max-width:479px){
     .item-coupon a{

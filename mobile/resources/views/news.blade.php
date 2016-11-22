@@ -48,6 +48,7 @@
                             <!-- Slides -->
                             @if(isset($news_detail) && count($news_detail)>0)
                             @foreach($news_detail as $news)
+                                @if($news)
                                 <div class="swiper-slide">
                                     <div class="load-ajax">
                                         @foreach($news->data->news as $news_title)
@@ -64,10 +65,15 @@
                                         </div><!-- End item coupon -->
                                         @endforeach
                                     </div>
-                                    @if($pagesize > 20)
+                                    @if (count($news->data->news) ==  $pagesize)
                                     <a href="#" class="btn tenposs-readmore more">もっと見る</a>
                                     @endif
                                 </div><!-- swiper slide -->
+                                @else
+                                <div class="swiper-slide">
+                                    <p style="text-align: center; margin-top:20px">データなし</p>
+                                </div>
+                                @endif
                             @endforeach
                             @endif
                             <!-- Slides -->
@@ -118,9 +124,7 @@
                         $(".swiper-slide-active .load-ajax").append(data.msg).fadeIn();
                         $('input[name="pagesize'+cateid+'"]').val(data.pagesize);
                         if(data.status == 'red'){
-                            // $('a.tenposs-readmore').removeClass('more').addClass('nomore').text('No more');
-                            // $('a.tenposs-readmore').replaceWith("<button class='btn tenposs-readmore' type='button'>No More</button>");
-                            alert('No more to load');
+                            $('.swiper-slide-active a.tenposs-readmore').hide();
                         }
                     }
                 })

@@ -73,7 +73,7 @@ class CouponController extends Controller
 //                    }
                 }
             } else {
-                $list_coupon_type = CouponType::where('store_id', '=', Input::get('store_id'))->get();
+                $list_coupon_type = CouponType::where('store_id', '=', Input::get('store_id'))->whereNull('deleted_at')->get();
 
                 $total_coupon = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->orderBy('updated_at', 'desc')->count();
 
@@ -81,7 +81,7 @@ class CouponController extends Controller
                     $currentDate = date('Y-m-d');
                     $currentDate = date('Y-m-d', strtotime($currentDate));
 
-                    $coupons = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('coupon_type')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get();
+                    $coupons = Coupon::whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->whereNull('deleted_at')->with('coupon_type')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get();
                     for ($i = 0; $i < count($coupons); $i++) {
                         $dateBegin = date('Y-m-d', strtotime($coupons[$i]['start_date']));
                         $dateEnd = date('Y-m-d', strtotime($coupons[$i]['end_date']));

@@ -250,7 +250,7 @@ class MenusController extends Controller
         $data =
         [
             'title'=>$this->request->input('title'),
-            'price'=>$this->request->input('price'),
+            'price'=>str_replace('.', '', $this->request->input('price')),
             'description' => $this->request->input('description'),
             'image_url'=>$img_url,
             'coupon_id'=> $this->request->input('coupon_id'),
@@ -329,7 +329,7 @@ class MenusController extends Controller
             $item->image_url = $image_create;
             $item->title = $this->request->input('title');
             $item->description = $this->request->input('description');
-            $item->price = $this->request->input('price');
+            $item->price = str_replace('.', '', $this->request->input('price'));
             $item->item_link = $this->request->input('item_link');
 
             $item->save();
@@ -406,7 +406,7 @@ class MenusController extends Controller
             $item = Item::find($id);
             $item->title = $this->request->input('title');
             $item->description = $this->request->input('description');
-            $item->price = $this->request->input('price');
+            $item->price = str_replace('.', '', $this->request->input('price'));
             $item->item_link = $this->request->input('item_link');
             if ($image_edit)
                 $item->image_url = $image_edit;
