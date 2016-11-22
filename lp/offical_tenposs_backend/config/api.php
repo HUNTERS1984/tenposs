@@ -64,7 +64,7 @@ return [
     'cache_profile' => 'profile_%s_%s', // app_id,user_id
     'cache_app_user_push' => 'app_user_push_%s', // app_id
     'cache_news_detail' => 'news_detail_%s_%s', // app_id,id
-    'cache_coupons_detail' => 'coupons_detail_%s_%s', // app_id,id
+    'cache_coupons_detail' => 'coupons_%s_%s', // app_id,id
     'cache_app_domain' => 'app_by_domain_%s', // domain
 
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
@@ -86,12 +86,14 @@ return [
     'url_api_notification_app_id' => 'https://api.ten-po.com/api/v1/notification_app_id',
     'url_api_notification_app_user_id' => 'https://api.ten-po.com/api/v1/notification',
 
-    'cache_delete_news' => 'news_%s_%s', //app_id,store_id
-    'cache_delete_items' => 'items_%s', // app_id
+
+    'cache_delete_news_cat' => 'news_cat_%s', // app_id
+    'cache_delete_news' => 'news_%s', //app_id
     'cache_delete_menus' => 'menus_%s', // app_id
-    'cache_delete_photo_cat' => 'photo_cat_%s_%s', // app_id,store_id
-    'cache_delete_photos' => 'photos_%s_%s', // app_id,category_id
-    'cache_delete_reserve' => 'reserve_%s_%s', // app_id,store_id
+    'cache_delete_items' => 'items_%s', // app_id  
+    'cache_delete_photo_cat' => 'photo_cat_%s', // app_id
+    'cache_delete_photos' => 'photos_%s', // app_id
+    'cache_delete_reserve' => 'reserve_%s', // app_id
     'cache_delete_app_detail' => 'app_detail_%s', // app_id
     'cache_delete_app_detail_token' => 'app_detail_token_%s', // token
     'cache_delete_app_info' => 'app_info_%s', // app_id
@@ -103,9 +105,8 @@ return [
     'cache_delete_top_contacts' => 'top_contacts_%s', // app_id
     'cache_delete_profile' => 'profile_%s', // app_id
     'cache_delete_app_user_push' => 'app_user_push_%s', // app_id
-    'cache_delete_staff' => 'staff_%s_%s', // app_id,category_id
-    'cache_delete_staff_categories' => 'staff_categories_%s_%s', // app_id,store_id
-    'cache_delete_news_cat' => 'news_cat_%s_%s', // app_id,store_id
+    'cache_delete_staff' => 'staff_%s', // app_id
+    'cache_delete_staff_categories' => 'staff_categories_%s', // app_id
 
     //notification new
     'url_api_notification' => 'https://apinotification.ten-po.com/v1/user/notification',

@@ -321,7 +321,7 @@ class CouponController extends Controller
 
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
-            RedisControl::delete_cache_redis('coupons');
+            RedisControl::delete_cache_redis('staff_cat');
             Session::flash('message', array('class' => 'alert-success', 'detail' => 'Edit coupon successfully'));
             return back();
         } catch (\Illuminate\Database\QueryException $e) {

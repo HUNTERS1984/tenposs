@@ -105,8 +105,8 @@ class NewsController extends Controller
         $this->entity->date = $date;
         $this->entity->new_category_id = intval($this->request->input('new_category_id'));
         $this->entity->save();
-        RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
-        RedisControl::delete_cache_redis('top_news', intval($this->request->input('new_category_id')));
+        RedisControl::delete_cache_redis('news');
+        RedisControl::delete_cache_redis('top_news');
         //push notify to all user on app
         $app_data = App::where('user_id', Session::get('user')->id )->first();
         $data_push = array(
@@ -164,8 +164,8 @@ class NewsController extends Controller
         if ($image_edit)
             $news->image_url = $image_edit;
         $news->save();
-        RedisControl::delete_cache_redis('news', intval($this->request->input('new_category_id')));
-        RedisControl::delete_cache_redis('top_news', intval($this->request->input('new_category_id')));
+        RedisControl::delete_cache_redis('news');
+        RedisControl::delete_cache_redis('top_news');
         return redirect()->route('admin.news.index')->with('status','Up the news successfully');
     }
 
@@ -175,8 +175,8 @@ class NewsController extends Controller
         $news = $this->entity->find($id);
         if ($news) {
             News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
-            RedisControl::delete_cache_redis('news', $news->new_category_id);
-            RedisControl::delete_cache_redis('top_news', $news->new_category_id);
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
             return redirect()->route('admin.news.index')->with('status','Delete the news successfully');
         } else {
             return redirect()->back()->withErrors('Cannot delete the news');
@@ -201,6 +201,8 @@ class NewsController extends Controller
             $this->new_cat->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('news_cat');
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
             return redirect()->route('admin.news.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
@@ -311,7 +313,9 @@ class NewsController extends Controller
             $item->name = $name;
             $item->store_id = $this->request->input('store_id');
             $item->save();
-
+            RedisControl::delete_cache_redis('news_cat');
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
             return redirect()->route('admin.news.cat')->with('status','Update the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update the category');
@@ -334,6 +338,9 @@ class NewsController extends Controller
                 News::where('new_category_id', $id)->update(['deleted_at' => Carbon::now()]);
             }
             DB::commit();
+            RedisControl::delete_cache_redis('news_cat');
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
             return json_encode(array('status' => 'success')); 
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();

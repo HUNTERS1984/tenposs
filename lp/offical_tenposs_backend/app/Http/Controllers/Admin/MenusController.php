@@ -120,7 +120,9 @@ class MenusController extends Controller
             $item->name = $name;
             $item->store_id = $this->request->input('store_id');
             $item->save();
-
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
             return redirect()->route('admin.menus.cat')->with('status','Update the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update the category');
@@ -144,6 +146,9 @@ class MenusController extends Controller
                 Item::whereIn('id', $list_id)->update(['deleted_at' => Carbon::now()]);
             }
             DB::commit();
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
             return json_encode(array('status' => 'success')); 
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
@@ -280,6 +285,8 @@ class MenusController extends Controller
             $this->menu->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
             return redirect()->back()->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
@@ -328,7 +335,6 @@ class MenusController extends Controller
             $item->save();
             $item->menus()->attach($this->request->input('menu_id'));
             //delete cache redis
-            RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
             return redirect()->route('admin.menus.index')->with('status','Add the item successfully');
@@ -431,7 +437,6 @@ class MenusController extends Controller
                 }
             }
             //delete cache redis
-            RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
             return redirect()->route('admin.menus.index')->with('status','Update the item successfully');
@@ -446,7 +451,6 @@ class MenusController extends Controller
         if ($item) {
             $item->menus()->detach();
         	$item->destroy($id);
-            RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
         }

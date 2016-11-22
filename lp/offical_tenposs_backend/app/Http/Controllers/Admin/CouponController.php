@@ -573,6 +573,7 @@ class CouponController extends Controller
         }
         $coupon = $this->entity->whereId($id)->with('tags')->first();
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
+        RedisControl::delete_cache_redis('coupons');
         return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon', 'list_coupon_type'));
     }
 
@@ -652,6 +653,7 @@ class CouponController extends Controller
             if ($this->entity) {
                 $this->entity->app_users()->detach();
                 $this->entity->destroy($id);
+                RedisControl::delete_cache_redis('coupons');
                 return redirect()->route('admin.coupon.index')->with('status','Delete the coupon successfully');
             } else {
                 return redirect()->back()->withErrors('Cannot delete the coupon');
