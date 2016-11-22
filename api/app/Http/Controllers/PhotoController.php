@@ -10,6 +10,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use App\Models\PhotoCat;
 use App\Models\Photo;
+use App\Models\Store;
 use Illuminate\Support\Facades\Redis;
 use Mail;
 use App\Address;
@@ -73,7 +74,7 @@ class PhotoController extends Controller
     public function index(Request $request)
     {
 
-        $check_items = array('app_id', 'category_id', 'pageindex', 'pagesize', 'time', 'sig');
+        $check_items = array('app_id', 'pageindex', 'pagesize', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -102,18 +103,34 @@ class PhotoController extends Controller
             $this->body = $data;
             return $this->output($this->body);
         }
+        $category_id = Input::get('category_id');
         try {
-            if (Input::get('category_id') > 0)
-                $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
-            else
-                $total_photos = Photo::whereNull('deleted_at')->count();
+
             $photos = [];
-            if ($total_photos > 0) {
-                if (Input::get('category_id') > 0)
+            if ($category_id > 0) {
+                $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
+                if ($total_photos > 0) {
                     $photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-                else
-                    $photos = Photo::whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-            }
+                }
+            } 
+            else {
+                $total_photos = 0;
+                $stores = Store::whereAppId($app['id'])->get();
+
+                if ($stores) {
+                    $photo_cat = PhotoCat::whereIn('store_id', $stores->pluck('id')->toArray())->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+
+                    if (count($photo_cat) > 0) {
+                        $total_photos = Photo::whereIn('photo_category_id',$photo_cat->pluck('id')->toArray())->whereNull('deleted_at')->count();            
+                    }
+                    if ($total_photos > 0)
+                    {
+                        $photos = Photo::whereIn('photo_category_id',$photo_cat->pluck('id')->toArray())->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('updated_at', 'desc')->get()->toArray();
+                    }        
+
+                }
+                    
+            }   
                 
             for ($i = 0; $i < count($photos); $i++) {
                 $photos[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
