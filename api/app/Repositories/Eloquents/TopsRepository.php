@@ -89,9 +89,9 @@ class TopsRepository implements TopsRepositoryInterface
 
             $photocats_id = PhotoCat::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
-            })->lists('id')->toArray();
+            })->whereNull('deleted_at')->lists('id')->toArray();
 
-            $photos = Photo::whereIn('photo_category_id', $photocats_id)->take(TOP_MAX_PHOTO)->orderBy('created_at', 'desc')->get()->toArray();
+            $photos = Photo::whereIn('photo_category_id', $photocats_id)->whereNull('deleted_at')->take(TOP_MAX_PHOTO)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($photos); $i++) {
                 $photos[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
             }
@@ -117,8 +117,8 @@ class TopsRepository implements TopsRepositoryInterface
 
             $news_cat = NewCat::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
-            })->lists('id')->toArray();
-            $news = News::whereIn('new_category_id', $news_cat)->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
+            })->whereNull('deleted_at')->lists('id')->toArray();
+            $news = News::whereIn('new_category_id', $news_cat)->whereNull('deleted_at')->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($news); $i++) {
                 $news[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }

@@ -20,10 +20,10 @@ class NewsRepository implements Contracts\NewsRepositoryInterface
             $news= [];
             if ($store_id > 0)
             {
-                $total_data = News::where('store_id', '=', $store_id)->count();
+                $total_data = News::where('store_id', '=', $store_id)->whereNull('deleted_at')->count();
                 if ($total_data > 0)
                 {
-                    $news = News::where('store_id', '=', $store_id)->skip($page)->take($pagesize)->get()->toArray();
+                    $news = News::where('store_id', '=', $store_id)->whereNull('deleted_at')->skip($page)->take($pagesize)->get()->toArray();
                     $arrResult['news']  = $news;
                     $arrResult['total_news'] = $total_data;
                 }
