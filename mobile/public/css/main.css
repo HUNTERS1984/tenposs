@@ -19,7 +19,7 @@
 
 .bg-tw{
     background-color: #4da8e0 !important;
-     padding:0;
+    padding:0;
     padding:10px 0;
     margin:0;
     margin-bottom:40px;
@@ -28,15 +28,15 @@
     content:'';
     position:absolute;
     top:50%;
-    margin-top:-20px;
-    left:20px;
-    width:49px;
-    height:40px;
+    margin-top:-15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
     background:url('../img/icon/ic-twitter.png')no-repeat;
 }
 .bg-mail{
     background-color: #14c8c8 !important;
-     padding:0;
+    padding:0;
     padding:10px 0;
     margin:0;
     margin-bottom:40px;
@@ -45,9 +45,9 @@
     content:'';
     position:absolute;
     top:50%;
-    margin-top:-20px;
-    left:10px;
-    width:63px;
+    margin-top:-15px;
+    left:15px;
+    width:40px;
     height:40px;
     background:url('../img/icon/ic-mail.png')no-repeat;
 }
@@ -79,7 +79,7 @@
         left:7px;
     }
     .bg-mail:before{
-        left:-3px;
+        left:7px;
     }
 }
 

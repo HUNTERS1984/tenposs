@@ -53,9 +53,9 @@
                                         @foreach($news->data->news as $news_title)
                                         <div class="item-coupon imageleft clearfix">
                                             <input type="hidden" name="pagesize{{$news_title->new_category_id}}" value="{{$pagesize}}">
-                                            <div class="image">
+                                            <a href="{{route('news.detail',[$news_title->id])}}" class="image">
                                                 <img class="center-cropped" src="{{$news_title->image_url}}" alt="Nakayo"/>
-                                            </div>
+                                            </a>
                                             <div class="info clearfix">
                                                 <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
                                                 <!-- <h3>{{$news_title->title}}</h3> -->
