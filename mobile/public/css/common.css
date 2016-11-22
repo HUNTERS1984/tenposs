@@ -276,6 +276,9 @@ h3,.h3{font-size: 28px;}
         font-size:12px;
         line-height: 20px;
     }
+    #main #banner img{
+        height: 150px;
+    }
 }
 
 /* Contact */
