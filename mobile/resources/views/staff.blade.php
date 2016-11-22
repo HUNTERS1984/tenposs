@@ -126,7 +126,7 @@
                 type: 'POST',
                 data: {cate: cateid, pagesize:$('input[name="pagesize'+cateid+'"]').val(), _token:$('input[name="token"]').val()},
                 success: function(data){
-                    $(".swiper-slide-active .load-ajax").empty();
+                    //$(".swiper-slide-active .load-ajax").empty();
                     $(".swiper-slide-active .load-ajax").append(data.msg).fadeIn();
                     $('input[name="pagesize'+cateid+'"]').val(data.pagesize);
                     if(data.status == 'red'){

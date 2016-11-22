@@ -7,7 +7,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 
-define('PAGESIZE', 1);
+define('PAGESIZE', 18);
 
 class StaffController extends Controller
 {
@@ -67,10 +67,10 @@ class StaffController extends Controller
             $pagesize = $request->input('pagesize');
             $cate_id = $request->input('cate');
             $pagesize = $pagesize + PAGESIZE;
-            $staff = \App\Utils\HttpRequestUtil::getInstance()->get_data('staffs',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>1,'pagesize'=>$pagesize],$this->app->app_app_secret);
+            $staff = \App\Utils\HttpRequestUtil::getInstance()->get_data('staffs',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>$pagesize/PAGESIZE,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
             $staff_detail = json_decode($staff);
 
-            if(count($staff_detail->data->staffs) < $staff_detail->data->total_staffs){
+            if($pagesize < $staff_detail->data->total_staffs){
                 $status = 'green';
             }else{
                 $status = 'red';
