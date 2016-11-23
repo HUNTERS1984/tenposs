@@ -350,22 +350,33 @@ class MenusController extends Controller
 
     public function edit($id)
     {
-        $item_thumbs = $this->item->select('image_url')->orderBy('id','DESC')->take(8)->get();
-        $menus = $this->menu->select('name','id')->get();
-        $list_coupons = $this->coupon->lists('title','id')->toArray();
+        $item = Item::whereId($id)->with('menus')->first();
 
-        $item = $this->item->with('menus')->find($id);
-        $data_menu = [];
-        foreach($item->menus()->get() as $v){
-            $data_menu[] = $v->id;
+        if ($item) {
+            $menu_id = 0;
+            $stores = $this->request->stores;
+            $menus = array();
+            if (count($stores) > 0) {
+                $list_store = $stores->lists('name', 'id');
+                $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->select('name','id')->get();
+            }
+            foreach ($item->menus as $menu_item) {
+                if (in_array($menu_item->id, $menus->pluck('id')->toArray())) {
+                    $menu_id = $menu_item->id;
+                    break;
+                }
+            }
+            //size info
+            $size_type = DB::table('item_size_types')->get();
+            $size_categories = DB::table('item_size_categories')->get();
+            $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
+    //        dd($size_categories);
+            return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
+                'size_type','size_categories','size_value'));
+        } else {
+            return redirect()->back()->withInput()->withErrors('Cannot edit the item');
         }
-        //size info
-        $size_type = DB::table('item_size_types')->get();
-        $size_categories = DB::table('item_size_categories')->get();
-        $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
-//        dd($size_categories);
-        return view('admin.pages.menus.edit',compact('item_thumbs','menus','list_coupons','item','data_menu',
-            'size_type','size_categories','size_value'));
+       
     }
 
    
