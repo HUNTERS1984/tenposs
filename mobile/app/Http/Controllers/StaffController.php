@@ -7,8 +7,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 
-define('PAGESIZE', 20);
-define('STEPSHOW', 1);
+define('PAGESIZE', 18);
 
 class StaffController extends Controller
 {
@@ -40,6 +39,8 @@ class StaffController extends Controller
                         $staff_decode = json_decode($staff);
                         if($staff_decode->data->staffs != null){
                             array_push($staff_detail,$staff_decode);
+                        } else {
+                             array_push($staff_detail,null);
                         }
                 }
             }
@@ -65,11 +66,11 @@ class StaffController extends Controller
         if($request->ajax()){
             $pagesize = $request->input('pagesize');
             $cate_id = $request->input('cate');
-            $pagesize = $pagesize + STEPSHOW;
-            $staff = \App\Utils\HttpRequestUtil::getInstance()->get_data('staffs',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>1,'pagesize'=>$pagesize],$this->app->app_app_secret);
+            $pagesize = $pagesize + PAGESIZE;
+            $staff = \App\Utils\HttpRequestUtil::getInstance()->get_data('staffs',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>$pagesize/PAGESIZE,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
             $staff_detail = json_decode($staff);
 
-            if(count($staff_detail->data->staffs) < $staff_detail->data->total_staffs){
+            if($pagesize < $staff_detail->data->total_staffs){
                 $status = 'green';
             }else{
                 $status = 'red';

@@ -112,7 +112,7 @@ class StaffController extends Controller
             'image_url' => $img_url,
         ];
         $this->staff->create($data);
-
+        RedisControl::delete_cache_redis('staff');
         return redirect()->route('admin.staff.index');
     }
     public function show($id)
@@ -175,9 +175,7 @@ class StaffController extends Controller
 
             $item->save();
             //delete cache redis
-//          RedisControl::delete_cache_redis('menus');
-//          RedisControl::delete_cache_redis('items');
-//          RedisControl::delete_cache_redis('top_items');
+            RedisControl::delete_cache_redis('staff');
             return redirect()->route('admin.staff.index')->with('status','Update the staff successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update the staff');
@@ -190,6 +188,7 @@ class StaffController extends Controller
             $this->staff = $this->staff->find($id);
             if ($this->staff) {
                 $this->staff->destroy($id);
+                RedisControl::delete_cache_redis('staff');
                 return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
             } else {
                 return redirect()->back()->withErrors('Cannot delete the staff');
@@ -206,6 +205,7 @@ class StaffController extends Controller
             $this->staff = $this->staff->find($id);
             if ($this->staff) {
                 $this->staff->destroy($id);
+                RedisControl::delete_cache_redis('staff');
                 return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
             } else {
                 return redirect()->back()->withErrors('Cannot delete the staff');
@@ -299,6 +299,7 @@ class StaffController extends Controller
             $this->staffcat->create($data);
             //delete cache redis
             RedisControl::delete_cache_redis('staff_cat');
+            RedisControl::delete_cache_redis('staff');
             return redirect()->route('admin.staff.cat')->with('status','Create the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withErrors('Cannot create the category');
@@ -348,7 +349,8 @@ class StaffController extends Controller
             $item->name = $name;
             $item->store_id = $this->request->input('store_id');
             $item->save();
-
+            RedisControl::delete_cache_redis('staff_cat');
+            RedisControl::delete_cache_redis('staff');
             return redirect()->route('admin.staff.cat')->with('status','Update the category successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update the category');
@@ -371,6 +373,8 @@ class StaffController extends Controller
                 Staff::where('staff_category_id', $id)->update(['deleted_at' => Carbon::now()]);
             }
             DB::commit();
+            RedisControl::delete_cache_redis('staff_cat');
+            RedisControl::delete_cache_redis('staff');
             return json_encode(array('status' => 'success')); 
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
@@ -424,10 +428,8 @@ class StaffController extends Controller
             $item->staff_category_id = $this->request->input('staff_category_id');
 //          dd($item);
             $item->save();
-            //delete cache redis
-//          RedisControl::delete_cache_redis('menus');
-//          RedisControl::delete_cache_redis('items');
-//          RedisControl::delete_cache_redis('top_items');
+            RedisControl::delete_cache_redis('staff_cat');
+            RedisControl::delete_cache_redis('staff');
             return redirect()->route('admin.staff.index')->with('status','Create the staff successfully');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot create the staff');

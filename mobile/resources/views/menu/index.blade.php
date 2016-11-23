@@ -49,14 +49,14 @@
                                         @foreach($items_data as $item)
                                             <div class="item-product">
                                                 <a href="{{ route('menus.detail', $item->id)}}">
-                                                    <img class="image_size center-cropped" src="{{$item->image_url}}}" alt="{{$item->title}}"/>
+                                                    <img class="image_size center-cropped" src="{{$item->image_url}}" alt="{{$item->title}}"/>
                                                     <p>{{$item->title}}</p>
                                                     <span>¥{{number_format($item->price, 0, '', ',')}}</span>
                                                 </a>
                                             </div>
                                         @endforeach
                                     @else
-                                        <p style="text-align: center;">データなし</p>
+                                        <p style="text-align: center; margin-top:20px">データなし</p>
                                     @endif
 
                                 </div>

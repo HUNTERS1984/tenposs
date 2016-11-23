@@ -23,7 +23,10 @@
                 <img class="img-circle" src="{{ url('/img/icon/icon-user.png') }}" alt=""/>
                 </a>
             </div>
-            <p class="font32"><a href="{{ route('login') }}">ログイン</a></p>
+            <p class="font32"><a href="{{ route('login') }}" style="
+                font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                color: #{{ $app_info->data->app_setting->menu_font_color }};
+            ">ログイン</a></p>
             @endif
             
         </div>

@@ -9,7 +9,6 @@ use DB;
 use Session;
 
 define('PAGESIZE', 20);
-define('STEPSHOW', 1);
 
 class NewsController extends Controller
 {
@@ -40,10 +39,14 @@ class NewsController extends Controller
                         $new_decode = json_decode($new);
                         if($new_decode->data->news != null){
                             array_push($news_detail,$new_decode);
+                        } else {
+                            array_push($news_detail, null);
                         }
                 }
             }
         }
+        //dd($news_cate);
+        //dd($news_detail);
         // $newtest = \App\Utils\HttpRequestUtil::getInstance()
         //                 ->get_data('news',['app_id'=>$this->app->app_app_id,'category_id'=>1,'pageindex'=>1,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
         // $dec = json_decode($newtest);
@@ -72,16 +75,16 @@ class NewsController extends Controller
         if($request->ajax()){
             $pagesize = $request->input('pagesize');
             $cate_id = $request->input('cate');
-            $pagesize = $pagesize + STEPSHOW;
-            $new = \App\Utils\HttpRequestUtil::getInstance()->get_data('news',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>1,'pagesize'=>$pagesize],$this->app->app_app_secret);
+            $pagesize = $pagesize + PAGESIZE;
+            $new = \App\Utils\HttpRequestUtil::getInstance()->get_data('news',['app_id'=>$this->app->app_app_id,'category_id'=>$cate_id,'pageindex'=>$pagesize/PAGESIZE,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
             $news_detail = json_decode($new);
-            if(count($news_detail->data->news) < $news_detail->data->total_news){
+            if($pagesize < $news_detail->data->total_news){
                 $status = 'green';
             }else{
                 $status = 'red';
             }
-            $view = view('ajax.newsajax', compact('pagesize','news_detail'))->render();
-            return response()->json(['msg'=>$view,'status'=>$status,'pagesize'=>$pagesize]);
+            $view = view('ajax.newsajax', compact('pagesize','news_detail','cate_id'))->render();
+            return response()->json(['msg'=>$view,'status'=>$status,'pagesize'=>$pagesize, 'cate_id'=>$cate_id]);
             
         }
     }

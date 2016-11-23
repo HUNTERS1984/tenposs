@@ -17,15 +17,14 @@
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="content" class="staff-detail-page">
-            <img src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
+        <div id="content" class="staff-detail-page item-detail">
+            <img class="image_size_detail center-cropped" src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
             <div class="wrap-content-staff-detail">
                 <div class="info-productdetail">
                     <div class="container-fluid">
                         <span class="sub-staff-name">{{$detail->data->staffs->name}}</span>
                         <p class="font32 staff-name"><strong>{{$detail->data->staffs->name}}</strong></p>
                     </div>
-                    <a href="javascript:void(0)" class="btn pad20 tenposs-button btn-buy">Buy now</a>
                 </div>
                 <div class="entry-productdetail">
                     <div class="option">
@@ -44,30 +43,37 @@
                     </div>
                     <div class="content-staffDetail" id="info">
                         <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <p class="title-staff">Gender:</p>
-                                </div>
-                                <div class="col-xs-8">
-                                    <p class="title-staff">{{$detail->data->staffs->gender}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <p class="title-staff">Birthday:</p>
-                                </div>
-                                <div class="col-xs-8">
-                                    <p class="title-staff">{{$detail->data->staffs->birthday}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <p class="title-staff">Tel:</p>
-                                </div>
-                                <div class="col-xs-8">
-                                    <p class="title-staff">{{$detail->data->staffs->tel}}</p>
-                                </div>
-                            </div>
+                            <div class="table-responsive">
+                            <table class="table ">
+                                <tbody>
+                                        <tr>
+                                            <td width:"60%">
+                                                <label>性别</label>
+                                            </td>
+                                            <td>
+                                                <p class="title-staff">{{$detail->data->staffs->gender}}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width:"60%">
+                                                <label>誕生日</label>
+                                            </td>
+                                            <td>
+                                                <p class="title-staff">{{$detail->data->staffs->birthday}}</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width:"60%">
+                                                <label>電話番号</label>
+                                            </td>
+                                            <td>
+                                                <p class="title-staff">{{$detail->data->staffs->tel}}</p>
+
+                                            </td>
+                                        </tr>
+                                 </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

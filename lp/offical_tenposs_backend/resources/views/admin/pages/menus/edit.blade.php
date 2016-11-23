@@ -48,7 +48,7 @@
                             <div class="col-lg-7 col-md-7 col-xs-12">
                                 <div class="form-group">
                                     {{Form::label('menu','メニュー')}}
-                                    {{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
+                                    {{Form::select('menu_id',$menus->pluck('name', 'id'),$menu_id,['class'=>'form-control'])}}
 
                                 </div>
                                 <div class="form-group">
