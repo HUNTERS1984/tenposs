@@ -197,7 +197,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-//            dd($app_settings);
+//            dd($app_stores);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -500,5 +500,48 @@ class AdminController extends Controller
         }
 
         return response()->json(array( 'success' => false, 'msg' => 'Set app icon fail' ));
+    }
+    public function globalSaveSplashImage(Request $request){
+        $files = array();
+        if( $request->hasFile('splash_image_1') ){
+            $files['splash_image_1'] = $request->file('splash_image_1');
+        }
+        if( $request->hasFile('splash_image_2') ){
+            $files['splash_image_2'] = $request->file('splash_image_2');
+        }
+        if( $request->hasFile('splash_image_3') ){
+            $files['splash_image_3'] = $request->file('splash_image_3');
+        }
+        if( $request->hasFile('splash_image_4') ){
+            $files['splash_image_4'] = $request->file('splash_image_4');
+        }
+        if( $request->hasFile('splash_image_5') ){
+            $files['splash_image_5'] = $request->file('splash_image_5');
+        }
+
+        if( ! empty( $files ) ){
+            foreach( $files as $key => $file ){
+                $image_info = getimagesize($file);
+                // check dementiosn
+                //if( $image_info[0] != 750 && $image_info[1] != 1334 )
+                    //return response()->json(["jquery-upload-file-error"=>"File demenstion not valid "]);
+                // save file
+                $destinationPath = public_path('uploads/app_plash'); // upload path
+                $extension = $file->getClientOriginalExtension(); // getting image extension
+                $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                $file->move($destinationPath, $fileName); // uploading file to given path
+                $filePath = 'uploads/app_plash/'.$fileName;
+                $rel_app_stores = DB::table('rel_apps_stores')
+                    ->where('app_id', $request->app->id )
+                    ->update(array(
+                        $key => $filePath
+                    ));
+                if( $rel_app_stores )
+                    return response()->json(["msg"=>"Upload file success "]);
+                return response()->json(["msg"=>"Upload file fail "]);
+            }
+
+        }
+
     }
 }

@@ -5058,3 +5058,28 @@ p.yen-cost-3-2-1-black{
     max-height: 30px;
     overflow: hidden;
 }
+
+.bg-ip5{
+    background: url('../images/bg-ip5.jpg') !important;
+    position: relative;
+}
+
+#app-icon-screen{
+    position: absolute;
+    right: 60px;
+    width: 40px;
+    height: 40px;
+    bottom: 84px;
+}
+#app-icon-screen img{
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+}
+#app-icon-screen p{
+    color: #FFF;
+    font-size: 6px;
+    margin-top: 1px;
+    letter-spacing: 1px;
+}
+
