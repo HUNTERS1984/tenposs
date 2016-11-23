@@ -50,9 +50,9 @@
                             {{--{{ Form::radio('genre', '1', old('gender') == 0, array('id'=>'male',--}}
                             {{--'class'=>'radio')) }}--}}
                             <input type="radio" id="gender" name="gender"
-                                   value="1" {{ old('gender')==1 ? 'checked='.'"'.'checked'.'"' : '' }} />男性
+                                   value="1" {{ $item->gender==1 ? 'checked='.'"'.'checked'.'"' : '' }} />男性
                             <input type="radio" id="gender" name="gender"
-                                   value="0" {{ old('gender')==0 ? 'checked='.'"'.'checked'.'"' : '' }} />女性
+                                   value="0" {{ $item->gender==0 ? 'checked='.'"'.'checked'.'"' : '' }} />女性
                         </div>
                         <div class="form-group">
                             {{Form::label('tel','電話番号')}}

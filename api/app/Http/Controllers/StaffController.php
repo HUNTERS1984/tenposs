@@ -107,9 +107,9 @@ class StaffController extends Controller
         try {
             $staffs = [];
             if ($category_id > 0) {
-                $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
+                $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->orderBy('updated_at', 'desc')->count();
                 if ($total_staffs > 0) {
-                    $staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                 }
             } 
             else {

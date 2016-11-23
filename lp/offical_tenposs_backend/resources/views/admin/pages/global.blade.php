@@ -45,7 +45,7 @@
                      <div class="wrapp-phone">
                         <div class="wrap-content-prview">
                             <div class="sidebar-preview">
-                                <div class="mobile-side">
+                                <div class="mobile-side" style="background:#{{$app_settings->menu_background_color}};">
                                     <div id="scroll-global-phone-review-1">
                                         <div class="h_side">
                                             <div class="imageleft">
@@ -143,7 +143,7 @@
                     <div class="wrapp-phone">
                         <div class="wrap-content-prview">
                             <div class="sidebar-preview">
-                                <div class="mobile-side">
+                                <div class="mobile-side" style="background:#{{$app_settings->menu_background_color}};">
                                     <div id="scroll-global-phone-review-1">
                                         <div class="h_side">
                                             <div class="imageleft">

@@ -47,10 +47,6 @@ class NewsController extends Controller
         }
         //dd($news_cate);
         //dd($news_detail);
-        // $newtest = \App\Utils\HttpRequestUtil::getInstance()
-        //                 ->get_data('news',['app_id'=>$this->app->app_app_id,'category_id'=>1,'pageindex'=>1,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
-        // $dec = json_decode($newtest);
-        // dd($dec);
     	return view('news',compact('app_info','news_cate','news_detail'))->with('pagesize',PAGESIZE);
     }
 

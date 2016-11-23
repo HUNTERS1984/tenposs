@@ -10,15 +10,16 @@ h3,.h3{font-size: 28px;}
     background: #e2f8f8;
     color: #14c8c8;
     width: 100%;
-    margin-top: 46px;
+    margin-top: 10px;
     margin-bottom: 35px;
     display: block;
     line-height: 76px;
 }
 @media screen and (max-width: 479px){
     .tenposs-readmore{
-        font-size:24px;
-        line-height: 35px;
+        font-size:14px;
+        line-height: 26px;
+        margin-bottom: 15px;
     }
 }
 .tenposs-button{
@@ -137,10 +138,11 @@ h3,.h3{font-size: 28px;}
 /* Content */
 #content h2{
     margin: 40px 0 26px;
+    font-weight: 600;
 }
 @media screen and (max-width:479px){
     #content h2{
-        font-size:24px;
+        font-size:18px;
     }
 }
 /* item product */
@@ -176,7 +178,7 @@ h3,.h3{font-size: 28px;}
     .item-product p{
         font-size:14px;
         margin:8px 0 5px;
-        line-height: 14px;
+        line-height: 16px;
     }
 }
 .item-product span{
@@ -189,7 +191,7 @@ h3,.h3{font-size: 28px;}
 @media screen and (max-width:479px){
     .item-product span{
         font-size:14px;
-        line-height: 14px;
+        line-height: 16px;
     }
 }
 .item-product:nth-child(2n+1){
@@ -270,7 +272,7 @@ h3,.h3{font-size: 28px;}
 #news .item-coupon .info{
     float:left;
     width: 70%;
-    padding-left:20px;
+    padding-left:10px;
 }
 
 #main #banner img{
@@ -279,14 +281,38 @@ h3,.h3{font-size: 28px;}
     height: 240px;
     width: 100%;
 }
+
+#news .item-coupon .info a{
+    font-size:20px;
+    line-height: 25px;
+}
+#news .item-coupon .info h3{
+    font-size:20px;
+    line-height: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#news .item-coupon .info p{
+    font-size:16px;
+    line-height: 25px;
+    color: #BBBBBB;
+}
+
 @media screen and (max-width:479px){
     #news .item-coupon .info a{
         font-size:14px;
         line-height: 20px;
     }
+    #news .item-coupon .info h3{
+        font-size:15px;
+        line-height: 20px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
     #news .item-coupon .info p{
         font-size:12px;
         line-height: 20px;
+        color: #BBBBBB;
     }
     #main #banner img{
         height: 150px;
@@ -309,14 +335,15 @@ h3,.h3{font-size: 28px;}
 }
 
 #contact li div.table-cell{
-    height: 127px;
+    height: 100px;
+    font-size:20px;
     display: table-cell;
     vertical-align: middle;
     text-align: center;
     clear: both;
 }
 #contact li div.table-cell .left-table-cell{
-    width:20%;
+    width:10%;
     display:inline-block;
     vertical-align: middle;
 }
@@ -324,15 +351,24 @@ h3,.h3{font-size: 28px;}
     display:inline-block;
     width:75%;
     vertical-align: middle;
-}
-@media screen and (max-width:479px){
-    #contact li div.table-cell{
-        font-size:16px;
-    }
+    font-weight: 600
 }
 #contact li div.table-cell img{
-    /*margin-right: 40px;*/
+    width: 30px;
 }
+@media screen and (max-width:479px){
+    #contact li div.table-cell .left-table-cell{
+        width:8%;
+    }
+    #contact li div.table-cell{
+        font-size:15px;
+        height: 55px;
+    }
+    #contact li div.table-cell img{
+        width: 16px;
+    }
+}
+
 /* Side */
 
 /*
