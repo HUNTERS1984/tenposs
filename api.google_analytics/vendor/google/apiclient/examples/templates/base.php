@@ -15,8 +15,8 @@ function pageHeader($title)
     <link href='styles/style.css' rel='stylesheet' type='text/css' />
   </head>
   <body>\n";
-  if ($_SERVER['PHP_SELF'] != "/index.php") {
-    $ret .= "<p><a href='index.php'>Back</a></p>";
+  if ($_SERVER['PHP_SELF'] != "/index_test.php") {
+    $ret .= "<p><a href='index_test.php'>Back</a></p>";
   }
   $ret .= "<header><h1>" . $title . "</h1></header>";
 
