@@ -197,7 +197,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-//            dd($app_settings);
+//            dd($app_stores);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -458,24 +458,90 @@ class AdminController extends Controller
     }
 
     public function globalSaveAppIcon(Request $request){
-        dd($request->stores);
+
         $img = $request->input('app_icon');
         $img = str_replace('data:image/png;base64,', '', $img);
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
+        $file_name = uniqid() . '.png';
+        $file = public_path('uploads/app_icons/') . $file_name;
 
-        $file = public_path('uploads/app_icons/') . uniqid() . '.png';
         $success = file_put_contents($file, $data);
         if( $success ){
-            /*
-            $app_store = AppStores::find( $request->stores->id );
-            if( !$app_store ){
-                $app_store = new AppStores();
-                $app_store->
+            //get all app_stores
+            $app_stores = AppStores::all();
+            if( $app_stores ){
+                // get all rel_app_stores
+                $rel_app_stores = DB::table('rel_apps_stores')
+                       ->where('app_id', $request->app->id )->get();
+                // update app_icon_url
+                if( count($rel_app_stores) > 0 ){
+                    foreach( $rel_app_stores as $real_app_store ){
+                        DB::table('rel_apps_stores')
+                            ->where('app_id', $request->app->id )
+                            ->update(
+                                array( 'app_icon_url' => 'uploads/app_icons/'.$file_name )
+                            );
+                    }
+                }else{ // Create new
+                    foreach( $app_stores as $item ){
+                        DB::table('rel_apps_stores')
+                            ->insert(array(
+                                'app_id' => $request->app->id,
+                                'app_store_id' => $item->id,
+                                'app_icon_url' => 'uploads/app_icons/'.$file_name
+                            ));
+                    }
+                }
+
+
             }
-            */
+            return response()->json(array( 'success' => true, 'msg' => 'Set app icon success' ));
         }
 
-        print $success ? $file : 'Unable to save the file.';
+        return response()->json(array( 'success' => false, 'msg' => 'Set app icon fail' ));
+    }
+    public function globalSaveSplashImage(Request $request){
+        $files = array();
+        if( $request->hasFile('splash_image_1') ){
+            $files['splash_image_1'] = $request->file('splash_image_1');
+        }
+        if( $request->hasFile('splash_image_2') ){
+            $files['splash_image_2'] = $request->file('splash_image_2');
+        }
+        if( $request->hasFile('splash_image_3') ){
+            $files['splash_image_3'] = $request->file('splash_image_3');
+        }
+        if( $request->hasFile('splash_image_4') ){
+            $files['splash_image_4'] = $request->file('splash_image_4');
+        }
+        if( $request->hasFile('splash_image_5') ){
+            $files['splash_image_5'] = $request->file('splash_image_5');
+        }
+
+        if( ! empty( $files ) ){
+            foreach( $files as $key => $file ){
+                $image_info = getimagesize($file);
+                // check dementiosn
+                //if( $image_info[0] != 750 && $image_info[1] != 1334 )
+                    //return response()->json(["jquery-upload-file-error"=>"File demenstion not valid "]);
+                // save file
+                $destinationPath = public_path('uploads/app_plash'); // upload path
+                $extension = $file->getClientOriginalExtension(); // getting image extension
+                $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+                $file->move($destinationPath, $fileName); // uploading file to given path
+                $filePath = 'uploads/app_plash/'.$fileName;
+                $rel_app_stores = DB::table('rel_apps_stores')
+                    ->where('app_id', $request->app->id )
+                    ->update(array(
+                        $key => $filePath
+                    ));
+                if( $rel_app_stores )
+                    return response()->json(["msg"=>"Upload file success "]);
+                return response()->json(["msg"=>"Upload file fail "]);
+            }
+
+        }
+
     }
 }

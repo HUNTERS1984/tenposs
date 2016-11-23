@@ -10,7 +10,7 @@
             </div>
         @endforeach
     @else
-        <p style="text-align: center;">データなし</p>
+        <p style="text-align: center; margin-top:20px">データなし</p>
     @endif
 </div>
 @if($total_page > 1)

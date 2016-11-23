@@ -158,7 +158,7 @@
 
                             </div>
                             <div class="form-group">
-                                {{Form::label('introduction','導入')}}
+                                {{Form::label('introduction','紹介')}}
                                 {{Form::textarea('introduction',old('introduction'),['class'=>'form-control'])}}
                             </div>
                             <div class="form-group">

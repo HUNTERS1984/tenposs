@@ -39,13 +39,13 @@
             <div id="recentry">
                 <h2 class="aligncenter">最近</h2>
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="container-photo-section clearfix">
                         @if( isset( $app_top->data->items->data)
                             && count($app_top->data->items->data) > 0 )
                             @foreach( $app_top->data->items->data as $item )
                         <div class="item-product">
                             <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
-                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
+                                <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
                             </a>
                             <p>{{ $item->title }}</p>
                             <span>¥{{number_format($item->price, 0, '', ',')}}</span>
@@ -53,11 +53,16 @@
                             @endforeach
                         @endif
                     </div>
+                    @if( isset( $app_top->data->photos->data)
+                            && count($app_top->data->photos->data) > 0 )
+                        <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
+                    @endif
                 </div>
             </div><!-- End recentry -->
             <div id="photogallery">
                 <h2 class="aligncenter">フォトギャラリー</h2>
-                <div class="container-photo-section clearfix">
+                <div class="container-fluid">
+                    <div class="container-photo-section clearfix">
                         @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                             @foreach( $app_top->data->photos->data as $photo )
@@ -74,11 +79,13 @@
                         </div>
                         @endforeach
                         @endif
-                </div>
-                 @if( isset( $app_top->data->photos->data)
+                    </div>
+                    @if( isset( $app_top->data->photos->data)
                             && count($app_top->data->photos->data) > 0 )
                         <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
                     @endif
+                </div>
+                    
             </div><!-- End photogallery -->
             <div id="news">
                 <h2 class="aligncenter">ニュース</h2>
@@ -98,7 +105,7 @@
                         </div>
                         <div class="info">
                             <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
-                            <!-- <h3>{{ $news->new_category_id }}</h3> -->
+                            <h3>{{ $news->new_category_id }}</h3>
                             <p>{{ str_limit($news->description,100,'...') }}</p>
                         </div>
                     </div><!-- End item coupon -->
@@ -120,7 +127,7 @@
                     <li>
                         <div class="table">
                             <div class="table-cell">
-                                <div class="left-table-cell">
+                                <div class="left-table-cell text-left">
                                     <img src="{{ url('img/icon/f_location.png') }}" alt="icon">
                                 </div>
                                 <div class="right-table-cell text-left">
@@ -132,7 +139,7 @@
                     <li>
                         <div class="table">
                             <div class="table-cell">
-                                <div class="left-table-cell">
+                                <div class="left-table-cell text-left">
                                     <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
                                 </div>
                                 <div class="right-table-cell text-left">
@@ -145,7 +152,7 @@
                     <li>
                         <div class="table">
                             <div class="table-cell">
-                                <div class="left-table-cell">
+                                <div class="left-table-cell text-left">
                                     <img src="{{ url('img/icon/f_tel.png') }}" alt="icon">
                                 </div>
                                 <div class="right-table-cell text-left">

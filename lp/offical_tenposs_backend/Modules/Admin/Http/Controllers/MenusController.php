@@ -207,7 +207,9 @@ class MenusController extends Controller
         ];
         $item = $this->item->create($data);
         //delete cache redis
-        RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('menus');
+            RedisControl::delete_cache_redis('items');
+            RedisControl::delete_cache_redis('top_items');
         if($this->request->has('menu_id')){
             $menu = $this->request->input('menu_id');
             $item->menus()->sync($menu);

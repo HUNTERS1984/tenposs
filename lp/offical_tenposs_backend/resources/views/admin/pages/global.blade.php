@@ -45,7 +45,7 @@
                      <div class="wrapp-phone">
                         <div class="wrap-content-prview">
                             <div class="sidebar-preview">
-                                <div class="mobile-side">
+                                <div class="mobile-side" style="background:#{{$app_settings->menu_background_color}};">
                                     <div id="scroll-global-phone-review-1">
                                         <div class="h_side">
                                             <div class="imageleft">
@@ -143,7 +143,7 @@
                     <div class="wrapp-phone">
                         <div class="wrap-content-prview">
                             <div class="sidebar-preview">
-                                <div class="mobile-side">
+                                <div class="mobile-side" style="background:#{{$app_settings->menu_background_color}};">
                                     <div id="scroll-global-phone-review-1">
                                         <div class="h_side">
                                             <div class="imageleft">
@@ -275,9 +275,17 @@
                         <div class="content-global-redesign">
                             <div class="title-global-redesign">アプリアイコン</div>
                             <div class="img-global-redesign">
-                                <center>
-                                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                                </center>
+                                <div class="wrapp-phone center-block">
+                                    <div class="wrap-content-prview bg-ip5">
+                                        @if( $app_stores->app_icon_url != '' )
+                                        <div id="app-icon-screen" class="text-center">
+                                            <img class="app-icon-screen" src="{{ url( $app_stores->app_icon_url ) }}" alt=""/>
+                                            <p>AppTitle</p>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="btn-global-redesign">
                                 <a href="" data-toggle="modal" data-target="#modal-appsicon" class="btn-gb-rd">
@@ -290,9 +298,38 @@
                         <div class="content-global-redesign">
                             <div class="title-global-redesign">ストア用スクリーンショット</div>
                             <div class="img-global-redesign">
-                                <center>
-                                    <img src="images/phone.jpg" class="img-responsive" alt="">
-                                </center>
+                                <div class="wrapp-phone center-block">
+                                    <div class="wrap-content-prview">
+                                        <div id="template-1" class="banner-preview">
+                                            <!-- Slider main container -->
+                                            <div class="swiper-container">
+                                                <div class="swiper-wrapper">
+                                                    <?php
+                                                        $slides = array();
+                                                        array_push($slides, $app_stores->splash_image_1);
+                                                        array_push($slides, $app_stores->splash_image_2);
+                                                        array_push($slides, $app_stores->splash_image_3);
+                                                        array_push($slides, $app_stores->splash_image_4);
+                                                        array_push($slides, $app_stores->splash_image_5);
+                                                    ?>
+                                                    @if ( count($slides) > 0 )
+                                                    @foreach( $slides as $slide )
+                                                    @if( !empty($slide) )
+                                                    <div class="swiper-slide">
+                                                        <img width="100%" style="object-fit: cover; object-position: center; height: 300px; width: 210px;" src="{{ url($slide) }}" alt=""/>
+                                                    </div>
+                                                    @endif
+                                                    @endforeach
+                                                    @endif
+
+
+                                                </div>
+                                                <!-- If we need pagination -->
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="btn-global-redesign">
                                 <a href="" data-toggle="modal" data-target="#modal-appsplash" class="btn-gb-rd">
@@ -336,59 +373,33 @@
                                    <div class="wrapp-form-tab-gb-1">
                                        <form>
                                             <label>ストア用スクリーンショット</label>
-                                            <div class="content-tab-3-select-2">
+                                            <label style="margin-bottom: 10px;display: block" class="label label-info" for="">File dementions: 750px x 1334px</label>
+                                            <div id="output-upload"></div>
+                                           <div class="content-tab-3-select-2">
                                                 <label for="">1 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <div class="splash-img" id="splash_image_1"></div>
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">2 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <div class="splash-img" id="splash_image_2"></div>
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">3 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <div class="splash-img" id="splash_image_3"></div>
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">4 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
+                                                <div class="splash-img" id="splash_image_4"></div>
                                             </div>
                                             <div class="content-tab-3-select-2">
                                                 <label for="">5 枚目</label>
-                                                <select name="" id="" class="form-control middle">
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                    <option value="">オンライン</option>
-                                                </select>
-                                            </div>  
+                                                <div class="splash-img" id="splash_image_5"></div>
+                                            </div>
+                                           <!--
                                             <div class="btn-tab-gb-1">
                                                 <a href="">作成依頼</a> 
-                                            </div>              
+                                            </div>
+                                                          -->
                                         </form>
                                    </div>
                                 </div>
@@ -398,8 +409,9 @@
                                         <p>説明が入ります説明が入りまます説明</p>
                                         <p>
                                             が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入り
-                                        </p>    
-                                        <a href="">作成依頼</a>            
+                                        </p>
+                                        <!--
+                                        <a href="">作成依頼</a> -->
                                     </div>
                                 </div>
                             </div>
@@ -529,7 +541,9 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <p class="text-center">
+
                                                     <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
+                                                    <p id="response-msg" class="text-center"></p>
                                                     <div class="hidden" id="app-ico-canvas"></div>
                                                 </p>
                                             </div>
@@ -553,6 +567,10 @@
     {{Html::script('admin/js/jscolor.js')}}
     {{Html::script('admin/js/mobile-reviews.js')}}
     {{Html::script('admin/js/html2canvas.js')}}
+    {{Html::script('admin/js/upload/jquery.uploadfile.min.js')}}
+    {{Html::style('admin/js/upload/uploadfile.css')}}
+    {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
+    {{Html::style('admin/js/swiper/swiper.min.css')}}
     <script type="text/javascript">
 
         function moveTo(from, to) {
@@ -575,15 +593,60 @@
             });
             $('#form_app_setting').submit();
         });
+
+        var optionsUpload = {
+            url:" {{ route('admin.client.global.save.splash_img') }}",
+            multiple:false,
+            dragDrop:false,
+            maxFileCount:1,
+            acceptFiles:"image/*",
+            fileName:"myfile",
+            showCancel: false,
+            showAbort: false,
+            showDone: false,
+            showFileSize: false,
+            showPreview: false,
+            // showQueueDiv: 'output-upload',
+            statusBarWidth: 250,
+            returnType:'json',
+
+            onSuccess:function(files,data,xhr,pd)
+            {
+                //files: list of files
+                //data: response from server
+                //xhr : jquer xhr object
+                $(pd.statusbar).append(data.msg);
+                console.log(pd.statusbar);
+                console.log(data);
+            }
+
+        };
         $(document).ready(function () {
             $('.nav-left, .nav-right').on('click', 'li', function (e) {
                 e.preventDefault();
                 $(this).toggleClass('selected');
                 $(this).find('a').toggleClass('active');
             });
+            var upload1 = $("#splash_image_1").uploadFile(optionsUpload);
+            var upload2 = $("#splash_image_2").uploadFile(optionsUpload);
+            var upload3 = $("#splash_image_3").uploadFile(optionsUpload);
+            var upload4 = $("#splash_image_4").uploadFile(optionsUpload);
+            var upload5 = $("#splash_image_5").uploadFile(optionsUpload);
+            upload1.update({ fileName:'splash_image_1'  });
+            upload2.update({ fileName:'splash_image_2'  });
+            upload3.update({ fileName:'splash_image_3'  });
+            upload4.update({ fileName:'splash_image_4'  });
+            upload5.update({ fileName:'splash_image_5'  });
 
-
-
+            var bannerSwiper = new Swiper('.swiper-container', {
+                autoplay: 1000,
+                speed: 400,
+                loop: true,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: ".swiper-pagination",
+                paginationClickable: true
+            });
         });
 
         $('#scroll-global-phone-review-1').slimScroll({
@@ -636,17 +699,19 @@
                         url: "{{ route('admin.client.global.save.app.icon') }}",
                         data: {
                             app_icon: canvas.toDataURL()
+                        },
+                        dataType: 'json'
+                    }).done(function( response ) {
+                        if( response.success ){
+                            $('#response-msg').addClass('text-success').text( response.msg );
+                        }else{
+                            $('#response-msg').addClass('text-danger').text( response.msg );
                         }
-                    }).done(function(o) {
-                            console.log('saved');
-                            // If you want the file to be visible in the browser
-                            // - please modify the callback in javascript. All you
-                            // need is to return the url to the file, you just saved
-                            // and than put the image in your browser.
-                        });
+                    });
                 }
             });
-        })
+        });
+
 
     </script>
 @endsection

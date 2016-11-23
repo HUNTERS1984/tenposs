@@ -21,8 +21,8 @@
             <div class="swiper-container">
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide"><img class="image_size_detail" src="{{$items_detail_data->image_url}}"
-                                                   alt="{{$items_detail_data->title}}" width="100%"/></div>
+                    <div class="swiper-slide"><img class="center-cropped" src="{{$items_detail_data->image_url}}"
+                                                   alt="{{$items_detail_data->title}}" style="width:100%;height:100vmin"/></div>
 
                 </div>
                 <!-- If we need pagination -->
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 @else
-                    <p>データなし</p>
+                    <p style="text-align: center; margin-top:20px">データなし</p>
                 @endif
             </div><!-- End container fluid -->
         </div><!-- End content -->

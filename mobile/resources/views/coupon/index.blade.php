@@ -43,7 +43,7 @@
                         </div><!-- End item coupon -->
                     @endforeach
                 @else
-                    <p>データなし</p>
+                    <p style="text-align: center; margin-top:20px">データなし</p>
                 @endif
             </div>
             @if($total_page > 1)

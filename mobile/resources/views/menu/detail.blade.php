@@ -22,9 +22,9 @@
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="content">
+        <div id="content" class="item-detail">
             @if(count($items_detail_data) > 0)
-                <img class="image_size_detail" src="{{$items_detail_data->image_url}}"
+                <img class="image_size_detail center-cropped" src="{{$items_detail_data->image_url}}"
                      alt="{{$items_detail_data->title}}"/>
                 <div class="container-fluid">
                     <div class="info-productdetail">
@@ -87,7 +87,7 @@
                                         </tbody>
                                     </table>
                                 @else
-                                    <p>データなし</p>
+                                    <p style="text-align:center; margin-top:20px; font-size:20px">データなし</p>
                                 @endif
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                 </div><!-- End container fluid -->
             @else
                 <div class="container-fluid" style="text-align: center;">
-                    <p>データなし</p>
+                    <p style="text-align: center; margin-top:20px">データなし</p>
                 </div>
             @endif
             @if(count($items_relate_data) > 0)
