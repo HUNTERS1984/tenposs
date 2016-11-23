@@ -83,7 +83,7 @@ $appRoutes = function(){
          * Phần này Nhiên hardcode để làm sidemenu
          */
         Route::get('/menus',[ 'as' => 'menus.index', 'uses' => 'MenusController@index']);
-        Route::get('/menus/get_data',[ 'as' => 'menus.index.get_data', 'uses' => 'MenusController@get_data']);
+        Route::post('/menus/ajaxLoadmore',[ 'as' => 'menus.ajax', 'uses' => 'MenusController@ajaxLoadmore']);
         Route::get('/menus/detail/{item_id}',[ 'as' => 'menus.detail', 'uses' => 'MenusController@detail']);
         Route::get('/menus/related/{id}',[ 'as' => 'menus.related', 'uses' => 'MenusController@related']);
         Route::get('/menus/related_get_data',[ 'as' => 'menus.related.get_data', 'uses' => 'MenusController@related_get_data']);

@@ -51,15 +51,19 @@
                                                 <label>性别</label>
                                             </td>
                                             <td>
-                                                <p class="title-staff">{{$detail->data->staffs->gender}}</p>
+                                                @if($detail->data->staffs->gender == '0')
+                                                <p class="title-staff">女性</p>
+                                                @else
+                                                <p class="title-staff">男性</p>
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width:"60%">
-                                                <label>誕生日</label>
+                                                <label>価格</label>
                                             </td>
                                             <td>
-                                                <p class="title-staff">{{$detail->data->staffs->birthday}}</p>
+                                                <p class="title-staff">{{$detail->data->staffs->price}}</p>
 
                                             </td>
                                         </tr>

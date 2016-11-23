@@ -50,24 +50,26 @@
                             @foreach($news_detail as $news)
                                 @if($news)
                                 <div class="swiper-slide">
-                                    <div class="load-ajax">
-                                        @foreach($news->data->news as $news_title)
-                                        <div class="item-coupon imageleft clearfix">
-                                            <input type="hidden" name="pagesize{{$news_title->new_category_id}}" value="{{$pagesize}}">
-                                            <a href="{{route('news.detail',[$news_title->id])}}" class="image">
-                                                <img class="center-cropped" src="{{$news_title->image_url}}" alt="Nakayo"/>
-                                            </a>
-                                            <div class="info clearfix">
-                                                <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
-                                                <!-- <h3>{{$news_title->title}}</h3> -->
-                                                <p>{{Str::words($news_title->description,20, '..')}}</p>
-                                            </div>
-                                        </div><!-- End item coupon -->
-                                        @endforeach
+                                    <div class="container-all-img clearfix">
+                                        <div class="load-ajax">
+                                            @foreach($news->data->news as $news_title)
+                                            <div class="item-coupon imageleft clearfix">
+                                                <input type="hidden" name="pagesize{{$news_title->new_category_id}}" value="{{$pagesize}}">
+                                                <a href="{{route('news.detail',[$news_title->id])}}" class="image">
+                                                    <img class="center-cropped" src="{{$news_title->image_url}}" alt="Nakayo"/>
+                                                </a>
+                                                <div class="info clearfix">
+                                                    <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
+                                                    <h3>{{$news_title->title}}</h3>
+                                                    <p>{{Str::words($news_title->description,20, '..')}}</p>
+                                                </div>
+                                            </div><!-- End item coupon -->
+                                            @endforeach
+                                        </div>
+                                        @if (count($news->data->news) ==  $pagesize)
+                                        <a href="#" class="btn tenposs-readmore more">もっと見る</a>
+                                        @endif
                                     </div>
-                                    @if (count($news->data->news) ==  $pagesize)
-                                    <a href="#" class="btn tenposs-readmore more">もっと見る</a>
-                                    @endif
                                 </div><!-- swiper slide -->
                                 @else
                                 <div class="swiper-slide">
