@@ -277,11 +277,12 @@
                             <div class="img-global-redesign">
                                 <div class="wrapp-phone center-block">
                                     <div class="wrap-content-prview bg-ip5">
+                                        @if( $app_stores->app_icon_url != '' )
                                         <div id="app-icon-screen" class="text-center">
                                             <img class="app-icon-screen" src="{{ url( $app_stores->app_icon_url ) }}" alt=""/>
                                             <p>AppTitle</p>
                                         </div>
-
+                                        @endif
                                     </div>
                                 </div>
 
@@ -311,6 +312,7 @@
                                                         array_push($slides, $app_stores->splash_image_4);
                                                         array_push($slides, $app_stores->splash_image_5);
                                                     ?>
+                                                    @if ( count($slides) > 0 )
                                                     @foreach( $slides as $slide )
                                                     @if( !empty($slide) )
                                                     <div class="swiper-slide">
@@ -318,7 +320,7 @@
                                                     </div>
                                                     @endif
                                                     @endforeach
-
+                                                    @endif
 
 
                                                 </div>
@@ -710,27 +712,6 @@
             });
         });
 
-
-
-
-
-        /*
-        $("input.splash-img").change(function (e) {
-            var file, img;
-            if ((file = this.files[0])) {
-                img = new Image();
-                var that = this;
-                img.onload = function () {
-                    if( this.width !== 750 && this.height !== 1334 ){
-                        $(that).parent().append( '<label class="text-danger">Please update image filesize</label>' );
-                    }else{
-
-                    }
-
-                };
-                img.src = _URL.createObjectURL(file);
-            }
-        });*/
 
     </script>
 @endsection
