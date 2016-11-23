@@ -176,7 +176,7 @@ class StaffController extends Controller
             return $this->output($this->body);
         }
         try {
-            $staffs = Staff::where('id', Input::get('id'))->whereNull('deleted_at')->first();
+            $staffs = Staff::where('id', Input::get('id'))->whereNull('deleted_at')->first()->toArray();
             if (count($staffs) > 0 && array_key_exists('image_url', $staffs))
                 $staffs['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $staffs['image_url']);
 
