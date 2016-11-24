@@ -64,6 +64,7 @@
                    
                 <li><a href="{{ route('company.info') }}">逼営会社</a></li>   
                 <li><a href="{{ route('user.privacy') }}">採用情報</a></li>   
+                <li><a href="{{ route('logout') }}">ログアウト</a></li> 
                
             </ul>
         </div>

@@ -8,7 +8,7 @@
         <div class="wrapp-breadcrumds">
             <div class="left">
               <span>アカウント設定</span>
-              <strong>ァカウント情報、ビジネス情報の設定が可能</strong>
+              <strong>アカウント情報、ビジネス情報の設定が可能</strong>
             </div>
             <div class="right">
                 <a href="#" id="form-submit" class="btn-2">保存</a></div>
