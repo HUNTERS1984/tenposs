@@ -223,6 +223,32 @@ class PaymentController extends Controller{
             return $this->error(9999);
         }
     }
+
+    public function getUserBillingPlan(){
+        
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin' && $auth_role != 'client') {
+            return $this->error(9997);
+        } 
+
+        try {
+
+            $billingAgreement = BillingAgreement::whereUserId($auth_id)->first();
+            if (!$billingAgreement)
+            {
+                return $this->error(1004);
+            }
+
+            $this->body['data'] = $billingAgreement->toArray();
+            return $this->output($this->body);
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+    }
+
     public function deleteBillingPlan($id){
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');

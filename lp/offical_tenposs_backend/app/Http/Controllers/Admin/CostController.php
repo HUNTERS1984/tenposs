@@ -13,6 +13,7 @@ use App\Utils\RedisControl;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Modules\Admin\Http\Requests\ImageRequest;
+use Illuminate\Http\JsonResponse;
 
 use App\Models\Users;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ class CostController extends Controller
 {
     protected $request;
 
-    protected $api_regiser_billingplan= 'https://auth.ten-po.com/v1/profile';
+    protected $api_payment_userplan= 'localhost:8888/api/v1/userplan';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -32,7 +33,15 @@ class CostController extends Controller
 
     public function index()
     {
-        return view('admin.pages.cost.index');
+        $response = cURL::newRequest('get', $this->api_payment_userplan )
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+
+        $userplan = json_decode($response->body);
+            
+        if( isset($userplan->code) && $userplan->code == 1000 )
+            return view('admin.pages.cost.index');
+        else
+            return view('admin.pages.cost.register');
     }
 
     public function register()

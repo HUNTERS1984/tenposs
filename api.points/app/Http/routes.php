@@ -61,6 +61,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
         $app->post('billingplan','PaymentController@createBillingPlan');
         $app->get('billingplan','PaymentController@billingPlan');
         $app->get('billingplan/{id}','PaymentController@getBillingPlan');
+        $app->get('userplan','PaymentController@getUserBillingPlan');
         $app->put('billingplan/{id}','PaymentController@updateBillingPlan');
         $app->delete('billingplan/{id}','PaymentController@deleteBillingPlan');
 
