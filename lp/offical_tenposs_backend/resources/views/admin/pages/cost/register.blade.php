@@ -12,6 +12,7 @@
         </div>
     </div>
     <section class="content">
+        @include('admin.layouts.messages')
         <div class="content-cost-2">
             <div class="col-md-12">
                 <div class="content-cost-2-1">
@@ -53,7 +54,7 @@
                             <p class="cost-m-y">
                                 ¥5,000~/month
                             </p>
-                            <a href="cost-3.html" class="btn-cost-m-y">登録する</a>
+                            <a href="{{route('admin.cost.payment',['id' => 0])}}" class="btn-cost-m-y">登録する</a>
                         </div>
                     </div>
                 </div>
@@ -67,7 +68,7 @@
                             <p class="cost-m-y">
                                 ¥60,000~/year
                             </p>
-                            <a href="cost-3.html" class="btn-cost-m-y">登録する</a>
+                            <a href="{{route('admin.cost.payment',['id' => 1])}}" class="btn-cost-m-y">登録する</a>
                         </div>
                     </div>
                 </div>

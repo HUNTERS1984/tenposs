@@ -130,11 +130,9 @@
                                 </div>
                                 <div class="col-xs-10">
                                     <select name="" id="" class="form-control">
-                                        <option value="">1円</option>
-                                        <option value="">オンライン</option>
-                                        <option value="">オンライン</option>
-                                        <option value="">オンライン</option>
-                                        <option value="">オンライン</option>
+                                        <option value="1">1円</option>
+                                        <option value="2">2円</option>
+                                        <option value="3">3円</option>
                                     </select>
                                 </div>
                             </div>
@@ -145,7 +143,7 @@
                                     <label for="">利用可能金額(利用可能なマイル数)</label>
                                 </div>
                                 <div class="col-xs-10">
-                                    <input type="text" class="form-control" id="" placeholder="">
+                                    <input type="text" class="form-control" id="" placeholder="デフォルトでは10,000">
                                 </div>
                                 <label for="" class="col-xs-2 control-label text-left">マイル</label>
                             </div>
@@ -154,14 +152,14 @@
                             <label for="">会員ステージ設定</label>
                             <div class="form-horizontal">
                                 <div class="form-group">
-                                    <label for="" class="col-xs-3 control-label text-left-first">シルバー会員:</label>
+                                    <label for="" class="col-xs-3 control-label text-left-first">紹介:</label>
                                     <div class="col-xs-7">
                                         <input type="text" class="form-control" id="" placeholder="">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="" class="col-xs-3 control-label text-left-first">認お問:</label>
+                                    <label for="" class="col-xs-3 control-label text-left-first">来店:</label>
                                     <div class="col-xs-7">
                                     <input type="text" class="form-control" id="" placeholder="">
                                     </div>
@@ -170,10 +168,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="">ザーを承認お問い合わせ</label>
+                            <label for="">会員ステージ設定</label>
                             <div class="form-horizontal">
                                 <div class="form-group">
-                                    <label for="" class="col-xs-3 control-label text-left-first">お問い合わせ:</label>
+                                    <label for="" class="col-xs-3 control-label text-left-first">シルバー会員:</label>
                                     <div class="col-xs-7">
                                         <input type="text" class="form-control" id="" placeholder="">
                                     </div>
@@ -187,14 +185,14 @@
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="" class="col-xs-3 control-label text-left-first">プラチナ会員。:</label>
+                                    <label for="" class="col-xs-3 control-label text-left-first">プラチナ会員:</label>
                                     <div class="col-xs-7">
                                     <input type="text" class="form-control" id="" placeholder="">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="" class="col-xs-3 control-label text-left-first">ザーを承認お問い:</label>
+                                    <label for="" class="col-xs-3 control-label text-left-first">ダイアモンド会員:</label>
                                     <div class="col-xs-7">
                                     <input type="text" class="form-control" id="" placeholder="">
                                     </div>
@@ -229,7 +227,7 @@
                         </li>
                     </ul>
                     <center>
-                        <a href="" class="btn-cos-tab-4">支払い申請</a>
+                        <a href="{{ route('admin.cost.register') }}" class="btn-cos-tab-4">支払い申請</a>
                     </center>
                 </div>
             </div>
