@@ -36,25 +36,33 @@
                         <div role="tabpanel" class="tab-pane active" id="tab-analytic-1">
                             <div class="row">
 
-                                <div class="col-md-12 text-right">
+                                <div class="col-md-12 text-right" style="margin-bottom: 20px;">
                                     <div class="form-inline">
                                         <div class="form-group">
-                                            <input style="margin-bottom: 10px;" name="daterange" type="text"
+                                            <input style="margin-bottom: 10px;" id="date_range" name="date_range"
+                                                   type="text"
                                                    value="01/01/2015 - 01/31/2015" class="form-control date-time"
                                                    placeholder="Ngay thang"><br>
 
-                                            <select class="form-control option-chart">
-                                                <option>ユーザー数</option>
-                                                <option>セッション</option>
-                                                <option>スクリーンビュー</option>
-                                                <option>離脱率</option>
-                                                <option>平均セッション時間</option>
-                                                <option>新規セッション率</option>
+                                            <select name="report_type" id="report_type"
+                                                    class="form-control option-chart">
+                                                <option value="ga:users">ユーザー数</option>
+                                                <option value="ga:sessions">セッション</option>
+                                                <option value="ga:screenviews">スクリーンビュー</option>
+                                                <option value="ga:bounceRate">離脱率</option>
+                                                <option value="ga:avgSessionDuration">平均セッション時間</option>
+                                                <option value="ga:percentNewSessions">新規セッション率</option>
                                             </select>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default">日</button>
-                                                <button type="button" class="btn btn-default">月</button>
-                                                <button type="button" class="btn btn-default">年</button>
+                                                <button type="button" name="time-type" data-time-type="D"
+                                                        class="btn btn-default active">日
+                                                </button>
+                                                <button type="button" name="time-type" data-time-type="M"
+                                                        class="btn btn-default">月
+                                                </button>
+                                                <button type="button" name="time-type" data-time-type="Y"
+                                                        class="btn btn-default">年
+                                                </button>
                                             </div>
                                         </div>
 
@@ -74,37 +82,37 @@
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>ユーザー数</p>
-                                                <h3>29,147</h3>
+                                                <h3 id="ga_users">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>セッション</p>
-                                                <h3>247,837</h3>
+                                                <h3 id="ga_sessions">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>スクリーンビュー</p>
-                                                <h3>1,002,719</h3>
+                                                <h3 id="ga_screen_views">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>離脱率</p>
-                                                <h3>64.07%</h3>
+                                                <h3 id="ga_bounce_rate">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>平均セッション時間</p>
-                                                <h3>00:01:48</h3>
+                                                <h3 id="ga_avg_session_duration">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>新規セッション率</p>
-                                                <h3>0.29%</h3>
+                                                <h3 id="ga_percent_new_sessions">0</h3>
                                             </div>
                                         </div>
                                     </div>
@@ -129,67 +137,30 @@
     {{Html::script('admin/js/Chart.min.js')}}
     {{Html::script('admin/js/moment.min.js')}}
     {{Html::script('admin/js/daterangepicker.js')}}
+    {{Html::script('admin/js/chart_tenposs.js')}}
+    {{Html::script('admin/js/chart_action_tenposs.js')}}
     <script>
+        var type_chart = 'ga';
         $(function () {
-            $('input[name="daterange"]').daterangepicker({
+            $('input[name="date_range"]').daterangepicker({
+                "timePicker24Hour": true,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                },
+                "startDate": moment().subtract(20, 'days'),
+                "endDate": moment(),
                 "opens": "left"
             });
         });
-        //
-        //        var ctx = document.getElementById('myChart').getContext('2d');
-        //        var myLineChart = new Chart(ctx, {
-        //            type: 'line',
-        //            data: data
-        //        });
-
-        function drawChart(label, data, namechart) {
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var data = {
-                labels: label,
-                datasets: [
-                    {
-                        label: namechart,
-                        fill: false,
-                        lineTension: 0.1,
-                        backgroundColor: "rgba(75,192,192,0.4)",
-                        borderColor: "rgba(75,192,192,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBorderColor: "rgba(75,192,192,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data: data,
-                        spanGaps: false,
-                    }
-                ]
-            };
-            var myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: data
-            });
-        }
-
-        var GetChartData = function () {
-            $.ajax({
-                url: '/admin/get_data',
-                method: 'GET',
-                dataType: 'json',
-                success: function (d) {
-                    drawChart(d.label, d.data, "GA");
-                }
-            });
-        };
 
         $(document).ready(function () {
-            GetChartData();
+            tenposs_action.init();
+            var from_date = tenposs_action.get_from_date();
+            var to_date = tenposs_action.get_to_date();
+            var time_type = tenposs_action.get_time_type();
+            var report_type = $('select[name=report_type]').val();
+            tenposs.google_analytics.draw_chart(report_type, time_type, from_date, to_date);
+            tenposs.google_analytics.get_total_data(time_type, from_date, to_date);
         });
     </script>
 @endsection

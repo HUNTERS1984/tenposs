@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\App;
+use App\Utils\HttpRequestUtil;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 
+use Illuminate\Support\Facades\Config;
 use Session;
 use Log;
 use DB;
@@ -32,119 +36,80 @@ class AnalyticController extends Controller
 
     public function get_data()
     {
-        $type_data = $this->request->input('type_data');
-        $from_date = $this->request->input(' '); //Y-m-d
+        $data_type = $this->request->input('data_type');
+        $from_date = $this->request->input('from_date'); //Y-m-d
         $to_date = $this->request->input('to_date'); // //Y-m-d
         $time_type = $this->request->input('time_type'); //M,W,D,Y
+        $report_type = $this->request->input('report_type');//'ga:users','ga:sessions','ga:screenviews','ga:bounceRate','ga:avgSessionDuration','ga:percentNewSessions');
+        //post,coupon_use,coupon_created
         $returnData = array();
 
-        switch ($type_data) {
-            case 'ga':
-                $returnData = $this->getDataFromGoogleAnalytics($from_date, $to_date);
+        switch ($data_type) {
+            case 'ga_detail':
+                $arr_data = array('from_date' => $from_date,
+                    'to_date' => $to_date,
+                    'time_type' => $time_type,
+                    'data_type' => 'detail',
+                    'report_type' => $report_type);
+                $returnData = HttpRequestUtil::getInstance()->get_data(Config::get('api.url_api_google_analytic'), $arr_data);
+                break;
+            case 'ga_total_all':
+                $arr_data = array('from_date' => $from_date,
+                    'to_date' => $to_date,
+                    'time_type' => $time_type,
+                    'data_type' => 'all');
+                $returnData = HttpRequestUtil::getInstance()->get_data(Config::get('api.url_api_google_analytic'), $arr_data);
+                break;
+            case 'cp_total_all':
+                $returnData = array('code' => 1000, 'message' => 'Success',
+                    'data' => array(
+                        array("report_type" => 'coupon_use',
+                            'total' => $this->cp_total_use($from_date, $to_date)),
+                        array('report_type' => 'post',
+                            'total' => $this->cp_total_post($from_date, $to_date)),
+                        array('report_type' => 'coupon_created',
+                            'total' => $this->cp_total_coupon($from_date, $to_date))));
+                break;
+            case 'cp_detail':
+                $arr_tmp = array();
+                $format_date = '';
+                switch ($time_type) {
+                    case 'D':
+                        $format_date = '%Y%m%d';
+                        break;
+                    case 'M':
+                        $format_date = '%Y%m';
+                        break;
+                    case 'Y':
+                        $format_date = '%Y';
+                        break;
+                    default:
+                        break;
+                }
+                switch ($report_type) {
+                    case 'post':
+                        $arr_tmp = $this->cp_detail_post($from_date, $to_date, $format_date);
+                        break;
+                    case 'coupon_use':
+                        $arr_tmp = $this->cp_detail_use($from_date, $to_date, $format_date);
+                        break;
+                    case 'coupon_created':
+                        $arr_tmp = $this->cp_detail_coupon($from_date, $to_date, $format_date);
+                        break;
+                    default:
+                        break;
+                }
+                $returnData = array('code' => 1000, 'message' => 'Success',
+                    'data' => $arr_tmp);
                 break;
             default:
                 break;
         }
-        $arr = array("label" => ["January", "February", "March", "April", "May", "June", "July"],
-            "data" => [65, 59, 80, 81, 56, 55, 40]);
-        return \Illuminate\Support\Facades\Response::json($arr);
+//        $arr = array("label" => ["January", "February", "March", "April", "May", "June", "July"],
+//            "data" => [65, 59, 80, 81, 56, 55, 40]);
+//        return \Illuminate\Support\Facades\Response::json($returnData);
+        return $returnData;
     }
-
-    private function getDataFromGoogleAnalytics($from_date, $to_date)
-    {
-        $arrLabel = array();
-        $arrData = array();
-        $analytics = $this->ga_init();
-        $profileName = '';
-        $profileId = $this->ga_get_profile($analytics);
-//        $from = date('Y-m-d', time() - 2 * 24 * 60 * 60); // 2 days
-//        $to = date('Y-m-d'); // today
-//        $dimensions = 'ga:date,ga:year,ga:month,ga:week,ga:day';
-        $dimensions = 'ga:date';
-        $results = $analytics->data_ga->get(
-            'ga:' . $profileId,
-            $from_date,
-            $to_date,
-            'ga:pageviews', array('dimensions' => $dimensions));
-        if ($results != null) {
-            if (count($results->getRows()) > 0) {
-
-                // Get the profile name.
-                $profileName = $results->getProfileInfo()->getProfileName();
-
-                // Get the entry for the first entry in the first row.
-                $rows = $results->getRows();
-                for ($i = 0; $i < count($rows); $i++) {
-                    $arrLabel[] = $rows[$i][0];
-                    $arrData[] = $rows[$i][1];
-                }
-            }
-        }
-        if (count($arrData) > 0) {
-            return array('label' => $arrLabel, 'data' => $arrData, 'name' => $profileName);
-        }
-        return null;
-    }
-
-    private function ga_get_profile($analytics)
-    {
-        // Get the user's first view (profile) ID.
-
-        // Get the list of accounts for the authorized user.
-        $accounts = $analytics->management_accounts->listManagementAccounts();
-
-        if (count($accounts->getItems()) > 0) {
-            $items = $accounts->getItems();
-            $firstAccountId = $items[0]->getId();
-
-            // Get the list of properties for the authorized user.
-            $properties = $analytics->management_webproperties
-                ->listManagementWebproperties($firstAccountId);
-
-            if (count($properties->getItems()) > 0) {
-                $items = $properties->getItems();
-                $firstPropertyId = $items[0]->getId();
-
-                // Get the list of views (profiles) for the authorized user.
-                $profiles = $analytics->management_profiles
-                    ->listManagementProfiles($firstAccountId, $firstPropertyId);
-
-                if (count($profiles->getItems()) > 0) {
-                    $items = $profiles->getItems();
-
-                    // Return the first view (profile) ID.
-                    return $items[0]->getId();
-
-                } else {
-                    throw new Exception('No views (profiles) found for this user.');
-                }
-            } else {
-                throw new Exception('No properties found for this user.');
-            }
-        } else {
-            throw new Exception('No accounts found for this user.');
-        }
-    }
-
-    private function ga_init()
-    {
-        // Creates and returns the Analytics Reporting service object.
-
-        // Use the developers console and download your service account
-        // credentials in JSON format. Place them in this directory or
-        // change the key file location if necessary.
-        $KEY_FILE_LOCATION = base_path() . '/ga-abbc95bccb9d.json';
-//        print_r($KEY_FILE_LOCATION);die;
-        // Create and configure a new client object.
-        $client = new \Google_Client();
-        $client->setApplicationName("Hello Analytics Reporting");
-        $client->setAuthConfig($KEY_FILE_LOCATION);
-        $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $analytics = new \Google_Service_Analytics($client);
-
-        return $analytics;
-    }
-
 
     public function coupon_analytic()
     {
@@ -156,4 +121,137 @@ class AnalyticController extends Controller
         return view('admin.pages.analytic.store');
     }
 
+    private function cp_total_use($from_date, $to_date)
+    {
+//        $ls_app_user_id = App::where('user_id', \Illuminate\Support\Facades\Session::get('user')->id)
+//            ->with('app_users')->get()->toArray();
+//        echo '<pre>';
+        $total_use = 0;
+        try {
+            $total_use = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+                ->join('rel_app_users_coupons', 'app_users.id', '=', 'rel_app_users_coupons.app_user_id')
+                ->whereNotNull('rel_app_users_coupons.user_use_date')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('rel_app_users_coupons.user_use_date',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+//            ->groupBy('rel_app_users_coupons.app_user_id')
+                ->distinct('rel_app_users_coupons.app_user_id')->count('rel_app_users_coupons.app_user_id');
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $total_use;
+    }
+
+    private function cp_total_post($from_date, $to_date)
+    {
+        $total_post = 0;
+        try {
+            $total_post = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+                ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('posts.created_at',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+                ->count('posts.id');
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $total_post;
+    }
+
+    private function cp_total_coupon($from_date, $to_date)
+    {
+        $total_coupon = 0;
+        try {
+            $total_coupon = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('stores', 'apps.id', '=', 'stores.app_id')
+                ->join('coupon_types', 'stores.id', '=', 'coupon_types.store_id')
+                ->join('coupons', 'coupon_types.id', '=', 'coupons.coupon_type_id')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('coupons.created_at',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+                ->count('coupons.id');
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $total_coupon;
+    }
+
+
+    private function cp_detail_use($from_date, $to_date,$format_date)
+    {
+        $detail_use = null;
+        try {
+            $detail_use = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+                ->join('rel_app_users_coupons', 'app_users.id', '=', 'rel_app_users_coupons.app_user_id')
+                ->whereNotNull('rel_app_users_coupons.user_use_date')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('rel_app_users_coupons.user_use_date',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+                ->groupBy(DB::raw('DATE_FORMAT(rel_app_users_coupons.user_use_date, \''.$format_date.'\')'))
+                ->select(DB::raw('DATE_FORMAT(rel_app_users_coupons.user_use_date, \''.$format_date.'\') as DateId'),
+                    DB::raw('count(DISTINCT rel_app_users_coupons.app_user_id) as total'))
+                ->get();
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $this->parse_data_to_report($detail_use, "Coupon Use");
+    }
+
+    private function cp_detail_post($from_date, $to_date, $format_date)
+    {
+        $total_post = null;
+        try {
+            $total_post = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+                ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('posts.created_at',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+                ->groupBy(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\')'))
+                ->select(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\') as DateId'),
+                    DB::raw('count(posts.id) as total'))
+                ->get();
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $this->parse_data_to_report($total_post, "Post");
+    }
+
+    private function cp_detail_coupon($from_date, $to_date,$format_date)
+    {
+        $detail_coupon = null;
+        try {
+            $detail_coupon = \Illuminate\Support\Facades\DB::table('apps')
+                ->join('stores', 'apps.id', '=', 'stores.app_id')
+                ->join('coupon_types', 'stores.id', '=', 'coupon_types.store_id')
+                ->join('coupons', 'coupon_types.id', '=', 'coupons.coupon_type_id')
+                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+                ->whereBetween('coupons.created_at',
+                    array(new \DateTime($from_date), new \DateTime($to_date)))
+                ->groupBy(DB::raw('DATE_FORMAT(coupons.created_at, \''.$format_date.'\')'))
+                ->select(DB::raw('DATE_FORMAT(coupons.created_at, \''.$format_date.'\') as DateId'),
+                    DB::raw('count(coupons.id) as total'))
+                ->get();
+        } catch (QueryException $e) {
+            \Illuminate\Support\Facades\Log::error($e->getMessage());
+        }
+        return $this->parse_data_to_report($detail_coupon, "Coupon Created");
+    }
+
+    private function parse_data_to_report($arr_input, $report_name)
+    {
+        if (count($arr_input) > 0) {
+            $arr_label = array();
+            $arr_data = array();
+            foreach ($arr_input as $item) {
+                $arr_label[] = $item->DateId;
+                $arr_data[] = $item->total;
+            }
+            return array('label' => $arr_label, 'data_chart' => $arr_data, 'name' => $report_name);
+        }
+        return null;
+    }
 }
