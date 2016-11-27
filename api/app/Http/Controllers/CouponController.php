@@ -52,8 +52,9 @@ class CouponController extends Controller
             return $this->error(1004);
 
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        $token = Input::get('token') ? Input::get('token') : '';
         //create key redis
-        $key = sprintf(Config::get('api.cache_coupons'), Input::get('app_id'), Input::get('store_id'), Input::get('pageindex'), Input::get('pagesize'));
+        $key = sprintf(Config::get('api.cache_coupons'), Input::get('app_id'), Input::get('store_id'), $token, Input::get('pageindex'), Input::get('pagesize'));
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
 //        $data = null;

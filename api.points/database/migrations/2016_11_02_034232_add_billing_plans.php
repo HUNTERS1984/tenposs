@@ -19,6 +19,8 @@ class AddBillingPlans extends Migration
             $table->string('paypal_billing_plan_id');
             $table->timestamps();
             $table->index('service_id');
+            $table->integer('type');
+            $table->string('redirect_url');
 
         });
     }

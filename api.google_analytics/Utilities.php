@@ -44,4 +44,9 @@ class Utilities
     {
 
     }
+
+    public static function get_list_metric()
+    {
+        return array('ga:users','ga:sessions','ga:screenviews','ga:bounceRate','ga:avgSessionDuration','ga:percentNewSessions');
+    }
 }

@@ -56,7 +56,7 @@ return [
     'cache_app_detail' => 'app_detail_%s', // app_id
     'cache_app_detail_token' => 'app_detail_token_%s', // token
     'cache_app_info' => 'app_info_%s', // app_id
-    'cache_coupons' => 'coupon_%s_%s_%s_%s', // app_id,store_id,pageindex,pagesize
+    'cache_coupons' => 'coupon_%s_%s_%s_%s_%s', // app_id,store_id, token,pageindex,pagesize
     'cache_top_images' => 'top_images_%s', // app_id
     'cache_top_news' => 'top_news_%s', // app_id
     'cache_top_photos' => 'top_photos_%s', // app_id

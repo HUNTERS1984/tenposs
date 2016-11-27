@@ -28,24 +28,17 @@ class GoogleAnalyticsProcess
 
     function getFirstProfileId()
     {
-        // Get the user's first view (profile) ID.
-
-        // Get the list of accounts for the authorized user.
         $accounts = $this->auth->management_accounts->listManagementAccounts();
 
         if (count($accounts->getItems()) > 0) {
             $items = $accounts->getItems();
             $firstAccountId = $items[0]->getId();
-
-            // Get the list of properties for the authorized user.
             $properties = $this->auth->management_webproperties
                 ->listManagementWebproperties($firstAccountId);
 
             if (count($properties->getItems()) > 0) {
                 $items = $properties->getItems();
                 $firstPropertyId = $items[0]->getId();
-
-                // Get the list of views (profiles) for the authorized user.
                 $profiles = $this->auth->management_profiles
                     ->listManagementProfiles($firstAccountId, $firstPropertyId);
 
@@ -66,12 +59,8 @@ class GoogleAnalyticsProcess
         }
     }
 
-    function getData($from_date, $to_date, $metrics, $dimensions)
+    function get_data($from_date, $to_date, $metrics, $dimensions)
     {
-//        $from = date('Y-m-d', time() - 2 * 24 * 60 * 60); // 2 days
-//        $to = date('Y-m-d'); // today
-//        $metrics = 'ga:visits,ga:pageviews,ga:bounces,ga:entranceBounceRate,ga:visitBounceRate,ga:avgTimeOnSite';
-//        $dimensions = 'ga:date,ga:year,ga:month,ga:week,ga:day';
         try {
             return $this->auth->data_ga->get(
                 'ga:' . $this->profile_id,
@@ -80,7 +69,26 @@ class GoogleAnalyticsProcess
                 $metrics, array('dimensions' => $dimensions));
 
         } catch (Exception $e) {
-//            print_r($e->getMessage());die;
+            print_r($e->getMessage());
+            die;
+            return null;
+        }
+    }
+
+    function get_data_total($from_date, $to_date, $metrics)
+    {
+//        $from = date('Y-m-d', time() - 2 * 24 * 60 * 60); // 2 days
+//        $to = date('Y-m-d'); // today
+        try {
+            return $this->auth->data_ga->get(
+                'ga:' . $this->profile_id,
+                $from_date,
+                $to_date,
+                $metrics);
+
+        } catch (Exception $e) {
+            print_r($e->getMessage());
+            die;
             return null;
         }
     }
