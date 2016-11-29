@@ -343,219 +343,12 @@
             <!-- //tab-global-3 -->
 
             <div id="modal-appsplash" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                <div class="modal-dialog modal-global-redesign-2" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">ストア用スクリーンショット作成依頼</h4>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="tab-header-gb">
-                                <ul class="nav nav-tabs tabs-center">
-                                    <li class="active">
-                                        <a href="#tab-gb-re-1" aria-controls="tab-gb-re-1" role="tab" data-toggle="tab">
-                                            スクリーンショット
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#tab-gb-re-2" data-toggle="tab">オリジナル作成</a>
-                                    </li>
-                                </ul>   
-                            </div>                   
-
-                            <!-- Tab panes -->
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="tab-gb-re-1">
-                                   <div class="wrapp-form-tab-gb-1">
-                                       <form>
-                                            <label>ストア用スクリーンショット</label>
-                                            <label style="margin-bottom: 10px;display: block" class="label label-info" for="">File dementions: 750px x 1334px</label>
-                                            <div id="output-upload"></div>
-                                           <div class="content-tab-3-select-2">
-                                                <label for="">1 枚目</label>
-                                                <div class="splash-img" id="splash_image_1"></div>
-                                            </div>
-                                            <div class="content-tab-3-select-2">
-                                                <label for="">2 枚目</label>
-                                                <div class="splash-img" id="splash_image_2"></div>
-                                            </div>
-                                            <div class="content-tab-3-select-2">
-                                                <label for="">3 枚目</label>
-                                                <div class="splash-img" id="splash_image_3"></div>
-                                            </div>
-                                            <div class="content-tab-3-select-2">
-                                                <label for="">4 枚目</label>
-                                                <div class="splash-img" id="splash_image_4"></div>
-                                            </div>
-                                            <div class="content-tab-3-select-2">
-                                                <label for="">5 枚目</label>
-                                                <div class="splash-img" id="splash_image_5"></div>
-                                            </div>
-                                           <!--
-                                            <div class="btn-tab-gb-1">
-                                                <a href="">作成依頼</a> 
-                                            </div>
-                                                          -->
-                                        </form>
-                                   </div>
-                                </div>
-                                
-                                <div role="tabpanel" class="tab-pane" id="tab-gb-re-2">
-                                    <div class="wrapp-form-tab-gb-2">
-                                        <p>説明が入ります説明が入りまます説明</p>
-                                        <p>
-                                            が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入ります説明が入り
-                                        </p>
-                                        <!--
-                                        <a href="">作成依頼</a> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-
-                    </div>
-              </div>
+                @include('admin.pages.globals.app_splash')
             </div>
             <!-- //modal -->
             <div id="modal-appsicon" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-global-redesign" role="document">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title" id="myModalLabel">アプリアイコン作成依頼</h4>
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <div class="left-global-redesign">
-                                        <div class="title-left-global-redesign">
-                                            <span>ロゴの種類を選択</span>
-                                        </div>
-                                        <ul>
-                                            <li class="active">
-                                                <a href="#">
-                                                    <img src="images/nav-global-redesign.jpg" alt="">
-                                                    <span>Type 1</span>
-                                                </a>
-                                            </li>
-                                            <!--
-                                            <li>
-                                                <a href="">
-                                                    <img src="images/nav-global-redesign.jpg" alt="">
-                                                    <span>Type 1</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="">
-                                                    <img src="images/nav-global-redesign.jpg" alt="">
-                                                    <span>Type 1</span>
-                                                </a>
-                                            </li>
-                                            -->
-                                        </ul>
-                                    </div>
-
-                                    <div class="right-global-redesign">
-                                        <form action="">
-                                            <div class="col-md-5 col-xs-12">
-                                                <div class="form-group">
-                                                    <label>画像アップロード</label>
-                                                    <div class="wrapp-draw">
-                                                        <span class="left">選択されていません</span>
-                                                        <input type="file" name="app_ico_image" class="form-control long" id="app-ico-image" placeholder="ファイルを選択">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>ロゴのタイトル</label>
-                                                    <input name="app_ico_title" type="text" class="form-control " id="app-ico-title" placeholder="12タイトル">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>タイトルカラー</label>
-                                                    <div class="wrapp-draw">
-                                                        <input  name="app_ico_title_color" id="app-ico-title-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_title_color(this)'}" placeholder="000000">
-                                                        <img onclick="document.getElementById('app-ico-title-color').jscolor.show()"
-                                                             src="/assets/backend/images/draw.jpg"
-                                                             class="left">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>背景カラー</label>
-                                                    <div class="wrapp-draw">
-                                                        <input name="app_ico_bg_color" id="app-ico-bg-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_bg_color(this)'}" placeholder="000000">
-                                                        <img onclick="document.getElementById('app-ico-bg-color').jscolor.show()"
-                                                             src="/assets/backend/images/draw.jpg"
-                                                             class="left">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-7 col-xs-12">
-                                                <div class="row">
-                                                <div class="content-right-gl-rd">
-                                                    <div class="pixel-title">256px x 256px</div>
-                                                    <div id="app-ico-canvas-holder" class="app-logo-review box-256px">
-                                                        <p class="app_logo_title">ICO TITLE</p>
-                                                        <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
-                                                    </div>
-
-                                                    <div class="box-bottom-gl-re">
-                                                        <ul class="box-px">
-                                                            <li>
-                                                                <div class="pixel-title">
-                                                                    120px x 120px
-                                                                </div>
-                                                                <div class="app-logo-review box-120px">
-                                                                    <p class="app_logo_title">ICO TITLE</p>
-                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="pixel-title">
-                                                                    80px x 80px
-                                                                </div>
-                                                                <div class="app-logo-review box-80px">
-                                                                    <p class="app_logo_title">ICO TITLE</p>
-                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="pixel-title">
-                                                                    60px x 60px
-                                                                </div>
-                                                                <div class="app-logo-review box-60px">
-                                                                    <p class="app_logo_title">ICO TITLE</p>
-                                                                    <img class="app_logo_review" src="/admin/images/logo-m.png" alt=""/>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p class="text-center">
-
-                                                    <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
-                                                    <p id="response-msg" class="text-center"></p>
-                                                    <div class="hidden" id="app-ico-canvas"></div>
-                                                </p>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                </div>
-                                
-
-                            </div>
-                      </div>
-                    </div>
+                @include('admin.pages.globals.app_icon')
+            </div>
                     <!-- //modal -->
         <div>
     </section>
@@ -571,10 +364,28 @@
     {{Html::style('admin/js/upload/uploadfile.css')}}
     {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
     {{Html::style('admin/js/swiper/swiper.min.css')}}
+    {{Html::style('admin/js/slider/bootstrap-slider.css')}}
+    {{Html::script('admin/js/slider/bootstrap-slider.min.js')}}
     <script type="text/javascript">
 
+        // Global function
+        function sendSaveiConFile(canvas){
+            $.ajax({
+                type: "POST",
+                url: "{{ route('admin.client.global.save.app.icon') }}",
+                data: {
+                    app_icon: canvas.toDataURL()
+                },
+                dataType: 'json'
+            }).done(function( response ) {
+                    if( response.success ){
+                        $('#response-msg').addClass('text-success').text( response.msg );
+                    }else{
+                        $('#response-msg').addClass('text-danger').text( response.msg );
+                    }
+                });
+        }
         function moveTo(from, to) {
-                
             $('ul.' + from + ' li.selected').remove().appendTo('ul.' + to);
             $('.' + to + ' li').removeAttr('class');
             $('.' + to + ' li a').removeAttr('class');
@@ -583,9 +394,21 @@
             $('.nav-left li').each(function(index,item){
                 $('#mobile-'+$(item).attr('data-value')).show();
             })*/
-            
             MobileView.updateMenuListItems( $('ul.nav-left li' ) );
         };
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        function readURL(input, elementString) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(elementString).attr('src', e.target.result);
+
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
         $('#btn_submit_form').click(function () {
             $('ul.nav-left li').each(function () {
                 var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_sidemenus[]">';
@@ -621,6 +444,15 @@
             }
 
         };
+        function shadeColor(color, percent) {  // deprecated. See below.
+            var num = parseInt(color,16),
+                amt = Math.round(2.55 * percent),
+                R = (num >> 16) + amt,
+                G = (num >> 8 & 0x00FF) + amt,
+                B = (num & 0x0000FF) + amt;
+            return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
+        }
+
         $(document).ready(function () {
             $('.nav-left, .nav-right').on('click', 'li', function (e) {
                 e.preventDefault();
@@ -647,6 +479,20 @@
                 pagination: ".swiper-pagination",
                 paginationClickable: true
             });
+
+            // With JQuery
+
+            $('#app_ico_image_scale').slider({
+                formatter: function(value) {
+                    $('img.app_logo_file_type3').css({
+                        'width' : value +'%' ,
+                        'margin-top' : 50 - value/2 + '%',
+                        'height' : value +'%'
+                    });
+                    return 'Current value: ' + value;
+                }
+            });
+
         });
 
         $('#scroll-global-phone-review-1').slimScroll({
@@ -654,35 +500,98 @@
             size: '5px',
             BorderRadius: '2px'
         });
+        // Type 3
+        $("#app-ico-file-type3").change(function () {
+            readURL(this, 'img.app_logo_file_type3');
+        });
+        function change_app_ico_back_color_type3(input){
 
-        $('#app-ico-title').on('keyup',function(e){
-            if( $(this).val() != '' ){
-                $('.app-logo-review p').text( $(this).val().trim().substring(0,8) );
-            }
-            else
-                $('.app-logo-review p').text( 'ICO TITLE' );
+            $('.type3-border-top').css({'background-color':'#' + input});
+            $('body').find('#border-top-style3').remove();
+            $('body').append('<div id="border-top-style3"></div>');
+            var styleBorderTop = '<style type="text/css">.type3-border-top:before{ border-right-color:#' + input +'!important } </style>';
+            $('#border-top-style3').append(styleBorderTop);
+        }
+        function change_app_ico_bg_color_type3(input){
+            $('body').find('#border-left-style3').remove();
+            $('body').append('<div id="border-left-style3"></div>');
+            var color = shadeColor(input, -20);
+            var styleBorderLeft = '<style type="text/css">.type3-border-left:after{ border-right-color:#' + color +'!important } </style>';
+            $('#border-left-style3').append(styleBorderLeft);
+
+            $('div[class^=app-ico-review-type3]').css({'background-color':'#' + input});
+            $('.type3-border-left').css({'background-color':'#' + color});
+
+        }
+        $('#convert-to-canvas-type3').on('click',function(e){
+            e.preventDefault();
+            $('#app-ico-canvas-type3').empty();
+            html2canvas(document.getElementById('app-ico-canvas-holder-type3'), {
+                onrendered: function(canvas) {
+                    document.getElementById('app-ico-canvas-type3').appendChild(canvas);
+                    $('#app-ico-canvas-type3 canvas').attr('id','canvas-id-file-type3');
+                    var canvas = document.getElementById('canvas-id-file-type3');
+                    sendSaveiConFile(canvas);
+                }
+            });
         });
 
+        // Type 2
+        $('#app-ico-title-type2').on('keyup',function(e){
+            if( $(this).val() != '' ){
+                $('.app_logo_title_type2').text( capitalizeFirstLetter( $(this).val().trim().substring(0,8) ));
+            }
+            else
+                $('.app_logo_title_type2').text( 'Ico' );
+        });
+        function change_app_ico_title_color_type2(input){
+            $('div[class^=app-ico-review-type2] p').css({'color':'#' + input});
+            $('.type2-border-top').css({'background-color':'#' + input});
+            $('body').find('#border-top-style').remove();
+            $('body').append('<div id="border-top-style"></div>');
+            var styleBorderTop = '<style type="text/css">.type2-border-top:before{ border-right-color:#' + input +'!important } </style>';
+            $('#border-top-style').append(styleBorderTop);
+        }
+        function change_app_ico_bg_color_type2(input){
+            $('body').find('#border-left-style').remove();
+            $('body').append('<div id="border-left-style"></div>');
+            var color = shadeColor(input, -20);
+            var styleBorderLeft = '<style type="text/css">.type2-border-left:after{ border-right-color:#' + color +'!important } </style>';
+            $('#border-left-style').append(styleBorderLeft);
+
+            $('div[class^=app-ico-review-type2]').css({'background-color':'#' + input});
+            $('.type2-border-left').css({'background-color':'#' + color});
+
+        }
+        $('#convert-to-canvas-type2').on('click',function(e){
+            e.preventDefault();
+            $('#app-ico-canvas-type2').empty();
+            html2canvas(document.getElementById('app-ico-canvas-holder-type2'), {
+                onrendered: function(canvas) {
+                    document.getElementById('app-ico-canvas-type2').appendChild(canvas);
+                    $('#app-ico-canvas-type2 canvas').attr('id','canvas-id-file-type2');
+                    var canvas = document.getElementById('canvas-id-file-type2');
+                    sendSaveiConFile(canvas);
+                }
+            });
+        });
+
+        // Type 1
         function change_app_ico_title_color(input){
             $('.app-logo-review p').css({'color':'#' + input});
         }
         function change_app_ico_bg_color(input){
             $('.app-logo-review').css({'background-color':'#' + input});
         }
-
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('.app-logo-review img').attr('src', e.target.result);
-
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
         $("#app-ico-image").change(function () {
-            readURL(this);
+            readURL(this, '.app-logo-review img');
+        });
+        $('#app-ico-title').on('keyup',function(e){
+            if( $(this).val() != '' ){
+                $('.app-logo-review p').text(  $(this).val().trim().substring(0,8) );
+            }
+            else
+                $('.app-logo-review p').text( 'Ico' );
         });
 
         $('#convert-to-canvas').on('click',function(e){
@@ -693,24 +602,11 @@
                     document.getElementById('app-ico-canvas').appendChild(canvas);
                     $('canvas').attr('id','canvas-id-file');
                     var canvas = document.getElementById('canvas-id-file');
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('admin.client.global.save.app.icon') }}",
-                        data: {
-                            app_icon: canvas.toDataURL()
-                        },
-                        dataType: 'json'
-                    }).done(function( response ) {
-                        if( response.success ){
-                            $('#response-msg').addClass('text-success').text( response.msg );
-                        }else{
-                            $('#response-msg').addClass('text-danger').text( response.msg );
-                        }
-                    });
+                    sendSaveiConFile(canvas);
                 }
             });
         });
+
 
 
     </script>

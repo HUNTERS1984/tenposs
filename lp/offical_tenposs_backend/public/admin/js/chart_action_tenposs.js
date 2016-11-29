@@ -1,6 +1,18 @@
 /**
  * Created by bangnk on 11/25/16.
  */
+// function loading() {
+//     $("body").addClass("loading");
+// }
+// function loaded() {
+//     $("body").removeClass("loading");
+// }
+// $(window).on('beforeunload', function () {
+//     loading();
+// });
+// $(window).on('load', function () {
+//     loaded();
+// });
 
 var tenposs_action = {
     init: function () {
@@ -9,6 +21,7 @@ var tenposs_action = {
     list_action: {
         init: function () {
             $('#date_range').on('apply.daterangepicker', function (ev, picker) {
+                $("body").addClass("loading");
                 var report_type = $('select[name=report_type]').val();
                 var from_date = picker.startDate.format('YYYY-MM-DD');
                 var to_date = picker.endDate.format('YYYY-MM-DD');
@@ -23,6 +36,7 @@ var tenposs_action = {
                 }
             });
             $('button[name=time-type]').click(function () {
+                $("body").addClass("loading");
                 var report_type = $('select[name=report_type]').val();
                 var time_type = $(this).attr('data-time-type');
                 $('button[name=time-type]').removeClass('active');
@@ -37,6 +51,7 @@ var tenposs_action = {
             });
 
             $('#report_type').on('change', function () {
+                $("body").addClass("loading");
                 var report_type = $('select[name=report_type]').val();
                 var time_type = tenposs_action.get_time_type();
                 var from_date = tenposs_action.get_from_date();

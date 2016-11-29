@@ -159,8 +159,15 @@
             var to_date = tenposs_action.get_to_date();
             var time_type = tenposs_action.get_time_type();
             var report_type = $('select[name=report_type]').val();
+            $("body").addClass("loading");
             tenposs.google_analytics.draw_chart(report_type, time_type, from_date, to_date);
             tenposs.google_analytics.get_total_data(time_type, from_date, to_date);
         });
     </script>
+    <div class="modal modal-loading">
+        <div class="preloader-wrapper">
+            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+        </div>
+    </div>
+
 @endsection
