@@ -25,6 +25,7 @@ $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app)
     $app->post('/staff/set_push_key','NotificationController@staff_set_push_key');
     $app->post('/staff/notification','NotificationController@staff_notification');
     $app->post('/configure_notification','NotificationController@configure_notification');
+    $app->get('/get_configure/{app_id}','NotificationController@get_configure_notification');
 });
 $app->group(['middleware' => 'jwt.refresh'], function ($app) {
 
