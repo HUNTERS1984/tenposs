@@ -5083,6 +5083,352 @@ p.yen-cost-3-2-1-black{
     letter-spacing: 1px;
 }
 
+/** TYPE 2 **/
+
+div[class^=app-ico-review-type2]{
+    display: inline-table;
+    position: relative;
+    background: #283c50;
+}
+div[class^=app-ico-review-type2] > .type2-border-left{
+    display: table;
+    z-index: 1;
+    position: absolute;
+    background: #071019;
+}
+
+div[class^=app-ico-review-type2] > .type2-border-left:after{
+    content: "";
+    height: 0;
+    width: 0;
+    left: 0;
+    position: absolute;
+}
+
+div[class^=app-ico-review-type2] > .type2-border-top{
+    left: 0;
+    position: absolute;
+    background: red;
+}
+
+div[class^=app-ico-review-type2] > .type2-border-top:before{
+    content: "";
+    top: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+div[class^=app-ico-review-type2] p{
+    display: table-cell;
+    vertical-align: middle;
+    color: #FFF;
+    text-shadow: rgba(255, 255, 255, 0.2) 3px 2px 3px;
+}
+
+
+/* 256px */
+
+.app-ico-review-type2-256px{
+    width: 236px;
+    height: 236px;
+}
+
+.app-ico-review-type2-256px .type2-border-left{
+    width: 20px;
+    height: 236px;
+    left: -20px;
+    top: -20px;
+}
+.app-ico-review-type2-256px  .type2-border-left:after{
+    bottom: -20px;
+    border-bottom: 20px solid rgba(255,255,255,0);
+    border-right: 20px solid #071019;
+}
+.app-ico-review-type2-256px .type2-border-top{
+    top: -20px;
+    width: 216px;
+    height: 20px;
+}
+.app-ico-review-type2-256px .type2-border-top:before{
+    border-bottom: 20px solid rgba(255,255,255,0);
+    border-right: 20px solid #ff0000;
+    left: -20px;
+}
+
+/* 120px */
+.app-ico-review-type2-120px{
+    width: 110px;
+    height: 110px;
+}
+.app-ico-review-type2-120px .type2-border-left{
+    width: 10px;
+    height: 110px;
+    left: -10px;
+    top: -10px;
+}
+.app-ico-review-type2-120px  .type2-border-left:after{
+    bottom: -10px;
+    border-bottom: 10px solid rgba(255,255,255,0);
+    border-right: 10px solid #071019;
+}
+.app-ico-review-type2-120px .type2-border-top{
+    top: -10px;
+    width: 100px;
+    height: 10px;
+}
+.app-ico-review-type2-120px .type2-border-top:before{
+    border-bottom: 10px solid rgba(255,255,255,0);
+    border-right: 10px solid #ff0000;
+    left: -10px;
+}
+
+
+
+/* 80px */
+
+.app-ico-review-type2-80px{
+    width: 72px;
+    height: 72px;
+}
+.app-ico-review-type2-80px .type2-border-left{
+    width: 8px;
+    height: 72px;
+    left: -8px;
+    top: -8px;
+}
+.app-ico-review-type2-80px  .type2-border-left:after{
+    bottom: -8px;
+    border-bottom: 8px solid rgba(255,255,255,0);
+    border-right: 8px solid #071019;
+}
+.app-ico-review-type2-80px .type2-border-top{
+    top: -8px;
+    width: 64px;
+    height: 8px;
+}
+.app-ico-review-type2-80px .type2-border-top:before{
+    border-bottom: 8px solid rgba(255,255,255,0);
+    border-right: 8px solid #ff0000;
+    left: -8px;
+}
+
+/* 60px */
+
+.app-ico-review-type2-60px{
+    width: 55px;
+    height: 55px;
+}
+
+.app-ico-review-type2-60px .type2-border-left{
+    width: 5px;
+    height: 55px;
+    left: -5px;
+    top: -5px;
+}
+.app-ico-review-type2-60px  .type2-border-left:after{
+    bottom: -5px;
+    border-bottom: 5px solid rgba(255,255,255,0);
+    border-right: 5px solid #071019;
+}
+.app-ico-review-type2-60px .type2-border-top{
+    top: -5px;
+    width: 50px;
+    height: 5px;
+}
+.app-ico-review-type2-60px .type2-border-top:before{
+    border-bottom: 5px solid rgba(255,255,255,0);
+    border-right: 5px solid #ff0000;
+    left: -5px;
+}
+
+
+
+.app-ico-canvas-holder-type2{
+    padding: 20px 0 0 20px;
+    display: inline-table;
+}
+
+.app-ico-review-type2-256px p{
+    font-size: 2vw;
+}
+.app-ico-review-type2-120px p{
+    font-size: 1vw;
+}
+.app-ico-review-type2-80px p{
+     font-size: 0.5vw;
+ }
+.app-ico-review-type2-60px p{
+    font-size: 0.2vw;
+}
+
+/** TYPE 3 **/
+
+
+div[class^=app-ico-review-type3]{
+    display: inline-table;
+    position: relative;
+    background: #283c50;
+}
+div[class^=app-ico-review-type3] > .type3-border-left{
+    display: table;
+    z-index: 1;
+    position: absolute;
+    background: #071019;
+}
+
+div[class^=app-ico-review-type3] > .type3-border-left:after{
+    content: "";
+    height: 0;
+    width: 0;
+    left: 0;
+    position: absolute;
+}
+
+div[class^=app-ico-review-type3] > .type3-border-top{
+    left: 0;
+    position: absolute;
+    background: red;
+}
+
+div[class^=app-ico-review-type3] > .type3-border-top:before{
+    content: "";
+    top: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+
+/* 256px */
+
+.app-ico-review-type3-256px{
+    width: 236px;
+    height: 236px;
+}
+
+.app-ico-review-type3-256px .type3-border-left{
+    width: 20px;
+    height: 236px;
+    left: -20px;
+    top: -20px;
+}
+.app-ico-review-type3-256px  .type3-border-left:after{
+    bottom: -20px;
+    border-bottom: 20px solid rgba(255,255,255,0);
+    border-right: 20px solid #071019;
+}
+.app-ico-review-type3-256px .type3-border-top{
+    top: -20px;
+    width: 216px;
+    height: 20px;
+}
+.app-ico-review-type3-256px .type3-border-top:before{
+    border-bottom: 20px solid rgba(255,255,255,0);
+    border-right: 20px solid #ff0000;
+    left: -20px;
+}
+
+/* 120px */
+.app-ico-review-type3-120px{
+    width: 110px;
+    height: 110px;
+}
+.app-ico-review-type3-120px .type3-border-left{
+    width: 10px;
+    height: 110px;
+    left: -10px;
+    top: -10px;
+}
+.app-ico-review-type3-120px  .type3-border-left:after{
+    bottom: -10px;
+    border-bottom: 10px solid rgba(255,255,255,0);
+    border-right: 10px solid #071019;
+}
+.app-ico-review-type3-120px .type3-border-top{
+    top: -10px;
+    width: 100px;
+    height: 10px;
+}
+.app-ico-review-type3-120px .type3-border-top:before{
+    border-bottom: 10px solid rgba(255,255,255,0);
+    border-right: 10px solid #ff0000;
+    left: -10px;
+}
+
+
+
+/* 80px */
+
+.app-ico-review-type3-80px{
+    width: 72px;
+    height: 72px;
+}
+.app-ico-review-type3-80px .type3-border-left{
+    width: 8px;
+    height: 72px;
+    left: -8px;
+    top: -8px;
+}
+.app-ico-review-type3-80px  .type3-border-left:after{
+    bottom: -8px;
+    border-bottom: 8px solid rgba(255,255,255,0);
+    border-right: 8px solid #071019;
+}
+.app-ico-review-type3-80px .type3-border-top{
+    top: -8px;
+    width: 64px;
+    height: 8px;
+}
+.app-ico-review-type3-80px .type3-border-top:before{
+    border-bottom: 8px solid rgba(255,255,255,0);
+    border-right: 8px solid #ff0000;
+    left: -8px;
+}
+
+/* 60px */
+
+.app-ico-review-type3-60px{
+    width: 55px;
+    height: 55px;
+}
+
+.app-ico-review-type3-60px .type3-border-left{
+    width: 5px;
+    height: 55px;
+    left: -5px;
+    top: -5px;
+}
+.app-ico-review-type3-60px  .type3-border-left:after{
+    bottom: -5px;
+    border-bottom: 5px solid rgba(255,255,255,0);
+    border-right: 5px solid #071019;
+}
+.app-ico-review-type3-60px .type3-border-top{
+    top: -5px;
+    width: 50px;
+    height: 5px;
+}
+.app-ico-review-type3-60px .type3-border-top:before{
+    border-bottom: 5px solid rgba(255,255,255,0);
+    border-right: 5px solid #ff0000;
+    left: -5px;
+}
+
+.app-ico-canvas-holder-type3{
+    padding: 20px 0 0 20px;
+    display: inline-table;
+}
+
+div[class^=app-ico-review-type3] img{
+    display: inline;
+    vertical-align: middle;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    object-fit: cover;
+    object-position: center;
+    margin-top: calc(50% - 50px);
+}
+
 .preloader-wrapper {
   position: fixed;
   width: 48px;
@@ -5100,5 +5446,3 @@ p.yen-cost-3-2-1-black{
  body.loading .modal-loading {
    display: block !important;
  }
-
-
