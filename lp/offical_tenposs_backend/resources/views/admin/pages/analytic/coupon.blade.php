@@ -8,7 +8,7 @@
             <div class="left">
                 <div class="tab-header-analytic">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" >
+                        <li role="presentation">
                             <a href="{{route('admin.analytic.google')}}" aria-controls="tab-analytic-1"
                                role="tab">アクセス解析</a>
                         </li>
@@ -39,19 +39,27 @@
                                 <div class="col-md-12 text-right">
                                     <div class="form-inline">
                                         <div class="form-group">
-                                            <input style="margin-bottom: 10px;" name="daterange" type="text"
+                                            <input style="margin-bottom: 10px;" id="date_range" name="date_range"
+                                                   type="text"
                                                    value="01/01/2015 - 01/31/2015" class="form-control date-time"
                                                    placeholder="Ngay thang"><br>
 
-                                            <select class="form-control option-chart">
-                                                <option>ユーザー数</option>
-                                                <option>セッション</option>
-                                                <option>スクリーンビュー</option>
+                                            <select name="report_type" id="report_type"
+                                                    class="form-control option-chart">
+                                                <option value="coupon_use">ユーザー数</option>
+                                                <option value="post">セッション</option>
+                                                <option value="coupon_created">スクリーンビュー</option>
                                             </select>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default">日</button>
-                                                <button type="button" class="btn btn-default">月</button>
-                                                <button type="button" class="btn btn-default">年</button>
+                                                <button type="button" name="time-type" data-time-type="D"
+                                                        class="btn btn-default active">日
+                                                </button>
+                                                <button type="button" name="time-type" data-time-type="M"
+                                                        class="btn btn-default">月
+                                                </button>
+                                                <button type="button" name="time-type" data-time-type="Y"
+                                                        class="btn btn-default">年
+                                                </button>
                                             </div>
                                         </div>
 
@@ -71,19 +79,19 @@
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>ユーザー数</p>
-                                                <h3>29,147</h3>
+                                                <h3 id="cp_coupon_use">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>セッション</p>
-                                                <h3>247,837</h3>
+                                                <h3 id="cp_post">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
                                                 <p>スクリーンビュー</p>
-                                                <h3>1,002,719</h3>
+                                                <h3 id="cp_coupon_created">0</h3>
                                             </div>
                                         </div>
                                     </div>
@@ -108,67 +116,31 @@
     {{Html::script('admin/js/Chart.min.js')}}
     {{Html::script('admin/js/moment.min.js')}}
     {{Html::script('admin/js/daterangepicker.js')}}
+    {{Html::script('admin/js/chart_tenposs.js')}}
+    {{Html::script('admin/js/chart_action_tenposs.js')}}
     <script>
+        var type_chart = 'cp';
         $(function () {
-            $('input[name="daterange"]').daterangepicker({
+            $('input[name="date_range"]').daterangepicker({
+                "timePicker24Hour": true,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                },
+                "startDate": moment().subtract(20, 'days'),
+                "endDate": moment(),
                 "opens": "left"
             });
         });
-        //
-        //        var ctx = document.getElementById('myChart').getContext('2d');
-        //        var myLineChart = new Chart(ctx, {
-        //            type: 'line',
-        //            data: data
-        //        });
-
-        function drawChart(label, data, namechart) {
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var data = {
-                labels: label,
-                datasets: [
-                    {
-                        label: namechart,
-                        fill: false,
-                        lineTension: 0.1,
-                        backgroundColor: "rgba(75,192,192,0.4)",
-                        borderColor: "rgba(75,192,192,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBorderColor: "rgba(75,192,192,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data: data,
-                        spanGaps: false,
-                    }
-                ]
-            };
-            var myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: data
-            });
-        }
-
-        var GetChartData = function () {
-            $.ajax({
-                url: '/admin/get_data',
-                method: 'GET',
-                dataType: 'json',
-                success: function (d) {
-                    drawChart(d.label, d.data, "GA");
-                }
-            });
-        };
 
         $(document).ready(function () {
-            GetChartData();
+            tenposs_action.init();
+            var from_date = tenposs_action.get_from_date();
+            var to_date = tenposs_action.get_to_date();
+            var time_type = tenposs_action.get_time_type();
+            var report_type = $('select[name=report_type]').val();
+            $("body").addClass("loading");
+            tenposs.coupon.draw_chart(report_type, time_type, from_date, to_date);
+            tenposs.coupon.get_total_data(time_type, from_date, to_date);
         });
     </script>
 @endsection

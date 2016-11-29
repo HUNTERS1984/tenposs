@@ -19,7 +19,7 @@
                 ポイントシステムPOMの登録が必須となります。
             </p>
             
-            <a href="{{ route('admin.cost.regilaucster') }}">登録する</a>
+            <a href="{{ route('admin.cost.register') }}">登録する</a>
             
         </div>
     </section>

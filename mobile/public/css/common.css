@@ -72,7 +72,7 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #page.active-scrollbar{
-        left: 250px;
+        left: 300px;
     }
 }
 .overfog{
@@ -92,7 +92,7 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #page.active-scrollbar .overfog{
-        left:250px;
+        left:300px;
     }
 }
 /* Header */
@@ -166,6 +166,9 @@ h3,.h3{font-size: 28px;}
     border-radius: 4px;
     width: 50vmin; 
     height: 50vmin;
+    box-shadow: 0 2px 2px #ddd;
+    -webkit-box-shadow: 1px 1px 2px #ddd;
+    -moz-box-shadow: 0 2px 2px #ddd;
 }
 .item-product p{
     color: #646e72;
@@ -409,8 +412,8 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #side{
-        left:-250px;
-        width:250px;
+        left:-300px;
+        width:300px;
     }
 }
 .active-scrollbar #side{
@@ -468,6 +471,10 @@ h3,.h3{font-size: 28px;}
     -webkit-transform:translateY(-50%);
 }
 @media screen and (max-width:479px){
+    #side .s_nav li{
+        padding:15px 0 15px 45px;
+        position:relative;
+    }
     #side .s_nav li:before{
         transform:scale(0.8);
         -webkit-transform:scale(0.8);
@@ -482,6 +489,8 @@ h3,.h3{font-size: 28px;}
     width: 100%;
     color: #fff;
     font-size: 30px;
+    padding-left: 35px;
+    padding-top: 15px;
     text-transform: capitalize;
 }
 #side .s_nav li a span{

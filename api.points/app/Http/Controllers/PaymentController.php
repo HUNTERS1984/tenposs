@@ -114,23 +114,36 @@ class PaymentController extends Controller{
             return $this->error(9997);
         } 
 
-        $plan = new Plan();
-        $plan->setName('Point Service Monthly Plan')
-        ->setDescription('Point Service Monthly Plan')
-        ->setType('fixed');
-        $paymentDefinition = new PaymentDefinition();
-        $paymentDefinition->setName('Regular Payments')
-            ->setType('REGULAR')
-            ->setFrequency('Month')
-            ->setFrequencyInterval("1")
-            ->setCycles("1")
-            ->setAmount(new Currency(array('value' => 25, 'currency' => 'USD')));
-       
-        // $chargeModel = new ChargeModel();
-        // $chargeModel->setType('SHIPPING')
-        //     ->setAmount(new Currency(array('value' => 10, 'currency' => 'USD')));
-
-        //$paymentDefinition->setChargeModels(array($chargeModel));
+        $type = Input::get('type') ? Input::get('type') : 0;
+        
+        if ($type == 1) // yearly
+        {
+            $price = 300;
+            $plan = new Plan();
+            $plan->setName('Point Service Yearly Plan')
+            ->setDescription('Point Service Yearly Plan')
+            ->setType('fixed');
+            $paymentDefinition = new PaymentDefinition();
+            $paymentDefinition->setName('Regular Payments')
+                ->setType('REGULAR')
+                ->setFrequency('Year')
+                ->setFrequencyInterval("1")
+                ->setCycles("1")
+                ->setAmount(new Currency(array('value' => $price, 'currency' => 'USD')));
+        } else { // monthly
+            $price  = 25;  
+            $plan = new Plan();
+            $plan->setName('Point Service Monthly Plan')
+            ->setDescription('Point Service Monthly Plan')
+            ->setType('fixed');
+            $paymentDefinition = new PaymentDefinition();
+            $paymentDefinition->setName('Regular Payments')
+                ->setType('REGULAR')
+                ->setFrequency('Month')
+                ->setFrequencyInterval("1")
+                ->setCycles("1")
+                ->setAmount(new Currency(array('value' => $price, 'currency' => 'USD')));
+        }  
 
         $merchantPreferences = new MerchantPreferences();
         $baseUrl = url();
@@ -140,7 +153,7 @@ class PaymentController extends Controller{
         ->setAutoBillAmount("yes")
         ->setInitialFailAmountAction("CONTINUE")
         ->setMaxFailAttempts("0")
-        ->setSetupFee(new Currency(array('value' => 25, 'currency' => 'USD')));
+        ->setSetupFee(new Currency(array('value' => $price, 'currency' => 'USD')));
 
 
         $plan->setPaymentDefinitions(array($paymentDefinition));
@@ -174,6 +187,7 @@ class PaymentController extends Controller{
         $billingPlan = new BillingPlan();
         $billingPlan->service_id = Input::get('service_id');
         $billingPlan->paypal_billing_plan_id = $plan->getId();
+        $billingPlan->type = $type;
         $billingPlan->save();
         $this->body['data'] = $plan->toArray();
         return $this->output($this->body);
@@ -188,9 +202,15 @@ class PaymentController extends Controller{
             return $this->error(9997);
         } 
 
+        $check_items = array('type');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
         try {
-            $params = array('page_size' => '10');
-            $planList = Plan::all($params, $this->_apiContext);
+            // $params = array('page_size' => '10');
+            // $planList = Plan::all($params, $this->_apiContext);
+            $planList = BillingPlan::whereType(Input::get('type'))->get();
             $this->body['data'] = $planList->toArray();
             return $this->output($this->body);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
@@ -215,7 +235,6 @@ class PaymentController extends Controller{
             {
                 return $this->error(1004);
             }
-
             $plan = Plan::get($billingPlan->paypal_billing_plan_id, $this->_apiContext);
             $this->body['data'] = $plan->toArray();
             return $this->output($this->body);
@@ -223,6 +242,33 @@ class PaymentController extends Controller{
             return $this->error(9999);
         }
     }
+
+    public function getUserBillingPlan(){
+        
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if ($auth_role != 'admin' && $auth_role != 'client') {
+            return $this->error(9997);
+        } 
+
+        try {
+
+            $billingAgreement = BillingAgreement::whereUserId($auth_id)->whereStatus(1)->first();
+            if (!$billingAgreement)
+            {
+                return $this->error(1004);
+            }
+
+            $this->body['data'] = $billingAgreement->toArray();
+            $this->body['data']['billingplan'] = BillingPlan::find($billingAgreement->billing_plan_id);
+            return $this->output($this->body);
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return $this->error(9999);
+        }
+    }
+
     public function deleteBillingPlan($id){
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
@@ -246,6 +292,14 @@ class PaymentController extends Controller{
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             return $this->error(9999);
         }
+
+        // try {
+        //     $plan = Plan::get($id, $this->_apiContext);
+        //     $result = $plan->delete($this->_apiContext);
+        // } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+        //     return $this->error(9999);
+        // }
+
 
         return $this->output($this->body);
 
@@ -301,14 +355,14 @@ class PaymentController extends Controller{
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
 
-
         $agreement = new Agreement();
 
         $agreement->setName('Base Agreement')
             ->setDescription('Basic Agreement')
-            ->setStartDate('2019-06-17T9:45:04Z');
+            ->setStartDate(date("c"));
         
         $billingPlan = BillingPlan::find($plan_id);
+
         if (!$billingPlan)
         {
             return $this->error(1004);
@@ -323,14 +377,7 @@ class PaymentController extends Controller{
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
         $agreement->setPayer($payer);
-        //Add Shipping Address
-        // $shippingAddress = new ShippingAddress();
-        // $shippingAddress->setLine1('111 First Street')
-        //     ->setCity('Saratoga')
-        //     ->setState('CA')
-        //     ->setPostalCode('95070')
-        //     ->setCountryCode('US');
-        // $agreement->setShippingAddress($shippingAddress);
+
         
         $request = clone $agreement;
        
@@ -402,7 +449,7 @@ class PaymentController extends Controller{
             $agreementStateDescriptor = new AgreementStateDescriptor();
             $agreementStateDescriptor->setNote("Reactivating the agreement");
 
-            $agreement = Agreement::get($billingAgreement->paypal_billing_agreement_id, $this->_apiContext);
+            $agreement = Agreement::get($billingAgreement->id, $this->_apiContext);
 
             $agreement->reActivate($agreementStateDescriptor, $this->_apiContext);
 
@@ -456,19 +503,27 @@ class PaymentController extends Controller{
             $point_history->role = 'client';
             $point_history->save();
 
+            $billingPlan = BillingPlan::find($billingAgreement->billing_plan_id);
+            if ($billingPlan && $billingPlan->redirect_url != null)
+            {
+                return redirect($billingPlan->redirect_url);
+            } else {
+                return redirect('https://www.paypal.com');
+            }
+
 
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             return $this->error(9999);
         }
 
-        $this->body['data'] = $billingAgreement->toArray();
-        return $this->output($this->body);
+        //$this->body['data'] = $billingAgreement->toArray();
+        //return $this->output($this->body);
   
     }
 
-    public function billingTransactions($id){
+    public function billingTransactions($agreement_id){
 
-        $billingAgreement = BillingAgreement::find($id);
+        $billingAgreement = BillingAgreement::find($agreement_id);
 
         if (!$billingAgreement)
         {

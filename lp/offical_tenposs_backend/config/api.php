@@ -111,4 +111,7 @@ return [
     //notification new
     'url_api_notification' => 'https://apinotification.ten-po.com/v1/user/notification',
 
+    //google analytics api
+    'url_api_google_analytic' => 'https://apiga.ten-po.com/get_data.php',
+
 ];

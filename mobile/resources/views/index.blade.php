@@ -20,166 +20,181 @@
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="banner">
-            <!-- Slider main container -->
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    @if( isset( $app_top->data->images->data)  && count($app_top->data->images->data) > 0 )
-                        @foreach( $app_top->data->images->data as $img )
-                        <div class="swiper-slide"><img src="{{ $img->image_url }}" alt=""/></div>
-                        @endforeach
-                    @endif
-                </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
-            </div>
-        </div><!-- End banner -->
+
         <div id="content">
-            <div id="recentry">
-                <h2 class="aligncenter">最近</h2>
-                <div class="container-fluid">
-                    <div class="container-photo-section clearfix">
-                        @if( isset( $app_top->data->items->data)
-                            && count($app_top->data->items->data) > 0 )
-                            @foreach( $app_top->data->items->data as $item )
-                        <div class="item-product">
-                            <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
-                                <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
-                            </a>
-                            <p>{{ $item->title }}</p>
-                            <span>¥{{number_format($item->price, 0, '', ',')}}</span>
+            <div id="session">
+            </div>
+            <div class="template" style="display:none">
+                <div id="template-1">
+                    <div id="banner" style="margin-bottom:20px">
+                        <!-- Slider main container -->
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                <!-- Slides -->
+                                @if( isset( $app_top->data->images->data)  && count($app_top->data->images->data) > 0 )
+                                    @foreach( $app_top->data->images->data as $img )
+                                    <div class="swiper-slide"><img src="{{ $img->image_url }}" alt=""/></div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <!-- If we need pagination -->
+                            <div class="swiper-pagination"></div>
                         </div>
-                            @endforeach
-                        @endif
-                    </div>
-                    @if( isset( $app_top->data->photos->data)
-                            && count($app_top->data->photos->data) > 0 )
-                        <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
-                    @endif
+                    </div><!-- End banner -->
                 </div>
-            </div><!-- End recentry -->
-            <div id="photogallery">
-                <h2 class="aligncenter">フォトギャラリー</h2>
-                <div class="container-fluid">
-                    <div class="container-photo-section clearfix">
-                        @if( isset( $app_top->data->photos->data)
-                            && count($app_top->data->photos->data) > 0 )
-                            @foreach( $app_top->data->photos->data as $photo )
-                        <div class="item-photogallery">
-                            <div class="crop">
-                                <div class="inner-crop">
-                                    <a href="{{$photo->image_url}}" data-lightbox="lightbox">
-                                        <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
+                <div id="template-2">
+                    <div id="recentry">
+                        <h2 class="aligncenter">最近</h2>
+                        <div class="container-fluid">
+                            <div class="container-photo-section clearfix">
+                                @if( isset( $app_top->data->items->data)
+                                    && count($app_top->data->items->data) > 0 )
+                                    @foreach( $app_top->data->items->data as $item )
+                                <div class="item-product">
+                                    <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
+                                        <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
                                     </a>
+                                    <p>{{ $item->title }}</p>
+                                    <span>¥{{number_format($item->price, 0, '', ',')}}</span>
+                                </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            @if( isset( $app_top->data->photos->data)
+                                    && count($app_top->data->photos->data) > 0 )
+                                <a href="{{ route('menus.index') }}" class="btn tenposs-readmore">もっと見る</a>
+                            @endif
+                        </div>
+                    </div><!-- End recentry -->
+                </div>
+                <div id="template-5">
+                    <div id="photogallery">
+                        <h2 class="aligncenter">フォトギャラリー</h2>
+                        <div class="container-fluid">
+                            <div class="container-photo-section clearfix">
+                                @if( isset( $app_top->data->photos->data)
+                                    && count($app_top->data->photos->data) > 0 )
+                                    @foreach( $app_top->data->photos->data as $photo )
+                                <div class="item-photogallery">
+                                    <div class="crop">
+                                        <div class="inner-crop">
+                                            <a href="{{$photo->image_url}}" data-lightbox="lightbox">
+                                                <img src="{{$photo->image_url}}" class="img-responsive" alt="Nayako"/>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                @endforeach
+                                @endif
+                            </div>
+                            @if( isset( $app_top->data->photos->data)
+                                    && count($app_top->data->photos->data) > 0 )
+                                <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
+                            @endif
+                        </div>
+                            
+                    </div><!-- End photogallery -->
+                </div>
+                <div id="template-3">
+                    <div id="news">
+                        <h2 class="aligncenter">ニュース</h2>
+                        <div class="container-fluid">
+                             @if( isset( $app_top->data->news->data)
+                                    && count($app_top->data->news->data) > 0 )
+                                @foreach( $app_top->data->news->data as $news )
+
+                            <div class="item-coupon imageleft clearfix">
+                                <div class="image">
+                                    <div class="crop">
+                                        <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
+                                            <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="info">
+                                    <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
+                                    <h3>{{ $news->new_category_id }}</h3>
+                                    <p>{{ str_limit($news->description,100,'...') }}</p>
+                                </div>
+                            </div><!-- End item coupon -->
+                                @endforeach
+                            @endif
+
+                            <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
+                        </div>
+                    </div><!-- End News -->
+                </div>
+                <div id="template-4">
+                    <div id="contact">
+                        <script type="text/javascript">
+                            var maps = [];
+                        </script>
+                         @if( isset( $app_top->data->contact->data)
+                                    && count($app_top->data->contact->data) > 0 )
+                        @foreach( $app_top->data->contact->data as $contact )
+                        <div id="map-{{$contact->id}}" class="maps"></div>
+                        <ul class="list-location">
+                            <li>
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="left-table-cell text-left">
+                                            <img src="{{ url('img/icon/f_location.png') }}" alt="icon">
+                                        </div>
+                                        <div class="right-table-cell text-left">
+                                            {{ $contact->title }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="left-table-cell text-left">
+                                            <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
+                                        </div>
+                                        <div class="right-table-cell text-left">
+                                            {{ $contact->start_time }} - {{ $contact->end_time }}
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
+                            </li>
+                            <li>
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="left-table-cell text-left">
+                                            <img src="{{ url('img/icon/f_tel.png') }}" alt="icon">
+                                        </div>
+                                        <div class="right-table-cell text-left">
+                                            <a class="text-phone" href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
+                                        </div>
+                                    </div>
+                                </div>
 
+                            </li>
+                        </ul>
+
+                        <div class="container-fluid">
+                            <a href="{{ route('reservation') }} " class="btn tenposs-button">予約</a>
                         </div>
+                        <script type="text/javascript">
+                            maps.push({
+                                id : '{{$contact->id}}',
+                                lat : '{{$contact->latitude}}',
+                                long : '{{$contact->longitude}}',
+                                title: '{{$contact->title}}'
+                            });
+
+                        </script>
                         @endforeach
                         @endif
-                    </div>
-                    @if( isset( $app_top->data->photos->data)
-                            && count($app_top->data->photos->data) > 0 )
-                        <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
-                    @endif
+
+                    </div><!-- End contact -->
                 </div>
-                    
-            </div><!-- End photogallery -->
-            <div id="news">
-                <h2 class="aligncenter">ニュース</h2>
-                <div class="container-fluid">
-                     @if( isset( $app_top->data->news->data)
-                            && count($app_top->data->news->data) > 0 )
-                        @foreach( $app_top->data->news->data as $news )
-
-                    <div class="item-coupon imageleft clearfix">
-                        <div class="image">
-                            <div class="crop">
-                                <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">
-                                    <img class="center-cropped" src="{{ $news->image_url }}" alt="{{ $news->title }}"/>
-                                </a>
-                            </div>
-
-                        </div>
-                        <div class="info">
-                            <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->title }}</a>
-                            <h3>{{ $news->new_category_id }}</h3>
-                            <p>{{ str_limit($news->description,100,'...') }}</p>
-                        </div>
-                    </div><!-- End item coupon -->
-                        @endforeach
-                    @endif
-
-                    <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
-                </div>
-            </div><!-- End News -->
-            <div id="contact">
-                <script type="text/javascript">
-                    var maps = [];
-                </script>
-                 @if( isset( $app_top->data->contact->data)
-                            && count($app_top->data->contact->data) > 0 )
-                @foreach( $app_top->data->contact->data as $contact )
-                <div id="map-{{$contact->id}}" class="maps"></div>
-                <ul class="list-location">
-                    <li>
-                        <div class="table">
-                            <div class="table-cell">
-                                <div class="left-table-cell text-left">
-                                    <img src="{{ url('img/icon/f_location.png') }}" alt="icon">
-                                </div>
-                                <div class="right-table-cell text-left">
-                                    {{ $contact->title }}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="table">
-                            <div class="table-cell">
-                                <div class="left-table-cell text-left">
-                                    <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
-                                </div>
-                                <div class="right-table-cell text-left">
-                                    {{ $contact->start_time }} - {{ $contact->end_time }}
-                                </div>
-                            </div>
-                        </div>
-
-                    </li>
-                    <li>
-                        <div class="table">
-                            <div class="table-cell">
-                                <div class="left-table-cell text-left">
-                                    <img src="{{ url('img/icon/f_tel.png') }}" alt="icon">
-                                </div>
-                                <div class="right-table-cell text-left">
-                                    <a class="text-phone" href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
-                                </div>
-                            </div>
-                        </div>
-
-                    </li>
-                </ul>
-
-                <div class="container-fluid">
-                    <a href="{{ route('reservation') }} " class="btn tenposs-button">予約</a>
-                </div>
-                <script type="text/javascript">
-                    maps.push({
-                        id : '{{$contact->id}}',
-                        lat : '{{$contact->latitude}}',
-                        long : '{{$contact->longitude}}',
-                        title: '{{$contact->title}}'
-                    });
-
-                </script>
-                @endforeach
-                @endif
-
-            </div><!-- End contact -->
+            </div>
         </div><!-- End content -->
         @include('partials.sidemenu')
     </div><!-- End main -->
@@ -194,17 +209,28 @@
 <script src="js/lightbox/js/lightbox.min.js"></script>
 
 <script type="text/javascript">
-    var bannerSwiper = new Swiper('#banner .swiper-container', {
-        autoplay: 2000,
-        speed: 400,
-        loop: true,
-        spaceBetween: 0,
-        slidesPerView: 1,
-        pagination: "#banner .swiper-pagination",
-        paginationClickable: true
-    });
+    $(document).ready(function () {
+        var components = [];
+        @foreach ( $app_info->data->top_components as $component )
+        components.push("{{ $component->id}}");
+        @endforeach
+        console.log(components);
+        for (i = 0; i < components.length; i++) { 
+            var html = '';
 
-    $(document).ready(function(){
+            var html = $('#template-'+components[i]).html();
+            $('#session').append(html);
+            var bannerSwiper = new Swiper('#banner .swiper-container', {
+                autoplay: 2000,
+                speed: 400,
+                loop: true,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: "#banner .swiper-pagination",
+                paginationClickable: true
+            });
+        }
+        
         $(maps).each(function(index, item){
             $("#map-"+item.id).googleMap();
             $("#map-"+item.id).addMarker({
@@ -213,16 +239,11 @@
               text: item.title
             });
         });
-    })
-    $(document).ready(function ($) {
-       lightbox.option({
+        lightbox.option({
           'showImageNumberLabel': false
         })
-    });
-</script>
-@if( Session::has('user') && !Session::get('setpushkey') )
- <script type="text/javascript">
-    $(document).ready(function () {
+
+        @if( Session::has('user') && !Session::get('setpushkey') )
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{  csrf_token() }}'
@@ -238,8 +259,9 @@
                 console.log('Setpushkey success');
             }
         })
+        @endif
     });
 </script>
-@endif
+
 
 @endsection

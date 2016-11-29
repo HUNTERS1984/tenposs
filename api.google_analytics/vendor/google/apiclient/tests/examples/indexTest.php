@@ -23,7 +23,7 @@ class examples_indexTest extends BaseTest
 {
   public function testIndex()
   {
-    $crawler = $this->loadExample('index.php');
+    $crawler = $this->loadExample('index_test.php');
 
     $nodes = $crawler->filter('li');
     $this->assertEquals(8, count($nodes));
