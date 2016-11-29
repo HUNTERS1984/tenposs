@@ -64,20 +64,27 @@ var tenposs = {
                     to_date: to_date,
                     report_type: report_type
                 };
-                $.ajax({
-                    url: '/admin/get_data',
-                    type: 'GET',
-                    cache: false,
-                    async: false,
-                    data: data_ajax,
-                    timeout: 60000,
-                    dataType: "json",
-                    success: function (result) {
-                        console.log(result);
-                        if (result !== undefined || result !== null && result.code == 1000) {
-                            tenposs.chart.draw(result.data.label, result.data.data_chart, result.data.name);
+                $("body").addClass("loading");
+                setTimeout(function () {
+                    $.ajax({
+                        url: '/admin/get_data',
+                        type: 'GET',
+                        cache: false,
+                        async: false,
+                        data: data_ajax,
+                        timeout: 60000,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $("body").addClass("loading");
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            if (result !== undefined || result !== null && result.code == 1000) {
+                                tenposs.chart.draw(result.data.label, result.data.data_chart, result.data.name);
+                                $("body").removeClass("loading");
+                            }
                         }
-                    }
+                    });
                 });
             },
             get_total_data: function (time_type, from_date, to_date) {
@@ -87,21 +94,28 @@ var tenposs = {
                     from_date: from_date,
                     to_date: to_date
                 };
-                $.ajax({
-                    url: '/admin/get_data',
-                    type: 'GET',
-                    cache: false,
-                    async: false,
-                    data: data_ajax,
-                    timeout: 60000,
-                    dataType: "json",
-                    success: function (result) {
-                        if (result !== undefined || result !== null && result.code == 1000) {
-                            console.log(result);
-                            for (var i = 0; i < result.data.length; i++)
-                                tenposs.google_analytics.bind_total_data(result.data[i].report_type, result.data[i].total);
+                $("body").addClass("loading");
+                setTimeout(function () {
+                    $.ajax({
+                        url: '/admin/get_data',
+                        type: 'GET',
+                        cache: false,
+                        async: false,
+                        data: data_ajax,
+                        timeout: 60000,
+                        beforeSend: function () {
+                            $("body").addClass("loading");
+                        },
+                        dataType: "json",
+                        success: function (result) {
+                            if (result !== undefined || result !== null && result.code == 1000) {
+                                console.log(result);
+                                for (var i = 0; i < result.data.length; i++)
+                                    tenposs.google_analytics.bind_total_data(result.data[i].report_type, result.data[i].total);
+                                $("body").removeClass("loading");
+                            }
                         }
-                    }
+                    });
                 });
             },
             bind_total_data: function (report_type, data_value) {
@@ -144,21 +158,28 @@ var tenposs = {
                     to_date: to_date,
                     report_type: report_type
                 };
-                $.ajax({
-                    url: '/admin/get_data',
-                    type: 'GET',
-                    cache: false,
-                    async: false,
-                    data: data_ajax,
-                    timeout: 60000,
-                    dataType: "json",
-                    success: function (result) {
-                        console.log(result);
-                        if (result !== undefined || result !== null && result.code == 1000) {
-                            tenposs.chart.draw(result.data.label, result.data.data_chart, result.data.name);
+                $("body").addClass("loading");
+                setTimeout(function () {
+                    $.ajax({
+                        url: '/admin/get_data',
+                        type: 'GET',
+                        cache: false,
+                        async: false,
+                        data: data_ajax,
+                        timeout: 60000,
+                        dataType: "json",
+                        beforeSend: function () {
+                            $("body").addClass("loading");
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            if (result !== undefined || result !== null && result.code == 1000) {
+                                tenposs.chart.draw(result.data.label, result.data.data_chart, result.data.name);
+                                $("body").removeClass("loading");
+                            }
                         }
-                    }
-                });
+                    });
+                }, 500);
             },
             get_total_data: function (time_type, from_date, to_date) {
                 var data_ajax = {
@@ -167,22 +188,30 @@ var tenposs = {
                     from_date: from_date,
                     to_date: to_date
                 };
-                $.ajax({
-                    url: '/admin/get_data',
-                    type: 'GET',
-                    cache: false,
-                    async: false,
-                    data: data_ajax,
-                    timeout: 60000,
-                    dataType: "json",
-                    success: function (result) {
-                        if (result !== undefined || result !== null && result.code == 1000) {
-                            console.log(result);
-                            for (var i = 0; i < result.data.length; i++)
-                                tenposs.coupon.bind_total_data(result.data[i].report_type, result.data[i].total);
+                $("body").addClass("loading");
+                setTimeout(function () {
+                    $.ajax({
+                        url: '/admin/get_data',
+                        type: 'GET',
+                        cache: false,
+                        async: false,
+                        data: data_ajax,
+                        timeout: 60000,
+                        beforeSend: function () {
+                            $("body").addClass("loading");
+                        },
+                        dataType: "json",
+                        success: function (result) {
+                            if (result !== undefined || result !== null && result.code == 1000) {
+                                console.log(result);
+                                for (var i = 0; i < result.data.length; i++)
+                                    tenposs.coupon.bind_total_data(result.data[i].report_type, result.data[i].total);
+                                $("body").removeClass("loading");
+                            }
                         }
-                    }
-                });
+                    });
+                }, 500);
+
             },
             bind_total_data: function (report_type, data_value) {
                 data_value = parseFloat(data_value);

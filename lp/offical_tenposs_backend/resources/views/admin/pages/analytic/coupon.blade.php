@@ -138,6 +138,7 @@
             var to_date = tenposs_action.get_to_date();
             var time_type = tenposs_action.get_time_type();
             var report_type = $('select[name=report_type]').val();
+            $("body").addClass("loading");
             tenposs.coupon.draw_chart(report_type, time_type, from_date, to_date);
             tenposs.coupon.get_total_data(time_type, from_date, to_date);
         });
