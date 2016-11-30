@@ -65,7 +65,7 @@ return [
     'cache_profile' => 'profile_%s_%s', // app_id,user_id
     'cache_app_user_push' => 'app_user_push_%s', // app_id
     'cache_news_detail' => 'news_detail_%s_%s', // app_id,id
-    'cache_coupons_detail' => 'coupons_%s_%s', // app_id,id
+    'cache_coupons_detail' => 'coupons_%s_%s_%s', // app_id,id, token
     'cache_app_domain' => 'app_by_domain_%s', // domain
     'cache_app_secret_info' => 'app_secret_info_%s', // app_id
 
@@ -82,5 +82,8 @@ return [
     'secret_key_coupon_use' => 'ASDFghjkl@12345A',
     'url_open_coupon_code' => 'https://ten-po.com/coupon/use/code/%s/%s/%s/%s',
 
-    'path_host_apache_site_available' => '/etc/apache2/sites-available/'
+    'path_host_apache_site_available' => '/etc/apache2/sites-available/',
+    //notification configure
+    'url_upload_file_notification_configure' => 'https://apinotification.ten-po.com/v1/configure_notification',
+    'url_get_notification_configure' => 'https://apinotification.ten-po.com/v1/get_configure/',
 ];
