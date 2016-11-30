@@ -68,7 +68,7 @@ class NotificationController extends Controller
         }
     }
 
-    public function user_get_push_key($app_id)
+    public function user_get_push_setting($app_id)
     {
         try {
             $token = JWTAuth::getToken();
