@@ -20,6 +20,7 @@ ini_set('display_errors', 'on');
 //});
 $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
     $app->post('/user/set_push_key','NotificationController@user_set_push_key');
+    $app->get('/user/get_push_key/{app_id}','NotificationController@user_get_push_key');
     $app->post('/user/set_push_setting','NotificationController@user_set_push_setting');
     $app->post('/user/notification','NotificationController@user_notification');
     $app->post('/staff/set_push_key','NotificationController@staff_set_push_key');
