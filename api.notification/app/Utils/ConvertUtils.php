@@ -17,6 +17,7 @@ class ConvertUtils
     public static function convert_p12_to_pem($path_file, $pass_file, $dest_folder = '', $app_id = '')
     {
 //        $is_valid = false;
+        $filename = '';
         try {
             $p12worked = openssl_pkcs12_read(file_get_contents($path_file), $p12, $pass_file);
 
