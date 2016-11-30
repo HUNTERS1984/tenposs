@@ -68,6 +68,34 @@ class NotificationController extends Controller
         }
     }
 
+    public function user_get_push_key($app_id)
+    {
+        try {
+            $token = JWTAuth::getToken();
+            $info = JWTAuth::decode($token)->toArray();
+            if (count($info) > 0) {
+                try {
+                    $user_setting = UserPushSetting::where('app_app_id', $app_id)
+                        ->where('auth_user_id', $info['id'])
+                        ->where('app_type', 'user')->first();
+                    if (count($user_setting) > 0) {
+                        $this->body['data'] = $user_setting;
+                        return $this->output($this->body);
+                    } else {
+                        return $this->error(99953);
+                    }
+                } catch (QueryException $e) {
+                    Log::error($e->getMessage());
+                    return $this->error(9999);
+                }
+            } else
+                return $this->error(9998);
+        } catch (JWTException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+    }
+
     public function user_set_push_setting()
     {
         $check_items = array('app_id', 'ranking', 'news', 'coupon', 'chat');
@@ -360,7 +388,8 @@ class NotificationController extends Controller
 
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-            print_r($e->getMessage());die;
+            print_r($e->getMessage());
+            die;
             return $this->error(9999);
         }
     }
