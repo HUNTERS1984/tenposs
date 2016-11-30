@@ -12,7 +12,19 @@ class AppUser extends Model {
     ];
 
     public function profile(){
-    	 return $this->hasOne(UserProfile::class)->select(['id', 'name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status', 'app_user_id']);
+    	 return $this->hasOne(UserProfile::class)
+             ->select(['id',
+                 'name',
+                 'gender',
+                 'age',
+                 'stage',
+                 'position',
+                 'address',
+                 'avatar_url',
+                 'facebook_status',
+                 'twitter_status',
+                 'instagram_status',
+                 'app_user_id']);
     }
 
     public function social(){
@@ -22,5 +34,11 @@ class AppUser extends Model {
     public function coupons()
     {
         return $this->belongsToMany(Coupon::class, 'rel_app_users_coupons', 'app_user_id', 'coupon_id');
+    }
+
+
+
+    public function sessions(){
+        return $this->hasMany(UserSession::class);
     }
 }

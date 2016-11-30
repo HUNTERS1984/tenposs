@@ -50,7 +50,7 @@
                 <a href="{{ route('admin.cost.index') }}"><span>コスト管理</span></a>
             </li>
             <li>
-                <a href="#"><span>顧客管理</span></a>
+                <a href="{{ route('admin.users.management') }}"><span>顧客管理</span></a>
             </li>
             <li>
                 <a href="{{ route('admin.coupon.accept') }}"><span>承認管理</span></a>

@@ -14,4 +14,6 @@ class UserSession extends Model {
     public function app_user(){
     	 return $this->belongsTo(AppUser::class)->select(['id', 'email', 'password', 'social_type', 'social_id', 'app_id']);
     }
+
+
 }
