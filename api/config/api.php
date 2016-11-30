@@ -65,7 +65,7 @@ return [
     'cache_profile' => 'profile_%s_%s', // app_id,user_id
     'cache_app_user_push' => 'app_user_push_%s', // app_id
     'cache_news_detail' => 'news_detail_%s_%s', // app_id,id
-    'cache_coupons_detail' => 'coupons_%s_%s', // app_id,id
+    'cache_coupons_detail' => 'coupons_%s_%s_%s', // app_id,id, token
     'cache_app_domain' => 'app_by_domain_%s', // domain
     'cache_app_secret_info' => 'app_secret_info_%s', // app_id
 
