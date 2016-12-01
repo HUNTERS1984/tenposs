@@ -10,9 +10,8 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Point;
-use App\Models\PointRequest;
 use App\Models\PointRequestHistory;
-use App\Models\PointRequestUse;
+use App\Models\PointSetting;
 use App\Utils\HttpRequestUtil;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Config;
@@ -29,43 +28,137 @@ class PointController extends Controller
 
     }
 
+    public function set_point_setting()
+    {
+        $check_items = array('app_id', 'yen_to_mile', 'mile_to_point', 'bonus_miles_1', 'bonus_miles_2', 'max_point_use', 'rank1', 'rank2', 'rank3', 'rank4');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
+
+        if ($auth_id > 0) {
+            try {
+                $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+                $point_setting->mile_to_point = Input::get('mile_to_point');
+                $point_setting->yen_to_mile = Input::get('yen_to_mile');
+                $point_setting->bonus_miles_1 = Input::get('bonus_miles_1');
+                $point_setting->bonus_miles_2 = Input::get('bonus_miles_2');
+                $point_setting->max_point_use = Input::get('max_point_use');
+                $point_setting->rank1 = Input::get('rank1');
+                $point_setting->rank2 = Input::get('rank2');
+                $point_setting->rank3 = Input::get('rank3');
+                $point_setting->rank4 = Input::get('rank4');
+                $point_setting->save();
+                return $this->output($this->body);
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
+
+    public function set_payment_method()
+    {
+        $check_items = array('app_id', 'payment_method');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
+
+        if ($auth_id > 0) {
+            try {
+                $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+                $point_setting->payment_method = Input::get('payment_method');
+                $point_setting->save();
+                return $this->output($this->body);
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
+
+
+    public function get_client_point_info()
+    {
+        $check_items = array('app_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
+
+        if ($auth_id > 0) {
+            try {
+                $point_info = Point::getPoint($auth_id);
+                $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+
+                $this->body['data']['point'] = $point_info;
+                $this->body['data']['point_setting'] = $point_setting;
+                return $this->output($this->body);
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
+
     public function get_point_info()
     {
         $check_items = array('app_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
+
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         if ($auth_id > 0) {
             try {
-                $point_info = DB::table('points')->where('auth_user_id', '=', $auth_id)
-//                    ->where('app_app_id', '=', Input::get('app_id'))
-                    ->select('auth_user_id', 'points', 'miles')->get();
-                if (count($point_info) > 0) {
-                    if ($point_info[0]->points > 0) {
-                        $tmp_point = $point_info[0]->points % 100;
-                        $add_point = 100 - $tmp_point;
-                        $point_info[0]->next_points = $point_info[0]->points + $add_point;
-                        if ($add_point > 0) {
-                            $point_setting = DB::table('point_setting')->get();
-                            $miles_to_point = 1;
-                            if (count($point_setting) > 0) {
-                                $miles_to_point = $point_setting[0]->mile_to_point;
-                                $point_info[0]->next_miles = $point_info[0]->miles + ($miles_to_point * $add_point);
-//
-                            } else
-                                $point_info[0]->next_miles = $point_info[0]->miles + ($miles_to_point * $add_point);
-                        } else
-                            $point_info[0]->next_miles = $point_info[0]->miles;
-                    } else {
-                        $point_info[0]->next_points = 0;
-                        $point_info[0]->next_miles = 0;
-                    }
-                    $this->body['data'] = $point_info;
-                    return $this->output($this->body);
-                } else
-                    return $this->error(99953);
+                $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+
+                $point_info = Point::getPoint($auth_id);
+               
+                if ($point_info->miles > 0) {
+                    $point_info->points = intval($point_info->miles/$point_setting->mile_to_point);
+                          
+                    $tmp_point = $point_info->points % 100;
+                    $add_point = 100 - $tmp_point;
+                    $point_info->next_points = $point_info->points + $add_point;
+                    $point_info->next_miles = $point_info->miles + ($point_setting->mile_to_point * $add_point);
+                } else {
+                    $point_info->miles = 0;
+                    $point_info->point = 0;
+                    $point_info->next_points = 100;
+                    $point_info->next_miles = $point_info->next_points*$point_setting->mile_to_point;
+                }
+
+                $this->body['data'] = $point_info;
+                return $this->output($this->body);
+               
+                    
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
                 return $this->error(9999);
@@ -84,55 +177,23 @@ class PointController extends Controller
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
-        if ($auth_role != 'user')
-            $auth_role = 'user';
-        if ($auth_id > 0) {
-            try {
-                $data = PointRequest::where('user_request_id', '=', $auth_id)
-                    ->where('app_app_id', Input::get('app_id'))
-                    ->where('role_request', $auth_role)->first();
-                if (count($data) > 0) {
-                    return $this->error(99954);
-                } else {
-                    $point_request = new PointRequest();
-                    $point_request->user_request_id = $auth_id;
-                    $point_request->role_request = $auth_role;
-                    $point_request->app_app_id = Input::get('app_id');
-                    $point_request->save();
-                    return $this->output($this->body);
-                }
-            } catch (QueryException $e) {
-                Log::error($e->getMessage());
-                return $this->error(9999);
-            }
-        } else {
-            return $this->error(99953);
-        }
-    }
 
-    public function request_point_for_client()
-    {
-        $check_items = array('app_id');
-        $ret = $this->validate_param($check_items);
-        if ($ret)
-            return $ret;
-        $data_token = JWTAuth::parseToken()->getPayload();
-        $auth_id = $data_token->get('id');
-        $auth_role = $data_token->get('role');
-        if ($auth_role != 'client')
-            $auth_role = 'client';
         if ($auth_id > 0) {
             try {
-                $data = PointRequest::where('user_request_id', '=', $auth_id)
+                $data = PointRequestHistory::where('user_request_id', '=', $auth_id)
                     ->where('app_app_id', Input::get('app_id'))
-                    ->where('role_request', $auth_role)->first();
-                if (count($data) > 0) {
+                    ->where('status', 0)
+                    ->where('action', 'get')
+                    ->where('role_request', 'user')->first();
+                if ($data) {
                     return $this->error(99954);
                 } else {
-                    $point_request = new PointRequest();
+                    $point_request = new PointRequestHistory();
                     $point_request->user_request_id = $auth_id;
-                    $point_request->role_request = $auth_role;
+                    $point_request->role_request = 'user';
                     $point_request->app_app_id = Input::get('app_id');
+                    $point_request->status = 0; //new
+                    $point_request->action = 'get';
                     $point_request->save();
                     return $this->output($this->body);
                 }
@@ -147,70 +208,63 @@ class PointController extends Controller
 
     public function approve_request_point_for_end_user()
     {
-        $check_items = array('app_id', 'action', 'user_request_id');
+        $check_items = array('app_id', 'action', 'user_request_id', 'bill_amount');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
 
+        if (Input::get('bill_amount') < 0)
+            return $this->error(1004);
+
         $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
+   
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
         if ($auth_id > 0) {
             $data = array();
             try {
-                $data = PointRequest::where('user_request_id', '=', Input::get('user_request_id'))
+                $data = PointRequestHistory::where('user_request_id', '=', Input::get('user_request_id'))
                     ->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)
+                    ->where('action', 'get')
                     ->where('role_request', 'user')->first();
 
             } catch (QueryException $e) {
-                DB::rollBack();
                 Log::error($e->getMessage());
                 return $this->error(9999);
             }
 
-            if (count($data) < 1) {
+            if (!$data) {
                 return $this->error(99955);
             } else {
                 try {
                     DB::beginTransaction();
-                    $point_request_history = new PointRequestHistory();
-                    $point_request_history->user_request_id = $data->user_request_id;
-                    $point_request_history->role_request = $data->role_request;
-                    $point_request_history->user_action_id = $auth_id;
-                    $point_request_history->role_action = $auth_role;
-                    $point_request_history->app_app_id = Input::get('app_id');
-                    $point_request_history->action = Input::get('action');
-                    $point_request_history->save();
-                    DB::table('point_requests')->where('id', $data->id)->delete();
                     if (Input::get('action') == 'approve') {
-                        //check user in point table
-                        $point_info = DB::table('points')->where('auth_user_id', '=', $data->user_request_id)
-                            ->where('app_app_id', '=', Input::get('app_id'))->get();
-                        if (count($point_info) < 1) {
-                            $point = new Point();
-                            $point->auth_user_id = $data->user_request_id;
-                            $point->app_app_id = Input::get('app_id');
-                            $point->points = 0;
-                            $point->miles = 0;
-                            $point->active = 1;
-                            $point->save();
-                        }
-                        return $this->output($this->body);
-                    } else if (Input::get('action') == 'reject') {
-                        $point_info = DB::table('points')->where('auth_user_id', '=', $data->user_request_id)
-                            ->where('app_app_id', '=', Input::get('app_id'))->get();
-                        if (count($point_info) < 1) {
-                            $point = new Point();
-                            $point->auth_user_id = $data->user_request_id;
-                            $point->app_app_id = Input::get('app_id');
-                            $point->points = 0;
-                            $point->miles = 0;
-                            $point->active = 0;
-                            $point->save();
-                        }
-                        DB::commit();
-                        return $this->output($this->body);
+                        $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+
+                        $data->user_action_id = $auth_id;
+                        $data->role_action = $auth_role;
+                        $data->miles = Input::get('bill_amount')/$point_setting->yen_to_mile + $point_setting->bonus_miles_2; //bonus miles 2 is shop comming bonus
+                        $data->status = 1; //accept
+                        $data->save();
+
+                        $point_info = Point::getPoint($auth_id);
+                        $point_info->miles += $data->miles;
+                        $point_info->save();
+                    } else {
+                        $data->user_action_id = $auth_id;
+                        $data->role_action = $auth_role;
+                        $data->status = 2; // reject
+                        $data->save();
                     }
+
+                    DB::commit();
+
+                    return $this->output($this->body);
                 } catch (QueryException $e) {
                     DB::rollBack();
                     Log::error($e->getMessage());
@@ -224,7 +278,7 @@ class PointController extends Controller
 
     public function request_use_point_for_end_user()
     {
-        $check_items = array('app_id', 'points');
+        $check_items = array('app_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -233,17 +287,20 @@ class PointController extends Controller
         $auth_role = $data_token->get('role');
         if ($auth_id > 0) {
             try {
-                $data = PointRequestUse::where('user_request_id', '=', $auth_id)
+                $data = PointRequestHistory::where('user_request_id', '=', $auth_id)
                     ->where('app_app_id', Input::get('app_id'))
-                    ->where('role_request', $auth_role)->first();
-                if (count($data) > 0) {
+                    ->where('status', 0)
+                    ->where('action', 'use')
+                    ->where('role_request', 'user')->first();
+                if ($data) {
                     return $this->error(99954);
                 } else {
-                    $point_request = new PointRequestUse();
+                    $point_request = new PointRequestHistory();
                     $point_request->user_request_id = $auth_id;
-                    $point_request->role_request = $auth_role;
+                    $point_request->role_request = 'user';
                     $point_request->app_app_id = Input::get('app_id');
-                    $point_request->points = Input::get('points');
+                    $point_request->status = 0; //new
+                    $point_request->action = 'use';
                     $point_request->save();
                     return $this->output($this->body);
                 }
@@ -256,23 +313,78 @@ class PointController extends Controller
         }
     }
 
+
     public function approve_use_point_for_end_user()
     {
-        $check_items = array('app_id', 'points', 'user_request_id');
+        $check_items = array('app_id', 'action', 'user_request_id', 'use_point');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
+
+        if (Input::get('use_point') < 0)
+            return $this->error(1004);
+
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
         if ($auth_id > 0) {
+            $data = array();
             try {
-
-                return $this->output($this->body);
+                $data = PointRequestHistory::where('user_request_id', '=', Input::get('user_request_id'))
+                    ->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)
+                    ->where('action', 'use')
+                    ->where('role_request', 'user')->first();
 
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
                 return $this->error(9999);
+            }
+
+            if (!$data) {
+                return $this->error(99955);
+            } else {
+                try {
+
+
+                    DB::beginTransaction();
+                    if (Input::get('action') == 'approve') {
+                        $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+                        $point_info = Point::getPoint($auth_id);
+                        //dd($point_info->miles);
+                        //dd( Input::get('use_point')*$point_setting->mile_to_point);
+                        if ($point_info->miles < Input::get('use_point')*$point_setting->mile_to_point)
+                            return $this->error(9994);
+
+                        if (Input::get('use_point')*$point_setting->mile_to_point > $point_setting->max_point_use)
+                            return $this->error(99941);
+
+                        $data->user_action_id = $auth_id;
+                        $data->role_action = $auth_role;
+                        $data->miles = -1 * (Input::get('use_point')*$point_setting->mile_to_point);
+                        $data->status = 1; //accept
+                        $data->save();
+
+                        $point_info->miles += $data->miles;
+                        $point_info->save();
+                    } else {
+                        $data->user_action_id = $auth_id;
+                        $data->role_action = $auth_role;
+                        $data->status = 2; // reject
+                        $data->save();
+                    }
+
+                    DB::commit();
+
+                    return $this->output($this->body);
+                } catch (QueryException $e) {
+                    DB::rollBack();
+                    Log::error($e->getMessage());
+                    return $this->error(9999);
+                }
             }
         } else {
             return $this->error(99953);
@@ -295,14 +407,22 @@ class PointController extends Controller
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         if ($auth_id > 0) {
             try {
-                $total_item = PointRequest::all()->count();
+                $total_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)->where('action', 'get')->count();
                 if ($total_item > 0) {
-                    $items = PointRequest::orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)->where('action', 'get')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
 
                     $token = (string)JWTAuth::parseToken()->getToken();
                     for ($i = 0; $i < count($items); $i++) {
                         $data = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.auth_profile_url'), $token);
-                        $items[$i]['email'] = $data->email;
+                        if ($data) {
+                            $items[$i]['email'] = $data->email;
+                            $items[$i]['name'] = $data->name;
+                        } else {
+                            $items[$i]['email'] = '';
+                            $items[$i]['name'] = '';
+                        }
                     }
 //
                     $this->body['data']['total_item'] = $total_item;
@@ -335,13 +455,21 @@ class PointController extends Controller
         $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
         if ($auth_id > 0) {
             try {
-                $total_item = PointRequestUse::all()->count();
+                $total_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)->where('action', 'use')->count();
                 if ($total_item > 0) {
-                    $items = PointRequestUse::orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 0)->where('action', 'use')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                     $token = (string)JWTAuth::parseToken()->getToken();
                     for ($i = 0; $i < count($items); $i++) {
                         $data = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.auth_profile_url'), $token);
-                        $items[$i]['email'] = $data->email;
+                        if ($data) {
+                            $items[$i]['email'] = $data->email;
+                            $items[$i]['name'] = $data->name;
+                        } else {
+                            $items[$i]['email'] = '';
+                            $items[$i]['name'] = '';
+                        }
                     }
                     $this->body['data']['total_item'] = $total_item;
                     $this->body['data']['items'] = $items;

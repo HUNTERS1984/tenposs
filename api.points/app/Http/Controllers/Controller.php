@@ -33,6 +33,7 @@ class Controller extends BaseController
         '10012' => 'Token exception.',
         '10013' => 'Token not match.',
         '11002' => 'Token not provided',
+        '99941' => 'Point use is over max',
         '99953' => 'User not existed.',
         '99954' => 'User have request',
         '99955' => 'User not have request',

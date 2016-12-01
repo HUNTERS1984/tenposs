@@ -22,6 +22,7 @@ use cURL;
 
 #define('API_PAYMENT_BASE', 'localhost:8888/api/v1/');
 define('API_PAYMENT_BASE', 'https://apipoints.ten-po.com/api/v1/');
+define('API_POINT_BASE', 'https://apipoints.ten-po.com/point/');
 
 class CostController extends Controller
 {
@@ -31,6 +32,8 @@ class CostController extends Controller
     protected $api_payment_billingplan= API_PAYMENT_BASE.'billingplan';
     protected $api_payment_billingagreement= API_PAYMENT_BASE.'billingagreement';
     protected $api_payment_transaction= API_PAYMENT_BASE.'billingtransactions';
+
+    protected $api_point_client= API_PAYMENT_BASE.'client';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -52,8 +55,14 @@ class CostController extends Controller
 
             if ($userplan->data->billingplan->type==1) // yearly plan
                 $member_months *= 12;
+            $start_month =  date("Y.m", strtotime($userplan->data->updated_at));
+            $end_month =  date("Y.m", strtotime($userplan->data->updated_at. "+ ".$member_months." months"));
 
-            return view('admin.pages.cost.index', compact('userplan', 'transactions', 'transaction_num', 'member_months'));
+            $response = cURL::newRequest('get', $this->api_point_client)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+            $point = json_decode($response->body);
+            dd($point);
+            return view('admin.pages.cost.index', compact('userplan', 'transactions', 'transaction_num', 'member_months', 'start_month', 'end_month'));
         } else {
             return view('admin.pages.cost.start');
         }
