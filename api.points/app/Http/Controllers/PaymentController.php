@@ -351,6 +351,7 @@ class PaymentController extends Controller{
 
 
     public function createBillingAgreement($plan_id){
+        dd(date('Y-m-d\TH:i:sO'));
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
@@ -359,7 +360,8 @@ class PaymentController extends Controller{
 
         $agreement->setName('Base Agreement')
             ->setDescription('Basic Agreement')
-            ->setStartDate(date('Y-m-d\TH:i:sO'));
+            //->setStartDate(date('Y-m-d\TH:i:sO'));
+            ->setStartDate("2015-02-19T00:37:04Z");
         
         $billingPlan = BillingPlan::find($plan_id);
 
