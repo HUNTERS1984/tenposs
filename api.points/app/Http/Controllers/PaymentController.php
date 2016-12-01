@@ -394,6 +394,7 @@ class PaymentController extends Controller{
             $billingAgreement->save();
 
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            dd($ex);
             return $this->error(9999);
         }
 
