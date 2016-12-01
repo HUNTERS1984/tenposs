@@ -1,9 +1,11 @@
 @extends('layouts.default')
-
-@section('title','Top')
-
+@section('SEO')
+<title>Tenposs（テンポス）：スマホサイト・お店オリジナルアプリを無料で簡単に作成</title>
+<meta name="keywords" content="Tenposs,テンポス,スマホサイト,お店アプリ,店舗アプリ">
+<meta name="description" content="Tenpossはスマホサイトとオリジナルアプリ作成が、めちゃくちゃ簡単・無料で作れます。お店の集客やリピーター作りに活用頂けるだけでなく連携サービスのOLOやOHOでInstagramやTwitterからの新規集客などのマーケティングを行えます。低コストで日本最高のパフォーマンスを是非お試しください。">
+@stop
 @section('css')
-	{{Html::style(asset('assets/frontend').'/css/top.css')}}
+{{Html::style(asset('assets/frontend').'/css/top.css')}}
 @stop
 
 @section('script')
@@ -39,6 +41,7 @@
 
 @section('content')
 	@include('layouts.banner')
+    <h1 class="hide">スマホサイト/アプリ対応できていますか？</h1>
 	<div class="middle">
 		<div class="section video-section">
 			<div class="container">

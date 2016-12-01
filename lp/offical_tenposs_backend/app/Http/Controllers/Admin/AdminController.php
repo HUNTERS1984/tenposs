@@ -553,4 +553,15 @@ class AdminController extends Controller
             'users' => $users
         ));
     }
+
+    public function userManagementDetail(Request $request, $app_user_id){
+        $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
+
+        if( $app_user ){
+            return view('admin.pages.users.users_detail',array(
+                'app_user' => $app_user
+            ));
+        }
+        return back()->with('status','User not found');
+    }
 }

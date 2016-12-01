@@ -1,7 +1,9 @@
 @extends('layouts.default')
-
-@section('title','FAQ')
-
+@section('SEO')
+<title>よくあるご質問｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）のよくあるご質問ページです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/faq.css')}}
 @stop
@@ -34,7 +36,7 @@
 				</div>
 				<div class="page-banner" id="faq">
 					<div class="is-table-cell">
-						<h1 class="title-page">FAQ</h1>
+						<h1 class="title-page">よくあるご質問</h1>
 						<p class="sub-title-page">-　よくあるご質問　-</p>
 					</div>
 				</div>

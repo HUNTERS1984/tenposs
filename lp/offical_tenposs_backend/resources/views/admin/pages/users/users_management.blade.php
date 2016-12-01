@@ -35,10 +35,10 @@
         <th></th>
         <th class="center">ユーザーネーム</th>
         <th class="center">ユーザーID</th>
-        <th class="center">メンバーステージ</th>
-        <th class="center">性別</th>
-        <th class="center">年齢</th>
-        <th class="center">ポジション</th>
+        <th class="center">メンバーステージ</th><!-- Member stage -->
+        <th class="center">性別</th><!-- Gender -->
+        <th class="center">年齢</th><!-- Age -->
+        <th class="center">ポジション</th><!-- Position -->
         <th class="center">クポン覧クポン</th><!-- Service connect -->
         <th class="center">真を確認</th><!-- Last login -->
     </tr>
@@ -61,10 +61,9 @@
               <i class="fa fa-user fa-stack-2x fa-inverse"></i>
             </span>
             @endif
-
         </td>
         <td class="center">
-            <a href="user-management-redesign-2.html" title="" class="blue">
+            <a href="{{ route('admin.users.management.detail',$user->id) }}" title="" class="blue">
                 {{ $user->profile->name }}
             </a>
         </td>

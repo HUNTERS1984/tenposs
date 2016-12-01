@@ -1,7 +1,9 @@
 @extends('layouts.default')
-
-@section('title','FUNCTION')
-
+@section('SEO')
+<title>機能｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="Tenposs（テンポス）| スマホサイトとオリジナルアプリ作成が、めちゃくちゃ簡単・無料で作れます。無料だけどCOOLなデザインテンプレートやプッシュ通知、セグメント配信など豊富なマーケティング機能もあります。お金・時間・人員が足りないけど新しい販促がしたい、そんな全ての方の悩みを解消するサービスです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/function.css')}}
 @stop
@@ -30,7 +32,7 @@
 				</div>
 				<div class="page-banner" id="function">
 					<div class="is-table-cell">
-						<h1 class="title-page">Function</h1>
+						<h1 class="title-page">機能</h1>
 						<p class="sub-title-page">-　機能　-</p>
 					</div>
 				</div>
