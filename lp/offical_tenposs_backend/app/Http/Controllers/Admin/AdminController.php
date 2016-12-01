@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\AppUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -543,5 +544,13 @@ class AdminController extends Controller
 
         }
 
+    }
+
+    public function userManagement(Request $request){
+
+        $users = AppUser::with('profile')->paginate(30);
+        return view('admin.pages.users.users_management', array(
+            'users' => $users
+        ));
     }
 }
