@@ -72,13 +72,13 @@
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-yellow">現在の収益</p>
-                                            <p class="yen-cost-3-2-1-yellow">¥24,837</p>
+                                            <p class="yen-cost-3-2-1-yellow">{{"¥".number_format($point_info->data->monthly_revenue, 0, '', ',')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-blue">現状のポイント</p>
-                                            <p class="yen-cost-3-2-1-blue">200p</p>
+                                            <p class="yen-cost-3-2-1-blue">{{"¥".number_format($point_info->data->point->points, 0, '', ',')}}p</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

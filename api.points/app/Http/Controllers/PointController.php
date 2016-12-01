@@ -114,6 +114,17 @@ class PointController extends Controller
                 $point_info = Point::getPoint($auth_id);
                 $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
 
+                $monthly_mile = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)
+                    ->where('action', 'use')
+                    ->whereMonth('updated_at', '=', date('m'))
+                    ->where('role_request', 'user')->select('miles', 'yen_to_mile')->get();
+                $monthly_revenue = 0;
+                //dd($monthly_mile);
+                foreach ($monthly_mile as $value) {
+                    $monthly_revenue += $value->miles * $value->yen_to_mile;
+                }
+                $this->body['data']['monthly_revenue'] = -$monthly_revenue;
                 $this->body['data']['point'] = $point_info;
                 $this->body['data']['point_setting'] = $point_setting;
                 return $this->output($this->body);
@@ -248,6 +259,8 @@ class PointController extends Controller
 
                         $data->user_action_id = $auth_id;
                         $data->role_action = $auth_role;
+                        $data->yen_to_mile = $point_setting->yen_to_mile;
+                        $data->mile_to_point = $point_setting->mile_to_point;
                         $data->miles = Input::get('bill_amount')/$point_setting->yen_to_mile + $point_setting->bonus_miles_2; //bonus miles 2 is shop comming bonus
                         $data->status = 1; //accept
                         $data->save();
@@ -348,8 +361,6 @@ class PointController extends Controller
                 return $this->error(99955);
             } else {
                 try {
-
-
                     DB::beginTransaction();
                     if (Input::get('action') == 'approve') {
                         $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
@@ -364,6 +375,8 @@ class PointController extends Controller
 
                         $data->user_action_id = $auth_id;
                         $data->role_action = $auth_role;
+                        $data->yen_to_mile = $point_setting->yen_to_mile;
+                        $data->mile_to_point = $point_setting->mile_to_point;
                         $data->miles = -1 * (Input::get('use_point')*$point_setting->mile_to_point);
                         $data->status = 1; //accept
                         $data->save();

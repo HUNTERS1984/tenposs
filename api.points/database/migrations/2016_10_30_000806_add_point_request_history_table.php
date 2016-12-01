@@ -22,6 +22,8 @@ class AddPointRequestHistoryTable extends Migration
             $table->string('action');//use or add
             $table->integer('status'); // 0:new ; 1: accept; 2: reject
             $table->integer('miles');
+            $table->integer('yen_to_mile')->nullable();
+            $table->integer('mile_to_point')->nullable();
             $table->string('role_request')->nullable();
             $table->string('role_action')->nullable();
             $table->timestamps();

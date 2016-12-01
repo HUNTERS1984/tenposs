@@ -33,7 +33,7 @@ class CostController extends Controller
     protected $api_payment_billingagreement= API_PAYMENT_BASE.'billingagreement';
     protected $api_payment_transaction= API_PAYMENT_BASE.'billingtransactions';
 
-    protected $api_point_client= API_PAYMENT_BASE.'client';
+    protected $api_point_client= API_POINT_BASE.'client';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -58,11 +58,11 @@ class CostController extends Controller
             $start_month =  date("Y.m", strtotime($userplan->data->updated_at));
             $end_month =  date("Y.m", strtotime($userplan->data->updated_at. "+ ".$member_months." months"));
 
-            $response = cURL::newRequest('get', $this->api_point_client)
+            $response = cURL::newRequest('get', $this->api_point_client."?app_id=".$this->request->app->app_app_id)
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
-            $point = json_decode($response->body);
-            dd($point);
-            return view('admin.pages.cost.index', compact('userplan', 'transactions', 'transaction_num', 'member_months', 'start_month', 'end_month'));
+            $point_info = json_decode($response->body);
+
+            return view('admin.pages.cost.index', compact('userplan', 'transactions', 'transaction_num', 'member_months', 'start_month', 'end_month', 'point_info'));
         } else {
             return view('admin.pages.cost.start');
         }
