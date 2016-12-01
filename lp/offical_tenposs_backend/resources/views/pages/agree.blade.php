@@ -1,6 +1,9 @@
 @extends('layouts.default')
-
-@section('title','Agree')
+@section('SEO')
+<title>利用規約｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）の利用規約ページです。">
+@stop
 
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/agree.css')}}
@@ -25,7 +28,7 @@
 			</div>
 			<div class="page-banner" id="agree">
 				<div class="is-table-cell">
-					<h1 class="title-page">Agree</h1>
+					<h1 class="title-page">利用規約</h1>
 					<p class="sub-title-page">運営会社</p>
 				</div>
 			</div>

@@ -1,6 +1,10 @@
 @extends('layouts.default')
 
-@section('title','Company')
+@section('SEO')
+<title>会社概要｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）の会社概要ページです。">
+@stop
 
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/company.css')}}
@@ -25,7 +29,7 @@
 			</div>
 			<div class="page-banner" id="company">
 				<div class="is-table-cell">
-					<h1 class="title-page">Company</h1>
+					<h1 class="title-page">会社概要</h1>
 					<p class="sub-title-page">-　運営会社　-</p>
 				</div>
 			</div>

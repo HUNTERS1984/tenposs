@@ -1,7 +1,9 @@
 @extends('layouts.default')
-
-@section('title','FEE')
-
+@section('SEO')
+<title>価格｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）の価格ページです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/fee.css')}}
 @stop
@@ -37,7 +39,7 @@
 		</div>
 		<div class="page-banner" id="fee">
 			<div class="is-table-cell">
-				<h1 class="title-page">Fee</h1>
+				<h1 class="title-page">価格</h1>
 				<p class="sub-title-page">-　価格　-</p>
 			</div>
 		</div>

@@ -86,6 +86,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
 
     //Users managements
     Route::get('users/management',['as' => 'admin.users.management', 'uses' => 'Admin\AdminController@userManagement' ] );
+    Route::get('users/management/{app_user_id}/detail',['as' => 'admin.users.management.detail', 'uses' => 'Admin\AdminController@userManagementDetail' ] );
 
     //Help
     Route::get('help',['as' => 'admin.client.help', 'uses' => 'Admin\AdminController@help' ] );
