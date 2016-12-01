@@ -359,7 +359,7 @@ class PaymentController extends Controller{
 
         $agreement->setName('Base Agreement')
             ->setDescription('Basic Agreement')
-            ->setStartDate(date("c"));
+            ->setStartDate(date('Y-m-d\TH:i:sO'));
         
         $billingPlan = BillingPlan::find($plan_id);
 
