@@ -20,7 +20,8 @@ use Carbon\Carbon;
 use cURL;
 
 
-define('API_PAYMENT_BASE', 'localhost:8888/api/v1/');
+#define('API_PAYMENT_BASE', 'localhost:8888/api/v1/');
+define('API_PAYMENT_BASE', 'apipoints.ten-po.com/api/v1/');
 
 class CostController extends Controller
 {
