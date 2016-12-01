@@ -134,6 +134,7 @@ class PhotoController extends Controller
                 
             for ($i = 0; $i < count($photos); $i++) {
                 $photos[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $photos[$i]['image_url']);
+                $photos[$i]['description'] = '';
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);

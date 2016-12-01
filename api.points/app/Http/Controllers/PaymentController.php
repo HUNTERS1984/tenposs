@@ -359,7 +359,7 @@ class PaymentController extends Controller{
 
         $agreement->setName('Base Agreement')
             ->setDescription('Basic Agreement')
-            ->setStartDate(date("c"));
+            ->setStartDate(gmdate('Y-m-d\TH:i:s\Z',strtotime("+1 days")));
         
         $billingPlan = BillingPlan::find($plan_id);
 
@@ -394,6 +394,7 @@ class PaymentController extends Controller{
             $billingAgreement->save();
 
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            dd($ex);
             return $this->error(9999);
         }
 

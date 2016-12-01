@@ -20,7 +20,8 @@ use Carbon\Carbon;
 use cURL;
 
 
-define('API_PAYMENT_BASE', 'localhost:8888/api/v1/');
+#define('API_PAYMENT_BASE', 'localhost:8888/api/v1/');
+define('API_PAYMENT_BASE', 'https://apipoints.ten-po.com/api/v1/');
 
 class CostController extends Controller
 {
@@ -78,6 +79,7 @@ class CostController extends Controller
             $response = cURL::newRequest('post', $this->api_payment_billingagreement."/".$billingplans->data[0]->id)
                  ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
             $agree = json_decode($response->body);
+            //dd($response);
             //https:\/\/www.sandbox.paypal.com\/cgi-bin\/webscr?cmd=_express-checkout&token=EC-43U043284X871120T
             if ($agree && $agree->data)
             {
