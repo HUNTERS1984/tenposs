@@ -106,7 +106,7 @@ class UserV1Controller extends Controller
     public function register(Request $request)
     {
 
-        $check_items = array('email', 'password', 'role');
+        $check_items = array('email', 'password', 'role','platform');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -179,6 +179,7 @@ class UserV1Controller extends Controller
 
         if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
             $this->body['data']['token'] = (string)$token;
+            $this->body['data']['auth_user_id'] = $user->id;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;
             $refresh_token = md5($user->id . Carbon::now());

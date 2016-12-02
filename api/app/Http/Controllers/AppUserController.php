@@ -210,8 +210,10 @@ class AppUserController extends Controller
                 [
                     'email' => Input::get('email')
                 ]);
+            print_r($call_api);die;
             if (count($call_api) > 0)
                 $auth_user_id = $call_api->auth_user_id;
+
             if ($auth_user_id > 0) {
                 $user = AppUser::where('auth_user_id', $auth_user_id)->where('app_id', $app['id'])->first();
                 if (count($user) > 0)
@@ -221,23 +223,15 @@ class AppUserController extends Controller
                     [
                         'email' => Input::get('email'),
                         'password' => Input::get('password'),
-                        'role' => 'user'
+                        'role' => 'user',
+                        'platform' => 'web'
                     ]);
+                print_r($register);
+                die;
                 if ($register != null) {
-                    try {
-                        $token = $register->token;
-                        $payload = JWTAuth::getPayload($token)->toArray();
-                        $auth_user_id = $payload['id'];
-                    }
-                    catch (TokenInvalidException $e)
-                    {
-                        Log::error($e->getMessage());
-                        $this->error(9998);
-                    }
-                    catch (JWTException $e) {
-                        Log::error($e->getMessage());
-                        $this->error(9998);
-                    }
+                    $token = $register->token;
+                    $auth_user_id = $register->auth_user_id;
+
                 }
             }
         } catch (\Illuminate\Database\QueryException $e) {

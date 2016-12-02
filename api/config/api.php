@@ -100,6 +100,6 @@ return [
     'api_create_vir' => 'https://api.ten-po.com/api/v1/create_virtual_host',
 
     //api auth path
-    'url_auth_check_user_exist' => 'https://auth.ten-po.com/auth/check_user_exist',
+    'url_auth_check_user_exist' => 'https://auth.ten-po.com/v1/auth/check_user_exist',
     'url_auth_register' => 'https://auth.ten-po.com/v1/auth/register',
 ];
