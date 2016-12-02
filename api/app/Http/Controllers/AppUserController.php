@@ -8,6 +8,7 @@ use App\Models\ShareCodeInfo;
 use App\Models\User;
 use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Utils\HttpRequestUtil;
 use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\QueryException;
@@ -32,6 +33,7 @@ use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
 use App\Utils\UrlHelper;
+use JWTAuth;
 
 class AppUserController extends Controller
 {
@@ -180,6 +182,112 @@ class AppUserController extends Controller
         $this->body['data']['profile'] = $profile;
         return $this->output($this->body);
 
+    }
+
+    public function v2_signup(Request $request)
+    {
+
+        $check_items = array('app_id', 'email', 'password', 'name');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+        $auth_user_id = 0;
+        $token = '';
+        try {
+            // them 3 param moi: app_uuid,source,code
+            if (!empty(Input::get('code'))) {
+                $error_code = $this->_topRepository->check_share_code($app['id'], Input::get('code'), Input::get('source'), Input::get('app_uuid'), Input::get('email'));
+                if ($error_code > 1000)
+                    return $this->error($error_code);
+            }
+            $call_api = HttpRequestUtil::getInstance()->get_data_with_basic_auth(Config::get('api.url_auth_check_user_exist'),
+                [
+                    'email' => Input::get('email')
+                ]);
+            if (count($call_api) > 0)
+                $auth_user_id = $call_api->auth_user_id;
+            if ($auth_user_id > 0) {
+                $user = AppUser::where('auth_user_id', $auth_user_id)->where('app_id', $app['id'])->first();
+                if (count($user) > 0)
+                    return $this->error(9996);
+            } else {
+                $register = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.url_auth_register'),
+                    [
+                        'email' => Input::get('email'),
+                        'password' => Input::get('password'),
+                        'role' => 'user'
+                    ]);
+                if ($register != null) {
+                    try {
+                        $token = $register->token;
+                        $payload = JWTAuth::getPayload($token)->toArray();
+                        $auth_user_id = $payload['id'];
+
+                    } catch (JWTException $e) {
+                        Log::error($e->getMessage());
+                    }
+                }
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        if ($auth_user_id < 1)
+            return $this->error(9999);
+
+        try {
+            DB::beginTransaction();
+            $user = new AppUser();
+            $user->auth_user_id = $auth_user_id;
+            $user->app_id = $app['id'];
+            $user->save();
+
+            $profile = new UserProfile();
+            $profile->name = Input::get('name');
+            $profile->gender = 0;
+            $profile->address = null;
+            $profile->avatar_url = null;
+            $profile->facebook_status = 0;
+            $profile->twitter_status = 0;
+            $profile->instagram_status = 0;
+            $profile->app_user_id = $user->id;
+
+            $profile->save();
+
+            //save info used code
+            if (!empty(Input::get('code'))) {
+                $share_code = ShareCodeInfo::where('code', Input::get('code'))
+                    ->where('app_id', $app['id'])->first();
+                if (count($share_code) > 0) {
+                    $share_code->status = 1;
+                    $share_code->app_uuid = Input::get('app_uuid');
+                    $share_code->email = Input::get('email');
+                    $share_code->save();
+                }
+            }
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return $this->error(9999);
+        }
+
+        $this->body['data']['token'] = $token;
+        $this->body['data']['app_id'] = $user->app_id;
+        $this->body['data']['auth_user_id'] = $auth_user_id;
+        $this->body['data']['id'] = $user->id;
+        $this->body['data']['email'] = Input::get('email');
+        $this->body['data']['social_type'] = NULL;
+        $this->body['data']['social_id'] = NULL;
+        $this->body['data']['profile'] = $profile;
+
+
+        return $this->output($this->body);
     }
 
     public function signup(Request $request)
@@ -540,7 +648,8 @@ class AppUserController extends Controller
     public function social_profile(Request $request)
     {
 
-        $check_items = array('token', 'social_type', 'social_id', 'social_token', 'nickname', 'time', 'sig');
+//        $check_items = array('token', 'social_type', 'social_id', 'social_token', 'nickname', 'time', 'sig');
+        $check_items = array('social_type', 'social_id', 'social_token', 'nickname');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -550,13 +659,13 @@ class AppUserController extends Controller
             return $this->error(1004);
 
         //validate sig
-        $check_sig_items = Config::get('api.sig_social_profile');
-        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
-        if ($app == null || count($app) == 0)
-            return $this->error(1004);
-        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
-        if ($ret_sig)
-            return $ret_sig;
+//        $check_sig_items = Config::get('api.sig_social_profile');
+//        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+//        if ($app == null || count($app) == 0)
+//            return $this->error(1004);
+//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+//        if ($ret_sig)
+//            return $ret_sig;
 
         try {
             $social = SocialProfile::where('social_id', Input::get('social_id'))
@@ -708,7 +817,7 @@ class AppUserController extends Controller
             $rs_data = $app_info;
             if (count($app_info) > 0) {
                 //if (count($app_info['apps']) > 0)
-                    //$rs_data = $app_info['apps'][0];
+                //$rs_data = $app_info['apps'][0];
             }
 
         } catch (QueryException $e) {

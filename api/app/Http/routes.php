@@ -108,6 +108,22 @@ Route::group(array('prefix' => 'admin',
 });
 
 
+Route::group(array('prefix' => 'api/v2'), function () {
+    Route::post('signup', 'AppUserController@v2_signup');
+
+    Route::group(['middleware' => 'api.auth.jwt'], function () {
+        Route::post('signout', 'AppUserController@signout');
+        Route::post('set_push_key', 'AppUserController@set_push_key');
+        Route::post('set_push_setting', 'AppUserController@set_push_setting');
+        Route::get('profile', 'AppUserController@profile');
+        Route::post('update_profile', 'AppUserController@update_profile');
+        Route::post('social_profile', 'AppUserController@social_profile');
+        Route::post('social_profile_cancel', 'AppUserController@social_profile_cancel');
+        Route::get('get_push_setting', 'AppUserController@get_push_setting');
+        Route::post('coupon_use', 'CouponController@coupon_use');
+        Route::post('coupon_use_new', 'CouponController@coupon_use_new');
+    });
+});
 
 
 
