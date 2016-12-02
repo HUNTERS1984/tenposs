@@ -222,13 +222,13 @@
                     <ul class="nav-cost-4">
                         <li>
                             <label class="control control--radio">Paypal
-                              <input type="radio" name="payment_method" {{($point_info->data->point_setting->payment_method == 0) ? "checked" : ""}}>
+                              <input type="radio" value=0 name="payment_method" {{($point_info->data->point_setting->payment_method == 0) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>
                         <li>
                             <label class="control control--radio">銀行口座振り込み
-                              <input type="radio" name="payment_method" {{($point_info->data->point_setting->payment_method == 1) ? "checked" : ""}}>
+                              <input type="radio" value=1 name="payment_method" {{($point_info->data->point_setting->payment_method == 1) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>

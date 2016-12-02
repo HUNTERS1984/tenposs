@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use Cache;
+use JWTAuth;
 
 use App\Models\App;
 use App\Models\AppStores;
@@ -389,6 +390,13 @@ class AdminController extends Controller
             return abort(503,'User info not found' );
         }
 
+        // $response = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
+        //         ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
+        // $response_profile = json_decode($response->body);
+        // if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
+        //     $user_info['auth'] = $response_profile->data;
+        // }
+        // dd($user_info);
         return view('admin.pages.users.account', ['user' => $user_info]);
     }
 
@@ -420,7 +428,7 @@ class AdminController extends Controller
                     ->withInput()
                     ->withErrors($validator);
             }
-            $requestUpdatePassWord = cURL::newRequest('post', 'https://auth.ten-po.com/v1/auth/changepassword',
+            $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
                     'old_password' => $request->input('password'),
                     'new_password' => $request->input('password_confirmation'),

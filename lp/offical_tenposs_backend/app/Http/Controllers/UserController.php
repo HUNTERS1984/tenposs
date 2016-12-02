@@ -11,16 +11,14 @@ use Auth;
 use Session;
 use cURL;
 use Mail;
+use Config;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
     //
     protected $jwt_auth;
-    
-    protected $url_register = 'https://auth.ten-po.com/auth/register';
-    protected $url_login = 'https://auth.ten-po.com/v1/auth/login';
-    
+
     public function __construct(){
         
     }
@@ -42,7 +40,7 @@ class UserController extends Controller
                 ->withErrors($validator);
         }
 
-        $requestLogin = cURL::newRequest('post', $this->url_login,[
+        $requestLogin = cURL::newRequest('post', Config::get('api.api_auth_login'),[
             'email' => Input::get('email'),
             'password' => Input::get('password'),
             'role' => 'client'
@@ -86,7 +84,7 @@ class UserController extends Controller
                 ->withErrors($validator);
         }
         // send to API auth
-        $response = cURL::post($this->url_register, 
+        $response = cURL::post(Config::get('api.api_auth_register'), 
             [
                 'email' => $request->input('email'), 
                 'password' => $request->input('password'),

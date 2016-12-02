@@ -7,6 +7,7 @@ use Validator;
 use Auth;
 use Session;
 use cURL;
+use Config;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -30,10 +31,7 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
-    
-    protected $url_register = 'https://auth.ten-po.com/auth/register';
-    protected $url_login = 'https://auth.ten-po.com/auth/login';
-    
+
     /**
      * Where to redirect users after login / registration.
      *
@@ -107,7 +105,7 @@ class AuthController extends Controller
         $user = $this->create($request->all());
         // Register to Micro Auth
       
-        $response = cURL::post($this->url_register, 
+        $response = cURL::post(Config::get('api.api_auth_register'), 
             [
                 'email' => $request->input('email'), 
                 'password' => $request->input('password'),
@@ -148,7 +146,7 @@ class AuthController extends Controller
         $credentials = $this->getCredentials($request);
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            $response = cURL::post($this->url_login, 
+            $response = cURL::post(Config::get('api.api_auth_login'), 
                 [
                     'email' => $request->input('email'), 
                     'password' => $request->input('password'),
