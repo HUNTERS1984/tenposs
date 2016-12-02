@@ -43,7 +43,7 @@
                     
                     <div class="text-center"> 
                         <p>&nbsp;</p>
-                        <button type="button" class="btn btn-submit btn-xanhduong" data-dismiss="modal">閉じる</button>
+                        <button type="button" class="btn btn-submit btn-xanhduong" data-dismiss="modal" style="color:white">閉じる</button>
                        
                     </div>
                     

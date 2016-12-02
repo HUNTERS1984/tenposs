@@ -95,6 +95,8 @@ class UserController extends Controller
         $response = json_decode( $response->body );
         
         if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
+             echo 'fdfds';
+             dd($responseLogin->data);
             Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
         }
