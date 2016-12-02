@@ -30,7 +30,7 @@ class PointController extends Controller
 
     public function set_point_setting()
     {
-        $check_items = array('app_id', 'yen_to_mile', 'mile_to_point', 'bonus_miles_1', 'bonus_miles_2', 'max_point_use', 'rank1', 'rank2', 'rank3', 'rank4');
+        $check_items = array('app_id', 'yen_to_mile', 'bonus_miles_1', 'bonus_miles_2', 'max_point_use', 'rank1', 'rank2', 'rank3', 'rank4');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -45,7 +45,8 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
-                $point_setting->mile_to_point = Input::get('mile_to_point');
+                if (Input::get('mile_to_point'))
+                    $point_setting->mile_to_point = Input::get('mile_to_point');
                 $point_setting->yen_to_mile = Input::get('yen_to_mile');
                 $point_setting->bonus_miles_1 = Input::get('bonus_miles_1');
                 $point_setting->bonus_miles_2 = Input::get('bonus_miles_2');

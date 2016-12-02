@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Modules\Admin\Http\Requests\ImageRequest;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\Input;
 use App\Models\Users;
 use Carbon\Carbon;
 use cURL;
@@ -34,6 +34,7 @@ class CostController extends Controller
     protected $api_payment_transaction= API_PAYMENT_BASE.'billingtransactions';
 
     protected $api_point_client= API_POINT_BASE.'client';
+    protected $api_point_setting= API_POINT_BASE.'setting';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -67,6 +68,35 @@ class CostController extends Controller
             return view('admin.pages.cost.start');
         }
             
+    }
+
+    public function setting()
+    {   
+        $rules = [
+            'yen_to_mile' => 'required',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $response = cURL::newRequest('post', $this->api_point_setting,
+                ['app_id' => $this->request->app->app_app_id,
+                'yen_to_mile' => Input::get('yen_to_mile'),
+                'max_point_use' => Input::get('max_point_use'),
+                'bonus_miles_1' => Input::get('bonus_miles_1'),
+                'bonus_miles_2' => Input::get('bonus_miles_2'),
+                'rank1' => Input::get('rank1'),
+                'rank2' => Input::get('rank2'),
+                'rank3' => Input::get('rank3'),
+                'rank4' => Input::get('rank4'),
+                 ])->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+            dd($response);
+            return redirect()->back()->with('status','Update POM setting successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update POM setting');
+        }
     }
 
     public function register()

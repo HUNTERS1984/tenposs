@@ -98,6 +98,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     //Cost
     Route::get('cost/register',['as' => 'admin.cost.register', 'uses' => 'Admin\CostController@register' ] );
     Route::get('cost/payment/{type}',['as' => 'admin.cost.payment', 'uses' => 'Admin\CostController@payment' ] );
+    Route::post('cost/setting',['as' => 'admin.cost.setting', 'uses' => 'Admin\CostController@setting' ] );
     Route::resource('cost', 'Admin\CostController');
     
     //push

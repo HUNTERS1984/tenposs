@@ -12,7 +12,7 @@
         </div>
     </div>
     <section class="content">
-
+        @include('admin.layouts.messages')
         <div class="col-md-12">
             <div class="row">
                 <div class="tab-header-cost">
@@ -78,7 +78,7 @@
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-blue">現状のポイント</p>
-                                            <p class="yen-cost-3-2-1-blue">{{"¥".number_format($point_info->data->point->points, 0, '', ',')}}p</p>
+                                            <p class="yen-cost-3-2-1-blue">{{number_format($point_info->data->point->points, 0, '', ',')}}p</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -122,17 +122,21 @@
 
             <div role="tabpanel" class="tab-pane" id="tab-cost-2">
                 <div class="content-cost-tab-3">
-                    <form action="" class="form-cost-tab-3">
+                    <form action="{{ route('admin.cost.setting') }}" 
+                            id="form_app_setting"
+                            class ="form-cost-tab-3"
+                            method="post" 
+                            enctype="multipart/form-data" class="form-global-1">
                         <div class="form-group">                                    
                             <div class="row">
                                 <div class="col-xs-12">
                                     <label>付与金額(1マイルあたり)</label>
                                 </div>
                                 <div class="col-xs-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="1">1円</option>
-                                        <option value="2">2円</option>
-                                        <option value="3">3円</option>
+                                    <select name="yen_to_mile" id="" class="form-control">
+                                        <option value="1" {{($point_info->data->point_setting->yen_to_mile == 1) ? "selected" : ""}}>1円</option>
+                                        <option value="2" {{($point_info->data->point_setting->yen_to_mile == 2) ? "selected" : ""}}>2円</option>
+                                        <option value="3" {{($point_info->data->point_setting->yen_to_mile == 3) ? "selected" : ""}}>3円</option>
                                     </select>
                                 </div>
                             </div>
@@ -143,7 +147,7 @@
                                     <label for="">利用可能金額(利用可能なマイル数)</label>
                                 </div>
                                 <div class="col-xs-10">
-                                    <input type="text" class="form-control" id="" placeholder="デフォルトでは10,000">
+                                    <input type="text" class="form-control" name="max_point_use" placeholder="デフォルトでは10,000" value="{{$point_info->data->point_setting->max_point_use}}">
                                 </div>
                                 <label for="" class="col-xs-2 control-label text-left">マイル</label>
                             </div>
@@ -154,14 +158,14 @@
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">紹介:</label>
                                     <div class="col-xs-7">
-                                        <input type="text" class="form-control" id="" placeholder="">
+                                        <input type="text" class="form-control" name="bonus_miles_1" placeholder="" value="{{$point_info->data->point_setting->bonus_miles_1}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">来店:</label>
                                     <div class="col-xs-7">
-                                    <input type="text" class="form-control" id="" placeholder="">
+                                    <input type="text" class="form-control" name="bonus_miles_2" placeholder="" value="{{$point_info->data->point_setting->bonus_miles_2}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル</label>
                                 </div>
@@ -173,28 +177,28 @@
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">シルバー会員:</label>
                                     <div class="col-xs-7">
-                                        <input type="text" class="form-control" id="" placeholder="">
+                                        <input type="text" class="form-control" name="rank1" placeholder="" value="{{$point_info->data->point_setting->rank1}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">ゴールド会員:</label>
                                     <div class="col-xs-7">
-                                    <input type="text" class="form-control" id="" placeholder="">
+                                    <input type="text" class="form-control" name="rank2" placeholder="" value="{{$point_info->data->point_setting->rank2}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">プラチナ会員:</label>
                                     <div class="col-xs-7">
-                                    <input type="text" class="form-control" id="" placeholder="">
+                                    <input type="text" class="form-control" name="rank3" placeholder="" value="{{$point_info->data->point_setting->rank3}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">ダイアモンド会員:</label>
                                     <div class="col-xs-7">
-                                    <input type="text" class="form-control" id="" placeholder="">
+                                    <input type="text" class="form-control" name="rank4" placeholder="" value="{{$point_info->data->point_setting->rank4}}">
                                     </div>
                                     <label for="" class="col-xs-2 control-label text-left">マイル以上</label>
                                 </div>
@@ -215,13 +219,13 @@
                     <ul class="nav-cost-4">
                         <li>
                             <label class="control control--radio">Paypal
-                              <input type="radio" name="radio" checked="checked">
+                              <input type="radio" name="radio" {{($point_info->data->point_setting->payment_method == 0) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>
                         <li>
                             <label class="control control--radio">銀行口座振り込み
-                              <input type="radio" name="radio">
+                              <input type="radio" name="radio" {{($point_info->data->point_setting->payment_method == 1) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>
