@@ -14,18 +14,10 @@ use DB;
 use Mail;
 use Session;
 use JWTAuth;
+use Config;
 
 class ClientsController extends Controller
 {
-    protected $url_register = 'https://auth.ten-po.com/auth/register';
-    protected $url_login = 'https://auth.ten-po.com/v1/auth/login';
-    protected $api_approvelist = 'https://auth.ten-po.com/approvelist';
-    protected $api_userlist = 'https://auth.ten-po.com/userlist';
-
-    protected $api_active = 'https://auth.ten-po.com/activate';
-    protected $api_user_profile = 'https://auth.ten-po.com/v1/profile';
-    protected $api_create_vir = 'https://api.ten-po.com/api/v1/create_virtual_host';
-
     public function __construct()
     {
 
@@ -34,7 +26,7 @@ class ClientsController extends Controller
     public function index()
     {
         // Get profile
-        $response = cURL::newRequest('get', $this->api_approvelist)
+        $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
         $response = $response->send();
@@ -61,14 +53,7 @@ class ClientsController extends Controller
                 return back()->withInput()->withErrors($v);
             }
 
-//            $response = cURL::post($this->url_login,
-//                [
-//                    'email' => $request->input('email'),
-//                    'password' => $request->input('password'),
-//                    'role' => 'admin'
-//                ]
-//            );
-            $response = HttpRequestUtil::getInstance()->post_data_with_basic_auth($this->url_login,
+            $response = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.api_auth_login'),
                 [
                     'email' => $request->input('email'),
                     'password' => $request->input('password'),
@@ -106,7 +91,7 @@ class ClientsController extends Controller
     public function show($user_id)
     {
 
-        $response = cURL::newRequest('get', $this->api_approvelist)
+        $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
         $response = $response->send();
@@ -117,7 +102,7 @@ class ClientsController extends Controller
             $user = \App\Helpers\ArrayHelper::searchObject($response->data, $user_id);
 
             if (!$user) {
-                $requestUserActiveList = cURL::newRequest('get', $this->api_userlist)
+                $requestUserActiveList = cURL::newRequest('get', Config::get('api.api_auth_userlist'))
                     ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
                 $responseUserActiveList = $requestUserActiveList->send();
                 $responseUserActiveList = json_decode($responseUserActiveList->body);
@@ -128,7 +113,7 @@ class ClientsController extends Controller
                 }
             }
 
-            $response_profile = cURL::newRequest('get', $this->api_user_profile)
+            $response_profile = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
                 ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
             if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
                 $userInfos = $response_profile->data;
@@ -159,7 +144,7 @@ class ClientsController extends Controller
     function approvedUsersProcess(Request $request)
     {
         // get all users
-        $response = cURL::newRequest('get', $this->api_approvelist)
+        $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
         $response = $response->send();
@@ -174,7 +159,7 @@ class ClientsController extends Controller
                     ->first();
 
                 // API active user
-                $requestActive = cURL::newRequest('post', $this->api_active, [
+                $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
                     'email' => $user->email
                 ])
                     ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
@@ -190,7 +175,7 @@ class ClientsController extends Controller
 
                 // API create virtual hosts
                 /*
-                $requestCreateVir = cURL::post($this->api_create_vir,
+                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
                     [
                         'domain' => $userInfos->domain,
                         'domain_type' => $userInfos->domain_type,

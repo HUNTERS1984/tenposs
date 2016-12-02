@@ -38,9 +38,9 @@
         <th class="center">メンバーステージ</th><!-- Member stage -->
         <th class="center">性別</th><!-- Gender -->
         <th class="center">年齢</th><!-- Age -->
-        <th class="center">ポジション</th><!-- Position -->
-        <th class="center">クポン覧クポン</th><!-- Service connect -->
-        <th class="center">真を確認</th><!-- Last login -->
+        <th class="center">地図</th><!-- Position -->
+        <th class="center">サービス連携</th><!-- Service connect -->
+        <th class="center">最終ログイン</th><!-- Last login -->
     </tr>
     </thead>
     <tbody>
@@ -73,7 +73,7 @@
         <td class="center">{{ $user->profile->stage }}</td>
         <td class="center">
             @if( $user->profile->gender == 0 )
-            利用不可
+            不定義
             @elseif( $user->profile->gender == 1 )
             男性
             @elseif( $user->profile->gender == 2 )
@@ -81,7 +81,7 @@
             @endif
         </td>
         <td class="center">{{ $user->profile->age }}</td>
-        <td class="center">{{ $user->profile->position }}</td>
+        <td class="center">{{ $user->profile->address }}</td>
         <td class="center">
             @if( $user->profile->facebook_status == 1 )
             <a href="#"><span class="fa-stack fa-lg">
