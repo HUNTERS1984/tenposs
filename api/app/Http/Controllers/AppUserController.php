@@ -228,9 +228,15 @@ class AppUserController extends Controller
                         $token = $register->token;
                         $payload = JWTAuth::getPayload($token)->toArray();
                         $auth_user_id = $payload['id'];
-
-                    } catch (JWTException $e) {
+                    }
+                    catch (TokenInvalidException $e)
+                    {
                         Log::error($e->getMessage());
+                        $this->error(9998);
+                    }
+                    catch (JWTException $e) {
+                        Log::error($e->getMessage());
+                        $this->error(9998);
                     }
                 }
             }
