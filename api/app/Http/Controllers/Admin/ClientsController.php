@@ -91,7 +91,7 @@ class ClientsController extends Controller
     public function show($user_id)
     {
 
-        $response = cURL::newRequest('get', Config::('api.api_auth_approvelist'))
+        $response = cURL::newRequest('get', Config::('api.api_auth_approvelist')
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
         $response = $response->send();
@@ -144,7 +144,7 @@ class ClientsController extends Controller
     function approvedUsersProcess(Request $request)
     {
         // get all users
-        $response = cURL::newRequest('get', Config::('api.api_auth_approvelist'))
+        $response = cURL::newRequest('get', Config::('api.api_auth_approvelist')
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
         $response = $response->send();
