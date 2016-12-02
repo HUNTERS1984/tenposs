@@ -35,6 +35,7 @@ class CostController extends Controller
 
     protected $api_point_client= API_POINT_BASE.'client';
     protected $api_point_setting= API_POINT_BASE.'setting';
+    protected $api_point_payment_method= API_POINT_BASE.'payment/method';
 
     public function __construct(Request $request){
         $this->request = $request;
@@ -92,12 +93,41 @@ class CostController extends Controller
                 'rank3' => Input::get('rank3'),
                 'rank4' => Input::get('rank4'),
                  ])->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
-            dd($response);
-            return redirect()->back()->with('status','Update POM setting successfully');
+            $result = json_decode($response->body);
+            if ($result && $result->code && $result->code == '1000')
+                return redirect()->back()->with('status','Update POM setting successfully');
+            else
+                return redirect()->back()->withErrors('Cannot update POM setting');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withInput()->withErrors('Cannot update POM setting');
         }
     }
+
+    public function payment_method()
+    {   
+        $rules = [
+            'payment_method' => 'required',
+        ];
+        $v = Validator::make($this->request->all(),$rules);
+        if ($v->fails())
+        {
+            return redirect()->back()->withInput()->withErrors($v);
+        }
+        try {
+            $response = cURL::newRequest('post', $this->api_point_payment_method,
+                ['app_id' => $this->request->app->app_app_id,
+                'payment_method' => Input::get('payment_method'),
+                 ])->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+            $result = json_decode($response->body);
+            if ($result && $result->code && $result->code == '1000')
+                return redirect()->back()->with('status','Update POM payment method successfully');
+            else
+                return redirect()->back()->withErrors('Cannot update POM payment method');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot update POM payment method');
+        }
+    }
+
 
     public function register()
     {

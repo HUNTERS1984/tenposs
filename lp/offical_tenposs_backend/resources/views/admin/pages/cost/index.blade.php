@@ -213,27 +213,30 @@
             <!-- //tab cost 2 -->
 
             <div role="tabpanel" class="tab-pane" id="tab-cost-3">
-                <div class="content-cost-tab-4">
-                    
+                <form action="{{ route('admin.cost.payment_method') }}" 
+                            id="form_app_setting"
+                            class ="content-cost-tab-4"
+                            method="post" 
+                            enctype="multipart/form-data" class="form-global-1">   
 
                     <ul class="nav-cost-4">
                         <li>
                             <label class="control control--radio">Paypal
-                              <input type="radio" name="radio" {{($point_info->data->point_setting->payment_method == 0) ? "checked" : ""}}>
+                              <input type="radio" name="payment_method" {{($point_info->data->point_setting->payment_method == 0) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>
                         <li>
                             <label class="control control--radio">銀行口座振り込み
-                              <input type="radio" name="radio" {{($point_info->data->point_setting->payment_method == 1) ? "checked" : ""}}>
+                              <input type="radio" name="payment_method" {{($point_info->data->point_setting->payment_method == 1) ? "checked" : ""}}>
                               <div class="control__indicator"></div>
                             </label>
                         </li>
                     </ul>
                     <center>
-                        <a href="{{ route('admin.cost.register') }}" class="btn-cos-tab-4">支払い申請</a>
+                        <button type="submit" class="btn-cos-tab-4">支払い申請</button>
                     </center>
-                </div>
+                </form>
             </div>
             <!-- //tab cost 3 -->
 

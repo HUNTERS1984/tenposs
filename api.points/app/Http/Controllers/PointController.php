@@ -72,7 +72,7 @@ class PointController extends Controller
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
