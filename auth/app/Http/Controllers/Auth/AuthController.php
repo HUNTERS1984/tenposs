@@ -159,6 +159,7 @@ class AuthController extends Controller
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
                 $this->body['data'] = (string)$token;
+               
 //                $this->body['data']['token'] = (string)$token;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => 1477801212312, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;
