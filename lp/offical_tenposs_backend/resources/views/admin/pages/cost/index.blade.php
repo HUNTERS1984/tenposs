@@ -44,19 +44,19 @@
                                 <li class="timeline__step">
                                     <span class="timeline__step-title-top">契約開始了月</span>
                                     <input class="timeline__step-radio" id="" name="" type="radio">        
-                                    <span class="timeline__step-title-bottom">2016.10</span>
+                                    <span class="timeline__step-title-bottom">{{$start_month}}</span>
                                     <i class="timeline__step-marker"></i>
                                 </li>
                                 <li class="timeline__step done">
                                     <span class="timeline__step-title-top">今月</span>
                                     <input class="timeline__step-radio" id="" name="" type="radio">   
-                                    <span class="timeline__step-title-bottom">2016.08</span>
+                                    <span class="timeline__step-title-bottom">{{date("Y.m")}}</span>
                                     <i class="timeline__step-marker"></i>
                                 </li>
                                 <li class="timeline__step">
                                     <span class="timeline__step-title-top">契約終了月</span>
                                     <input class="timeline__step-radio" id="" name="" type="radio">
-                                    <span class="timeline__step-title-bottom">2017.01</span>
+                                    <span class="timeline__step-title-bottom">{{$end_month}}</span>
                                     <i class="timeline__step-marker"></i>
                                 </li>
                             </ol>
@@ -66,19 +66,19 @@
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-blue">現在のコスト</p>
-                                            <p class="yen-cost-3-2-1-blue">¥10,200</p>
+                                            <p class="yen-cost-3-2-1-blue">{{"¥".number_format(200*25*$member_months, 0, '', ',')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-yellow">現在の収益</p>
-                                            <p class="yen-cost-3-2-1-yellow">¥24,837</p>
+                                            <p class="yen-cost-3-2-1-yellow">{{"¥".number_format($point_info->data->monthly_revenue, 0, '', ',')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="content-cost-3-2-1">
                                             <p class="title-cost-3-2-1-blue">現状のポイント</p>
-                                            <p class="yen-cost-3-2-1-blue">200p</p>
+                                            <p class="yen-cost-3-2-1-blue">{{"¥".number_format($point_info->data->point->points, 0, '', ',')}}p</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

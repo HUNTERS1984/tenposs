@@ -41,8 +41,10 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/auth/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
     $app->delete('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@deleteInvalidate');
     $app->get('/point','App\Http\Controllers\PointController@get_point_info');
+    $app->get('/point/client','App\Http\Controllers\PointController@get_client_point_info');
+    $app->post('/point/setting','App\Http\Controllers\PointController@set_point_setting');
+    $app->post('/point/payment/method','App\Http\Controllers\PointController@set_payment_method');
     $app->post('/point/request/user','App\Http\Controllers\PointController@request_point_for_end_user');
-    $app->post('/point/request/client','App\Http\Controllers\PointController@request_point_for_client');
     $app->post('/point/approve/request/user','App\Http\Controllers\PointController@approve_request_point_for_end_user');
     $app->post('/point/use/user','App\Http\Controllers\PointController@request_use_point_for_end_user');
     $app->post('/point/approve/use/user','App\Http\Controllers\PointController@approve_use_point_for_end_user');

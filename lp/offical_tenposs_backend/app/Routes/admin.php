@@ -80,9 +80,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('chat/line', array('as' => 'admin.client.chat', 'uses' => 'Admin\ClientChatLineController@chatAdmin'));
     Route::post('chat/contact/search', array('as' => 'chat.search.contact', 'uses' => 'Admin\ClientChatLineController@searchContact'));
     
-    //Accoutn setting
+    //Account setting
     Route::get('account',['as' => 'admin.client.account', 'uses' => 'Admin\AdminController@account' ] );
     Route::post('account',['as' => 'admin.client.account.save', 'uses' => 'Admin\AdminController@accountSave' ] );
+
+    //Users managements
+    Route::get('users/management',['as' => 'admin.users.management', 'uses' => 'Admin\AdminController@userManagement' ] );
+    Route::get('users/management/{app_user_id}/detail',['as' => 'admin.users.management.detail', 'uses' => 'Admin\AdminController@userManagementDetail' ] );
 
     //Help
     Route::get('help',['as' => 'admin.client.help', 'uses' => 'Admin\AdminController@help' ] );

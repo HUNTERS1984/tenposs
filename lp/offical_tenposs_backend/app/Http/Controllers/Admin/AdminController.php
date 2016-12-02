@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\AppUser;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -197,7 +198,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-//            dd($app_stores);
+         //   dd($list_font_size);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -543,5 +544,24 @@ class AdminController extends Controller
 
         }
 
+    }
+
+    public function userManagement(Request $request){
+
+        $users = AppUser::with('profile')->paginate(30);
+        return view('admin.pages.users.users_management', array(
+            'users' => $users
+        ));
+    }
+
+    public function userManagementDetail(Request $request, $app_user_id){
+        $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
+
+        if( $app_user ){
+            return view('admin.pages.users.users_detail',array(
+                'app_user' => $app_user
+            ));
+        }
+        return back()->with('status','User not found');
     }
 }

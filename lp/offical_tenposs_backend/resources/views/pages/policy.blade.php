@@ -1,7 +1,9 @@
 @extends('layouts.default')
-
-@section('title','Agree')
-
+@section('SEO')
+<title>プライバシーポリシー｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）のプライバシーポリシーページです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/agree.css')}}
 @stop
@@ -25,7 +27,7 @@
 				</div>
 				<div class="page-banner" id="agree">
 					<div class="is-table-cell">
-						<h1 class="title-page">Privacy Policy</h1>
+						<h1 class="title-page">プライバシーポリシー</h1>
 						<p class="sub-title-page">-　プライバシーポリシー　-</p>
 					</div>
 				</div>

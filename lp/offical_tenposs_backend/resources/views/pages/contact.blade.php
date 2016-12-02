@@ -1,7 +1,9 @@
 @extends('layouts.default')
-
-@section('title','Contact')
-
+@section('SEO')
+<title>お問い合わせ｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）のお問い合わせページです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/contact.css')}}
 @stop
@@ -57,7 +59,7 @@
 			</div>
 			<div class="page-banner" id="contact">
 				<div class="is-table-cell">
-					<h1 class="title-page">Contact</h1>
+					<h1 class="title-page">お問い合わせ</h1>
 					<p class="sub-title-page">-　お問い合わせ　-</p>
 				</div>
 			</div>

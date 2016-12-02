@@ -157,7 +157,8 @@ class CouponController extends Controller
             return $ret_sig;
         //end validate app_id and sig
         //create key redis
-        $key = sprintf(Config::get('api.cache_coupons_detail'), Input::get('app_id'), Input::get('id'));
+        $token = Input::get('token') ? Input::get('token') : '';
+        $key = sprintf(Config::get('api.cache_coupons_detail'), Input::get('app_id'), Input::get('id'), $token);
         //get data from redis
         $data = RedisUtil::getInstance()->get_cache($key);
 //        $data = null;

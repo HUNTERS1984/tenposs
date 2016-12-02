@@ -4,9 +4,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{!! csrf_token() !!}">
-	<title>RESET PASSWORD</title>
+    <title>パスワード忘れ・リセット｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs    </title>
+    <meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+    <meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）のパスワード忘れ・リセットページです。">
 </head>
 <body>
+    <h1 class="hidden">パスワード忘れ・リセット</h1>
 	<div class="page signupLogin">
 		<div class="header">
 			<div class="container">
@@ -19,7 +22,7 @@
 		</div>
 		<!-- END HEADER -->
 		<div class="container-wrap-form">
-			<h2 class="title-container">さあ、はじめましょう。</h2>
+			<h2 class="title-container">パスワード忘れ・リセット</h2>
 			<p class="content">ご登録済みのメールアドレスを入力ください。新規パスワード設定のメールが送信されます。</p>
 			<div class="wrap-form-forgot">
 				@if (session('status'))

@@ -1,4 +1,4 @@
 <?php
 return [
-    'auth_profile_url' => 'http://auth.tenposs.local/profile',
+    'auth_profile_url' => 'https://auth.ten-po.com/profile',
 ];

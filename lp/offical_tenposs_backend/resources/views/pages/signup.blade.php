@@ -4,12 +4,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{!! csrf_token() !!}">
-	<title>SIGNUP</title>
+    <title>登録・サインアップ｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+    <meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+    <meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）の登録・サインアップページです。">
 	{{Html::style(asset('assets/frontend').'/css/bootstrap.min.css')}}
 	{{Html::style(asset('assets/frontend').'/css/animate.css')}}
 	{{Html::style(asset('assets/frontend').'/css/signup.css')}}
 </head>
 <body>
+    <h1 class="hidden">さあ、はじめましょう。</h1>
 	<div class="page signupLogin">
 		<div class="header">
 			<div class="container">

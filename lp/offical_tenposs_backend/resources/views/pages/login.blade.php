@@ -4,9 +4,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{!! csrf_token() !!}">
-	<title>LOGIN</title>
+    <title>ログイン｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+    <meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+    <meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）のログインページです。">
+
 </head>
 <body>
+    <h1 class="hidden">ログイン</h1>
 	<div class="page signupLogin">
 		<div class="header">
 			<div class="container">

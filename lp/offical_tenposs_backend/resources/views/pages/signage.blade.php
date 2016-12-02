@@ -1,7 +1,10 @@
 @extends('layouts.default')
 
-@section('title','SIGNAGE')
-
+@section('SEO')
+<title>特定商取引法に基づく表記｜スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs</title>
+<meta name="keywords" content="店舗アプリ,お店アプリ,店舗販促,集客方法,リピーター">
+<meta name="description" content="スマホサイトとオリジナルアプリを簡単に無料で作れるTenposs（テンポス）の特定商取引法に基づく表記ページです。">
+@stop
 @section('css')
 	{{Html::style(asset('assets/frontend').'/css/signage.css')}}
 @stop
@@ -25,7 +28,7 @@
 				</div>
 				<div class="page-banner" id="signage">
 					<div class="is-table-cell">
-						<h1 class="title-page">Signage</h1>
+						<h1 class="title-page">特定商取引法に基づく表記</h1>
 						<p class="sub-title-page">-　特定商取引法に基づく表記　-</p>
 					</div>
 				</div>
