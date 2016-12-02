@@ -210,7 +210,6 @@ class AppUserController extends Controller
                 [
                     'email' => Input::get('email')
                 ]);
-            print_r($call_api);die;
             if (count($call_api) > 0)
                 $auth_user_id = $call_api->auth_user_id;
 
@@ -226,8 +225,7 @@ class AppUserController extends Controller
                         'role' => 'user',
                         'platform' => 'web'
                     ]);
-                print_r($register);
-                die;
+              
                 if ($register != null) {
                     $token = $register->token;
                     $auth_user_id = $register->auth_user_id;
