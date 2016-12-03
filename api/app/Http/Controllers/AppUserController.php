@@ -618,10 +618,6 @@ class AppUserController extends Controller
         }
         if ($app_id < 1)
             return $this->error(1004);
-//        //creare key redis
-//        Log::info("config: ".Config::get('api.cache_profile'));
-//        Log::info("app_app_id: ".$app['app_app_id']);
-//        Log::info("user->profile->id: ".$request->user->profile->id);
 
         $key = sprintf(Config::get('api.cache_profile'), $app_app_id, $this->request->token_info['id']);
 //        Log::info("key: ".$key);
@@ -634,9 +630,12 @@ class AppUserController extends Controller
         }
         $app_user = AppUser::where('auth_user_id', $this->request->token_info['id'])
             ->where('app_id', $app_id)->first();
+
         if (count($app_user) < 1)
             return $this->error(1004);
-
+        $auth_profile = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.api_auth_profile'),$this->request->token);
+        if ($auth_profile)
+            $app_user['email'] = $auth_profile->email;
         $app_user_profile = UserProfile::where('app_user_id', $app_user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
 
         $app_user_profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $app_user_profile->avatar_url);

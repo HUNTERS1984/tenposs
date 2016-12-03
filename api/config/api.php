@@ -92,6 +92,7 @@ return [
     'api_auth_login' => 'https://auth.ten-po.com/v1/auth/login',
     'api_auth_changepass' => 'https://auth.ten-po.com/v1/auth/changepassword',
     'api_auth_profile' => 'https://auth.ten-po.com/v1/profile',
+//    'api_auth_profile' => 'http://auth.tenposs.local/v1/profile',
     'api_auth_approvelist' => 'https://auth.ten-po.com/approvelist',
     'api_auth_userlist' => 'https://auth.ten-po.com/userlist',
     'api_auth_active' => 'https://auth.ten-po.com/activate',
