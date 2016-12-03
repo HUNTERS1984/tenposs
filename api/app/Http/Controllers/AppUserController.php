@@ -598,9 +598,9 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function v2_profile($app_app_id)
+    public function v2_profile()
     {
-
+        $app_app_id = Input::get("app_id");
 //        print_r($request->token_info['id']);die;
         if (empty($app_app_id))
             return $this->error(1002);
