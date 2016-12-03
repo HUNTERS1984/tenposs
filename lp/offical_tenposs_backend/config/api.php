@@ -132,7 +132,6 @@ return [
     'api_auth_userlist' => 'https://auth.ten-po.com/userlist',
     'api_auth_active' => 'https://auth.ten-po.com/activate',
     'api_user_v1_profile' => 'https://auth.ten-po.com/v1/profile',
-
     'api_create_vir' => 'https://api.ten-po.com/api/v1/create_virtual_host',
 
 ];

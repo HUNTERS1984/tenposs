@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Models\User;
+use Illuminate\Support\Facades\Config;
 use Validator;
 use Auth;
 use Session;
 use cURL;
 use Mail;
-use Config;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
@@ -43,13 +42,14 @@ class UserController extends Controller
         $requestLogin = cURL::newRequest('post', Config::get('api.api_auth_login'),[
             'email' => Input::get('email'),
             'password' => Input::get('password'),
-            'role' => 'client'
+            'role' => 'client',
+            'platform' => 'web',
         ])->setHeader('Authorization',  'Basic '. base64_encode( config('jwt.jwt_admin').':'.config('jwt.jwt_admin_password') ));
 
 
         $responseLogin = $requestLogin->send();
         $responseLogin = json_decode($responseLogin->body);
-
+       
         if( !empty($responseLogin) && isset( $responseLogin->code ) && $responseLogin->code == 1000 ){
             Session::put('jwt_token',$responseLogin->data);
             return redirect()->route('admin.client.top');
