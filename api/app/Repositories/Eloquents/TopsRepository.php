@@ -243,7 +243,7 @@ class TopsRepository implements TopsRepositoryInterface
         try {
             $sharecode = ShareCodeInfo::where('code', $code)
                 ->where('app_id', $app_id)->first();
-          
+
             if (count($sharecode) < 1)
                 $error_code = 1015;
             else {
@@ -268,5 +268,35 @@ class TopsRepository implements TopsRepositoryInterface
             Log::error($e->getMessage());
         }
         return $error_code;
+    }
+
+    public function get_app_id_and_app_user_id($app_app_id, $auth_user_id)
+    {
+        $app_id = 0;
+        $app_user_id = 0;
+        $profile_id = 0;
+        try {
+            $apps = App::where('app_app_id', $app_app_id)->first();
+            if (count($apps) > 0) {
+                $app_id = $apps->id;
+            }
+            $app_user = \Illuminate\Support\Facades\DB::table('app_users')
+                ->leftJoin('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+                ->select('app_users.*', 'user_profiles.id as profile_id')
+                ->where('app_users.app_id', $app_id)
+                ->where('app_users.auth_user_id', $auth_user_id)
+                ->first();
+            if (count($app_user) > 0) {
+                $app_user_id = $app_user->id;
+                $profile_id = $app_user->profile_id;
+            }
+            if ($app_id > 0 && $app_user_id > 0)
+                return array('app_id' => $app_id,
+                    'app_user_id' => $app_user_id
+                , 'profile_id' => $profile_id);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+        }
+        return null;
     }
 }

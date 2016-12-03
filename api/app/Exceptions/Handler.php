@@ -3,11 +3,13 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +47,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return new JsonResponse([
+                'code' => '99957',
+                'message' => "Method not allow.",
+            ], $e->getStatusCode());
+        }
+        if ($e instanceof HttpException) {
+            return new JsonResponse([
+                'code' => '9999',
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        }
         return parent::render($request, $e);
     }
 }

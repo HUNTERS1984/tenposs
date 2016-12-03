@@ -17,19 +17,19 @@ class APIJWTAuth extends BaseMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
 
-
         if (!$token = $this->auth->setRequest($request)->getToken()) {
             return $this->respond('tymon.jwt.absent', 'token_not_provided', 400);
         }
         try {
-            JWTAuth::parseToken()->getPayload();
+            $payload = JWTAuth::parseToken()->getPayload()->toArray();
+            $request->token_info = $payload;
         } catch (TokenExpiredException $e) {
             return new JsonResponse(['code' => 10011,
                 'message' => $e->getMessage(),

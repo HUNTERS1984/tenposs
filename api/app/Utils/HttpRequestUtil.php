@@ -199,7 +199,7 @@ class HttpRequestUtil
     {
         try {
 
-//            Log::info($service_url);
+//
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data_params));
@@ -218,6 +218,7 @@ class HttpRequestUtil
                 return null;
             }
             curl_close($curl);
+//            print_r($curl_response);
             $decoded = json_decode($curl_response);
             if (isset($decoded->code) && $decoded->code == '1000') {
                 return $decoded->data;
@@ -240,6 +241,7 @@ class HttpRequestUtil
                 $url = $service_url . '?' . http_build_query($data_params);
             else
                 $url = $service_url;
+//            print_r($url);
             $curl = curl_init($url);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data_params));
@@ -258,6 +260,7 @@ class HttpRequestUtil
                 return null;
             }
             curl_close($curl);
+//            print_r($curl_response);
             $decoded = json_decode($curl_response);
             if (isset($decoded->code) && $decoded->code == '1000') {
                 return $decoded->data;

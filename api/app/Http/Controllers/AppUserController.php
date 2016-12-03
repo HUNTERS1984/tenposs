@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\App;
 use App\Models\Coupon;
 use App\Models\News;
 use App\Models\ShareCodeInfo;
@@ -29,6 +30,7 @@ use App\Address;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 use Twitter;
 use Illuminate\Support\Facades\Config;
 use App\Jobs\InstagramHashtagJob;
@@ -225,7 +227,7 @@ class AppUserController extends Controller
                         'role' => 'user',
                         'platform' => 'web'
                     ]);
-              
+
                 if ($register != null) {
                     $token = $register->token;
                     $auth_user_id = $register->auth_user_id;
@@ -596,6 +598,54 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
+    public function v2_profile($app_app_id)
+    {
+
+//        print_r($request->token_info['id']);die;
+        if (empty($app_app_id))
+            return $this->error(1002);
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $app_id = 0;
+        try {
+            $apps = App::where('app_app_id', $app_app_id)->first();
+            if (count($apps) > 0) {
+                $app_id = $apps->id;
+            }
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        if ($app_id < 1)
+            return $this->error(1004);
+//        //creare key redis
+//        Log::info("config: ".Config::get('api.cache_profile'));
+//        Log::info("app_app_id: ".$app['app_app_id']);
+//        Log::info("user->profile->id: ".$request->user->profile->id);
+
+        $key = sprintf(Config::get('api.cache_profile'), $app_app_id, $this->request->token_info['id']);
+//        Log::info("key: ".$key);
+        //get data from redis
+        $data = RedisUtil::getInstance()->get_cache($key);
+        //check data and return data
+        if ($data != null) {
+            $this->body = $data;
+            return $this->output($this->body);
+        }
+        $app_user = AppUser::where('auth_user_id', $this->request->token_info['id'])
+            ->where('app_id', $app_id)->first();
+        if (count($app_user) < 1)
+            return $this->error(1004);
+
+        $app_user_profile = UserProfile::where('app_user_id', $app_user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
+
+        $app_user_profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $app_user_profile->avatar_url);
+        $app_user->profile = $app_user_profile;
+        $this->body['data']['user'] = $app_user;
+        RedisUtil::getInstance()->set_cache($key, $this->body);
+        return $this->output($this->body);
+    }
+
 
     public function update_profile(Request $request)
     {
@@ -642,6 +692,66 @@ class AppUserController extends Controller
 
         return $this->output($this->body);
     }
+
+
+    public function v2_update_profile()
+    {
+        $check_items = array('app_id', 'username', 'gender', 'address');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        if (Input::get('gender') != '0' && Input::get('gender') != '1')
+            return $this->error(1004);
+        $app_id = 0;
+        try {
+            $apps = App::where('app_app_id', Input::get('app_id'))->first();
+            if (count($apps) > 0) {
+                $app_id = $apps->id;
+            }
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        if ($app_id < 1)
+            return $this->error(1004);
+
+        $path_file = "";
+        if (Input::file('avatar') != null && Input::file('avatar')->isValid()) {
+            $destinationPath = 'uploads'; // upload path
+            $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
+            $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
+            $path_file = $destinationPath . '/' . $fileName;
+        }
+
+        try {
+            $app_user = \Illuminate\Support\Facades\DB::table('app_users')
+                ->leftJoin('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+                ->select('app_users.*', 'user_profiles.id as profile_id')
+                ->where('app_users.app_id', $app_id)
+                ->where('app_users.auth_user_id', $this->request->token_info['id'])
+                ->first();
+            if ($app_user->profile_id)
+                $profiles = UserProfile::find($app_user->profile_id);
+            else
+                $profiles = new UserProfile();
+            $profiles->name = Input::get('username');
+            $profiles->gender = Input::get('gender');
+            $profiles->address = Input::get('address');
+            if (!empty($path_file))
+                $profiles->avatar_url = $path_file;
+            $profiles->save();
+            $key = sprintf(Config::get('api.cache_profile'), Input::get('app_id'), $this->request->token_info['id']);
+            RedisUtil::getInstance()->clear_cache($key);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
+
 
     public function social_profile(Request $request)
     {
@@ -723,6 +833,78 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
+
+    public function v2_social_profile(Request $request)
+    {
+        $check_items = array('app_id', 'social_type', 'social_id', 'social_token', 'nickname');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+        try {
+            $social = SocialProfile::where('social_id', Input::get('social_id'))
+                ->where('social_type', Input::get('social_type'))
+                ->where('app_user_id', $app_info['app_user_id'])->first();
+            if (count($social) > 0) {
+                $social->app_user_id = $app_info['app_user_id'];
+                $social->social_type = Input::get('social_type');
+                $social->social_id = Input::get('social_id');
+                $social->social_token = Input::get('social_token');
+                if (Input::get('social_secret'))
+                    $social->social_secret = Input::get('social_secret');
+                $social->nickname = Input::get('nickname');
+                $social->deleted_at = null;
+                $social->save();
+            } else {
+                $social_profile = new SocialProfile();
+                $social_profile->app_user_id = $app_info['app_user_id'];
+                $social_profile->social_type = Input::get('social_type');
+                $social_profile->social_id = Input::get('social_id');
+                $social_profile->social_token = Input::get('social_token');
+                if (Input::get('social_secret'))
+                    $social_profile->social_secret = Input::get('social_secret');
+                $social_profile->nickname = Input::get('nickname');
+                $social_profile->save();
+            }
+            // update status social
+            $user_profile = UserProfile::find($app_info['profile_id']);
+            if ($user_profile) {
+                $user_profile->app_user_id = $app_info['app_user_id'];
+                $user_profile->gender = 0;
+                if (Input::get('social_type') == 1) {
+                    $user_profile->facebook_status = 1;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+
+                    $user_profile->facebook_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 2) {
+                    $user_profile->twitter_status = 1;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+                    $user_profile->twitter_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 3) {
+                    $user_profile->instagram_status = 1;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = Input::get('social_token');
+                }
+                $user_profile->save();
+            }
+            $key = sprintf(Config::get('api.cache_profile'), Input::get('app_id'), $app_info['app_user_id']);
+            RedisUtil::getInstance()->clear_cache($key);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
+
     public function social_profile_cancel(Request $request)
     {
 
@@ -776,6 +958,60 @@ class AppUserController extends Controller
                 $user_profile->save();
             }
             $key = sprintf(Config::get('api.cache_profile'), $app['app_app_id'], $request->user->id);
+            RedisUtil::getInstance()->clear_cache($key);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
+
+    public function v2_social_profile_cancel()
+    {
+
+        $check_items = array('app_id', 'social_type');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+
+        try {
+            $app_user_id = $app_info['app_user_id'];
+
+            if ($app_user_id > 0) {
+                $social_profile = SocialProfile::where('app_user_id', $app_user_id)
+                    ->where('social_type', Input::get('social_type'))->first();
+                if ($social_profile) {
+                    $social_profile->deleted_at = Carbon::now();
+                    $social_profile->save();
+                }
+            }
+            // update status social
+            $user_profile = UserProfile::find($app_info['profile_id']);
+            if ($user_profile) {
+                if (Input::get('social_type') == 1) {
+                    $user_profile->facebook_status = 0;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+
+                    $user_profile->facebook_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 2) {
+                    $user_profile->twitter_status = 0;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->instagram_token = $user_profile->instagram_token > 0 ? $user_profile->instagram_token : 0;
+                    $user_profile->twitter_token = Input::get('social_token');
+                } else if (Input::get('social_type') == 3) {
+                    $user_profile->instagram_status = 0;
+                    $user_profile->facebook_status = $user_profile->facebook_status > 0 ? $user_profile->facebook_status : 0;
+                    $user_profile->twitter_status = $user_profile->twitter_status > 0 ? $user_profile->twitter_status : 0;
+                    $user_profile->instagram_token = Input::get('social_token');
+                }
+                $user_profile->save();
+            }
+            $key = sprintf(Config::get('api.cache_profile'), Input::get('app_id'), $app_user_id);
             RedisUtil::getInstance()->clear_cache($key);
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);

@@ -134,7 +134,8 @@ class AuthV1Controller extends Controller
         $credentials['password'] = $password;
 
 
-        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
+        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
+                'id' => $user->id,'platform' => Input::get('platform')])) {
 
             $this->body['data']['first_login'] = $first_login;
             $this->body['data']['token'] = (string)$token;

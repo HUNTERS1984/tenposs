@@ -177,7 +177,8 @@ class UserV1Controller extends Controller
         $credentials['password'] = Input::get('password');
 
 
-        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
+        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 
+                'id' => $user->id,'platform' => Input::get('platform')])) {
             $this->body['data']['token'] = (string)$token;
             $this->body['data']['auth_user_id'] = $user->id;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
