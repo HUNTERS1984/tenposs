@@ -31,6 +31,7 @@ class RegisterProcessController extends Controller
         if ($request->session()->get(JWTAuth::getPayload()->toArray()['sub'].'welcome_registration'))
         {   
             $visibleStep1 = false;
+            $step3 = ['status' => 'panel-primary', 'active' => 'in'];
         } else {
 
             $request->session()->put(JWTAuth::getPayload()->toArray()['sub'].'welcome_registration', '1');
@@ -58,9 +59,9 @@ class RegisterProcessController extends Controller
             
         ];
         return view('pages.registers.dashboard')
-            ->with('visibleStep1', $visibleStep1 )
+            ->with('visibleStep1', $visibleStep1)
             ->with('visibleStep3', $visibleStep3)
-            ->with('visibleStep4', $visibleStep4 )
+            ->with('visibleStep4', $visibleStep4)
             ->with('visibleStepFinal', $visibleStepFinal )
             ->with('step', $arrStep);
         

@@ -482,7 +482,7 @@ class PaymentController extends Controller{
             $billingAgreement->paypal_billing_agreement_id = $agreement->getId();
             $billingAgreement->status = 1;
             $billingAgreement->save();
-
+            
             $point = Point::where('auth_user_id', '=', $billingAgreement->user_id)->first();
 
             if (!$point) {

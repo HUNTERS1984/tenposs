@@ -146,7 +146,7 @@ class ClientsController extends Controller
         // get all users
         $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
-
+            
         $response = $response->send();
         $response = json_decode($response->body);
         if (!empty($response) && isset($response->code) && $response->code == 1000) {
@@ -174,7 +174,7 @@ class ClientsController extends Controller
                 }
 
                 // API create virtual hosts
-                /*
+                
                 $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
                     [
                         'domain' => $userInfos->domain,
@@ -188,12 +188,12 @@ class ClientsController extends Controller
                 if( $responseCreateVir->code == 1000 ){
 
                 }
-                */
+                
 
 
                 // Send mail to user approved
                 try {
-                    /*
+                    
                     $to = $user->email ;
 
                     Mail::send('admin.emails.user_approved',
@@ -203,7 +203,7 @@ class ClientsController extends Controller
                             $message->to( $to )
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
-                        });*/
+                        });
                 } catch (Exception $e) {
 
                 }

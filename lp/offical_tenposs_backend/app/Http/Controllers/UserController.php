@@ -91,11 +91,10 @@ class UserController extends Controller
                 'role' => 'client'
             ]
         );
-        dd($response); 
+        
         $response = json_decode( $response->body );
         
         if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
-
             Session::put('jwt_token',$response->data);
             return redirect()->route('user.dashboard');
         }

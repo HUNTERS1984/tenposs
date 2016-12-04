@@ -43,6 +43,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/point','App\Http\Controllers\PointController@get_point_info');
     $app->get('/point/client','App\Http\Controllers\PointController@get_client_point_info');
     $app->post('/point/setting','App\Http\Controllers\PointController@set_point_setting');
+    $app->post('/point/bonus/{type}','App\Http\Controllers\PointController@bonus');
     $app->post('/point/payment/method','App\Http\Controllers\PointController@set_payment_method');
     $app->post('/point/request/user','App\Http\Controllers\PointController@request_point_for_end_user');
     $app->post('/point/approve/request/user','App\Http\Controllers\PointController@approve_request_point_for_end_user');
