@@ -135,7 +135,8 @@ class AuthV1Controller extends Controller
 
 
         if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
-                'id' => $user->id,'platform' => Input::get('platform')])) {
+                'id' => $user->id, 'platform' => Input::get('platform')])
+        ) {
 
             $this->body['data']['first_login'] = $first_login;
             $this->body['data']['token'] = (string)$token;
@@ -182,8 +183,7 @@ class AuthV1Controller extends Controller
         try {
             $this->validate($request, [
                 'email' => 'required|email|max:255',
-                'password' => 'required',
-                'platform' => 'required'
+                'password' => 'required'
             ]);
         } catch (HttpResponseException $e) {
             return $this->error(9995);
@@ -199,7 +199,8 @@ class AuthV1Controller extends Controller
                 return $this->error(99950);
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
-                    'id' => $user->id,'platform' => Input::get('platform')])) {
+                    'id' => $user->id, 'platform' => Input::get('platform')])
+            ) {
                 $this->body['data']['token'] = (string)$token;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;
