@@ -397,11 +397,11 @@
             })
         }
 
-        function saveSplashImage( file, event ){
-            event.stopPropagation();
-            event.preventDefault();
+        function saveSplashImage( file ){
+
             var formData = new FormData();
-            formData.append( $(file).attr('name'), $('#form_app_setting input[name^="splash_image"]')[0].files[0]);
+            formData.append( $(file).attr('name'), file.files[0]);
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('admin.client.global.save.splash_img') }}",
@@ -420,6 +420,7 @@
                         $('p#upload-response').text(response.msg).addClass('text-success');
                     }else{
                         $('p#upload-response').text(response.msg).addClass('text-danger');
+                        $('img'+$(file).attr('data-review')).attr('src',currentImg);
                     }
 
                 }
@@ -499,15 +500,39 @@
 
         });
         // Spash image upload
-        $('.splash-img button').on('click',function(e){
+        $('.splash-img > button').on('click',function(e){
             e.preventDefault();
-            $(this).parent().find('input[type="file"]').click();
+            $(this).parent().find('input[type="file"]').trigger('click');
         });
 
+        function validImage(file, _callback){
+            var ext = $(file).val().split('.').pop().toLowerCase();
+            if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+                _callback(false);
+            }else{
+                _callback(true);
+            }
+        }
+
+        var currentImg ;
         $('input[name^="splash_image"]').each(function(index,item){
             $(item).change(function (event) {
-                readURL( this, $(this).attr('data-review') );
-                saveSplashImage(this, event);
+                event.stopPropagation();
+                event.preventDefault();
+                $('p#upload-response').text('');
+                var that = this;
+                console.log(that);
+                validImage( that, function( isValid ){
+                    if( isValid ){
+                        currentImg = $( $(that).attr('data-review') ).attr('src');
+                        readURL( that, $(that).attr('data-review') );
+                        saveSplashImage(that);
+                    }else{
+                        $('p#upload-response').text('Please select image file').addClass('text-danger');
+                    }
+                } );
+
+
             });
         });
 
