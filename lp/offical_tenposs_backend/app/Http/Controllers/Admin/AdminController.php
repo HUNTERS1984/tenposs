@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 
 use Cache;
+use JWTAuth;
 
 use App\Models\App;
 use App\Models\AppStores;
@@ -22,7 +23,6 @@ use App\Utils\UploadHandler;
 use App\Utils\UrlHelper;
 
 use Illuminate\Database\QueryException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 use cURL;
 use Analytics;
@@ -47,8 +47,9 @@ class AdminController extends Controller
     public function top(Request $request){
         $all = Component::whereNotNull('top')->pluck('name', 'id');
         $app_data = App::where('user_id', $request->user['sub'] )->first();
+
         if( !$app_data ){
-            abort(503);
+            return redirect()->route('user.dashboard');
         }
         $app_components = array();
         $top_images = array();
@@ -390,6 +391,13 @@ class AdminController extends Controller
             return abort(503,'User info not found' );
         }
 
+        // $response = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
+        //         ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
+        // $response_profile = json_decode($response->body);
+        // if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
+        //     $user_info['auth'] = $response_profile->data;
+        // }
+        // dd($user_info);
         return view('admin.pages.users.account', ['user' => $user_info]);
     }
 
@@ -421,7 +429,7 @@ class AdminController extends Controller
                     ->withInput()
                     ->withErrors($validator);
             }
-            $requestUpdatePassWord = cURL::newRequest('post', 'https://auth.ten-po.com/v1/auth/changepassword',
+            $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
                     'old_password' => $request->input('password'),
                     'new_password' => $request->input('password_confirmation'),

@@ -3900,7 +3900,7 @@ form.form-cost-tab-3 .form-group input.form-control{
   border: 1px solid #c8d2d6;
   list-style: none;
 }
-.content-cost-tab-4 a.btn-cos-tab-4{
+.content-cost-tab-4 button.btn-cos-tab-4{
   width: 70%;
   height: 40px;
   background: #1e96d6;
@@ -3915,7 +3915,7 @@ form.form-cost-tab-3 .form-group input.form-control{
   color: #fff;
   margin-top: 35px;
 }
-.content-cost-tab-4 a:hover.btn-cos-tab-4{
+.content-cost-tab-4 button:hover.btn-cos-tab-4{
   background: #1e86d6;
   color: #fff;
   border:1px solid #116eb5;

@@ -66,6 +66,7 @@ class AuthV1Controller extends Controller
 
     public function socialLogin(Request $request)
     {
+
         $facebook_status = 0;
         $twitter_status = 0;
         $email = "";
@@ -94,6 +95,7 @@ class AuthV1Controller extends Controller
             return $this->error(1004);
         }
 
+        $check_items[] = 'platform';
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -104,7 +106,7 @@ class AuthV1Controller extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
-
+        $first_login = false;
         if (!$user) {
             try {
                 DB::beginTransaction();
@@ -122,7 +124,8 @@ class AuthV1Controller extends Controller
                 dd($e);
                 return $this->error(9999);
             }
-        }
+        } else
+            $first_login = true;
 
         $user = User::whereEmail($email)->with('roles')->first();
 
@@ -130,8 +133,36 @@ class AuthV1Controller extends Controller
         $credentials['email'] = $email;
         $credentials['password'] = $password;
 
-        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug])) {
-            $this->body['data'] = $token;
+
+        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
+                'id' => $user->id, 'platform' => Input::get('platform')])
+        ) {
+
+            $this->body['data']['first_login'] = $first_login;
+            $this->body['data']['token'] = (string)$token;
+//                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
+//                $this->body['data']['refresh_token'] = (string)$refresh_token;
+            $refresh_token = md5($user->id . Carbon::now());
+            $this->body['data']['refresh_token'] = $refresh_token;
+            $user_id_code = PseudoCrypt::hash($user->id);
+            $this->body['data']['access_refresh_token_href'] = HttpUtils::get_refresh_token_url($request, $user_id_code, $refresh_token);
+            //insert refresh token
+
+            $refresh = UserRefreshToken::where('user_id', $user->id)->first();
+
+            if (count($refresh) > 0) {
+                $refresh->refresh_token = $refresh_token;
+                $refresh->user_id_code = $user_id_code;
+                $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
+                $refresh->save();
+            } else {
+                $refresh = new UserRefreshToken();
+                $refresh->refresh_token = $refresh_token;
+                $refresh->user_id = $user->id;
+                $refresh->user_id_code = $user_id_code;
+                $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
+                $refresh->save();
+            }
             return $this->output($this->body);
         } else {
             return $this->error(9995);
@@ -148,10 +179,11 @@ class AuthV1Controller extends Controller
      */
     public function postLogin(Request $request)
     {
+
         try {
             $this->validate($request, [
                 'email' => 'required|email|max:255',
-                'password' => 'required',
+                'password' => 'required'
             ]);
         } catch (HttpResponseException $e) {
             return $this->error(9995);
@@ -161,10 +193,14 @@ class AuthV1Controller extends Controller
 
         try {
             $user = User::whereEmail(Input::get('email'))->with('roles')->first();
+            if (count($user) < 1)
+                return $this->error(99953);
             if ($user->active != 1)
                 return $this->error(99950);
             // Attempt to verify the credentials and create a token for the user
-            if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
+            if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
+                    'id' => $user->id, 'platform' => Input::get('platform')])
+            ) {
                 $this->body['data']['token'] = (string)$token;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;

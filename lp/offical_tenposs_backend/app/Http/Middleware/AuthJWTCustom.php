@@ -13,13 +13,15 @@ use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
 use cURL;
-
+use Config;
 
 class AuthJWTCustom extends BaseMiddleware
 
 {
+
     protected $api_user_profile = 'https://auth.ten-po.com/v1/profile';
     protected $api_refresh_token = 'https://auth.ten-po.com/v1/auth/access_token';
+
     /**
      * Handle an incoming request.
      *
@@ -47,7 +49,7 @@ class AuthJWTCustom extends BaseMiddleware
             if ( Session::get('user') == null ) {
                 $requestProfile = cURL::newRequest('get', $this->api_user_profile )
                     ->setHeader('Authorization',  'Bearer '. $token );
-            
+
                 $responseProfile = $requestProfile->send();
                 $profile = json_decode($responseProfile->body);
                 

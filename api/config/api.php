@@ -86,4 +86,21 @@ return [
     //notification configure
     'url_upload_file_notification_configure' => 'https://apinotification.ten-po.com/v1/configure_notification',
     'url_get_notification_configure' => 'https://apinotification.ten-po.com/v1/get_configure/',
+
+
+    'api_auth_register' => 'https://auth.ten-po.com/auth/register',
+    'api_auth_login' => 'https://auth.ten-po.com/v1/auth/login',
+    'api_auth_changepass' => 'https://auth.ten-po.com/v1/auth/changepassword',
+    'api_auth_profile' => 'https://auth.ten-po.com/v1/profile',
+//    'api_auth_profile' => 'http://auth.tenposs.local/v1/profile',
+    'api_auth_approvelist' => 'https://auth.ten-po.com/approvelist',
+    'api_auth_userlist' => 'https://auth.ten-po.com/userlist',
+    'api_auth_active' => 'https://auth.ten-po.com/activate',
+    'api_user_v1_profile' => 'https://auth.ten-po.com/v1/profile',
+
+    'api_create_vir' => 'https://api.ten-po.com/api/v1/create_virtual_host',
+
+    //api auth path
+    'url_auth_check_user_exist' => 'https://auth.ten-po.com/v1/auth/check_user_exist',
+    'url_auth_register' => 'https://auth.ten-po.com/v1/auth/register',
 ];

@@ -114,4 +114,24 @@ return [
     //google analytics api
     'url_api_google_analytic' => 'https://apiga.ten-po.com/get_data.php',
 
+
+    'api_payment_userplan' => 'https://apipoints.ten-po.com/api/v1/userplan',
+    'api_payment_billingplan' => 'https://apipoints.ten-po.com/api/v1/billingplan',
+    'api_payment_billingagreement' => 'https://apipoints.ten-po.com/api/v1/billingagreement',
+    'api_payment_transaction' => 'https://apipoints.ten-po.com/api/v1/billingtransactions',
+
+    'api_point_client' => 'https://apipoints.ten-po.com/point/client',
+    'api_point_setting' => 'https://apipoints.ten-po.com/point/setting',
+    'api_point_payment_method' => 'https://apipoints.ten-po.com/point/payment/method',
+
+    'api_auth_register' => 'https://auth.ten-po.com/auth/register',
+    'api_auth_login' => 'https://auth.ten-po.com/v1/auth/login',
+    'api_auth_changepass' => 'https://auth.ten-po.com/v1/auth/changepassword',
+    'api_auth_profile' => 'https://auth.ten-po.com/v1/profile',
+    'api_auth_approvelist' => 'https://auth.ten-po.com/approvelist',
+    'api_auth_userlist' => 'https://auth.ten-po.com/userlist',
+    'api_auth_active' => 'https://auth.ten-po.com/activate',
+    'api_user_v1_profile' => 'https://auth.ten-po.com/v1/profile',
+    'api_create_vir' => 'https://api.ten-po.com/api/v1/create_virtual_host',
+
 ];

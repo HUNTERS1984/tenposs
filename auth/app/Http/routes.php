@@ -38,12 +38,17 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app) {
     $app->get('/test', 'UserV1Controller@test');
     $app->post('/auth/login', 'Auth\AuthV1Controller@postLogin');
+    $app->get('/auth/check_user_exist', 'UserV1Controller@check_user_exist');
+    $app->post('/auth/social_login', 'Auth\AuthV1Controller@socialLogin');
     $app->get('/auth/access_token/{id_code}/{refresh_token}', 'Auth\AuthV1Controller@access_token');
+    $app->post('/auth/register', 'UserV1Controller@register');
 });
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
     $app->get('/profile', 'UserV1Controller@profile');
     $app->post('/auth/changepassword', 'UserV1Controller@change_password');
+    $app->post('/auth/signout', 'UserV1Controller@signout');
+    $app->get('/userlist', 'UserV1Controller@userlist');
 
 });
 $app->group(['middleware' => 'jwt.refresh'], function ($app) {

@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\UserRefreshToken;
+use App\Utils\HttpUtils;
+use App\Utils\PseudoCrypt;
+use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use JWTAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -123,7 +130,30 @@ class AuthController extends Controller
         $credentials['password'] = $password;
 
         if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug])) {
-            $this->body['data'] = $token;
+            $this->body['data']['token'] = (string)$token;
+//                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
+//                $this->body['data']['refresh_token'] = (string)$refresh_token;
+            $refresh_token = md5($user->id . Carbon::now());
+            $this->body['data']['refresh_token'] = $refresh_token;
+            $user_id_code = PseudoCrypt::hash($user->id);
+            $this->body['data']['access_refresh_token_href'] = HttpUtils::get_refresh_token_url($request, $user_id_code, $refresh_token);
+            //insert refresh token
+
+            $refresh = UserRefreshToken::where('user_id', $user->id)->first();
+
+            if (count($refresh) > 0) {
+                $refresh->refresh_token = $refresh_token;
+                $refresh->user_id_code = $user_id_code;
+                $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
+                $refresh->save();
+            } else {
+                $refresh = new UserRefreshToken();
+                $refresh->refresh_token = $refresh_token;
+                $refresh->user_id = $user->id;
+                $refresh->user_id_code = $user_id_code;
+                $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
+                $refresh->save();
+            }
             return $this->output($this->body);
         } else {
             return $this->error(9995);
@@ -159,6 +189,7 @@ class AuthController extends Controller
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 'id' => $user->id])) {
                 $this->body['data'] = (string)$token;
+               
 //                $this->body['data']['token'] = (string)$token;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => 1477801212312, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;

@@ -16,6 +16,7 @@ use App\Http\Requests;
 use DB;
 use Illuminate\Support\Facades\Config;
 use App\Models\UserSession;
+use Illuminate\Support\Facades\Log;
 
 class CouponController extends Controller
 {
@@ -261,6 +262,37 @@ class CouponController extends Controller
 
     }
 
+    public function v2_coupon_use()
+    {
+        $check_items = array('app_id', 'app_user_id', 'coupon_id', 'staff_id');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+        if ($app_info['app_user_id'] != Input::get("app_user_id"))
+            return $this->error(1004);
+
+        try {
+            $coupon = DB::table('rel_app_users_coupons')
+                ->whereAppUserId(Input::get('app_user_id'))
+                ->whereCouponId(Input::get('coupon_id'))->update(
+                    ['status' => 2,
+                        'staff_id' => Input::get('staff_id'),
+                        'user_use_date' => Carbon::now()]);
+            if ($coupon == 0)
+                return $this->error(1014);
+
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+
+    }
+
     public function coupon_use_new()
     {
         $check_items = array('token', 'time', 'code', 'staff_id', 'sig');
@@ -290,6 +322,32 @@ class CouponController extends Controller
         } catch (QueryException $e) {
             print_r($e->getMessage());
             die;
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+
+    }
+
+    public function v2_coupon_use_new()
+    {
+        $check_items = array('app_id', 'code', 'staff_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+        try {
+            $coupon = DB::table('rel_app_users_coupons')
+                ->whereCode(Input::get('code'))->update(
+                    ['status' => 2,
+                        'staff_id' => Input::get('staff_id'),
+                        'user_use_date' => Carbon::now()]);
+            if ($coupon == 0)
+                return $this->error(1014);
+
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
             return $this->error(9999);
         }
         return $this->output($this->body);

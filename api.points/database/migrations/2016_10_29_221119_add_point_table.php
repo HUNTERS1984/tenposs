@@ -18,7 +18,7 @@ class AddPointTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('auth_user_id')->unique();;
             $table->string('app_app_id');
-            $table->integer('points')->nullable();
+            $table->string('points')->nullable();
             $table->integer('miles')->nullable();
             $table->smallInteger('active')->default(0);
             $table->timestamps();

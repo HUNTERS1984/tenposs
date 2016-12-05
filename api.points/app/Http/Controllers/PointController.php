@@ -28,9 +28,55 @@ class PointController extends Controller
 
     }
 
+    public function bonus($type)
+    {
+        $check_items = array('app_id', 'user_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+        if ($auth_role != 'client' && ($auth_role != 'admin')) {
+            return $this->error(9997);
+        } 
+
+        if ($auth_id > 0) {
+            try {
+                $client_point_info = Point::getPoint($auth_id);
+                $user_point_info = Point::getPoint(Input::get('user_id'));
+                $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+                $client_miles = $client_point_info->points*$point_setting->mile_to_point;
+                if ($client_miles < $point_setting->bonus_miles_1)
+                    return $this->error(9994);
+                else {
+                    if ($type == 0) {
+                        $user_point_info->miles += $point_setting->bonus_miles_1;
+                        $client_point_info->points -= (float)($point_setting->bonus_miles_1/$point_setting->mile_to_point);
+                    }         
+                    else {
+                        $user_point_info->miles += $point_setting->bonus_miles_2;
+                        $client_point_info->points -= (float)($point_setting->bonus_miles_2/$point_setting->mile_to_point);
+                    }
+                    
+                    $user_point_info->save();
+                    $client_point_info->save();
+                }
+                
+                return $this->output($this->body);
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
+
     public function set_point_setting()
     {
-        $check_items = array('app_id', 'yen_to_mile', 'mile_to_point', 'bonus_miles_1', 'bonus_miles_2', 'max_point_use', 'rank1', 'rank2', 'rank3', 'rank4');
+        $check_items = array('app_id', 'yen_to_mile', 'bonus_miles_1', 'bonus_miles_2', 'max_point_use', 'rank1', 'rank2', 'rank3', 'rank4');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -45,7 +91,8 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
-                $point_setting->mile_to_point = Input::get('mile_to_point');
+                if (Input::get('mile_to_point'))
+                    $point_setting->mile_to_point = Input::get('mile_to_point');
                 $point_setting->yen_to_mile = Input::get('yen_to_mile');
                 $point_setting->bonus_miles_1 = Input::get('bonus_miles_1');
                 $point_setting->bonus_miles_2 = Input::get('bonus_miles_2');
@@ -71,7 +118,7 @@ class PointController extends Controller
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
-
+        
         $data_token = JWTAuth::parseToken()->getPayload();
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
@@ -256,7 +303,13 @@ class PointController extends Controller
                     DB::beginTransaction();
                     if (Input::get('action') == 'approve') {
                         $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
+                        $client_point_info = Point::getPoint($auth_id);
+                        $user_point_info = Point::getPoint(Input::get('user_request_id'));
 
+                        $client_miles = $client_point_info->points*$point_setting->mile_to_point;
+                        if ($client_miles < Input::get('bill_amount')/$point_setting->yen_to_mile + $point_setting->bonus_miles_2)
+                            return $this->error(9994);
+                        
                         $data->user_action_id = $auth_id;
                         $data->role_action = $auth_role;
                         $data->yen_to_mile = $point_setting->yen_to_mile;
@@ -265,9 +318,12 @@ class PointController extends Controller
                         $data->status = 1; //accept
                         $data->save();
 
-                        $point_info = Point::getPoint($auth_id);
-                        $point_info->miles += $data->miles;
-                        $point_info->save();
+                        
+                        $user_point_info->miles += $data->miles;
+                        $client_point_info->points -= (float)($data->miles/$point_setting->mile_to_point);
+                        
+                        $user_point_info->save();
+                        $client_point_info->save();
                     } else {
                         $data->user_action_id = $auth_id;
                         $data->role_action = $auth_role;
@@ -364,10 +420,10 @@ class PointController extends Controller
                     DB::beginTransaction();
                     if (Input::get('action') == 'approve') {
                         $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
-                        $point_info = Point::getPoint($auth_id);
-                        //dd($point_info->miles);
-                        //dd( Input::get('use_point')*$point_setting->mile_to_point);
-                        if ($point_info->miles < Input::get('use_point')*$point_setting->mile_to_point)
+                        $client_point_info = Point::getPoint($auth_id);
+                        $user_point_info = Point::getPoint(Input::get('user_request_id'));
+
+                        if ($user_point_info->miles < Input::get('use_point')*$point_setting->mile_to_point)
                             return $this->error(9994);
 
                         if (Input::get('use_point')*$point_setting->mile_to_point > $point_setting->max_point_use)
@@ -381,8 +437,11 @@ class PointController extends Controller
                         $data->status = 1; //accept
                         $data->save();
 
-                        $point_info->miles += $data->miles;
-                        $point_info->save();
+                        $user_point_info->miles += $data->miles;
+                        $client_point_info->points -= (float)($data->miles/$point_setting->mile_to_point);
+                       
+                        $user_point_info->save();
+                        $client_point_info->save();
                     } else {
                         $data->user_action_id = $auth_id;
                         $data->role_action = $auth_role;

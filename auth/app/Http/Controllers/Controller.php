@@ -35,6 +35,7 @@ class Controller extends BaseController
         '99954' => 'Refresh token invalid.',
         '99955' => 'Auth invalid.',
         '99956' => 'Password not math.',
+        '99957' => 'Method not allow.',
     );
     protected $body = array(
         'code' => '1000',
