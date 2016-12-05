@@ -45,7 +45,8 @@
                                 <label>画像アップロード</label>
                                 <div class="wrapp-draw">
                                     <span class="left">選択されていません</span>
-                                    <input type="file" name="app_ico_image" class="form-control long" id="app-ico-image" placeholder="ファイルを選択">
+                                    <input type="text" name="app_ico_image_trigger" class="form-control long" id="" placeholder="ファイルを選択">
+                                    <input type="file" id="app-ico-image" name="app_ico_image" class="hidden"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -117,8 +118,9 @@
                         <div class="col-md-12">
                             <div class="text-center">
                                 <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
-
                                 <div class="hidden" id="app-ico-canvas"></div>
+                                <p>&nbsp;</p>
+                                <p id="response-msg-type1" class="text-center"></p>
                             </div>
                         </div>
                     </form>
@@ -211,6 +213,8 @@
                             <div class="text-center">
                                 <a id="convert-to-canvas-type2" href="#" class="btn-box-px">作成依頼</a>
                                 <div class="hidden" id="app-ico-canvas-type2"></div>
+                                <p>&nbsp;</p>
+                                <p id="response-msg-type2" class="text-center"></p>
                             </div>
                         </div>
                     </form>
@@ -219,8 +223,13 @@
                     <form id="" action="">
                         <div class="col-md-5 col-xs-12">
                             <div class="form-group">
-                                <label>ロゴのタイトル</label>
-                                <input name="app_ico_file_type3" type="file" class="form-control " id="app-ico-file-type3" placeholder="12タイトル">
+                                <label>画像アップロード</label>
+                                <div class="wrapp-draw">
+                                    <span class="left">選択されていません</span>
+                                    <input type="text" name="app_ico_image_trigger_type3" class="form-control long" id="" placeholder="ファイルを選択">
+                                    <input type="file" id="app-ico-file-type3" name="app_ico_file_type3" class="hidden"/>
+                                </div>
+
                             </div>
                             <div class="form-group">
                                 <label>タイトルカラー</label>
@@ -309,12 +318,15 @@
                             <div class="text-center">
                                 <a id="convert-to-canvas-type3" href="#" class="btn-box-px">作成依頼</a>
                                 <div class="hidden" id="app-ico-canvas-type3"></div>
+                                <p>&nbsp;</p>
+                                <p id="response-msg-type3" class="text-center"></p>
                             </div>
                         </div>
                     </form>
                 </div>
-                <p id="response-msg" class="text-center"></p>
+
             </div>
+
 
         </div>
     </div>

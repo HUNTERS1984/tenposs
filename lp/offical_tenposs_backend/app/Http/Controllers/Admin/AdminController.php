@@ -22,6 +22,7 @@ use App\Utils\UploadHandler;
 use App\Utils\UrlHelper;
 
 use Illuminate\Database\QueryException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 use cURL;
 use Analytics;
@@ -497,12 +498,15 @@ class AdminController extends Controller
 
 
             }
-            return response()->json(array( 'success' => true, 'msg' => 'Set app icon success' ));
+            return response()->json(array( 'success' => true, 'file' => url('uploads/app_icons/'.$file_name) ));
         }
-
         return response()->json(array( 'success' => false, 'msg' => 'Set app icon fail' ));
+
     }
+
+
     public function globalSaveSplashImage(Request $request){
+
         $files = array();
         if( $request->hasFile('splash_image_1') ){
             $files['splash_image_1'] = $request->file('splash_image_1');
@@ -524,8 +528,11 @@ class AdminController extends Controller
             foreach( $files as $key => $file ){
                 $image_info = getimagesize($file);
                 // check dementiosn
-                //if( $image_info[0] != 750 && $image_info[1] != 1334 )
-                    //return response()->json(["jquery-upload-file-error"=>"File demenstion not valid "]);
+                if( $image_info[0] != 750 && $image_info[1] != 1334 )
+                    return response()->json([
+                        'success' => false,
+                        'msg' => 'File demenstion is not valid'
+                    ]);
                 // save file
                 $destinationPath = public_path('uploads/app_plash'); // upload path
                 $extension = $file->getClientOriginalExtension(); // getting image extension
@@ -538,8 +545,12 @@ class AdminController extends Controller
                         $key => $filePath
                     ));
                 if( $rel_app_stores )
-                    return response()->json(["msg"=>"Upload file success "]);
-                return response()->json(["msg"=>"Upload file fail "]);
+                    return response()->json([
+                        "success" => true,
+                        "msg"=>"Upload file success "]);
+                return response()->json([
+                    "success" => false,
+                    "msg"=>"Upload file fail "]);
             }
 
         }
@@ -548,7 +559,8 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $users = AppUser::with('profile')->paginate(30);
+        $users = AppUser::with('profile')
+            ->paginate(30);
         return view('admin.pages.users.users_management', array(
             'users' => $users
         ));
@@ -556,12 +568,47 @@ class AdminController extends Controller
 
     public function userManagementDetail(Request $request, $app_user_id){
         $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
+        $url = cURL::buildUrl('https://apipoints.ten-po.com/point', ['app_id' => $request->app->app_app_id]);
+
+        // Poins
+        $requestPoint = cURL::newRequest('get', $url)
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
+
+        $requestPoint = $requestPoint->send();
+        $responsePoint = json_decode($requestPoint->body);
+        $points = 0;
+        if( $responsePoint->code == 1000  ){
+            $points = $responsePoint->data->points;
+        }
+
+        // Poins history
+        $url = cURL::buildUrl('https://apipoints.ten-po.com/point/use/list',
+            [
+                'app_id' => $request->app->app_app_id,
+                'pageindex' => 1,
+                'pagesize' => 20
+            ]);
+
+        $requestUsePoints = cURL::newRequest('get', $url)
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
+
+        $requestUsePoints = $requestUsePoints->send();
+        $responseUsePoints = json_decode($requestUsePoints->body);
+
+        if( $responsePoint->code == 1000  ){
+            $points = $responsePoint->data->points;
+        }
+
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
-                'app_user' => $app_user
+                'app_user' => $app_user,
+                'points' => $points
             ));
         }
         return back()->with('status','User not found');
     }
+
+
 }
+
