@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShareCodeInfo extends Model
+class ShareCodeHistory extends Model
 {
     //
-    protected $table = 'share_code_info';
+    protected $table = 'share_code_history';
 }

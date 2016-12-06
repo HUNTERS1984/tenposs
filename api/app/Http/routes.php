@@ -110,9 +110,11 @@ Route::group(array('prefix' => 'admin',
 
 Route::group(array('prefix' => 'api/v2'), function () {
     Route::post('signup', 'AppUserController@v2_signup');
+    Route::post('signup_social', 'AppUserController@v2_signup_social');
 
     Route::group(['middleware' => 'api.auth.jwt'], function () {
         Route::get('profile', 'AppUserController@v2_profile');
+        Route::get('get_invite_code', 'AppUserController@v2_get_invite_code');
         Route::post('update_profile', 'AppUserController@v2_update_profile');
         Route::post('social_profile', 'AppUserController@v2_social_profile');
         Route::post('social_profile_cancel', 'AppUserController@v2_social_profile_cancel');

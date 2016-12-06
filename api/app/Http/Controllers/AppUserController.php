@@ -6,9 +6,11 @@ use App\Models\App;
 use App\Models\Coupon;
 use App\Models\News;
 use App\Models\ShareCodeInfo;
+use App\Models\ShareCodes;
 use App\Models\User;
 use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Utils\ConvertUtils;
 use App\Utils\HttpRequestUtil;
 use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -201,6 +203,7 @@ class AppUserController extends Controller
             return $this->error(1004);
         $auth_user_id = 0;
         $token = '';
+        $login = array();
         try {
             // them 3 param moi: app_uuid,source,code
             if (!empty(Input::get('code'))) {
@@ -229,11 +232,18 @@ class AppUserController extends Controller
                     ]);
 
                 if ($register != null) {
-                    $token = $register->token;
                     $auth_user_id = $register->auth_user_id;
 
                 }
             }
+            $login = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.api_auth_login'),
+                [
+                    'email' => Input::get('email'),
+                    'password' => Input::get('password'),
+                    'role' => 'user',
+                    'platform' => Input::get('platform')
+                ]);
+
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(9999);
         }
@@ -276,8 +286,11 @@ class AppUserController extends Controller
             DB::rollBack();
             return $this->error(9999);
         }
-
-        $this->body['data']['token'] = $token;
+        if (count($login) > 0) {
+            $this->body['data']['token'] = $login->token;
+            $this->body['data']['refresh_token'] = $login->refresh_token;
+            $this->body['data']['access_refresh_token_href'] = $login->access_refresh_token_href;
+        }
         $this->body['data']['app_id'] = $user->app_id;
         $this->body['data']['auth_user_id'] = $auth_user_id;
         $this->body['data']['id'] = $user->id;
@@ -633,7 +646,7 @@ class AppUserController extends Controller
 
         if (count($app_user) < 1)
             return $this->error(1004);
-        $auth_profile = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.api_auth_profile'),$this->request->token);
+        $auth_profile = HttpRequestUtil::getInstance()->get_data_with_token(Config::get('api.api_auth_profile'), $this->request->token);
         if ($auth_profile)
             $app_user['email'] = $auth_profile->email;
         $app_user_profile = UserProfile::where('app_user_id', $app_user->id)->select(['name', 'gender', 'address', 'avatar_url', 'facebook_status', 'twitter_status', 'instagram_status'])->first();
@@ -904,7 +917,112 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function social_profile_cancel(Request $request)
+    public function v2_signup_social()
+    {
+        $check_items = array('app_id', 'social_type', 'social_id', 'social_token');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if (!$app)
+            return $this->error(1004);
+
+        $auth_profile = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.url_auth_social_login'),
+            [
+                'social_type' => Input::get('social_type'),
+                'social_token' => Input::get('social_token'),
+                'platform' => Input::get('platform')
+            ]);
+        $profile = array();
+        $user = array();
+        $auth_user_id = 0;
+        $first_login = false;
+        if (count($auth_profile) > 0) {
+            $auth_user_id = $auth_profile->auth_user_id;
+            if ($auth_profile->first_login) {
+                $first_login = true;
+                if ($auth_user_id > 0) {
+                    //check auth_user_id exist on app_user table
+                    $user = AppUser::where('auth_user_id', $auth_user_id)->where('app_id', $app['id'])->first();
+                    if (count($user) < 1) { // not exist => create new info
+                        try {
+                            DB::beginTransaction();
+                            $user = new AppUser();
+                            $user->auth_user_id = $auth_profile->auth_user_id;;
+                            $user->app_id = $app['id'];
+                            $user->save();
+
+                            $profile = new UserProfile();
+                            $profile->name = '';
+                            $profile->gender = 0;
+                            $profile->address = null;
+                            $profile->avatar_url = null;
+                            $profile->facebook_status = 0;
+                            $profile->twitter_status = 0;
+                            $profile->instagram_status = 0;
+                            $profile->app_user_id = $user->id;
+
+                            $profile->save();
+                            DB::commit();
+                        } catch (\Illuminate\Database\QueryException $e) {
+                            DB::rollBack();
+                            return $this->error(9999);
+                        }
+                    } else {
+                        $profile = UserProfile::where('app_user_id', $user->id)->first();
+                    }
+                }
+            } else {
+                try {
+                    DB::beginTransaction();
+                    $user = AppUser::where('auth_user_id', $auth_user_id)->where('app_id', $app['id'])->first();
+                    if (count($user) < 1) {
+                        $user = new AppUser();
+                        $user->auth_user_id = $auth_user_id;
+                        $user->app_id = $app['id'];
+                        $user->save();
+                    }
+                    $profile = UserProfile::where('app_user_id', $user->id)->first();
+                    if (count($profile) < 1) {
+                        $profile = new UserProfile();
+                        $profile->name = '';
+                        $profile->gender = 0;
+                        $profile->address = null;
+                        $profile->avatar_url = null;
+                        $profile->facebook_status = 0;
+                        $profile->twitter_status = 0;
+                        $profile->instagram_status = 0;
+                        $profile->app_user_id = $user->id;
+
+                        $profile->save();
+                    }
+                    DB::commit();
+                } catch (\Illuminate\Database\QueryException $e) {
+                    DB::rollBack();
+                    return $this->error(9999);
+                }
+            }
+
+            $data = array('token' => $auth_profile->token,
+                'refresh_token' => $auth_profile->refresh_token,
+                'access_refresh_token_href' => $auth_profile->access_refresh_token_href);
+            $this->body['data'] = $data;
+            $this->body['data']['first_login'] = $first_login;
+            $this->body['data']['app_id'] = $app['id'];
+            $this->body['data']['auth_user_id'] = $auth_user_id;
+            $this->body['data']['id'] = $user->id;
+            $this->body['data']['email'] = $auth_profile->email;;
+            $this->body['data']['profile'] = $profile;
+        } else
+            return $this->error(9999);
+        return $this->output($this->body);
+    }
+
+
+    public
+    function social_profile_cancel(Request $request)
     {
 
         $check_items = array('token', 'social_type', 'time', 'sig');
@@ -965,7 +1083,8 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function v2_social_profile_cancel()
+    public
+    function v2_social_profile_cancel()
     {
 
         $check_items = array('app_id', 'social_type');
@@ -1020,7 +1139,8 @@ class AppUserController extends Controller
     }
 
 
-    public function get_app_by_domain(Request $request)
+    public
+    function get_app_by_domain(Request $request)
     {
         $check_items = array('domain', 'time', 'sig');
         $ret = $this->validate_param($check_items);
@@ -1064,7 +1184,8 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function get_data_web_notification()
+    public
+    function get_data_web_notification()
     {
         $check_items = array('app_id', 'key', 'time', 'sig');
         $ret = $this->validate_param($check_items);
@@ -1119,7 +1240,8 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function delete_data_web_notification()
+    public
+    function delete_data_web_notification()
     {
         $check_items = array('app_id', 'id', 'time', 'sig');
         $ret = $this->validate_param($check_items);
@@ -1147,7 +1269,8 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public function share_get_code()
+    public
+    function share_get_code()
     {
         $check_items = array('app_id', 'time', 'sig');
         $ret = $this->validate_param($check_items);
@@ -1182,7 +1305,8 @@ class AppUserController extends Controller
 
     }
 
-    public function create_virtual_host()
+    public
+    function create_virtual_host()
     {
 
         $check_items = array('domain', 'domain_type', 'time', 'sig');
@@ -1221,5 +1345,38 @@ class AppUserController extends Controller
         }
         return $this->output($this->body);
     }
+
+    public
+    function v2_get_invite_code()
+    {
+        $app_app_id = Input::get("app_id");
+        if (empty($app_app_id))
+            return $this->error(1002);
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+        try {
+            $share_code = ShareCodes::where('app_user_id', $app_info['app_user_id'])
+                ->where('app_id', $app_info['app_id'])->first();
+            if (count($share_code) > 0)
+                $this->body['data']['code'] = $share_code->code;
+            else {
+                $code = ConvertUtils::generate_invite_code(8);
+                $share_code = new ShareCodes();
+                $share_code->app_user_id = $app_info['app_user_id'];
+                $share_code->app_id = $app_info['app_id'];
+                $share_code->code = $code;
+                $share_code->save();
+                $this->body['data']['code'] = $code;
+            }
+            return $this->output($this->body);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+    }
+
 
 }

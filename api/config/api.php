@@ -103,4 +103,5 @@ return [
     //api auth path
     'url_auth_check_user_exist' => 'https://auth.ten-po.com/v1/auth/check_user_exist',
     'url_auth_register' => 'https://auth.ten-po.com/v1/auth/register',
+    'url_auth_social_login' => 'http://auth.tenposs.local/v1/auth/social_login',
 ];

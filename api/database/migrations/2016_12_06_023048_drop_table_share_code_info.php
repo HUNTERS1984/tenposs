@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableShareCodeInfo extends Migration
+class DropTableShareCodeInfo extends Migration
 {
     /**
      * Run the migrations.
@@ -11,6 +11,16 @@ class CreateTableShareCodeInfo extends Migration
      * @return void
      */
     public function up()
+    {
+        Schema::drop('share_code_info');
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
     {
         Schema::create('share_code_info', function (Blueprint $table) {
             $table->increments('id');
@@ -22,15 +32,5 @@ class CreateTableShareCodeInfo extends Migration
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('share_code_info');
     }
 }
