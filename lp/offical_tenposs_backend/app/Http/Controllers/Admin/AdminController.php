@@ -47,7 +47,7 @@ class AdminController extends Controller
     public function top(Request $request){
         $all = Component::whereNotNull('top')->pluck('name', 'id');
         $app_data = App::where('user_id', $request->user['sub'] )->first();
-
+        
         if( !$app_data ){
             return redirect()->route('user.dashboard');
         }
@@ -154,14 +154,16 @@ class AdminController extends Controller
     }
     
     public function globalpage(Request $request)
-    {
+    { 
+        $app_data = App::where('user_id', $request->user['sub'])->first();
+        if (!$app_data)
+            return redirect()->route('user.dashboard');
         
-        $app_data = App::where('user_id', $request->user['sub'])->firstOrFail();
         $component_all = DB::table('components')->whereNotNull('sidemenu')
             ->select('name', 'id','sidemenu_icon')
             ->get();
   
-    
+        
         $data_component_source = array();
         $data_component_dest = array();
         
@@ -391,13 +393,6 @@ class AdminController extends Controller
             return abort(503,'User info not found' );
         }
 
-        // $response = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
-        //         ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
-        // $response_profile = json_decode($response->body);
-        // if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
-        //     $user_info['auth'] = $response_profile->data;
-        // }
-        // dd($user_info);
         return view('admin.pages.users.account', ['user' => $user_info]);
     }
 
@@ -434,7 +429,7 @@ class AdminController extends Controller
                     'old_password' => $request->input('password'),
                     'new_password' => $request->input('password_confirmation'),
                 ])
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
             $responseUpdatePassWord = json_decode($responseUpdatePassWord->body);
 
@@ -449,14 +444,18 @@ class AdminController extends Controller
         }
 
 
-        $user_info->business_form = $request->input('business_form');
-        $user_info->business_category = $request->input('business_category');
-        $user_info->brand_name = $request->input('brand_name');
-        $user_info->street_address = $request->input('street_address');
+        $user_info->business_type = $request->input('business_type');
         $user_info->tel = $request->input('tel');
-        $user_info->business_hours = $request->input('business_hours');
-        $user_info->regular_holiday = $request->input('regular_holiday');
-        $user_info->testimonial = $request->input('testimonial');
+        $user_info->fax = $request->input('fax');
+        $user_info->shop_category = $request->input('shop_category');
+        $user_info->shop_url = $request->input('shop_url');
+        $user_info->shop_tel = $request->input('shop_tel');
+        $user_info->shop_regular_holiday = $request->input('shop_regular_holiday');
+        $user_info->shop_business_hours = $request->input('shop_business_hours');
+        $user_info->shop_address = $request->input('shop_address');
+        $user_info->shop_name = $request->input('shop_name');
+        $user_info->shop_description = $request->input('shop_description');
+
         if( $filePath != '' )
             $user_info->avatar = $filePath;
         $user_info->save();
@@ -506,12 +505,15 @@ class AdminController extends Controller
 
 
             }
-            return response()->json(array( 'success' => true, 'msg' => 'Set app icon success' ));
+            return response()->json(array( 'success' => true, 'file' => url('uploads/app_icons/'.$file_name) ));
         }
-
         return response()->json(array( 'success' => false, 'msg' => 'Set app icon fail' ));
+
     }
+
+
     public function globalSaveSplashImage(Request $request){
+
         $files = array();
         if( $request->hasFile('splash_image_1') ){
             $files['splash_image_1'] = $request->file('splash_image_1');
@@ -533,8 +535,11 @@ class AdminController extends Controller
             foreach( $files as $key => $file ){
                 $image_info = getimagesize($file);
                 // check dementiosn
-                //if( $image_info[0] != 750 && $image_info[1] != 1334 )
-                    //return response()->json(["jquery-upload-file-error"=>"File demenstion not valid "]);
+                if( $image_info[0] != 750 && $image_info[1] != 1334 )
+                    return response()->json([
+                        'success' => false,
+                        'msg' => 'File demenstion is not valid'
+                    ]);
                 // save file
                 $destinationPath = public_path('uploads/app_plash'); // upload path
                 $extension = $file->getClientOriginalExtension(); // getting image extension
@@ -547,8 +552,12 @@ class AdminController extends Controller
                         $key => $filePath
                     ));
                 if( $rel_app_stores )
-                    return response()->json(["msg"=>"Upload file success "]);
-                return response()->json(["msg"=>"Upload file fail "]);
+                    return response()->json([
+                        "success" => true,
+                        "msg"=>"Upload file success "]);
+                return response()->json([
+                    "success" => false,
+                    "msg"=>"Upload file fail "]);
             }
 
         }
@@ -557,7 +566,8 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $users = AppUser::with('profile')->paginate(30);
+        $users = AppUser::with('profile')
+            ->paginate(30);
         return view('admin.pages.users.users_management', array(
             'users' => $users
         ));
@@ -565,12 +575,47 @@ class AdminController extends Controller
 
     public function userManagementDetail(Request $request, $app_user_id){
         $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
+        $url = cURL::buildUrl('https://apipoints.ten-po.com/point', ['app_id' => $request->app->app_app_id]);
+
+        // Poins
+        $requestPoint = cURL::newRequest('get', $url)
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
+
+        $requestPoint = $requestPoint->send();
+        $responsePoint = json_decode($requestPoint->body);
+        $points = 0;
+        if( $responsePoint->code == 1000  ){
+            $points = $responsePoint->data->points;
+        }
+
+        // Poins history
+        $url = cURL::buildUrl('https://apipoints.ten-po.com/point/use/list',
+            [
+                'app_id' => $request->app->app_app_id,
+                'pageindex' => 1,
+                'pagesize' => 20
+            ]);
+
+        $requestUsePoints = cURL::newRequest('get', $url)
+            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
+
+        $requestUsePoints = $requestUsePoints->send();
+        $responseUsePoints = json_decode($requestUsePoints->body);
+
+        if( $responsePoint->code == 1000  ){
+            $points = $responsePoint->data->points;
+        }
+
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
-                'app_user' => $app_user
+                'app_user' => $app_user,
+                'points' => $points
             ));
         }
         return back()->with('status','User not found');
     }
+
+
 }
+

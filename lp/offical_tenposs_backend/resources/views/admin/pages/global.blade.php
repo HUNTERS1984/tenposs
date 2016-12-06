@@ -316,7 +316,7 @@
                                                     @foreach( $slides as $slide )
                                                     @if( !empty($slide) )
                                                     <div class="swiper-slide">
-                                                        <img width="100%" style="object-fit: cover; object-position: center; height: 300px; width: 210px;" src="{{ url($slide) }}" alt=""/>
+                                                        <img width="100%" style="object-fit: cover; object-position: center; width: 210px;" src="{{ url($slide) }}" alt=""/>
                                                     </div>
                                                     @endif
                                                     @endforeach
@@ -352,53 +352,93 @@
                     <!-- //modal -->
         <div>
     </section>
+
 </aside>
-</form> 
+
+</form>
+<div class="modal modal-loading">
+    <div class="preloader-wrapper">
+        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+    </div>
+</div>
 @endsection
 
 @section('footerJS')
     {{Html::script('admin/js/jscolor.js')}}
     {{Html::script('admin/js/mobile-reviews.js')}}
     {{Html::script('admin/js/html2canvas.js')}}
-    {{Html::script('admin/js/upload/jquery.uploadfile.min.js')}}
-    {{Html::style('admin/js/upload/uploadfile.css')}}
     {{Html::script('admin/js/swiper/swiper.jquery.min.js')}}
     {{Html::style('admin/js/swiper/swiper.min.css')}}
     {{Html::style('admin/js/slider/bootstrap-slider.css')}}
     {{Html::script('admin/js/slider/bootstrap-slider.min.js')}}
-    <script type="text/javascript">
 
+    <script type="text/javascript">
         // Global function
-        function sendSaveiConFile(canvas){
+        // Save icon
+        function sendSaveiConFile(canvas, msgElement){
             $.ajax({
                 type: "POST",
                 url: "{{ route('admin.client.global.save.app.icon') }}",
                 data: {
                     app_icon: canvas.toDataURL()
                 },
-                dataType: 'json'
-            }).done(function( response ) {
+                dataType: 'json',
+                beforeSend:function(){
+                    $('body').addClass('loading');
+                },
+                success: function(response){
+                    $('body').removeClass('loading');
                     if( response.success ){
-                        $('#response-msg').addClass('text-success').text( response.msg );
+                        $(msgElement).addClass('text-success').html( '<a download target="_blank" href="'+response.file+'"> Click here to download app icon </a>');
                     }else{
-                        $('#response-msg').addClass('text-danger').text( response.msg );
+                        $(msgElement).addClass('text-danger').text( response.msg );
                     }
-                });
+                }
+            })
         }
+
+        function saveSplashImage( file ){
+
+            var formData = new FormData();
+            formData.append( $(file).attr('name'), file.files[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('admin.client.global.save.splash_img') }}",
+                data: formData,
+                dataType: 'json',
+                processData: false, // Don't process the files
+                contentType: false,
+                cache: false,
+                beforeSend:function(){
+                    $('body').addClass('loading');
+                    $('p#upload-response').text('');
+                },
+                success: function(response){
+                    $('body').removeClass('loading');
+                    if( response.success ){
+                        $('p#upload-response').text(response.msg).addClass('text-success');
+                    }else{
+                        $('p#upload-response').text(response.msg).addClass('text-danger');
+                        $('img'+$(file).attr('data-review')).attr('src',currentImg);
+                    }
+
+                }
+            })
+
+        }
+
+        // Move items menus
         function moveTo(from, to) {
             $('ul.' + from + ' li.selected').remove().appendTo('ul.' + to);
             $('.' + to + ' li').removeAttr('class');
             $('.' + to + ' li a').removeAttr('class');
-            /*
-            $('div[id^=mobile]').hide();
-            $('.nav-left li').each(function(index,item){
-                $('#mobile-'+$(item).attr('data-value')).show();
-            })*/
             MobileView.updateMenuListItems( $('ul.nav-left li' ) );
         };
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
+        // render image to img element
         function readURL(input, elementString) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -409,6 +449,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        // Submit save global
         $('#btn_submit_form').click(function () {
             $('ul.nav-left li').each(function () {
                 var tmp = '<input type="hidden" value="' + $(this).data('value') + '"  name="data_sidemenus[]">';
@@ -417,33 +458,6 @@
             $('#form_app_setting').submit();
         });
 
-        var optionsUpload = {
-            url:" {{ route('admin.client.global.save.splash_img') }}",
-            multiple:false,
-            dragDrop:false,
-            maxFileCount:1,
-            acceptFiles:"image/*",
-            fileName:"myfile",
-            showCancel: false,
-            showAbort: false,
-            showDone: false,
-            showFileSize: false,
-            showPreview: false,
-            // showQueueDiv: 'output-upload',
-            statusBarWidth: 250,
-            returnType:'json',
-
-            onSuccess:function(files,data,xhr,pd)
-            {
-                //files: list of files
-                //data: response from server
-                //xhr : jquer xhr object
-                $(pd.statusbar).append(data.msg);
-                console.log(pd.statusbar);
-                console.log(data);
-            }
-
-        };
         function shadeColor(color, percent) {  // deprecated. See below.
             var num = parseInt(color,16),
                 amt = Math.round(2.55 * percent),
@@ -453,22 +467,14 @@
             return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
         }
 
+
         $(document).ready(function () {
+
             $('.nav-left, .nav-right').on('click', 'li', function (e) {
                 e.preventDefault();
                 $(this).toggleClass('selected');
                 $(this).find('a').toggleClass('active');
             });
-            var upload1 = $("#splash_image_1").uploadFile(optionsUpload);
-            var upload2 = $("#splash_image_2").uploadFile(optionsUpload);
-            var upload3 = $("#splash_image_3").uploadFile(optionsUpload);
-            var upload4 = $("#splash_image_4").uploadFile(optionsUpload);
-            var upload5 = $("#splash_image_5").uploadFile(optionsUpload);
-            upload1.update({ fileName:'splash_image_1'  });
-            upload2.update({ fileName:'splash_image_2'  });
-            upload3.update({ fileName:'splash_image_3'  });
-            upload4.update({ fileName:'splash_image_4'  });
-            upload5.update({ fileName:'splash_image_5'  });
 
             var bannerSwiper = new Swiper('.swiper-container', {
                 autoplay: 1000,
@@ -481,7 +487,6 @@
             });
 
             // With JQuery
-
             $('#app_ico_image_scale').slider({
                 formatter: function(value) {
                     $('img.app_logo_file_type3').css({
@@ -494,18 +499,60 @@
             });
 
         });
+        // Spash image upload
+        $('.splash-img > button').on('click',function(e){
+            e.preventDefault();
+            $(this).parent().find('input[type="file"]').trigger('click');
+        });
+
+        function validImage(file, _callback){
+            var ext = $(file).val().split('.').pop().toLowerCase();
+            if($.inArray(ext, ['gif','png','jpg','jpeg']) == -1) {
+                _callback(false);
+            }else{
+                _callback(true);
+            }
+        }
+
+        var currentImg ;
+        $('input[name^="splash_image"]').each(function(index,item){
+            $(item).change(function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                $('p#upload-response').text('');
+                var that = this;
+                console.log(that);
+                validImage( that, function( isValid ){
+                    if( isValid ){
+                        currentImg = $( $(that).attr('data-review') ).attr('src');
+                        readURL( that, $(that).attr('data-review') );
+                        saveSplashImage(that);
+                    }else{
+                        $('p#upload-response').text('Please select image file').addClass('text-danger');
+                    }
+                } );
+
+
+            });
+        });
+
+
 
         $('#scroll-global-phone-review-1').slimScroll({
             height: '374px',
             size: '5px',
             BorderRadius: '2px'
         });
-        // Type 3
+        // Icon Type 3
+        $('input[name="app_ico_image_trigger_type3"]').on('click',function(){
+            $("input#app-ico-file-type3").click();
+        });
         $("#app-ico-file-type3").change(function () {
+            var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+            $('input[name="app_ico_image_trigger_type3"]').val( filename );
             readURL(this, 'img.app_logo_file_type3');
         });
         function change_app_ico_back_color_type3(input){
-
             $('.type3-border-top').css({'background-color':'#' + input});
             $('body').find('#border-top-style3').remove();
             $('body').append('<div id="border-top-style3"></div>');
@@ -518,10 +565,8 @@
             var color = shadeColor(input, -20);
             var styleBorderLeft = '<style type="text/css">.type3-border-left:after{ border-right-color:#' + color +'!important } </style>';
             $('#border-left-style3').append(styleBorderLeft);
-
             $('div[class^=app-ico-review-type3]').css({'background-color':'#' + input});
             $('.type3-border-left').css({'background-color':'#' + color});
-
         }
         $('#convert-to-canvas-type3').on('click',function(e){
             e.preventDefault();
@@ -531,12 +576,12 @@
                     document.getElementById('app-ico-canvas-type3').appendChild(canvas);
                     $('#app-ico-canvas-type3 canvas').attr('id','canvas-id-file-type3');
                     var canvas = document.getElementById('canvas-id-file-type3');
-                    sendSaveiConFile(canvas);
+                    sendSaveiConFile(canvas,'#response-msg-type3');
                 }
             });
         });
 
-        // Type 2
+        // Icon Type 2
         $('#app-ico-title-type2').on('keyup',function(e){
             if( $(this).val() != '' ){
                 $('.app_logo_title_type2').text( capitalizeFirstLetter( $(this).val().trim().substring(0,8) ));
@@ -571,19 +616,24 @@
                     document.getElementById('app-ico-canvas-type2').appendChild(canvas);
                     $('#app-ico-canvas-type2 canvas').attr('id','canvas-id-file-type2');
                     var canvas = document.getElementById('canvas-id-file-type2');
-                    sendSaveiConFile(canvas);
+                    sendSaveiConFile(canvas,'#response-msg-type2');
                 }
             });
         });
 
-        // Type 1
+        // Icon Type 1
         function change_app_ico_title_color(input){
             $('.app-logo-review p').css({'color':'#' + input});
         }
         function change_app_ico_bg_color(input){
             $('.app-logo-review').css({'background-color':'#' + input});
         }
+        $('input[name="app_ico_image_trigger"]').on('click',function(){
+            $("input#app-ico-image").click();
+        });
         $("#app-ico-image").change(function () {
+            var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+            $('input[name="app_ico_image_trigger"]').val( filename );
             readURL(this, '.app-logo-review img');
         });
         $('#app-ico-title').on('keyup',function(e){
@@ -602,12 +652,9 @@
                     document.getElementById('app-ico-canvas').appendChild(canvas);
                     $('canvas').attr('id','canvas-id-file');
                     var canvas = document.getElementById('canvas-id-file');
-                    sendSaveiConFile(canvas);
+                    sendSaveiConFile(canvas,'#response-msg-type1');
                 }
             });
         });
-
-
-
     </script>
 @endsection

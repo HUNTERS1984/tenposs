@@ -10,6 +10,7 @@ use Session;
 use Auth;
 use Validator;
 use MetzWeb\Instagram\Instagram;
+use \Curl\Curl;
 
 use OAuth\OAuth2\Service\Facebook;
 use OAuth\Common\Storage\Session as OAuthSession;
@@ -19,8 +20,11 @@ class LoginController extends Controller
 {
     protected $socialite;
     protected $instagram;
-    
-    
+    protected $url_api_login = 'https://auth.ten-po.com/v1/auth/login';
+    protected $url_api_signup = 'https://api.ten-po.com/api/v2/signup';
+    protected $url_api_social_login = 'https://auth.ten-po.com/v1/auth/social_login';
+    protected $url_api_profile_update = 'https://api.ten-po.com/api/v2/update_profile';
+
     public function __construct(Socialite $socialite, Request $request){
         parent::__construct($request);
         $this->socialite = $socialite;
@@ -28,7 +32,7 @@ class LoginController extends Controller
         $this->instagram = new Instagram(array(
             'apiKey'      => '17d7e27257b74d05b352fc55692b2b59',
             'apiSecret'   => 'e2cbde752038423f8f9c6100ef815634',
-            'apiCallback' => route('instagram.callback')
+            'apiCallback' => route('instagram.connect')
         ));
     }
     
@@ -45,6 +49,7 @@ class LoginController extends Controller
     }
     
     public function loginNormalPost(Request $request){
+
         $rules = array(
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -63,21 +68,34 @@ class LoginController extends Controller
                 ->withInput()
                 ->withErrors($v);
         }
-        $post = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('signin',[
-                     'app_id' => $this->app->app_app_id,
-                     'email' =>  $request->input('email') ,
-                     'password' => $request->input('password') ,
-                ],
-                $this->app->app_app_secret); 
-                
-        $response = json_decode($post);
 
-        if( \App\Utils\Messages::validateErrors($response) ){
-            Session::put('user', $response->data);
+        $curl = new Curl();
+        $curl->setBasicAuthentication('tenposs','Tenposs@123');
+        $curl = $curl->post($this->url_api_login,array(
+            'email' => trim($request->input('email')) ,
+            'password' => $request->input('password') ,
+            'role' => 'user',
+            'platform' => 'web'
+        ));
+
+        if ( $curl->code == 1000 && isset( $curl->data )){
+            $token = $curl->data;
+            Session::put('jwt', $token);
+            // Get profile user
+            $curl = new Curl();
+            $curl->setHeader('Authorization','Bearer '.$token->token);
+            $curl->get('https://api.ten-po.com/api/v2/profile?app_id='.$this->app->app_app_id);
+
+            if( $curl->response->code == 1000 ){
+                Session::put('user', $curl->response->data->user);
+            }else{
+                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'アクセス権がありません') );
+                return back()->withInput();
+            }
             return redirect('/');
         }
-        Session::flash('message', \App\Utils\Messages::customMessage('2003') );
+
+        Session::flash('message', array('class' => 'alert-danger', 'detail' => '間違ったメールアドレスまたはパスワード') );
         return back()->withInput();
         
     }
@@ -86,7 +104,6 @@ class LoginController extends Controller
         Session::forget('user');
         return redirect('/login');
     }
-    
     
     public function register(){
         return view('signup_email');
@@ -119,106 +136,90 @@ class LoginController extends Controller
                 ->withInput()
                 ->withErrors($v);
         }
-        
-        
-        $post = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('signup',[
-                     'app_id' => $this->app->app_app_id,
-                     'email' =>  $request->input('email') ,
-                     'name' => $request->input('name') ,
-                     'password' => $request->input('password') ,
-                ],
-                $this->app->app_app_secret); 
-                
-        $response = json_decode($post);
-        
-        if( \App\Utils\Messages::validateErrors($response) ){
-            Session::put('user', $response->data);
+
+        $curl = new Curl();
+        $curl = $curl->post($this->url_api_signup, array(
+            'email' => trim($request->input('email')) ,
+            'password' => $request->input('password') ,
+            'app_id' => $this->app->app_app_id,
+            'name' => $request->input('name')
+        ));
+
+        if( $curl->code == 1000 ){
+            Session::put('user', $curl->data);
             return redirect('/');
-        }else{
-            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
-            return back()->withInput();
         }
 
-    }
-    
-    public function getSocialAuth( $provider = null ){
-        if(!config("services.$provider")) 
-            abort('404');
-        return $this->socialite->with($provider)->redirect();
-    }
-    
-    
-    public function getSocialAuthCallback( $provider = null){
+        Session::flash('message', array('class'=>'alert-danger', 'detail'=>'再試行する') );
+        return back()->withInput();
 
-        if($user = $this->socialite->with($provider)->user()){
-            
-            if( $provider == 'facebook' ){
-                $params = [
-                    'app_id' => $this->app->app_app_id,
-                    'social_type' => 1,
-                    'social_id' => $user->id ,
-                    'social_token' => $user->token ,
-                    'social_secret' => '',
-                    'name' => $user->name,
-                    
-                ];
-            }
-            
-            if( $provider == 'twitter' ){
-            
-                $params = [
-                    'app_id' => $this->app->app_app_id,
-                    'social_type' => 2,
-                    'social_id' => $user->id ,
-                    'social_token' => $user->token ,
-                    'social_secret' => $user->tokenSecret,
-                    'name' => $user->name,
-                    
-                ];
-            }
-        
-            
-            $post = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('social_login',$params,
-                $this->app->app_app_secret);  
-                
-            $response = json_decode($post);
-          
-            if( \App\Utils\Messages::validateErrors($response) ){
-                Session::put('user', $response->data);
+    }
+    
+    public function loginWithFacebook( Request $request ){
+
+        $code = $request->get('code');
+        $fb = \OAuth::consumer('Facebook');
+        // if code is provided get user data and sign in
+        if ( ! is_null($code))
+        {
+            // This was a callback request from facebook, get the token
+            $token = $fb->requestAccessToken($code);
+            // Send a request with it
+            //$result = json_decode($fb->request('/me'), true);
+            $curl = new Curl();
+            $curl = $curl->post($this->url_api_social_login, array(
+                'social_type' => 1 ,
+                'social_token' => $token ,
+                'platform' => 'web'
+            ));
+
+            if( $curl->code == 1000 ){
+                Session::put('jwt', $curl->data);
                 return redirect('/');
             }
-            Session::flash('message', \App\Utils\Messages::getMessage( $response ));
-            return back();
-           
-        }else{
-            Session::flash('message', \App\Utils\Messages::customMessage(2000) );
-            return back();
+        }
+        // if not ask for permission first
+        else
+        {
+            // get fb authorization
+            $url = $fb->getAuthorizationUri();
+            // return to facebook login url
+            return redirect((string)$url);
         }
     }
-    
-    public function setPushKey(Request $request){
-        // set push key after login
-        if( $request->ajax() && $request->has('key') ){
-            $postPushKey = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('set_push_key',[
-                     'token' => Session::get('user')->token,
-                     'client' =>  3,
-                     'key' => $request->input('key')
-                ],
-                $this->app->app_app_secret); 
-                $responsePushKey = json_decode($postPushKey);
-               
-                if( $responsePushKey->code == 1000 ){
-                    Session::put('setpushkey', true );
-                    return response()->json(['msg' => 'Set push key success' ]);
-                }
+
+    public function loginWithTwitter( Request $request){
+        $token  = $request->get('oauth_token');
+        $verify = $request->get('oauth_verifier');
+        $tw = \OAuth::consumer('Twitter');
+        // if code is provided get user data and sign in
+        if ( ! is_null($token) && ! is_null($verify))
+        {
+            $token = $tw->requestAccessToken($token, $verify);
+            //$result = json_decode($tw->request('account/verify_credentials.json'), true);
+            $curl = new Curl();
+            $curl = $curl->post($this->url_api_social_login, array(
+                'social_type' => 2 ,
+                'social_token' => $token ,
+                'platform' => 'web'
+            ));
+            if( $curl->code == 1000 ){
+                Session::put('jwt', $curl->data);
+                return redirect('/');
+            }
         }
-        
+        else
+        {
+            // get request token
+            $reqToken = $tw->requestRequestToken();
+            // get Authorization Uri sending the request token
+            $url = $tw->getAuthorizationUri(['oauth_token' => $reqToken->getRequestToken()]);
+            // return to twitter login url
+            return redirect((string)$url);
+        }
     }
-    
-    public function getSocialConnectCallback(Request $request){
+
+    public function socialConnect(Request $request){
         $fb = \OAuth::consumer('Facebook', route('social.connect') );
         $tw = \OAuth::consumer('Twitter', route('social.connect') );
         
@@ -319,29 +320,26 @@ class LoginController extends Controller
         $reqTokenTw = $tw->requestRequestToken();
         // get Authorization Uri sending the request token
         $url_tw = $tw->getAuthorizationUri(['oauth_token' => $reqTokenTw->getRequestToken()]);
- 
-        
-        $get = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('profile',[
-                'token' => Session::get('user')->token
-            ],
-            $this->app->app_app_secret);    
-        
-        $response = json_decode($get);
-        //dd($response);
-        if( \App\Utils\Messages::validateErrors($response) ){
-            return view('profile', 
-            [ 
-                'fb_url' => (string)$url_fb,
-                'tw_url' => (string)$url_tw,
-                'instagram_login_url' => $this->instagram->getLoginUrl(),
-                'profile' => $response,
-                'app_info' => $this->app_info
-            ]);
-        }else{
-            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
-            return back();
+
+
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('jwt')->token);
+        $curl->get('https://api.ten-po.com/api/v2/profile?app_id='.$this->app->app_app_id);
+
+        if( $curl->response->code == 1000 ){
+            Session::put('user', $curl->response->data->user);
         }
+
+        return view('profile',
+        [
+            'fb_url' => (string)$url_fb,
+            'tw_url' => (string)$url_tw,
+            'instagram_login_url' => $this->instagram->getLoginUrl(),
+            'user' => Session::get('user'),
+            'app_info' => $this->app_info
+        ]);
+
+        return back();
 
     }
     
@@ -370,43 +368,40 @@ class LoginController extends Controller
             $file = $request->file('avatar');
             if( $file ) {
                 
-                $destinationPath = public_path('uploads'); // upload path
-                $extension = $file->getClientOriginalExtension(); // getting image extension
-                $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
-                $file->move($destinationPath, $fileName); // uploading file to given path
-                $url = 'uploads/' . $fileName;
+                $destinationPath = public_path('uploads/avatar');
+                $extension = $file->getClientOriginalExtension();
+                $fileName = md5($file->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension;
+                $file->move($destinationPath, $fileName);
+                $url = 'uploads/avatar/' . $fileName;
                 if (function_exists('curl_file_create')) { // php 5.6+
                     $cFile = curl_file_create( public_path($url) );
                 } else { // 
                     $cFile = '@' . public_path($url) ;
                 }
                 $params = [
-                    'token' => Session::get('user')->token,
+                    'app_id' => $this->app->app_app_id,
                     'username' => $request->input('name') ,
                     'gender' => $request->input('gender'),
                     'address' => $request->input('address'),
                     'avatar' => $cFile
                 ];
-                $post = \App\Utils\HttpRequestUtil::getInstance()
-                    ->post_data_file('update_profile',$params,$this->app->app_app_secret);
-                
             }
             
         }else{
             $params = [
-                'token' => Session::get('user')->token,
+                'app_id' => $this->app->app_app_id,
                 'username' => $request->input('name') ,
                 'gender' => $request->input('gender'),
                 'address' => $request->input('address'),
                 'avatar' => ''
             ];
-            $post = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('update_profile',$params,$this->app->app_app_secret);
         }
-       
-        $response = json_decode($post);
-     
-        if( $response->code == 1000 ){
+
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('jwt')->token);
+        $curl = $curl->post($this->url_api_profile_update, $params);
+
+        if( $curl->code == 1000 ){
             Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
             return back();
         }
@@ -415,7 +410,7 @@ class LoginController extends Controller
         
     }
     
-    public function instagramAuthCallback(Request $request){
+    public function instagramConnect(Request $request){
         // grab OAuth callback code
         $code = $request->input('code');
         $data = $this->instagram->getOAuthToken($code);
@@ -442,4 +437,25 @@ class LoginController extends Controller
         }
 
     }
+
+    public function setPushKey(Request $request){
+        // set push key after login
+        if( $request->ajax() && $request->has('key') ){
+            $postPushKey = \App\Utils\HttpRequestUtil::getInstance()
+                ->post_data('set_push_key',[
+                        'token' => Session::get('user')->token,
+                        'client' =>  3,
+                        'key' => $request->input('key')
+                    ],
+                    $this->app->app_app_secret);
+            $responsePushKey = json_decode($postPushKey);
+
+            if( $responsePushKey->code == 1000 ){
+                Session::put('setpushkey', true );
+                return response()->json(['msg' => 'Set push key success' ]);
+            }
+        }
+
+    }
+
 }

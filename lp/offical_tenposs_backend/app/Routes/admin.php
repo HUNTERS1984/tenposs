@@ -10,6 +10,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('global',['as' => 'admin.client.global', 'uses' => 'Admin\AdminController@globalpage' ] );
     Route::post('global', ['as' => 'admin.client.global.store', 'uses' => 'Admin\AdminController@globalstore']);
     Route::post('global/save-app-icon', ['as' => 'admin.client.global.save.app.icon', 'uses' => 'Admin\AdminController@globalSaveAppIcon']);
+    Route::get('global/get-splash-image', ['as' => 'admin.client.global.get.splash_img', 'uses' => 'Admin\AdminController@getSplashImage']);
+    Route::post('global/delete-splash-image', ['as' => 'admin.client.global.delete.splash_img', 'uses' => 'Admin\AdminController@deleteSplashImage']);
     Route::post('global/save-splash-image', ['as' => 'admin.client.global.save.splash_img', 'uses' => 'Admin\AdminController@globalSaveSplashImage']);
 
     // NEWS

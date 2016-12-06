@@ -187,6 +187,7 @@ class UserV1Controller extends Controller
             $this->body['data']['refresh_token'] = $refresh_token;
             $user_id_code = PseudoCrypt::hash($user->id);
             $this->body['data']['access_refresh_token_href'] = HttpUtils::get_refresh_token_url($request, $user_id_code, $refresh_token);
+            $this->body['data']['is_active'] = $user->active;
             //insert refresh token
 
             $refresh = UserRefreshToken::where('user_id', $user->id)->first();

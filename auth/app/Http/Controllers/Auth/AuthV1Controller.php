@@ -195,8 +195,8 @@ class AuthV1Controller extends Controller
             $user = User::whereEmail(Input::get('email'))->with('roles')->first();
             if (count($user) < 1)
                 return $this->error(99953);
-            if ($user->active != 1)
-                return $this->error(99950);
+            //if ($user->active != 1)
+                //return $this->error(99950);
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
                     'id' => $user->id, 'platform' => Input::get('platform')])
@@ -208,6 +208,7 @@ class AuthV1Controller extends Controller
                 $this->body['data']['refresh_token'] = $refresh_token;
                 $user_id_code = PseudoCrypt::hash($user->id);
                 $this->body['data']['access_refresh_token_href'] = HttpUtils::get_refresh_token_url($request, $user_id_code, $refresh_token);
+                $this->body['data']['is_active'] = $user->active;
                 //insert refresh token
 
                 $refresh = UserRefreshToken::where('user_id', $user->id)->first();

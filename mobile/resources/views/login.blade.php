@@ -12,10 +12,10 @@
     <div id="sign-up-page">
        
         <div class="bottom-layout">
-            <a href="{{ route('auth.getSocialAuth',['provider' => 'facebook']) }}" class="btn tenposs-button bg-fb">
+            <a href="{{ route('login.facebook') }}" class="btn tenposs-button bg-fb">
                 Facebook ではじめる</a>
                 
-            <a href="{{ route('auth.getSocialAuth',['provider' => 'twitter']) }}" class="btn tenposs-button bg-tw">
+            <a href="{{ route('login.twitter') }}" class="btn tenposs-button bg-tw">
                 Twitter ではじめる</a>
                 
             <a href="{{ route('login.normal') }}" class="btn tenposs-button bg-mail">

@@ -53,17 +53,6 @@ class AppsController extends Controller
     public function store(Request $request, $user_id)
     {
         if ($request->isMethod('post')) {
-            // is create new apps
-            $user_id = 0;
-
-            try {
-                $payload = JWTAuth::getPayload(\Illuminate\Support\Facades\Session::get('jwt_token'))->toArray();
-                $user_id = $payload['id'];
-
-            } catch (JWTException $e) {
-                Log::error($e->getMessage());
-                abort(404);
-            }
             if ($user_id < 1)
                 abort(404);
 
@@ -173,6 +162,7 @@ class AppsController extends Controller
             $staff_android_status = 0;
             $staff_ios_status = 0;
             $ga_status = 0;
+            $array = 0;
             if ($data != null) {
                 if (!empty($data[0]->android_push_api_key) && !empty($data[0]->android_push_service_file))
                     $android_status = 1;
@@ -186,6 +176,7 @@ class AppsController extends Controller
                     $staff_ios_status = 1;
                 if (!empty($data[0]->google_analytics_file))
                     $ga_status = 1;
+                $array = json_decode(json_encode($data[0]), True);
             }
             return view('admin.apps.setting',
                 [
@@ -198,7 +189,7 @@ class AppsController extends Controller
                     'staff_ios_status' => $staff_ios_status,
                     'web_status' => $web_status,
                     'ga_status' => $ga_status,
-                    'data' => $array = json_decode(json_encode($data[0]), True)
+                    'data' => $array
                 ]);
         }
         abort(403);

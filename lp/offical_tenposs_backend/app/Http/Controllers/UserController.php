@@ -11,12 +11,16 @@ use Auth;
 use Session;
 use cURL;
 use Mail;
+use JWTAuth;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
     //
     protected $jwt_auth;
+    protected $url_register = 'https://auth.ten-po.com/v1/auth/register';
+    protected $url_login = 'https://auth.ten-po.com/v1/auth/login';
+    protected $url_logout = 'https://auth.ten-po.com/v1/auth/signout';
 
     public function __construct(){
         
@@ -48,11 +52,17 @@ class UserController extends Controller
 
 
         $responseLogin = $requestLogin->send();
+
         $responseLogin = json_decode($responseLogin->body);
        
         if( !empty($responseLogin) && isset( $responseLogin->code ) && $responseLogin->code == 1000 ){
             Session::put('jwt_token',$responseLogin->data);
-            return redirect()->route('admin.client.top');
+            //dd($responseLogin);
+            if ($responseLogin->data->is_active)
+                return redirect()->route('admin.client.global');
+            else
+                return redirect()->route('user.dashboard');
+            //return redirect()->intended();
         }
         return back()->withErrors( 'ログインできません' );
     }
@@ -60,8 +70,7 @@ class UserController extends Controller
     public function logout(){
         Session::forget('jwt_token');
         Session::forget('user');
-        
-        return redirect('/');
+        return redirect()->route('login');
     }
     
     
@@ -77,25 +86,26 @@ class UserController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-
         if ( $validator->fails() ) {
             return back()
                 ->withInput()
                 ->withErrors($validator);
         }
         // send to API auth
-        $response = cURL::post(Config::get('api.api_auth_register'), 
-            [
-                'email' => $request->input('email'), 
-                'password' => $request->input('password'),
-                'role' => 'client'
-            ]
-        );
-        
-        $response = json_decode( $response->body );
-        
-        if( !empty($response) && isset( $response->code ) && $response->code == 1000 ){
-            Session::put('jwt_token',$response->data);
+
+        $requestRegister = cURL::newRequest('post', $this->url_register,[
+            'email' => Input::get('email'),
+            'password' => Input::get('password'),
+            'role' => 'client',
+            'platform' => 'web'
+        ])->setHeader('Authorization',  'Basic '. base64_encode( config('jwt.jwt_admin').':'.config('jwt.jwt_admin_password') ));
+
+
+        $responseRegister = $requestRegister->send();
+        $responseRegister = json_decode($responseRegister->body);
+
+        if( !empty($responseRegister) && isset( $responseRegister->code ) && $responseRegister->code == 1000 ){
+            Session::put('jwt_token',$responseRegister->data);
             return redirect()->route('user.dashboard');
         }
         
@@ -143,11 +153,9 @@ class UserController extends Controller
     // Show form reset pass by email 
     public function showResetForm(Request $request, $token = null)
     {
-        
         if (is_null($token)) {
             return $this->reset();
         }
-
         $email = $request->input('email');
         return view('pages.password.reset_form')
             ->with(compact('token', 'email'));
@@ -164,10 +172,7 @@ class UserController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-        
         // send token to reset
-        
-       
     }
  
 }

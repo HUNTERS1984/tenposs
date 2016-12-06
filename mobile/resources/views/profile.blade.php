@@ -38,8 +38,8 @@
             <ul>
                 <li>
                     <?php
-                    $avatar = ($profile->data->user->profile->avatar_url != '')
-                        ? $profile->data->user->profile->avatar_url
+                    $avatar = ($user->profile->avatar_url != '')
+                        ? $user->profile->avatar_url
                         : url('/img/wall.jpg');
                     ?>
 
@@ -49,12 +49,12 @@
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
                         </a>
-                        <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $profile->data->user->profile->avatar_url }}">
+                        <input class="btn_upload_ipt create" style="display:none" type="file" name="avatar" value="{{ $user->profile->avatar_url }}">
                     </label>
                 </li>
                 <li>
                     <label>ユーザー名</label>
-                    <input type="text" name="name" value="{{ $profile->data->user->profile->name }}"/>
+                    <input type="text" name="name" value="{{ $user->profile->name }}"/>
 
                 </li>
                 <li>
@@ -64,7 +64,7 @@
                 </li>
                 <li>
                     <label>メールアドレス</label>
-                    <input type="email" readonly name="email" value="{{ $profile->data->user->email }}"/>
+                    <input type="email" readonly name="email" value="{{ $user->email }}"/>
 
                 </li>
                 <li>
@@ -78,7 +78,7 @@
                 </li>
                 <li>
                     <label>住所</label>
-                    <input type="text" name="address" value="{{ $profile->data->user->profile->address }}"/>
+                    <input type="text" name="address" value="{{ $user->profile->address }}"/>
 
                 </li>
             </ul>
@@ -87,7 +87,7 @@
                     <i class="icon-face"></i>
                     <div class="wrap-ic">
                         <span >Facebook</span>
-                        @if( $profile->data->user->profile->facebook_status == 1 )
+                        @if( $user->profile->facebook_status == 1 )
                         <a href="{{ route('social.cancel',[ 'type' => 1 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ $fb_url }}" class="btn">
@@ -100,7 +100,7 @@
                     <i class="icon-twitter"></i>
                     <div class="wrap-ic">
                         <span >Twitter</span>
-                        @if( $profile->data->user->profile->twitter_status == 1 )
+                        @if( $user->profile->twitter_status == 1 )
                         <a href="{{ route('social.cancel',[ 'type' => 2 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ $tw_url }}" class="btn">
@@ -113,7 +113,7 @@
                     <i class="icon-instagram"></i>
                     <div class="wrap-ic">
                         <span >Instagram</span>
-                        @if( $profile->data->user->profile->instagram_status == 1 )
+                        @if( $user->profile->instagram_status == 1 )
                         <a href="{{ route('social.cancel',[ 'type' => 3 ]) }}" class="btn">非接続</a>
                         @else
                         <a href="{{ $instagram_login_url }}" class="btn">

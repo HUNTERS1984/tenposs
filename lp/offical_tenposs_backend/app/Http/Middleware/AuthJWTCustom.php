@@ -18,6 +18,10 @@ use Config;
 class AuthJWTCustom extends BaseMiddleware
 
 {
+
+    protected $api_user_profile = 'https://auth.ten-po.com/v1/profile';
+    protected $api_refresh_token = 'https://auth.ten-po.com/v1/auth/access_token';
+
     /**
      * Handle an incoming request.
      *
@@ -41,34 +45,41 @@ class AuthJWTCustom extends BaseMiddleware
         $token = JWTAuth::getToken();
 
         try {
-            $user = $this->auth->getPayload( $token );
             // call api to get user profile
-            $user_id = $user->get('id');
-            //$user_role = $user->get('role');
-            if (Session::get('user') == null) {
-                $requestProfile = cURL::newRequest('get', Config::get('api.api_auth_profile'))
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
-            
+            if ( Session::get('user') == null ) {
+                $requestProfile = cURL::newRequest('get', $this->api_user_profile )
+                    ->setHeader('Authorization',  'Bearer '. $token );
+
                 $responseProfile = $requestProfile->send();
                 $profile = json_decode($responseProfile->body);
                 
                 if( isset($profile->code) && $profile->code == 1000 ){
                     Session::put('user', $profile->data );
                 } else {
-                    Session::put('jwt_token', null);
-                    Session::put('user', null);
-                    return redirect()->route('login')->withErrors('Session expired');
+                    // refresh token
+                    $requestRefresh = cURL::newRequest('post', $this->api_refresh_token,[
+                        'id_code' => Session::get('jwt_token')->refresh_token,
+                        'refresh_token' => Session::get('jwt_token')->access_refresh_token_href
+                    ] )->setHeader('Authorization',  'Bearer '. $token );
+
+                    $responseRefresh = $requestRefresh->send();
+                    $responseRefresh = json_decode($responseRefresh->body);
+                    if( isset($responseRefresh->code) && $responseRefresh->code == 1000 ){
+                        Session::put('jwt_token', $responseRefresh->data);
+                    }else{
+                        return redirect()->route('login')->withErrors('Session expired');
+                    }
+
                 }
             }
-            
+
+            $user = $this->auth->getPayload( $token );
             $request->user = $user->get();
             if ($request->user) {
- 
-                $request->app = App::whereUserId( $user_id )->first();
+                $request->app = App::whereUserId( $request->user['id'] )->first();
                 if ($request->app) {
                     $request->stores =  Store::whereAppId($request->app->id)->get();
                 }
-                
             }
         } catch (TokenExpiredException $e) {
             
@@ -77,14 +88,13 @@ class AuthJWTCustom extends BaseMiddleware
             return redirect()->route('login')->withErrors('Session expired');
             
         } catch (JWTException $e) {
-            
             return redirect()->route('login')->withErrors('Token Signature could not be verified.');
             //return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
         } catch (TokenBlacklistedException $e) {
             
             Session::put('jwt_token', null);
             Session::put('user', null);
-            return redirect()->route('login')->withErrors('Session expired');;
+            return redirect()->route('login')->withErrors('Session expired');
         }
 
         $this->events->fire('tymon.jwt.valid', $user);
