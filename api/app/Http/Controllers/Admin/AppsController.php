@@ -154,7 +154,7 @@ class AppsController extends Controller
         $apps = App::find($app_id);
         if (count($apps) > 0) {
             $url = Config::get('api.url_get_notification_configure') . $apps->app_app_id;
-            $data = HttpRequestUtil::getInstance()->get_data_with_token($url, \Illuminate\Support\Facades\Session::get('jwt_token')->token);
+            $data = HttpRequestUtil::getInstance()->get_data_with_token($url, \Illuminate\Support\Facades\Session::get('jwt_token'));
 
             $android_status = 0;
             $ios_status = 0;
@@ -289,7 +289,7 @@ class AppsController extends Controller
 //            print_r($params);
             if ($params != null && count($params) > 0) {
                 $updated = HttpRequestUtil::getInstance()->post_data_file(Config::get('api.url_upload_file_notification_configure')
-                    , $params, \Illuminate\Support\Facades\Session::get('jwt_token')->token);
+                    , $params, \Illuminate\Support\Facades\Session::get('jwt_token'));
 //print_r($updated);die;
                 if ($updated) {
                     Session::flash('message', array('class' => 'alert-success', 'detail' => 'Configure successful!'));
