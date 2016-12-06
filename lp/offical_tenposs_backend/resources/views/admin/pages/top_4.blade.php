@@ -1,7 +1,9 @@
 <div id="template-4" class="content-preview contact">
-    @foreach($contacts as $contact)
     <script type="text/javascript">
         var maps = [];
+    </script>
+    @foreach($contacts as $contact)
+    <script type="text/javascript">
         maps.push({
             id : '{{$contact->id}}',
             lat : '{{$contact->latitude}}',

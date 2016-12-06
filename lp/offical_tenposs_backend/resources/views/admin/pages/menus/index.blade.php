@@ -109,7 +109,7 @@
                     @endif
                  
                     <div class="page-bottom">
-                        @if(!$list_item->isEmpty())
+                        @if($list_item && !$list_item->isEmpty())
                             {{ $list_item->render() }}
                         @endif
                         <!--
