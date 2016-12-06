@@ -176,7 +176,7 @@ class AppsController extends Controller
                     $staff_ios_status = 1;
                 if (!empty($data[0]->google_analytics_file))
                     $ga_status = 1;
-                $array = json_decode(json_encode($data[0]), True)
+                $array = json_decode(json_encode($data[0]), True);
             }
             return view('admin.apps.setting',
                 [
