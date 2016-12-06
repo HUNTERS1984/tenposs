@@ -19,13 +19,14 @@ class VerifyExistApp
      */
     public function handle($request, Closure $next)
     {
+
         if( !Session::has('app') ){
            
             $url = URL::to('/');
             $url = parse_url($url,PHP_URL_HOST);
             $url = strstr(str_replace("www.","",$url), ".",true);
 
-//            $url = 'm';
+            $url = 'm';
             $post = \App\Utils\HttpRequestUtil::getInstance()
                 ->get_data('get_app_by_domain',[
                     'domain' => $url
@@ -34,14 +35,14 @@ class VerifyExistApp
 
             $response = json_decode($post);
 
-            if( \App\Utils\Messages::validateErrors($response) && count($response->data->app_info) > 0 ){
+            if( $response->code == 1000  ){
                 $app = DB::table('apps')
                     ->where('app_app_id', $response->data->app_info->app_app_id )
                     ->first();
+
                 if( is_null($app) )
                     abort(404);
                 Session::put('app',$app);  
-                
                 
             }else{
                 Session::flash('message', \App\Utils\Messages::getMessage( $response ));

@@ -23,6 +23,7 @@ class Controller extends BaseController
     public function __construct(Request $request)
     {
         $this->request = $request;
+
         $this->app = Session::get('app');
         $get = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo', [

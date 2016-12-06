@@ -33,7 +33,7 @@ class Messages
     static $customErrorsList = array(
          '2000' => "社会的なユーザーを取得できません!",//Cannot get social user
          '2001' => "ユーザープロファイルを取得できません",
-         '2002' => "プロファイルの成功を更新",
+         '2002' => "プロファイルの成功を更新", //Update profile success
          '2003' => '間違ったメールアドレスまたはパスワード！', //Wrong email or password!
          '2004' => '社会的に接続することはできません。', //Cannot connect social,
          '2005' => '社会的成功を接続キャンセル！', //Cancel connect social success!,
