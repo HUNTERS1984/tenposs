@@ -110,7 +110,7 @@ class NotificationController extends Controller
                         'message' => $this->request->input('message'),
                         'type' => 'custom',
                         'app_id' => $apps->app_app_id),
-                    Session::get('jwt_token')
+                    Session::get('jwt_token')->token
                 );
                 $this->push->status = 1;
                 $this->push->save();

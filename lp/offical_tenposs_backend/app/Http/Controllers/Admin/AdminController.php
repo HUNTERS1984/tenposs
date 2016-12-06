@@ -393,13 +393,6 @@ class AdminController extends Controller
             return abort(503,'User info not found' );
         }
 
-        // $response = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
-        //         ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
-        // $response_profile = json_decode($response->body);
-        // if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
-        //     $user_info['auth'] = $response_profile->data;
-        // }
-        // dd($user_info);
         return view('admin.pages.users.account', ['user' => $user_info]);
     }
 
@@ -436,7 +429,7 @@ class AdminController extends Controller
                     'old_password' => $request->input('password'),
                     'new_password' => $request->input('password_confirmation'),
                 ])
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
             $responseUpdatePassWord = json_decode($responseUpdatePassWord->body);
 
@@ -451,14 +444,18 @@ class AdminController extends Controller
         }
 
 
-        $user_info->business_form = $request->input('business_form');
-        $user_info->business_category = $request->input('business_category');
-        $user_info->brand_name = $request->input('brand_name');
-        $user_info->street_address = $request->input('street_address');
+        $user_info->business_type = $request->input('business_type');
         $user_info->tel = $request->input('tel');
-        $user_info->business_hours = $request->input('business_hours');
-        $user_info->regular_holiday = $request->input('regular_holiday');
-        $user_info->testimonial = $request->input('testimonial');
+        $user_info->fax = $request->input('fax');
+        $user_info->shop_category = $request->input('shop_category');
+        $user_info->shop_url = $request->input('shop_url');
+        $user_info->shop_tel = $request->input('shop_tel');
+        $user_info->shop_regular_holiday = $request->input('shop_regular_holiday');
+        $user_info->shop_business_hours = $request->input('shop_business_hours');
+        $user_info->shop_address = $request->input('shop_address');
+        $user_info->shop_name = $request->input('shop_name');
+        $user_info->shop_description = $request->input('shop_description');
+
         if( $filePath != '' )
             $user_info->avatar = $filePath;
         $user_info->save();

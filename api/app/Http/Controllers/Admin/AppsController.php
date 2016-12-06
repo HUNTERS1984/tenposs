@@ -154,7 +154,7 @@ class AppsController extends Controller
         $apps = App::find($app_id);
         if (count($apps) > 0) {
             $url = Config::get('api.url_get_notification_configure') . $apps->app_app_id;
-            $data = HttpRequestUtil::getInstance()->get_data_with_token($url, \Illuminate\Support\Facades\Session::get('jwt_token'));
+            $data = HttpRequestUtil::getInstance()->get_data_with_token($url, \Illuminate\Support\Facades\Session::get('jwt_token')->token);
 
             $android_status = 0;
             $ios_status = 0;
@@ -162,6 +162,7 @@ class AppsController extends Controller
             $staff_android_status = 0;
             $staff_ios_status = 0;
             $ga_status = 0;
+            $array = 0;
             if ($data != null) {
                 if (!empty($data[0]->android_push_api_key) && !empty($data[0]->android_push_service_file))
                     $android_status = 1;
@@ -175,6 +176,7 @@ class AppsController extends Controller
                     $staff_ios_status = 1;
                 if (!empty($data[0]->google_analytics_file))
                     $ga_status = 1;
+                $array = json_decode(json_encode($data[0]), True)
             }
             return view('admin.apps.setting',
                 [
@@ -187,7 +189,7 @@ class AppsController extends Controller
                     'staff_ios_status' => $staff_ios_status,
                     'web_status' => $web_status,
                     'ga_status' => $ga_status,
-                    'data' => $array = json_decode(json_encode($data[0]), True)
+                    'data' => $array
                 ]);
         }
         abort(403);
@@ -287,7 +289,7 @@ class AppsController extends Controller
 //            print_r($params);
             if ($params != null && count($params) > 0) {
                 $updated = HttpRequestUtil::getInstance()->post_data_file(Config::get('api.url_upload_file_notification_configure')
-                    , $params, \Illuminate\Support\Facades\Session::get('jwt_token'));
+                    , $params, \Illuminate\Support\Facades\Session::get('jwt_token')->token);
 //print_r($updated);die;
                 if ($updated) {
                     Session::flash('message', array('class' => 'alert-success', 'detail' => 'Configure successful!'));
