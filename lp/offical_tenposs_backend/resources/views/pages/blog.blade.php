@@ -44,7 +44,7 @@
 
 										<a href="{{route('blog.detail',[$item->id,$item->slug])}}" class="name-blog">{{$item->title}}</a>
 										<a href="{{route('blog.detail',[$item->id,$item->slug])}}"><img src="{{asset($item->img_url)}}" class="img-responsive" alt=""></a>
-										<p>{{Str::words($item->content,30)}}</p>
+										<p>{{Str::limit($item->content,80)}}</p>
 									</div>
 									@endforeach
 								</div>

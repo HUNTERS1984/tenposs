@@ -44,11 +44,13 @@ p {
 
 .bg-blue,
 .btn-xanhduong {
-    background: #288CDC
+    background: #288CDC;
+    border-width: 0;
 }
 
 .btn-hong {
-    background: #F078A0
+    background: #F078A0;
+    border-width: 0;
 }
 
 .btn-trang {
@@ -466,6 +468,51 @@ p {
     font-family: "HiraKakuPro-W6-AlphaNum";
     color: #fff
 }
+
+.middle.page .panel-group .panel {
+    box-shadow: 0 2px 4px #CDCCCD;
+    border: 0;
+    border-radius: 0px;
+}
+
+.middle.page .panel-primary>.panel-heading+.panel-collapse>.panel-body {
+    border-top: 1px solid #ddd;
+}
+
+.middle.page .panel-primary>.panel-heading {
+    border-radius: 0px;
+    border-top: solid 6px #288CDC;
+    background-color: white;
+    color: #616062;
+}
+
+.middle.page .button-register {
+    border: 2px solid #1e96d6;
+    padding: 8px 30px;
+    color: #1e96d6;
+    border-radius: 4px;
+    vertical-align: bottom;
+    background-color: white;
+}
+
+.middle.page .content-welcome {
+    border: 1px solid #c8d2d6;
+    border-radius: 4px;
+    padding: 50px 35px;
+    min-height: 330px;
+    background: #fff;
+    text-align: center;
+}
+
+.middle.page .content-welcome p {
+    margin: 35px 0;
+    letter-spacing: 2px;
+    font-weight: bold;
+    line-height: 25px;
+    color: #646e72;
+    font-size: 16px;
+}
+
 
 .footer {
     background: #383838;

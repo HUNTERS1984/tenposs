@@ -52,11 +52,16 @@ class UserController extends Controller
 
 
         $responseLogin = $requestLogin->send();
+
         $responseLogin = json_decode($responseLogin->body);
        
         if( !empty($responseLogin) && isset( $responseLogin->code ) && $responseLogin->code == 1000 ){
             Session::put('jwt_token',$responseLogin->data);
-            return redirect()->route('admin.client.global');
+            //dd($responseLogin);
+            if ($responseLogin->data->is_active)
+                return redirect()->route('admin.client.global');
+            else
+                return redirect()->route('user.dashboard');
             //return redirect()->intended();
         }
         return back()->withErrors( 'ログインできません' );
@@ -65,7 +70,7 @@ class UserController extends Controller
     public function logout(){
         Session::forget('jwt_token');
         Session::forget('user');
-        return redirect('/');
+        return redirect()->route('login');
     }
     
     

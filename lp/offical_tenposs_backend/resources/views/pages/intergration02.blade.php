@@ -52,7 +52,7 @@
 								<div class="col-md-9">
 									<div class="left">
 										<a href="{{route('intergration02.detail',[$item->id, $item->slug])}}"><h3 class="title-inter">{{$item->title}}</h3></a>
-										<p>{{Str::words($item->content,30)}}</p>
+										<p>{{Str::limit($item->content,80)}}</p>
 									</div>
 								</div>
 							</div>

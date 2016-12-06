@@ -52,13 +52,13 @@
 						    </div>
 						    <div id="collapseOne" class="panel-collapse collapse {{ $step['step1']['active'] }}" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
-						      	<p>
+						      	<p style="padding:30px">
 						      			TENPOSSへようこそ！ショップ開設あ	りがとうございます。
 この画面ではショップをオープンするまでの道のりを案内したり、商品が売れた通知やTENPOSSからのキャンペーンのお知らせ、上手にショップを運営するためのヒント等を表示します。
 まずはショップの公開まで進めてみましょう！
 						      	</p>
 						       	<p class="text-center">
-					       			<button onClick="window.location.reload()" class="btn btn-primary" >閉じる</button>
+					       			<button onClick="window.location.reload()" class="btn btn-primary btn-xanhduong" >次へ</button>
 					       		</p>
 						      </div>
 						    </div>
@@ -111,63 +111,65 @@
 						       	<form class="form-horizontal form" method="post" action="{{ route('user.dashboard.post') }}">
 						       		<input type="hidden" name="_token" value="{{ csrf_token() }}" >
 						       		<div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">会社名</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">会社名</label>
+					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="company" name="company" value="{{ old('company') }}"
-					                               placeholder="ここのために入力し...">
+					                               placeholder="">
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">事業の種類</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">事業の種類</label>
+					                    <div class="col-sm-4">
 					                        <select name="business_type" class="form-control">
 					                            <option value="">選択します</option>
-					                            <option value="business" {{ (old('business_type') == 'business') ? 'selected' : '' }}>ビジネス</option>
-					                            <option value="other" {{ (old('business_type') == 'other') ? 'selected' : '' }}>他の</option>
+			                                    <option value="0">法人</option>
+			                                    <option value="1">個人</option>
+			                                    <option value="2">その他</option>
+
 					                        </select>
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">アプリ名</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">アプリ名</label>
+					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="app_name_register" name="app_name_register"  
 					                        value="{{ old('app_name_register') }}"
-					                               placeholder="ここのために入力し...">
+					                               placeholder="">
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">ドメインタイプ</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">ドメインタイプ</label>
+					                    <div class="col-sm-4">
 					                        <select name="domain_type" class="form-control">
 					                            <option value="">選択します</option>
-					                            <option value="main" {{ (old('domain_type') == 'main') ? 'selected' : '' }}>ドメインの所有者</option>
-					                            <option value="sub" {{ (old('domain_type') == 'sub') ? 'selected' : '' }}>tenpossのサブドメイン</option>
+					                            <option value="main" {{ (old('domain_type') == 'main') ? 'selected' : '' }}>所有者のドメイン (example.com)</option>
+					                            <option value="sub" {{ (old('domain_type') == 'sub') ? 'selected' : '' }}>Tenpossのサブドメイン (example.ten-po.com)</option>
 					                        </select>
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">ドメイン</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">ドメイン</label>
+					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="domain" name="domain" value="{{ old('domain') }}"
-					                               placeholder="ここのために入力し...">
+					                               placeholder="">
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">電話番号</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">電話番号</label>
+					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="tel" name="tel" value="{{ old('tel') }}"
-					                               placeholder="ここのために入力し...">
+					                               placeholder="">
 					                    </div>
 					                </div>
 					                <div class="form-group">
-					                    <label for="inputEmail3" class="col-sm-3 control-label">ファックス</label>
-					                    <div class="col-sm-9">
+					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">ファックス</label>
+					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="fax" name="fax" value="{{ old('fax') }}"
-					                               placeholder="ここのために入力し...">
+					                               placeholder="">
 					                    </div>
 					                </div>
 					                <p class="text-center">
-					                	<button type="submit" class="btn btn-primary"> 登録 </button>
+					                	<button type="submit" class="btn btn-primary btn-xanhduong"> 次へ </button>
 					                </p>
 					                
 						       	</form>
@@ -190,20 +192,94 @@
 						      	<form class="form-horizontal form" method="post" action="{{ route('user.dashboard.post') }}">
 						      		<input type="hidden" name="_token" value="{{ csrf_token() }}" >
 						      		<div class="form-group">
-					                    <label for="" class="col-sm-3 control-label">ショップへのリンク</label>
-					                    <div class="col-sm-7">
-					                        <input type="text" class="form-control" id="shop_info" name="shop_info"  value=""
-					                               placeholder="beauty.hotpepper.jpまたはtabelog.comのリンクを入力してください">
-					                        <label id"shop_sample" for="" class="text-muted">例えば：http://beauty.hotpepper.jp/slnH000196113/</label>     
-					                    	 <div id="crawled-info"></div>
-					                    </div>
-					                    <div class="col-sm-2">
-					                    	<button type="button" id="btn-fetch" class="btn btn-primary"> 取得 </button>
+						      			
+					      				<div class="form-group">
+						                    <label for="" class="col-sm-offset-2 col-sm-4">ショップURL</label>
+						                   	<div class="input-group col-sm-5" style="padding-left:10px">
+										      <input type="text" class="form-control" id="shop_info" placeholder="beauty.hotpepper.jpまたはtabelog.comのURL">
+										      <span class="input-group-btn">
+										        <button type="button" id="btn-fetch" class="btn btn-primary btn-xanhduong">取得!</button>
+										      </span>
+										    </div>
+										    <label id"shop_sample" for="" class="col-sm-offset-6 text-muted" style="padding-left:10px; word-break: break-word;">例えば：http://beauty.hotpepper.jp/slnH000196113/</label>
+										   	</div>
+					                   	<div id="crawled-info" class="">
+								       		<div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">ブランド名・店舗名</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_name_register" name="shop_name_register" value="{{ old('shop_name_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+							                <div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">カテゴリー</label>
+							                    <div class="col-sm-4">
+							                        <select name="shop_category"  id="shop_category" class="form-control">
+							                            <option value="">選択します</option>
+					                                    <option value="0">ファッション</option>
+					                                    <option value="1">飲食業界</option>
+					                                    <option value="2">美容業界</option>
+					                                    <option value="3">情報</option>
+					                                    <option value="4">その他</option>
+
+							                        </select>
+							                    </div>
+							                </div>
+							               	<div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">お店のホームページ</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_url_register" name="shop_url_register"  
+							                        value="{{ old('shop_url_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+
+							                <div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">住所</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_address_register" name="shop_address_register"  
+							                        value="{{ old('shop_address_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+							                <div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">電話番号</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_tel_register" name="shop_tel_register"  
+							                        value="{{ old('shop_tel_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+							               	<div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">営業時間(例:AM10:00~PM21:00)</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_time_register" name="shop_time_register"  
+							                        value="{{ old('shop_time_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+							                <div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">定休日</label>
+							                    <div class="col-sm-4">
+							                        <input type="text" class="form-control" id="shop_close_register" name="shop_close_register"  
+							                        value="{{ old('shop_close_register') }}"
+							                               placeholder="">
+							                    </div>
+							                </div>
+								            <div class="form-group">
+							                    <label for="" class="col-sm-offset-2 col-sm-4">コメント・紹介文</label>
+							                    <div class="col-sm-4">
+							                        <textarea type="text" class="form-control" id="shop_description_register" name="shop_description_register"  
+							                        value="" placeholder="" rows="3" cols="10"> {{ old('shop_description_register') }}
+							                        </textarea>
+							                    </div>
+							                </div>
+								            
+
 					                   	</div>
 					                </div>
 						      		<p class="text-center">
-						      			
-					                	<button type="submit" class="btn btn-primary"> 完了 </button>
+						      			<button type="submit" class="button-register"> 完了 </button>
 					                </p>
 						      	</form>
 						      </div>
@@ -213,14 +289,13 @@
 					</div>	
 					
 					@if ($visibleStepFinal)
-					<div class="alert alert-info">
-						<div class="text-center">
-							<p>この度はTenpossをお申し込みいただき、ありがとうございます。</p>
-							<p>&nbsp;</p>
-							<p>現時点ではまだお申し込み手続きが完了しておりませんので、管理者から確認する必要があります。</p>
-							<p>&nbsp;</p>
-							<p>確認にかかる時間は1日以内です</p>
-						</div>
+					<div class="content-welcome">
+						<img src="{{ url('assets/frontend/img/logo-agree.jpg') }}" alt="">
+						<p class="text-center">
+							この度はTenpossをお申し込みいただき、ありがとうございます。<br/><br/>
+							現時点ではまだお申し込み手続きが完了しておりませんので、管理者から確認する必要があります。
+							確認にかかる時間は1日以内です
+						</p>
 					</div>
 					@endif
 				</div>
@@ -245,9 +320,16 @@
 						 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
 					success: function(response){
-						console.log(response);
-						$('#crawled-info').html(response);
-						$('#shop_sample').html('');
+						var obj = jQuery.parseJSON(response);
+						console.log(obj);
+						$('#shop_tel_register').val(obj['電話番号']);
+						$('#shop_close_register').val(obj['定休日']);
+						$('#shop_url_register').val(obj['お店のホームページ']);
+						$('#shop_time_register').val(obj['営業時間']);
+						$('#shop_address_register').val(obj['住所']);
+						$('#shop_name_register').val(obj['店舗名']);
+						$('#shop_description_register').text(obj['紹介文']);
+						$('#shop_category').val(obj['カテゴリー']);
 					}
 				});
 			})

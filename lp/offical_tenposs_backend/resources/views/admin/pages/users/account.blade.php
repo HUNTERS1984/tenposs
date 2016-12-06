@@ -58,10 +58,12 @@
                                 <div class="form-group">
                                   <label for="">事業形態</label>
                                   <select name="business_form" class="form-control">
-                                    <option {{ ($user->business_form == 'corporation') ? 'selected' : '' }}
-                                       value="corporation">法人</option>
-                                    <option {{ ($user->business_form == 'other') ? 'selected' : '' }}
-                                        value="other">Other</option>
+                                    <option {{ ($user->business_form == 0) ? 'selected' : '' }}
+                                       value="0">法人</option>
+                                    <option {{ ($user->business_form == 1) ? 'selected' : '' }}
+                                       value="1">個人</option>
+                                    <option {{ ($user->business_form == 2) ? 'selected' : '' }}
+                                        value="2">その他</option>
 
                                   </select>
                                 </div>

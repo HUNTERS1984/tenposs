@@ -53,17 +53,6 @@ class AppsController extends Controller
     public function store(Request $request, $user_id)
     {
         if ($request->isMethod('post')) {
-            // is create new apps
-            $user_id = 0;
-
-            try {
-                $payload = JWTAuth::getPayload(\Illuminate\Support\Facades\Session::get('jwt_token'))->toArray();
-                $user_id = $payload['id'];
-
-            } catch (JWTException $e) {
-                Log::error($e->getMessage());
-                abort(404);
-            }
             if ($user_id < 1)
                 abort(404);
 
