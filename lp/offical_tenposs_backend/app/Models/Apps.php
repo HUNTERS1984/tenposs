@@ -53,6 +53,10 @@ class Apps extends Model
         return $this->hasMany('App\Models\AppUsers','app_id','id');
     }
 
+    public function app_setting()
+    {
+        return $this->hasOne(AppSetting::class)->select(['id', 'app_id', 'title', 'title_color', 'font_size', 'font_family', 'header_color', 'menu_icon_color', 'menu_background_color' ,'menu_font_color', 'menu_font_size', 'menu_font_family', 'template_id']);
+    }
 
 
 }

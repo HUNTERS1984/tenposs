@@ -46,8 +46,9 @@ class AdminController extends Controller
     
     public function top(Request $request){
         $all = Component::whereNotNull('top')->pluck('name', 'id');
-        $app_data = App::where('user_id', $request->user['sub'] )->first();
-        
+
+        $app_data = App::whereUserId($request->user['sub'] )->first();
+
         if( !$app_data ){
             return redirect()->route('user.dashboard');
         }
@@ -56,17 +57,15 @@ class AdminController extends Controller
         $available_components = array();
         if (count($all) > 0) {
 //            $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
-            $app = AppSetting::where('id', $app_data->id);
-            $app_settings = $app->firstOrFail();
-
+            $app = App::where('id', $app_data->id)->first();
+            $app_settings = $app->app_setting()->first();
             if ($app_settings != null) {
 
                 $top_images = AppTopMainImage::where('app_setting_id', '=', $app_settings->id)->get();
                 for ($i = 0; $i < count($top_images); $i++) {
                     $top_images[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$top_images[$i]->image_url);
                 }
-                $app_components = $app->first()
-                    ->components()
+                $app_components = $app_settings->components()
                     ->whereNotNull('top')
                     ->pluck('name', 'id')
                     ->toArray();
@@ -75,7 +74,9 @@ class AdminController extends Controller
                 } else {
                     $available_components = $all->toArray();
                 }
-            }     
+            } else {
+                return redirect()->route('user.dashboard');
+            } 
             
         }
         
@@ -168,8 +169,8 @@ class AdminController extends Controller
         $data_component_dest = array();
         
         if (count($app_data) > 0) {
-            $app_settings = AppSetting::where('app_id', $app_data->id)->firstOrFail();
-            
+            $app_settings = AppSetting::where('app_id', $app_data->id)->first();
+            //dd($app_data->id);
             if ($app_settings != null) {
                 $data_component_dest = DB::table('components')
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
@@ -189,6 +190,8 @@ class AdminController extends Controller
                         );
                 } else
                     $data_component_source = $component_all;
+            } else {
+                return redirect()->route('user.dashboard');
             }
         }
         
@@ -312,7 +315,7 @@ class AdminController extends Controller
             $app_data = App::where('user_id', $request->user['sub'])->first();
             if (count($app_data) > 0) {
                 $app = new AppSetting();
-                $app_setting = $app->with('components')->find($app_data->id);
+                $app_setting = $app->whereAppId($app_data->id)->with('components')->first();
                 if (!$app_setting)
                     return back()->with('warning', 'Add App Setting fail');
             } else {
@@ -371,9 +374,8 @@ class AdminController extends Controller
                     'order' => $i);
                 $i++;
             }
-
             if (count($list_id) > 0)
-                DB::table('rel_app_settings_components')->whereIn('app_setting_id', $list_id)->delete();
+                DB::table('rel_app_settings_components')->where('app_setting_id', $app_setting->id)->delete();
             if (count($list_insert) > 0)
                 DB::table('rel_app_settings_components')->insert($list_insert);
             //delete cache redis
@@ -381,6 +383,7 @@ class AdminController extends Controller
             DB::commit();
             return back()->with('status', 'Setting successfully');
         } catch (QueryException $e) {
+            dd($e);
             Log::error($e->getMessage());
             DB::rollBack();
             return back()->with('warning', 'Setting fail');
