@@ -85,6 +85,7 @@ class AuthV1Controller extends Controller
             $result = json_decode($result);
 
             $email = $result->id . '@fb.com';
+//            $email = "123234234324234234234" . '@fb.com';
             $password = Input::get('social_token');
         } else if (Input::get('social_type') == 2) {
             $check_items = array('social_token', 'social_secret');
@@ -134,11 +135,8 @@ class AuthV1Controller extends Controller
         $user = User::whereEmail($email)->with('roles')->first();
 
         $credentials = array();
-        $credentials['email'] = $email;
+        $credentials['email'] = $user->email;
         $credentials['password'] = $password;
-
-        $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
-            'id' => $user->id, 'platform' => Input::get('platform')]);
 
         if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
                 'id' => $user->id, 'platform' => Input::get('platform')])
