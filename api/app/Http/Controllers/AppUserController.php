@@ -928,13 +928,24 @@ class AppUserController extends Controller
         $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if (!$app)
             return $this->error(1004);
-
-        $auth_profile = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.url_auth_social_login'),
-            [
+        $arr_param = array();
+        if (Input::get('social_type') == 1) {
+            $arr_param = [
                 'social_type' => Input::get('social_type'),
                 'social_token' => Input::get('social_token'),
                 'platform' => Input::get('platform')
-            ]);
+            ];
+        } else if (Input::get('social_type') == 2) {
+            $arr_param = [
+                'social_type' => Input::get('social_type'),
+                'social_token' => Input::get('social_token'),
+                'social_secret' => Input::get('social_secret'),
+                'platform' => Input::get('platform')
+            ];
+        }
+        $auth_profile = HttpRequestUtil::getInstance()->post_data_with_basic_auth(Config::get('api.url_auth_social_login'),
+            $arr_param);
+
         $profile = array();
         $user = array();
         $auth_user_id = 0;
@@ -1376,6 +1387,7 @@ class AppUserController extends Controller
             return $this->error(9999);
         }
     }
+
     public function v2_update_profile_from_social_signup()
     {
         $check_items = array('app_id');
