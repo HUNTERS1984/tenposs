@@ -54,7 +54,7 @@
                     <div class="content-preview clearfix">
                         <div class="row-me fixHeight">
                             @if(empty($list_preview_photo))
-                                No Data
+                                <p align="center">データなし</p>
                             @else
                                 @foreach($list_preview_photo as $item_thumb)
                                     <div class="col-xs-4 padding-me">
@@ -64,6 +64,7 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                <a href="#" class="btn tenposs-readmore">もっと見る</a>
                             @endif
                         </div>
 
@@ -83,7 +84,7 @@
             <div class="wrapp-photo-img">
                     <div class="row">
                         @if(empty($list_photo))
-                            No Data
+                            
                         @else
                             @foreach($list_photo as $item)
                                 <div class="col-md-4 col-xs-6">
@@ -102,7 +103,7 @@
                         @endif
                     </div>
                     <div class="clearfix">
-                        @if(!$list_photo->isEmpty())
+                        @if($list_photo && !$list_photo->isEmpty())
                             {{ $list_photo->render() }}
                         @endif
                     </div>

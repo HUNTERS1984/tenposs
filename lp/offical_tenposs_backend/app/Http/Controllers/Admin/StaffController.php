@@ -43,6 +43,7 @@ class StaffController extends Controller
         $list_staff = array();
         $list_preview_staff = array();
         $list_store = array();
+        $staff_cat = array();
         if (count($stores) > 0) {
             $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 

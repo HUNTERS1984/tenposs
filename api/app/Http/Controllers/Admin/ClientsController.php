@@ -251,8 +251,29 @@ class ClientsController extends Controller
                 $appSetting->top_main_image_url = 'uploads/1.jpg';
                 $appSetting->save();
 
-                // Set rel_app_settings_sidemenus, rel_app_settings_components
 
+                $store = new \App\Models\Store;
+                $store->app_id = $app->id;
+                $store->name = 'Default Store';
+                $store->save();
+
+                $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
+                
+                $response = json_decode($response);
+
+                $address = new \App\Models\Address;
+                $address->store_id = $store->id;
+                $address->title = $userInfos->shop_address;
+                $address->tel = $userInfos->shop_tel;
+                if ($response)
+                {
+                    $address->latitude= $response->results[0]->geometry->location->lat;
+                    $address->longitude= $response->results[0]->geometry->location->lng;
+                }
+
+                $address->save();
+
+                // Set rel_app_settings_sidemenus, rel_app_settings_components
                 $component = DB::table('components')
                     ->whereNotNull('sidemenu')
                     ->get();
