@@ -53,7 +53,7 @@
                     </div>
                     <div class="content-preview clearfix">
                         <div class="row-me fixHeight">
-                            @if(empty($list_preview_photo))
+                            @if(count($list_preview_photo) == 0)
                                 <p align="center">データなし</p>
                             @else
                                 @foreach($list_preview_photo as $item_thumb)

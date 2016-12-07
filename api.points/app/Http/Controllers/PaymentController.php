@@ -198,7 +198,7 @@ class PaymentController extends Controller{
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
 
-        if ($auth_role != 'admin') {
+        if ($auth_role != 'admin' && $auth_role != 'client') {
             return $this->error(9997);
         } 
 
@@ -224,7 +224,7 @@ class PaymentController extends Controller{
         $auth_id = $data_token->get('id');
         $auth_role = $data_token->get('role');
 
-        if ($auth_role != 'admin') {
+        if ($auth_role != 'admin' && $auth_role != 'client') {
             return $this->error(9997);
         } 
 

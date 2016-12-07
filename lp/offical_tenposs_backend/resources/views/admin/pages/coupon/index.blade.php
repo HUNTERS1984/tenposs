@@ -34,7 +34,7 @@
                         <h2 class="title-prview">クーポン</h2>
                     </div>
                     <div class="content-preview" style="height:340px;overflow: auto;">
-                        @if(empty($coupons))
+                        @if(count($coupons) == 0)
                             <p align="center">データなし</p>
                         @else
                             @foreach($coupons as $coupon)

@@ -265,6 +265,7 @@ class ClientsController extends Controller
                 $address->store_id = $store->id;
                 $address->title = $userInfos->shop_address;
                 $address->tel = $userInfos->shop_tel;
+                
                 if ($response)
                 {
                     $address->latitude= $response->results[0]->geometry->location->lat;
