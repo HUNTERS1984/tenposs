@@ -254,7 +254,7 @@ class ClientsController extends Controller
 
                 $store = new \App\Models\Store;
                 $store->app_id = $app->id;
-                $store->title = 'Default Store';
+                $store->name = 'Default Store';
                 $store->save();
 
                 $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
