@@ -415,10 +415,37 @@ class AdminController extends Controller
         if(!$user_info){
             return abort(503);
         }
+        if( $request->has('name') ){
+            $validator = Validator::make( $request->all() , [
+                'name' => 'required|min:3',
+            ]);
 
+            if ( $validator->fails() ) {
+                return back()
+                    ->withInput()
+                    ->withErrors($validator);
+            }
+            $requestUpdateName = cURL::newRequest('post', Config::get('api.api_auth_updateprofile'),
+                [
+                    'name' => $request->input('name'),
+                ])
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
+            $responseUpdateName = $requestUpdateName->send();
+            //dd($responseUpdateName);
+            $responseUpdateName = json_decode($responseUpdateName->body);
+
+            if( !empty($responseUpdateName)
+                && isset( $responseUpdateName->code )
+                && $responseUpdateName->code == 1000 ){
+                //$status[] = 'Update password success!';
+            }else{
+                $warning[] = 'Update name fail!';
+            }
+        }
         if( $request->has('password') ){
             $validator = Validator::make( $request->all() , [
-                'password' => 'required|min:6',
+                'current_password' => 'required|min:6',
+                'password' => 'required|min:6|confirmed',
                 'password_confirmation' => 'required|min:6',
             ]);
 
@@ -429,17 +456,18 @@ class AdminController extends Controller
             }
             $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
-                    'old_password' => $request->input('password'),
+                    'old_password' => $request->input('current_password'),
                     'new_password' => $request->input('password_confirmation'),
                 ])
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
+            //dd($responseUpdatePassWord);
             $responseUpdatePassWord = json_decode($responseUpdatePassWord->body);
 
             if( !empty($responseUpdatePassWord)
                 && isset( $responseUpdatePassWord->code )
                 && $responseUpdatePassWord->code == 1000 ){
-                $status[] = 'Update password success!';
+                //$status[] = 'Update password success!';
             }else{
                 $warning[] = 'Update password fail!';
             }
@@ -459,9 +487,10 @@ class AdminController extends Controller
         $user_info->shop_name = $request->input('shop_name');
         $user_info->shop_description = $request->input('shop_description');
 
-        if( $filePath != '' )
+        if( $filePath != '' ) 
             $user_info->avatar = $filePath;
         $user_info->save();
+        Session::put('user', null);
 
         $status[] = 'Update account setting success!';
         return back()

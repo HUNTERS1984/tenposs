@@ -127,6 +127,7 @@ return [
     'api_auth_register' => 'https://auth.ten-po.com/auth/register',
     'api_auth_login' => 'https://auth.ten-po.com/v1/auth/login',
     'api_auth_changepass' => 'https://auth.ten-po.com/v1/auth/changepassword',
+    'api_auth_updateprofile' => 'https://auth.ten-po.com/v1/auth/updateprofile',
     'api_auth_profile' => 'https://auth.ten-po.com/v1/profile',
     'api_auth_approvelist' => 'https://auth.ten-po.com/approvelist',
     'api_auth_userlist' => 'https://auth.ten-po.com/userlist',

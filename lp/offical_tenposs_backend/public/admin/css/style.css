@@ -175,6 +175,7 @@ body > .header .navbar .sidebar-toggle .icon-bar + .icon-bar {
   height: 48px;
   border: 1px solid #ccc;
   padding: 1px;
+  object-fit: cover;
 }
 .user-panel > .info {
   font-weight: 600;

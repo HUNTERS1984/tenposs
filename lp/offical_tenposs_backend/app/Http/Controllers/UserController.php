@@ -64,7 +64,7 @@ class UserController extends Controller
                 return redirect()->route('user.dashboard');
             //return redirect()->intended();
         }
-        return back()->withErrors( 'ログインできません' );
+        return back()->withErrors( 'ログインできません' )->withInput();
     }
     
     public function logout(){

@@ -83,6 +83,29 @@ class UserV1Controller extends Controller
         return $this->output($this->body);
     }
 
+    public function update_profile()
+    {
+        $check_items = array('name');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $user = \Tymon\JWTAuth\Facades\JWTAuth::toUser();
+        if (!$user)
+            return $this->error(1004);
+
+        try {
+            $user_data = User::find($user->id);
+            $user_data->name = Input::get('name');
+            $user_data->save();
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+        return $this->output($this->body);
+    }
+
+
     public function check_user_exist(Request $request)
     {
         $check_items = array('email');

@@ -34,7 +34,7 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="row wrapp_avar_btn">
-                          <div class="col-md-4"><img class="user-avatar" src="{{ url($user->avatar) }}" alt=""></div>
+                          <div class="col-md-4"><img class="user-avatar" src="{{ $user->avatar ? url($user->avatar) : url('admin/images/icon-user.png')}}" alt=""></div>
                           <div class="col-md-8">
                             <div class="btn_setting_avatar">
                                 <input id="input-avatar" type="file" name="avatar" class="hidden"/>
@@ -48,12 +48,16 @@
                                   <input type="text" class="form-control" id="" value="{{ Session::get('user')->name }}" name="name" placeholder="ユーザーネーム">
                                 </div>
                                 <div class="form-group">
-                                  <label for="">パスワード</label>
-                                  <input type="password" class="form-control" id="" value="" name="password" placeholder="パスワード">
+                                  <label for="">現在パスワード</label>
+                                  <input type="password" class="form-control" id="" value="" name="current_password" placeholder="現在パスワード">
                                 </div>
                                 <div class="form-group">
-                                  <label for="">パスワード(確認)</label>
-                                  <input type="password" class="form-control" id="" value="" name="password_confirmation" placeholder="パスワード(確認)">
+                                  <label for="">新しいパスワード</label>
+                                  <input type="password" class="form-control" id="" value="" name="password" placeholder="新しいパスワード">
+                                </div>
+                                <div class="form-group">
+                                  <label for="">新しいパスワード(確認)</label>
+                                  <input type="password" class="form-control" id="" value="" name="password_confirmation" placeholder="新しいパスワード(確認)">
                                 </div>
                                 <div class="form-group">
                                   <label for="">事業形態</label>
@@ -180,8 +184,11 @@
 </script>
 <style>
     .user-avatar{
-        max-width: 100%;
-        height: auto;
+        border: 2px solid #ddd;
+        object-fit: cover;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
     }
 </style>
 @endsection
