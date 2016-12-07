@@ -708,7 +708,8 @@ class AppUserController extends Controller
 
     public function v2_update_profile()
     {
-        $check_items = array('app_id', 'username', 'gender', 'address');
+//         $check_items = array('app_id', 'username', 'gender', 'address');
+        $check_items = array('app_id');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
