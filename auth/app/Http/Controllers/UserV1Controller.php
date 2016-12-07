@@ -98,6 +98,9 @@ class UserV1Controller extends Controller
             $user_data = User::find($user->id);
             $user_data->name = Input::get('name');
             $user_data->save();
+
+            $key_redis = 'profile_' . $user_data->id . '_' . $user_data->email;
+            RedisUtil::getInstance()->clear_cache($key_redis);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             return $this->error(9999);
