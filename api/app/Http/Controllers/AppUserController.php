@@ -1346,8 +1346,7 @@ class AppUserController extends Controller
         return $this->output($this->body);
     }
 
-    public
-    function v2_get_invite_code()
+    public function v2_get_invite_code()
     {
         $app_app_id = Input::get("app_id");
         if (empty($app_app_id))
@@ -1371,6 +1370,28 @@ class AppUserController extends Controller
                 $share_code->save();
                 $this->body['data']['code'] = $code;
             }
+            return $this->output($this->body);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->error(9999);
+        }
+    }
+    public function v2_update_profile_from_social_signup()
+    {
+        $check_items = array('app_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        // app_id, birthday, address, code
+        $app_app_id = Input::get("app_id");
+        if (empty($app_app_id))
+            return $this->error(1002);
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($app_info) < 1)
+            return $this->error(1004);
+        try {
             return $this->output($this->body);
         } catch (QueryException $e) {
             Log::error($e->getMessage());

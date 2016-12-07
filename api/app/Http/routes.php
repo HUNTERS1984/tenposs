@@ -120,6 +120,7 @@ Route::group(array('prefix' => 'api/v2'), function () {
         Route::post('social_profile_cancel', 'AppUserController@v2_social_profile_cancel');
         Route::post('coupon_use', 'CouponController@v2_coupon_use');
         Route::post('coupon_use_new', 'CouponController@v2_coupon_use_new');
+        Route::post('update_profile_social_signup', 'AppUserController@v2_update_profile_from_social_signup');
     });
 });
 
