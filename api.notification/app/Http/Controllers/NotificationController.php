@@ -68,9 +68,10 @@ class NotificationController extends Controller
         }
     }
 
-    public function user_get_push_setting($app_id)
+    public function user_get_push_setting()
     {
         try {
+            $app_id = Input::get('app_id');
             $token = JWTAuth::getToken();
             $info = JWTAuth::decode($token)->toArray();
             if (count($info) > 0) {
@@ -92,7 +93,7 @@ class NotificationController extends Controller
                         $user_setting->app_app_id = $app_id;
                         $user_setting->auth_user_id = $info['id'];
                         $user_setting->app_type = 'user';
-                        $user_setting->save(); 
+                        $user_setting->save();
                         $this->body['data'] = $user_setting;
                         return $this->output($this->body);
                     }
