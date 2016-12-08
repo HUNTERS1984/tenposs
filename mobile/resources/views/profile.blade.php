@@ -60,26 +60,22 @@
                 <li>
                     <label>パスワード</label>
                     <input readonly type="text" value="******"/>
-
                 </li>
                 <li>
                     <label>メールアドレス</label>
                     <input type="email" readonly name="email" value="{{ $user->email }}"/>
-
                 </li>
                 <li>
                     <label>性别</label>
                     <select name="gender" id="" class="">
-                        <option value="0">男性</option>
-                        <option value="1">女性</option>
-                        <option value="2">未定義</option>
+                        <option value="0" {{ ($user->profile->gender == 0) ? 'selected' : '' }}>男性</option>
+                        <option value="1" {{ ($user->profile->gender == 1) ? 'selected' : '' }}>女性</option>
+                        <option value="2" {{ ($user->profile->gender == 2) ? 'selected' : '' }}>未定義</option>
                     </select>
-
                 </li>
                 <li>
                     <label>住所</label>
                     <input type="text" name="address" value="{{ $user->profile->address }}"/>
-
                 </li>
             </ul>
             <ul class="social">

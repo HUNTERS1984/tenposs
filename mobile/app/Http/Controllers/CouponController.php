@@ -76,7 +76,7 @@ class CouponController extends Controller
         $app_info = $this->app_info;
         $token = '';
         if (Session::get('user'))
-            $token = Session::get('user')->token;
+            $token = Session::get('jwt')->token;
 
         $items_detail = HttpRequestUtil::getInstance()->get_data('coupon_detail',
             [
@@ -91,7 +91,7 @@ class CouponController extends Controller
                 $items_detail_data = $items_detail->data->coupons;
             }
         }
-//        dd($items_detail_data);
+       dd($items_detail);
         return view('coupon.detail', compact('app_info', 'items_detail_data'));
     }
 
