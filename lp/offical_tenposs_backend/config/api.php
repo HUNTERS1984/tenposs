@@ -121,6 +121,8 @@ return [
     'api_payment_transaction' => 'https://apipoints.ten-po.com/api/v1/billingtransactions',
 
     'api_point_client' => 'https://apipoints.ten-po.com/point/client',
+    'api_point_history' => 'https://apipoints.ten-po.com/point/history',
+    'api_point_user' => 'https://apipoints.ten-po.com/point',
     'api_point_setting' => 'https://apipoints.ten-po.com/point/setting',
     'api_point_payment_method' => 'https://apipoints.ten-po.com/point/payment/method',
 

@@ -56,10 +56,7 @@
             @if( file_exists( public_path($user->profile->avatar_url) ) )
             <img src="{{ ( $user->profile->avatar_url != '' ) ? url($user->profile->avatar_url) : '' }}" alt="">
             @else
-            <span class="fa-stack fa-lg">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              <i class="fa fa-user fa-stack-2x fa-inverse"></i>
-            </span>
+            <img src="{{ url('admin/images/icon-user.png') }}" alt="">
             @endif
         </td>
         <td class="center">

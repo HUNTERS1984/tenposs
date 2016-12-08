@@ -16,10 +16,10 @@
             <div class="col-md-4">
                 <div class="left-user-re">
                     <div class="img-user-re">
-                        @if( file_exists( public_path($app_user->profile->avatar_url)) )
-                        <img src="{{ url($app_user->profile->avatar_url) }}" alt="">
+                        @if( isset($app_user->profile->avatar_url) && file_exists( public_path($app_user->profile->avatar_url)) )
+                        <img src="{{ url($app_user->profile->avatar_url) }}" class="img-user-big" alt="">
                         @else
-                        <img src="{{ url('admin/images/user-re.png') }}" alt="">
+                        <img src="{{ url('admin/images/icon-user.png') }}" class="img-user-big" alt="">
                         @endif
                         <span><img src="{{ url('admin/images/gold.png') }}" alt=""></span>
                     </div>
@@ -33,13 +33,9 @@
                             <p>{{ $app_user->profile->name }}</p>
                         </li>
                         <li>
-                            <span>メンバーステージ</span>
-                            <p>{{ $app_user->profile->stage }}</p>
-                        </li>
-                        <li>
                             <span>性別</span>
                             <p>@if( $app_user->profile->gender == 0 )
-                                利用不可
+                                不定義
                                 @elseif( $app_user->profile->gender == 1 )
                                 男性
                                 @elseif( $app_user->profile->gender == 2 )
@@ -47,15 +43,29 @@
                                 @endif</p>
                         </li>
                         <li>
-                            <span>年齢</span>
-                            <p>{{ $app_user->profile->age }}</p>
+                            <span>年代</span>
+                            <p>{{ $app_user->profile->age }}代</p>
                         </li>
                         <li>
-                            <span>ポジション</span>
+                            <span>地図</span>
                             <p>{{ $app_user->profile->position }}</p>
                         </li>
                         <li>
-                            <span>クポン覧クポン</span>
+                            <span>会員ステージ</span>
+                            @if ($app_user->point->miles >= $client->point_setting->rank4)
+                            <p>4</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank3)
+                            <p>3</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank2)
+                            <p>2</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank1)
+                            <p>1</p>
+                            @else
+                            <p>0</p>
+                            @endif
+                        </li>
+                        <li>
+                            <span>連携サービス</span>
                             <p>
                                 @if( $app_user->profile->facebook_status == 1 )
                                 <a href="#"><span class="fa-stack fa-lg">
@@ -79,7 +89,7 @@
                         </li>
 
                         <li>
-                            <span>真を確認</span>
+                            <span>最終ログイン</span>
 
                             </a>
                         </li>
@@ -98,7 +108,7 @@
                         <div class="col-md-6 col-xs-6">
                             <div class="tab-no">
                                 <p>保有ポイント</p>
-                                <h3>7,823p</h3>
+                                <h3>{{ $app_user->point->miles }} マイル</h3>
                             </div>
                         </div>
                         <div class="col-md-12">

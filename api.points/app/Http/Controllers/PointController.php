@@ -556,4 +556,45 @@ class PointController extends Controller
             return $this->error(99953);
         }
     }
+
+    public function history_list()
+    {
+        $check_items = array('app_id', 'pageindex', 'pagesize');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+            return $this->error(1004);
+//
+        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        if ($auth_id > 0) {
+            try {
+                $total_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->count();
+                $total_request_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('action', 'get')->count();
+                $total_use_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('action', 'use')->count();
+                if ($total_item > 0) {
+                    $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $this->body['data']['total_item'] = $total_item;
+                    $this->body['data']['total_request_item'] = $total_request_item;
+                    $this->body['data']['total_use_item'] = $total_use_item;
+                    $this->body['data']['items'] = $items;
+                }
+                return $this->output($this->body);
+
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
 }
