@@ -47,6 +47,7 @@ $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app
 $app->group(array('prefix' => 'v1', 'middleware' => 'jwt.auth'), function ($app) {
     $app->get('/profile', 'UserV1Controller@profile');
     $app->post('/auth/changepassword', 'UserV1Controller@change_password');
+    $app->post('/auth/updateprofile', 'UserV1Controller@update_profile');
     $app->post('/auth/signout', 'UserV1Controller@signout');
     $app->get('/userlist', 'UserV1Controller@userlist');
 

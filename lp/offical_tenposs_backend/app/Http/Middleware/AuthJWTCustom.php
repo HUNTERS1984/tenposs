@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use JWTAuth;
 use App\Models\App;
+use App\Models\UserInfos;
 use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
@@ -37,13 +38,12 @@ class AuthJWTCustom extends BaseMiddleware
         //$token = $this->auth->setRequest($request)->getToken();
         
         // Way 2
-        
         if( !Session::has('jwt_token') )
             return redirect()->route('login')->withErrors('Please login');
 
         JWTAuth::setToken(Session::get('jwt_token')->token);
         $token = JWTAuth::getToken();
-
+        
         try {
             // call api to get user profile
             if ( Session::get('user') == null ) {
@@ -54,6 +54,8 @@ class AuthJWTCustom extends BaseMiddleware
                 $profile = json_decode($responseProfile->body);
                 
                 if( isset($profile->code) && $profile->code == 1000 ){
+                    $user_info = UserInfos::find($profile->data->id );
+                    $profile->data->user_info = $user_info;
                     Session::put('user', $profile->data );
                 } else {
                     // refresh token
@@ -96,7 +98,7 @@ class AuthJWTCustom extends BaseMiddleware
             Session::put('user', null);
             return redirect()->route('login')->withErrors('Session expired');
         }
-
+        
         $this->events->fire('tymon.jwt.valid', $user);
         return $next($request);
     

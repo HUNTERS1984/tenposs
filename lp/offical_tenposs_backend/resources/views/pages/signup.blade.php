@@ -46,7 +46,7 @@
                             <input id="terms" value="1" type="checkbox" class="" name="terms">
                             <a href="#" data-toggle="modal" data-target="#agreement-modal">規約と条件</a>
                         </label>
-                        <label for="" id="terms-msg" class="text-danger"></label>
+                        <span for="" id="terms-msg" class="text-danger"></span>
 					</div>
 					
 					<div class="form-group text-center form-group-btn">

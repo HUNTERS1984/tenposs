@@ -42,4 +42,19 @@ class ConvertUtils
         }
         return $filename;
     }
+
+    public static function generate_invite_code($length)
+    {
+        $conso = array("b", "c", "d", "f", "g", "h", "j", "k", "l",
+            "m", "n", "p", "r", "s", "t", "v", "w", "x", "y", "z");
+        $vocal = array("a", "e", "i", "o", "u", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+        $code = "";
+        srand((double)microtime() * 1000000);
+        $max = $length / 2;
+        for ($i = 1; $i <= $max; $i++) {
+            $code .= $conso[rand(0, 19)];
+            $code .= $vocal[rand(0, 4)];
+        }
+        return strtoupper($code);
+    }
 }

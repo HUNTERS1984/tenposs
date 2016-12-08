@@ -48,7 +48,7 @@
 									<div class="each-partner">
 										<a href="{{route('partnership02.detail',[$item->id, $item->slug])}}"><img src="{{$item->img_url}}" class="img-responsive" height="160" width="160" alt=""></a>
 										<a href="{{route('partnership02.detail',[$item->id, $item->slug])}}"><h3 class="title-each-partner">{{$item->title}}</h3></a>
-										<a href="{{route('partnership02.detail',[$item->id, $item->slug])}}"><p class="content">{{Str::words($item->content,20)}}</p></a>
+										<a href="{{route('partnership02.detail',[$item->id, $item->slug])}}"><p class="content">{{Str::limit($item->content,55)}}</p></a>
 									</div>
 								</div>
 								@endforeach

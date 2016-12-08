@@ -121,12 +121,15 @@ return [
     'api_payment_transaction' => 'https://apipoints.ten-po.com/api/v1/billingtransactions',
 
     'api_point_client' => 'https://apipoints.ten-po.com/point/client',
+    'api_point_history' => 'https://apipoints.ten-po.com/point/history',
+    'api_point_user' => 'https://apipoints.ten-po.com/point',
     'api_point_setting' => 'https://apipoints.ten-po.com/point/setting',
     'api_point_payment_method' => 'https://apipoints.ten-po.com/point/payment/method',
 
     'api_auth_register' => 'https://auth.ten-po.com/auth/register',
     'api_auth_login' => 'https://auth.ten-po.com/v1/auth/login',
     'api_auth_changepass' => 'https://auth.ten-po.com/v1/auth/changepassword',
+    'api_auth_updateprofile' => 'https://auth.ten-po.com/v1/auth/updateprofile',
     'api_auth_profile' => 'https://auth.ten-po.com/v1/profile',
     'api_auth_approvelist' => 'https://auth.ten-po.com/approvelist',
     'api_auth_userlist' => 'https://auth.ten-po.com/userlist',

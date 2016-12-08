@@ -56,10 +56,7 @@
             @if( file_exists( public_path($user->profile->avatar_url) ) )
             <img src="{{ ( $user->profile->avatar_url != '' ) ? url($user->profile->avatar_url) : '' }}" alt="">
             @else
-            <span class="fa-stack fa-lg">
-              <i class="fa fa-circle fa-stack-2x"></i>
-              <i class="fa fa-user fa-stack-2x fa-inverse"></i>
-            </span>
+            <img src="{{ url('admin/images/icon-user.png') }}" alt="">
             @endif
         </td>
         <td class="center">
@@ -70,7 +67,20 @@
         <td class="center">
             {{ $user->id }}
         </td>
-        <td class="center">{{ $user->profile->stage }}</td>
+        <td class="center">
+            @if ($user->point->miles >= $client->point_setting->rank4)
+                <p>ダイアモンド会員</p>
+                @elseif ($user->point->miles >= $client->point_setting->rank3)
+                <p>プラチナ会員</p>
+                @elseif ($user->point->miles >= $client->point_setting->rank2)
+                <p>ゴールド会員</p>
+                @elseif ($user->point->miles >= $client->point_setting->rank1)
+                <p>シルバー会員</p>
+                @else
+                <p>普通会員</p>
+            @endif
+
+        </td>
         <td class="center">
             @if( $user->profile->gender == 0 )
             不定義
@@ -104,10 +114,7 @@
         </td>
         <td class="center">
             <a href="#" title="" class="blue-noneline">
-                <?php $session = $user->sessions()->orderBy('created_at','DESC')->first();  ?>
-                @if( $session )
-                {{ date('Y.m.d.H.i:s', strtotime( $session->created_at ) ) }}
-                @endif
+
                 </a>
         </td>
     </tr>

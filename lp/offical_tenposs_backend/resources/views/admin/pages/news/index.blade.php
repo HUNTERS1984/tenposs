@@ -53,7 +53,7 @@
                     </div>
                     <div class="content-preview" style="height:320px;">
                         @if(empty($list_preview_news))
-                            No data
+                            <p align="center">データなし</p>
                         @else
                             @foreach($list_preview_news as $item_thumb)
                                 <div class="each-coupon clearfix">
@@ -64,7 +64,7 @@
                                            style="font-size:9px; color:#14b4d2">{{$item_thumb->title}}</p>
                                         <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
                                         <p class="text-inner"
-                                           style="font-size:9px;">{{Str::words($item_thumb->description,12)}}</p>
+                                           style="font-size:9px;">{{Str::limit($item_thumb->description,45)}}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -85,49 +85,49 @@
             <div class="wrapp-news">
 
                 @if(empty($news))
-                        No data
-                    @else
-                        @foreach($news as $item)
-                        <div class="news-content">
-                            <div class="row">
-                                <div class="col-md-4 col-xs-12">
-                                    <a href="{{route('admin.news.edit',$item->id)}}">
-                                        <center>
-                                            <img src="{{ ($item->image_url != '') ? asset($item->image_url) : url('admin/images/img-news.jpg') }}" class="img-responsive" alt="">
-                                        </center>
-                                    </a>
-                                </div>
-                                <div class="col-md-8 col-xs-12">
-                                    <div class="title-news">
-                                        <div class="row">
-                                            <div class="col-md-8 col-xs-12">
-                                                <a href="{{route('admin.news.edit',$item->id)}}" class="text-news-left">{{$item->title}}</a>
-                                                <p>{{ $item->category->name }}</p>
-                                            </div>
-                                            <div class="col-md-4 col-xs-12">
-                                                {{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
-                                                <input type="submit" class="btn-5" value="削除"
-                                                       onclick="return confirm('Are you sure you want to delete this item?');">
-                                                {{Form::close()}}
+                            
+                @else
+                    @foreach($news as $item)
+                    <div class="news-content">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <a href="{{route('admin.news.edit',$item->id)}}">
+                                    <center>
+                                        <img src="{{ ($item->image_url != '') ? asset($item->image_url) : url('admin/images/img-news.jpg') }}" class="img-responsive" alt="">
+                                    </center>
+                                </a>
+                            </div>
+                            <div class="col-md-8 col-xs-12">
+                                <div class="title-news">
+                                    <div class="row">
+                                        <div class="col-md-8 col-xs-12">
+                                            <a href="{{route('admin.news.edit',$item->id)}}" class="text-news-left">{{$item->title}}</a>
+                                            <p>{{ $item->category->name }}</p>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                            {{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
+                                            <input type="submit" class="btn-5" value="削除"
+                                                   onclick="return confirm('Are you sure you want to delete this item?');">
+                                            {{Form::close()}}
 
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="des-news col-xs-12">
-                                        <div class="row">
-                                            <p>
-                                                {{ Str::words($item->description, 68) }}
+                                </div>
+                                <div class="des-news col-xs-12">
+                                    <div class="row">
+                                        <p>
+                                            {{ Str::limit($item->description, 200) }}
 
-                                            </p>
-                                        </div>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
 
-                        @endforeach
-                    @endif
+                    @endforeach
+                @endif
 
 
 
@@ -135,23 +135,6 @@
                     @if(count($news) > 0)
                         {{ $news->render() }}
                     @endif
-                    <!--
-                    <ul class="pagination">
-                        <li class="disabled">
-                            <a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a>
-                        </li>
-                        <li class="active">
-                            <a href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li>
-                            <a href="#" aria-label="Next"><span aria-hidden="true">»</span></a>
-                        </li>
-                    </ul>
-                    -->
                 </div>
             </div>
         </div>

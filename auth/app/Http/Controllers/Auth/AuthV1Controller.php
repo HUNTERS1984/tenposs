@@ -76,10 +76,16 @@ class AuthV1Controller extends Controller
             $check_items = array('social_token');
             $facebook_status = 1;
             $result = $this->verify_facebook_token(Input::get('social_token'));
+
+            //$result['id'] = "123123aq1";
+//            $result = true;//$this->verify_facebook_token(Input::get('social_token'));
             if ($result == false) {
                 return $this->error(9998);
             }
-            $email = $result['id'] . '@fb.com';
+            $result = json_decode($result);
+
+            $email = $result->id . '@fb.com';
+//            $email = "123234234324234234234" . '@fb.com';
             $password = Input::get('social_token');
         } else if (Input::get('social_type') == 2) {
             $check_items = array('social_token', 'social_secret');
@@ -95,7 +101,7 @@ class AuthV1Controller extends Controller
             return $this->error(1004);
         }
 
-        $check_items[] = 'platform';
+//        $check_items[] = 'platform';
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -119,26 +125,26 @@ class AuthV1Controller extends Controller
                 $user->attachRole($role);
 
                 DB::commit();
+                $first_login = true;
             } catch (\Illuminate\Database\QueryException $e) {
                 DB::rollBack();
                 dd($e);
                 return $this->error(9999);
             }
-        } else
-            $first_login = true;
-
+        }
         $user = User::whereEmail($email)->with('roles')->first();
 
         $credentials = array();
-        $credentials['email'] = $email;
+        $credentials['email'] = $user->email;
         $credentials['password'] = $password;
-
 
         if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
                 'id' => $user->id, 'platform' => Input::get('platform')])
         ) {
 
             $this->body['data']['first_login'] = $first_login;
+            $this->body['data']['email'] = $email;
+            $this->body['data']['auth_user_id'] = $user->id;
             $this->body['data']['token'] = (string)$token;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);
 //                $this->body['data']['refresh_token'] = (string)$refresh_token;
@@ -196,7 +202,7 @@ class AuthV1Controller extends Controller
             if (count($user) < 1)
                 return $this->error(99953);
             //if ($user->active != 1)
-                //return $this->error(99950);
+            //return $this->error(99950);
             // Attempt to verify the credentials and create a token for the user
             if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
                     'id' => $user->id, 'platform' => Input::get('platform')])

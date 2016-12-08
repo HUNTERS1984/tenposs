@@ -43,6 +43,7 @@ class StaffController extends Controller
         $list_staff = array();
         $list_preview_staff = array();
         $list_store = array();
+        $staff_cat = array();
         if (count($stores) > 0) {
             $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
 
@@ -284,7 +285,7 @@ class StaffController extends Controller
 
     public function storeCat(){
         $rules = [
-            'name' => 'required|unique:staff_categories|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -327,7 +328,9 @@ class StaffController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $staff_cat = StaffCat::find($id);
+            $staff_cat = StaffCat::whereId($id)->whereNull('deleted_at')->first();
+            if (!$staff_cat)
+                return abort(404);
         }
         return view('admin.pages.staff.editcat',compact('staff_cat', 'list_store'));
        
@@ -336,7 +339,7 @@ class StaffController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|unique:staff_categories|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

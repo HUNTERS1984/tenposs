@@ -34,7 +34,7 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="row wrapp_avar_btn">
-                          <div class="col-md-4"><img class="user-avatar" src="{{ url($user->avatar) }}" alt=""></div>
+                          <div class="col-md-4"><img class="user-avatar" src="{{ $user->avatar ? url($user->avatar) : url('admin/images/icon-user.png')}}" alt=""></div>
                           <div class="col-md-8">
                             <div class="btn_setting_avatar">
                                 <input id="input-avatar" type="file" name="avatar" class="hidden"/>
@@ -48,31 +48,36 @@
                                   <input type="text" class="form-control" id="" value="{{ Session::get('user')->name }}" name="name" placeholder="ユーザーネーム">
                                 </div>
                                 <div class="form-group">
-                                  <label for="">パスワード</label>
-                                  <input type="password" class="form-control" id="" value="" name="password" placeholder="パスワード">
+                                  <label for="">現在パスワード</label>
+                                  <input type="password" class="form-control" id="" value="" name="current_password" placeholder="現在パスワード">
                                 </div>
                                 <div class="form-group">
-                                  <label for="">パスワード(確認)</label>
-                                  <input type="password" class="form-control" id="" value="" name="password_confirmation" placeholder="パスワード(確認)">
+                                  <label for="">新しいパスワード</label>
+                                  <input type="password" class="form-control" id="" value="" name="password" placeholder="新しいパスワード">
+                                </div>
+                                <div class="form-group">
+                                  <label for="">新しいパスワード(確認)</label>
+                                  <input type="password" class="form-control" id="" value="" name="password_confirmation" placeholder="新しいパスワード(確認)">
                                 </div>
                                 <div class="form-group">
                                   <label for="">事業形態</label>
-                                  <select name="business_form" class="form-control">
-                                    <option {{ ($user->business_form == 'corporation') ? 'selected' : '' }}
-                                       value="corporation">法人</option>
-                                    <option {{ ($user->business_form == 'other') ? 'selected' : '' }}
-                                        value="other">Other</option>
+                                  <select name="business_type" class="form-control">
+                                    <option {{ ($user->business_type == 0) ? 'selected' : '' }}
+                                       value="0">法人</option>
+                                    <option {{ ($user->business_type == 1) ? 'selected' : '' }}
+                                       value="1">個人</option>
+                                    <option {{ ($user->business_type == 2) ? 'selected' : '' }}
+                                        value="2">その他</option>
 
                                   </select>
                                 </div>
                                 <div class="form-group">
-                                  <label for="">事業カテゴリー</label>
-                                  <select name="business_category" class="form-control">
-                                    @foreach( App\Models\BusinessCategories::all() as $cat )
-                                    <option {{ ($cat->id == $user->business_category )?'selected':'' }}
-                                      value="{{$cat->id}}">{{$cat->name}}</option>
-                                    @endforeach
-                                  </select>
+                                  <label for="">電話番号</label>
+                                  <input type="text" class="form-control" id="" value="{{ $user->tel }}" name="tel" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                  <label for="">ファックス</label>
+                                  <input type="text" class="form-control" id="" value="{{ $user->fax }}" name="fax" placeholder="">
                                 </div>
                         </div>
                       </div>
@@ -94,43 +99,45 @@
                             <div class="form-setting">
                               <div class="form-group">
                                 <label for="">ブランド名・店舗名</label>
-                                <input name="brand_name" value="{{$user->brand_name}}" type="text" class="form-control" id="" placeholder="ブランドネーム">
+                                <input name="shop_name" value="{{$user->shop_name}}" type="text" class="form-control" id="" placeholder="ブランドネーム">
                               </div>
                               <div class="form-group">
                                 <label for="">カテゴリー</label>
-                                <select class="form-control">
-                                  <option>グルメ</option>
-                                  <option>Option one</option>
-                                  <option>Option two</option>
-                                  <option>Option three</option>
-                                  <option>Option four</option>
+                                <select name="shop_category"  class="form-control">
+                                    <option value="" >選択します</option>
+                                    <option {{ ($user->shop_category == 0) ? 'selected' : '' }} value="0">ファッション</option>
+                                    <option {{ ($user->shop_category == 1) ? 'selected' : '' }} value="1">飲食業界</option>
+                                    <option {{ ($user->shop_category == 2) ? 'selected' : '' }} value="2">美容業界</option>
+                                    <option {{ ($user->shop_category == 3) ? 'selected' : '' }} value="3">情報</option>
+                                    <option {{ ($user->shop_category == 4) ? 'selected' : '' }} value="4">その他</option>
                                 </select>
                               </div>
                               <div class="form-group">
                                 <label for="">住所</label>
-                                <input name="street_address" value="{{$user->street_address}}" type="text" class="form-control" id="住所" placeholder="東京都新宿区">
+                                <input name="shop_address" value="{{$user->shop_address}}" type="text" class="form-control" id="住所" placeholder="東京都新宿区">
                               </div>
                               <div class="form-group">
                                 <label for="">電話番号</label>
-                                <input type="text" class="form-control" name="tel" value="{{$user->tel}}" id="" placeholder="03-1234-5678">
+                                <input type="text" class="form-control" name="shop_tel" value="{{$user->shop_tel}}" id="" placeholder="03-1234-5678">
                               </div>
                               <div class="form-group">
                                 <label for="">営業時間(例:AM10:00~PM21:00)</label>
-                                <input type="text" class="form-control" name="business_hours" value="{{$user->business_hours}}" id="" placeholder="AM10:00~PM21:00">
+                                <input type="text" class="form-control" name="shop_business_hours" value="{{$user->shop_business_hours}}" id="" placeholder="AM10:00~PM21:00">
                               </div>
                               <div class="form-group">
                                 <label for="">定休日</label>
-                                <select name="regular_holiday" class="form-control">
-                                  <option value="sunday">土日</option>
-                                  <option value="other">Option one</option>
-                                </select>
+                                <input type="text" class="form-control" name="shop_regular_holiday" value="{{$user->shop_regular_holiday}}" id="" placeholder="土日">
+                              </div>
+                              <div class="form-group">
+                                <label for="">ホームページ</label>
+                                <input type="text" class="form-control" name="shop_url" value="{{$user->shop_url}}" id="" placeholder="">
                               </div>
                             </div>
                       </div>
                       <div class="col-md-12">
                         <div class="form-group">
                           <label for="">コメント・紹介文</label>
-                          <textarea name="testimonial" class="form-control" rows="5">{{ $user->testimonial }}</textarea>
+                          <textarea name="shop_description" class="form-control" rows="5">{{ $user->shop_description }}</textarea>
                         </div>
                       </div>
                     </div>
@@ -177,8 +184,11 @@
 </script>
 <style>
     .user-avatar{
-        max-width: 100%;
-        height: auto;
+        border: 2px solid #ddd;
+        object-fit: cover;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
     }
 </style>
 @endsection

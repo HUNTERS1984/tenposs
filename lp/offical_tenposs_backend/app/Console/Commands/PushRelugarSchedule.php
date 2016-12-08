@@ -72,7 +72,7 @@ class PushRelugarSchedule extends Command
                     'message' => $data->message,
                     'type' => 'custom',
                     'app_id' => 0),
-                \Illuminate\Support\Facades\Session::get('jwt_token')
+                \Illuminate\Support\Facades\Session::get('jwt_token')->token
             );
             //update
             try {

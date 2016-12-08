@@ -196,8 +196,10 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
-
-                $point_info = Point::getPoint($auth_id);
+                if (Input::get('user_id'))
+                    $point_info = Point::getPoint(Input::get('user_id'));
+                else
+                    $point_info = Point::getPoint($auth_id);
                
                 if ($point_info->miles > 0) {
                     $point_info->points = intval($point_info->miles/$point_setting->mile_to_point);
@@ -544,6 +546,47 @@ class PointController extends Controller
                         }
                     }
                     $this->body['data']['total_item'] = $total_item;
+                    $this->body['data']['items'] = $items;
+                }
+                return $this->output($this->body);
+
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else {
+            return $this->error(99953);
+        }
+    }
+
+    public function history_list()
+    {
+        $check_items = array('app_id', 'pageindex', 'pagesize', 'user_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        $data_token = JWTAuth::parseToken()->getPayload();
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+
+        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+            return $this->error(1004);
+//
+        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+        if ($auth_id > 0) {
+            try {
+                $total_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->count();
+                $total_request_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->where('action', 'get')->count();
+                $total_use_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->where('action', 'use')->count();
+                if ($total_item > 0) {
+                    $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $this->body['data']['total_item'] = $total_item;
+                    $this->body['data']['total_request_item'] = $total_request_item;
+                    $this->body['data']['total_use_item'] = $total_use_item;
                     $this->body['data']['items'] = $items;
                 }
                 return $this->output($this->body);

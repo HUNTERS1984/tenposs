@@ -34,8 +34,8 @@
                         <h2 class="title-prview">クーポン</h2>
                     </div>
                     <div class="content-preview" style="height:340px;overflow: auto;">
-                        @if(empty($coupons))
-                            No data
+                        @if(count($coupons) == 0)
+                            <p align="center">データなし</p>
                         @else
                             @foreach($coupons as $coupon)
                                 <div class="each-coupon clearfix">
@@ -46,12 +46,13 @@
                                            style="font-size:9px; color:#14b4d2">{{$coupon->title}}</p>
                                         <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
                                         <p class="text-inner"
-                                           style="font-size:9px;">{{Str::words($coupon->description,12)}}</p>
+                                           style="font-size:9px;">{{Str::limit($coupon->description,55)}}</p>
                                     </div>
                                 </div>
                             @endforeach
+                            <a href="#" class="btn tenposs-readmore">もっと見る</a>
                         @endif
-                        <a href="#" class="btn tenposs-readmore">もっと見る</a>
+                        
                     </div>
                 </div>
             </div>
@@ -68,47 +69,47 @@
             <div class="wrapp-news">
                 
                 @if(empty($coupons))
-                        No data
-                    @else
-                        @foreach($coupons as $item)
-                        <div class="coupon-content">
-                            <div class="row">
-                                <div class="col-md-4 col-xs-12">
-                                    <a href="{{route('admin.coupon.edit',$item->id)}}">
-                                        <center>
-                                            <img src="{{ ($item->image_url != '') ? asset($item->image_url) : url('admin/images/img-news.jpg') }}" class="img-responsive" alt="">
-                                        </center>
-                                    </a>
-                                </div>
-                                <div class="col-md-8 col-xs-12">
-                                    <div class="title-coupon">
-                                        <div class="row">
-                                            <div class="col-md-8 col-xs-12">
-                                                <a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-left">{{$item->title}}</a>
-                                                <p>{{$item->coupon_type->name}}</p>
-                                                <p class="date-copon">有効期間　{{$item->end_date}}まで</p>
-                                            </div>
-                                            <div class="col-md-4 col-xs-12">
-                                                 {{Form::open(array('route'=>array('admin.coupon.destroy',$item->id),'method'=>'DELETE'))}}
-                                                <input type="submit" class="btn-5" value="削除"
-                                                       onclick="return confirm('Are you sure you want to delete this item?');">
-                                                {{Form::close()}}
-                                            </div>
+                  
+                @else
+                    @foreach($coupons as $item)
+                    <div class="coupon-content">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <a href="{{route('admin.coupon.edit',$item->id)}}">
+                                    <center>
+                                        <img src="{{ ($item->image_url != '') ? asset($item->image_url) : url('admin/images/img-news.jpg') }}" class="img-responsive" alt="">
+                                    </center>
+                                </a>
+                            </div>
+                            <div class="col-md-8 col-xs-12">
+                                <div class="title-coupon">
+                                    <div class="row">
+                                        <div class="col-md-8 col-xs-12">
+                                            <a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-left">{{$item->title}}</a>
+                                            <p>{{$item->coupon_type->name}}</p>
+                                            <p class="date-copon">有効期間　{{$item->end_date}}まで</p>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12">
+                                             {{Form::open(array('route'=>array('admin.coupon.destroy',$item->id),'method'=>'DELETE'))}}
+                                            <input type="submit" class="btn-5" value="削除"
+                                                   onclick="return confirm('Are you sure you want to delete this item?');">
+                                            {{Form::close()}}
                                         </div>
                                     </div>
-                                    <div class="des-coupon col-xs-12">
-                                        <div class="row">
-                                            <p>
-                                                {{ Str::words($item->description, 68) }}
-                                            </p>
-                                        </div>
+                                </div>
+                                <div class="des-coupon col-xs-12">
+                                    <div class="row">
+                                        <p>
+                                            {{ Str::limit($item->description, 200) }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </div>   
+                        </div>
+                    </div>   
 
-                        @endforeach
-                    @endif
+                    @endforeach
+                @endif
                
                 
                 

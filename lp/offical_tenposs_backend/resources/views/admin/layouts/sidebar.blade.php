@@ -3,7 +3,7 @@
 
         <div class="user-panel">
             <div class="pull-left image">
-                 <img src="{{ url('admin/images/avatar.png') }}" class="img-circle" alt="User Image" />
+                 <img src="{{ Session::has('user') && isset(Session::get('user')->user_info) ? url(Session::get('user')->user_info->avatar) : url('admin/images/icon-user.png')}}" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
                 <p>{{ (Session::has('user') ? Session::get('user')->name : 'Welcome' ) }}</p>

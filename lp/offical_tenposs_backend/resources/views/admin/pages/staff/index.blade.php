@@ -39,7 +39,7 @@
                             <!-- Additional required wrapper -->
                             <div class="swiper-wrapper">
                                 <!-- Slides -->
-                                @if(count($staff_cat) > 0)
+                                @if($staff_cat)
                                     @foreach($staff_cat as $item)
                                         <div class="swiper-slide">{{$item->name}}</div>
                                     @endforeach
@@ -54,7 +54,7 @@
                     <div class="content-preview clearfix">
                         <div class="row-me fixHeight">
                             @if(empty($list_preview_staff))
-                                <p>No data</p>
+                                <p align="center">データなし</p>
                             @else
                                 @foreach($list_preview_staff as $item_thumb)
                                     <div class="col-xs-6 padding-me">
@@ -83,7 +83,6 @@
             <div class="wrapp-staff-img">
                 <div class="row">
                     @if(empty($list_staff))
-                        <p>No data</p>
                     @else
                         @foreach($list_staff as $item)
                          <div class="col-md-4 col-xs-6">
@@ -103,7 +102,7 @@
                     @endif
                  
                     <div class="page-bottom">
-                        @if(!$list_staff->isEmpty())
+                        @if($list_staff && !$list_staff->isEmpty())
                             {{ $list_staff->render() }}
                         @endif
                         <!--
@@ -148,7 +147,7 @@
                         <div class="col-md-8" align="left">
                             <div class="form-group">
                                 {{Form::label('staff_category_id','カテゴリー')}}
-                                @if(count($staff_cat) > 0)
+                                @if($staff_cat)
                                     {{Form::select('staff_category_id',$staff_cat->pluck('name', 'id'),old('staff_category_id'),['class'=>'form-control'])}}
                                 @endif
                             </div>

@@ -195,11 +195,48 @@ class HttpRequestUtil
         }
     }
 
-    public function post_data_with_basic_auth($service_url, $data_params)
+    public function post_data_with_token($service_url, $data_params,$token)
     {
         try {
 
-//
+            $curl = curl_init($service_url);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data_params));
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SAFE_UPLOAD, false);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $token)
+            );
+            $curl_response = curl_exec($curl);
+            if ($curl_response === false) {
+                $info = curl_getinfo($curl);
+                Log::error(json_encode($info));
+                return null;
+            }
+            curl_close($curl);
+//            print_r($curl_response);
+            $decoded = json_decode($curl_response);
+            if (isset($decoded->code) && $decoded->code == '1000') {
+                return $decoded->data;
+            } else {
+                Log::error(json_encode($decoded));
+                return null;
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return null;
+        }
+    }
+
+
+    public function post_data_with_basic_auth($service_url, $data_params)
+    {
+        try {
+//        print_r($service_url);
+//        print_r(json_encode($data_params));
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data_params));

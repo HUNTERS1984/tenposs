@@ -54,7 +54,7 @@
                     <div class="content-preview clearfix">
                         <div class="row-me fixHeight">
                             @if(empty($list_preview_item))
-                                <p>No data</p>
+                                <p align="center">データなし</p>
                             @else
                                 @foreach($list_preview_item as $item_thumb)
                                     <div class="col-xs-6 padding-me">
@@ -85,7 +85,7 @@
             <div class="wrapp-menu-img">
                 <div class="row">
                     @if(empty($list_item))
-                        <p>No data</p>
+
                     @else
                         @foreach($list_item as $item)
                          <div class="col-md-4 col-xs-6">
@@ -109,7 +109,7 @@
                     @endif
                  
                     <div class="page-bottom">
-                        @if(!$list_item->isEmpty())
+                        @if($list_item && !$list_item->isEmpty())
                             {{ $list_item->render() }}
                         @endif
                         <!--

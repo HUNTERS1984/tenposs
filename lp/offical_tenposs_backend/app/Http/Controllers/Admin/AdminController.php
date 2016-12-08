@@ -46,7 +46,8 @@ class AdminController extends Controller
     
     public function top(Request $request){
         $all = Component::whereNotNull('top')->pluck('name', 'id');
-        $app_data = App::where('user_id', $request->user['sub'] )->first();
+
+        $app_data = App::whereUserId($request->user['sub'] )->first();
 
         if( !$app_data ){
             return redirect()->route('user.dashboard');
@@ -56,17 +57,15 @@ class AdminController extends Controller
         $available_components = array();
         if (count($all) > 0) {
 //            $app_components = $app->first()->components()->whereNotNull('top')->pluck('name', 'id')->toArray();
-            $app = AppSetting::where('id', $app_data->id);
-            $app_settings = $app->firstOrFail();
-
+            $app = App::where('id', $app_data->id)->first();
+            $app_settings = $app->app_setting()->first();
             if ($app_settings != null) {
 
                 $top_images = AppTopMainImage::where('app_setting_id', '=', $app_settings->id)->get();
                 for ($i = 0; $i < count($top_images); $i++) {
                     $top_images[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'),$top_images[$i]->image_url);
                 }
-                $app_components = $app->first()
-                    ->components()
+                $app_components = $app_settings->components()
                     ->whereNotNull('top')
                     ->pluck('name', 'id')
                     ->toArray();
@@ -75,7 +74,9 @@ class AdminController extends Controller
                 } else {
                     $available_components = $all->toArray();
                 }
-            }     
+            } else {
+                return redirect()->route('user.dashboard');
+            } 
             
         }
         
@@ -154,26 +155,29 @@ class AdminController extends Controller
     }
     
     public function globalpage(Request $request)
-    {
+    { 
+        $app_data = App::where('user_id', $request->user['sub'])->first();
+        if (!$app_data)
+            return redirect()->route('user.dashboard');
         
-        $app_data = App::where('user_id', $request->user['sub'])->firstOrFail();
         $component_all = DB::table('components')->whereNotNull('sidemenu')
             ->select('name', 'id','sidemenu_icon')
             ->get();
   
-    
+        
         $data_component_source = array();
         $data_component_dest = array();
         
         if (count($app_data) > 0) {
-            $app_settings = AppSetting::where('app_id', $app_data->id)->firstOrFail();
-            
+            $app_settings = AppSetting::where('app_id', $app_data->id)->first();
+            //dd($app_data->id);
             if ($app_settings != null) {
                 $data_component_dest = DB::table('components')
                     ->join('rel_app_settings_sidemenus', 'components.id', '=', 'rel_app_settings_sidemenus.sidemenu_id')
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
                     ->whereNotNull('components.sidemenu')
                     ->select('name', 'id','sidemenu_icon')
+                    ->orderBy('rel_app_settings_sidemenus.order', 'ASC')
                     ->get();
                
                 if (count($data_component_dest) > 0) {
@@ -187,6 +191,8 @@ class AdminController extends Controller
                         );
                 } else
                     $data_component_source = $component_all;
+            } else {
+                return redirect()->route('user.dashboard');
             }
         }
         
@@ -200,7 +206,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-         //   dd($list_font_size);
+        //dd($data_component_dest);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -255,6 +261,7 @@ class AdminController extends Controller
                             'order' => $i);
                         $i++;
                     }
+                    //dd($list_insert);
                      DB::table('rel_app_settings_sidemenus')->insert($list_insert);
                     
                 }
@@ -291,6 +298,7 @@ class AdminController extends Controller
                         'rel_apps_stores.app_icon_url' => $app_icon,
                         'rel_apps_stores.store_icon_url' => $store_image
                     ]);
+
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
@@ -310,7 +318,7 @@ class AdminController extends Controller
             $app_data = App::where('user_id', $request->user['sub'])->first();
             if (count($app_data) > 0) {
                 $app = new AppSetting();
-                $app_setting = $app->with('components')->find($app_data->id);
+                $app_setting = $app->whereAppId($app_data->id)->with('components')->first();
                 if (!$app_setting)
                     return back()->with('warning', 'Add App Setting fail');
             } else {
@@ -369,9 +377,8 @@ class AdminController extends Controller
                     'order' => $i);
                 $i++;
             }
-
             if (count($list_id) > 0)
-                DB::table('rel_app_settings_components')->whereIn('app_setting_id', $list_id)->delete();
+                DB::table('rel_app_settings_components')->where('app_setting_id', $app_setting->id)->delete();
             if (count($list_insert) > 0)
                 DB::table('rel_app_settings_components')->insert($list_insert);
             //delete cache redis
@@ -379,6 +386,7 @@ class AdminController extends Controller
             DB::commit();
             return back()->with('status', 'Setting successfully');
         } catch (QueryException $e) {
+            dd($e);
             Log::error($e->getMessage());
             DB::rollBack();
             return back()->with('warning', 'Setting fail');
@@ -391,13 +399,6 @@ class AdminController extends Controller
             return abort(503,'User info not found' );
         }
 
-        // $response = cURL::newRequest('get', Config::get('api.api_user_v1_profile'))
-        //         ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
-        // $response_profile = json_decode($response->body);
-        // if (!empty($response_profile) && isset($response_profile->code) && $response_profile->code == 1000) {
-        //     $user_info['auth'] = $response_profile->data;
-        // }
-        // dd($user_info);
         return view('admin.pages.users.account', ['user' => $user_info]);
     }
 
@@ -417,10 +418,37 @@ class AdminController extends Controller
         if(!$user_info){
             return abort(503);
         }
+        if( $request->has('name') ){
+            $validator = Validator::make( $request->all() , [
+                'name' => 'required|min:3',
+            ]);
 
+            if ( $validator->fails() ) {
+                return back()
+                    ->withInput()
+                    ->withErrors($validator);
+            }
+            $requestUpdateName = cURL::newRequest('post', Config::get('api.api_auth_updateprofile'),
+                [
+                    'name' => $request->input('name'),
+                ])
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
+            $responseUpdateName = $requestUpdateName->send();
+            //dd($responseUpdateName);
+            $responseUpdateName = json_decode($responseUpdateName->body);
+
+            if( !empty($responseUpdateName)
+                && isset( $responseUpdateName->code )
+                && $responseUpdateName->code == 1000 ){
+                //$status[] = 'Update password success!';
+            }else{
+                $warning[] = 'Update name fail!';
+            }
+        }
         if( $request->has('password') ){
             $validator = Validator::make( $request->all() , [
-                'password' => 'required|min:6',
+                'current_password' => 'required|min:6',
+                'password' => 'required|min:6|confirmed',
                 'password_confirmation' => 'required|min:6',
             ]);
 
@@ -431,17 +459,18 @@ class AdminController extends Controller
             }
             $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
-                    'old_password' => $request->input('password'),
+                    'old_password' => $request->input('current_password'),
                     'new_password' => $request->input('password_confirmation'),
                 ])
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')  );
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
+            //dd($responseUpdatePassWord);
             $responseUpdatePassWord = json_decode($responseUpdatePassWord->body);
 
             if( !empty($responseUpdatePassWord)
                 && isset( $responseUpdatePassWord->code )
                 && $responseUpdatePassWord->code == 1000 ){
-                $status[] = 'Update password success!';
+                //$status[] = 'Update password success!';
             }else{
                 $warning[] = 'Update password fail!';
             }
@@ -449,17 +478,22 @@ class AdminController extends Controller
         }
 
 
-        $user_info->business_form = $request->input('business_form');
-        $user_info->business_category = $request->input('business_category');
-        $user_info->brand_name = $request->input('brand_name');
-        $user_info->street_address = $request->input('street_address');
+        $user_info->business_type = $request->input('business_type');
         $user_info->tel = $request->input('tel');
-        $user_info->business_hours = $request->input('business_hours');
-        $user_info->regular_holiday = $request->input('regular_holiday');
-        $user_info->testimonial = $request->input('testimonial');
-        if( $filePath != '' )
+        $user_info->fax = $request->input('fax');
+        $user_info->shop_category = $request->input('shop_category');
+        $user_info->shop_url = $request->input('shop_url');
+        $user_info->shop_tel = $request->input('shop_tel');
+        $user_info->shop_regular_holiday = $request->input('shop_regular_holiday');
+        $user_info->shop_business_hours = $request->input('shop_business_hours');
+        $user_info->shop_address = $request->input('shop_address');
+        $user_info->shop_name = $request->input('shop_name');
+        $user_info->shop_description = $request->input('shop_description');
+
+        if( $filePath != '' ) 
             $user_info->avatar = $filePath;
         $user_info->save();
+        Session::put('user', null);
 
         $status[] = 'Update account setting success!';
         return back()
@@ -567,51 +601,55 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $users = AppUser::with('profile')
-            ->paginate(30);
+        $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')
+            ->paginate(10);
+
+        // Client
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
+        }
+
         return view('admin.pages.users.users_management', array(
-            'users' => $users
+            'users' => $users,
+            'client' => $client
         ));
     }
 
     public function userManagementDetail(Request $request, $app_user_id){
         $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
-        $url = cURL::buildUrl('https://apipoints.ten-po.com/point', ['app_id' => $request->app->app_app_id]);
+        //dd($app_user->toArray());
 
-        // Poins
-        $requestPoint = cURL::newRequest('get', $url)
-            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
-
-        $requestPoint = $requestPoint->send();
-        $responsePoint = json_decode($requestPoint->body);
-        $points = 0;
-        if( $responsePoint->code == 1000  ){
-            $points = $responsePoint->data->points;
+        // Client
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
         }
-
-        // Poins history
-        $url = cURL::buildUrl('https://apipoints.ten-po.com/point/use/list',
+        
+        $url = cURL::buildUrl(Config::get('api.api_point_history'),
             [
                 'app_id' => $request->app->app_app_id,
                 'pageindex' => 1,
-                'pagesize' => 20
+                'pagesize' => 20,
+                'user_id' => $app_user_id
             ]);
-
-        $requestUsePoints = cURL::newRequest('get', $url)
-            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
-
-        $requestUsePoints = $requestUsePoints->send();
-        $responseUsePoints = json_decode($requestUsePoints->body);
-
-        if( $responsePoint->code == 1000  ){
-            $points = $responsePoint->data->points;
+        $response = cURL::newRequest('get', $url)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $history = json_decode($response->body);
+        if ($history) {
+            $history = $history->data;
         }
 
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
                 'app_user' => $app_user,
-                'points' => $points
+                'client' => $client,
+                'history' => $history,
             ));
         }
         return back()->with('status','User not found');
