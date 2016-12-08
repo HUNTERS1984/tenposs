@@ -196,8 +196,10 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $point_setting = PointSetting::getPointSetting(Input::get('app_id'));
-
-                $point_info = Point::getPoint($auth_id);
+                if (Input::get('user_id'))
+                    $point_info = Point::getPoint(Input::get('user_id'));
+                else
+                    $point_info = Point::getPoint($auth_id);
                
                 if ($point_info->miles > 0) {
                     $point_info->points = intval($point_info->miles/$point_setting->mile_to_point);
