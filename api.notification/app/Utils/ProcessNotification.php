@@ -65,20 +65,24 @@ class ProcessNotification
                     $message = 0;
                     if (property_exists($obj, 'message'))
                         $message = $obj->message;
+                    $auth_user_id = 0;
+                    if (property_exists($obj, 'auth_user_id'))
+                        $auth_user_id = $obj->auth_user_id;
 
-                    $this->notification_to_one_user($obj->app_id, $obj->notification_to, $obj->type, $obj->user_type, $data_id, $tile, $message);
+                    $this->notification_to_one_user($obj->app_id,$auth_user_id, $obj->notification_to, $obj->type, $obj->user_type, $data_id, $tile, $message);
                 }
             }
         }
     }
 
-    private function notification_to_one_user($app_id, $notification_to, $type, $user_type = '', $data_id = 0, $tile = '', $message = '')
+    private function notification_to_one_user($app_id,$auth_user_id, $notification_to, $type, $user_type = '', $data_id = 0, $tile = '', $message = '')
     {
-        if ($this->check_permission_notify_from_data($app_id, $notification_to, $type)) { // user allow notification
+        if ($this->check_permission_notify_from_data($app_id,$auth_user_id, $notification_to, $type)) { // user allow notification
 
             $app_setting = $this->get_notification_setting($app_id);
             $user_setting = $this->get_user_setting($app_id, $notification_to, $user_type);
-
+            Log::info("get_notification_setting: ".json_encode($app_setting));
+            Log::info("get_user_setting:".json_encode($user_setting));
             if ($app_setting != null && count($app_setting) > 0 && $user_setting != null && count($user_setting) > 0) {
                 $data_notify = array();
                 switch ($type) {
@@ -95,9 +99,10 @@ class ProcessNotification
                         break;
                     case 'news':
                         $data = $this->get_data_from_id_with_api('news', $data_id, $app_id);
+                        Log::info("data_news: ". json_encode($data));
                         if ($data != null && count($data) > 0) {
                             $data_notify = array('title' => $data->title,
-                                'desc' => $data->description,
+                                'desc' => '',
                                 'subtitle' => '',
                                 'tickertext' => '',
                                 'id' => $data->id,
@@ -109,16 +114,21 @@ class ProcessNotification
                         $data = $this->get_data_from_id_with_api('coupon', $data_id, $app_id);
                         if ($data != null && count($data) > 0) {
                             $data_notify = array('title' => $data->title,
-                                'desc' => $data->description,
+                                'desc' => '',//$data->description,
                                 'subtitle' => '',
                                 'tickertext' => '',
                                 'id' => $data->id,
-                                'type' => 'news',
+                                'type' => 'coupon',
                                 'image_url' => $data->image_url);
                         }
                         break;
                 }
-                $this->send_message_to_user($app_setting, $user_setting, $data_notify);
+                if (count($data_notify) > 0) {
+                    Log::info("data_notify: ".json_encode($data_notify));
+                    $this->send_message_to_user($app_setting, $user_setting, $data_notify);
+                }
+                else
+                    Log::info("data send empty");
             }
         }
     }
@@ -215,28 +225,36 @@ class ProcessNotification
         return null;
     }
 
-    private function get_permission_setting_user($app_id, $auth_user_id)
+    private function get_permission_setting_user($app_id, $notification_to)
     {
         try {
             return UserPushSetting::where('app_app_id', $app_id)
-                ->where('auth_user_id', $auth_user_id)->first();
+                ->where('auth_user_id', $notification_to)->get();
         } catch (QueryException $e) {
             Log::error($e);
         }
         return null;
     }
 
-    public function check_permission_notify_from_data($app_id, $auth_user_id, $type)
+    public function check_permission_notify_from_data($app_id, $auth_user_id,$notification_to, $type)
     {
+        if ($type == 'custom')
+            return true;
         $isValid = false;
-        $data = $this->get_permission_setting_user($app_id, $auth_user_id);
-
+        $data = $this->get_permission_setting_user($app_id, $notification_to);
+        Log::info("get_permission_setting_user:" . $data);
+        Log::info("app_id:" . $app_id);
+        Log::info("notification_to:" . $notification_to);
         if (count($data) > 0) {
             $data_check = $data->toArray();
-            if (array_key_exists($type, $data_check) && $data_check[$type] == 1)
+            Log::info("data_check:" . json_encode($data_check));
+            Log::info("type:" . $type);
+
+            if (array_key_exists($type, $data_check[0]) && $data_check[0][$type] == 1)
                 $isValid = true;
 
         }
+        Log::info("isValid".$isValid);
         return $isValid;
     }
 }

@@ -58,7 +58,6 @@ class PushNotification
         );
 
         $result = $this->useCurl($this->gooole_url, $headers, json_encode($fields));
-        print_r($result);die;
         if ($this->isJson($result)) {
             return true;
         } else {
