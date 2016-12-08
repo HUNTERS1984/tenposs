@@ -172,9 +172,6 @@ class LoginController extends Controller
         {
             // This was a callback request from facebook, get the token
             $social_token = $fb->requestAccessToken($code);
-
-            $fb->getAccessToken();
-
             // Send a request with it
             $result = json_decode($fb->request('/me'), true);
             $curl = new Curl();
