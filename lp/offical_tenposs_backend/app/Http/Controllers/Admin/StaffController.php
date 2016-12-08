@@ -285,7 +285,7 @@ class StaffController extends Controller
 
     public function storeCat(){
         $rules = [
-            'name' => 'required|unique:staff_categories|Max:255',
+            'name' => 'required|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -337,7 +337,7 @@ class StaffController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|unique:staff_categories|Max:255',
+            'name' => 'required|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

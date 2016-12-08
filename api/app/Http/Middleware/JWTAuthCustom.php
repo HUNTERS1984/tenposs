@@ -22,7 +22,8 @@ class JWTAuthCustom extends BaseMiddleware
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
+    { 
+
         if( !Session::has('jwt_token') )
             return redirect()->route('admin.login')->withErrors('Please login');
         // Way 1
@@ -32,7 +33,7 @@ class JWTAuthCustom extends BaseMiddleware
         // Way 2
         JWTAuth::setToken(Session::get('jwt_token'));
         $token = JWTAuth::getToken();
-       
+        
         if (! $token  ) {
             return redirect()->route('admin.login')->withErrors('Please login');
         }
@@ -47,7 +48,7 @@ class JWTAuthCustom extends BaseMiddleware
             return $next($request);
             
         } catch (JWTException $e) {
-            return redirect()->route('admin.login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('Token Signature could not be verified');
         }
         $this->events->fire('tymon.jwt.valid', $user);
         return $next($request);

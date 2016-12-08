@@ -601,9 +601,8 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $users = AppUser::with('profile')
+        $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')
             ->paginate(30);
-
         return view('admin.pages.users.users_management', array(
             'users' => $users
         ));
@@ -611,42 +610,35 @@ class AdminController extends Controller
 
     public function userManagementDetail(Request $request, $app_user_id){
         $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
-        $url = cURL::buildUrl('https://apipoints.ten-po.com/point', ['app_id' => $request->app->app_app_id]);
+        //dd($app_user->toArray());
 
         // Poins
-        $requestPoint = cURL::newRequest('get', $url)
-            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
-
-        $requestPoint = $requestPoint->send();
-        $responsePoint = json_decode($requestPoint->body);
-        $points = 0;
-        if( $responsePoint->code == 1000  ){
-            $points = $responsePoint->data->points;
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
         }
-
-        // Poins history
-        $url = cURL::buildUrl('https://apipoints.ten-po.com/point/use/list',
+        
+        $url = cURL::buildUrl(Config::get('api.api_point_history'),
             [
                 'app_id' => $request->app->app_app_id,
                 'pageindex' => 1,
-                'pagesize' => 20
+                'pagesize' => 20,
+                'user_id' => $app_user_id
             ]);
-
-        $requestUsePoints = cURL::newRequest('get', $url)
-            ->setHeader('Authorization',  'Bearer '. JWTAuth::getToken() );
-
-        $requestUsePoints = $requestUsePoints->send();
-        $responseUsePoints = json_decode($requestUsePoints->body);
-
-        if( $responsePoint->code == 1000  ){
-            $points = $responsePoint->data->points;
+        $response = cURL::newRequest('get', $url)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $history = json_decode($response->body);
+        if ($history) {
+            $history = $history->data;
         }
-
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
                 'app_user' => $app_user,
-                'points' => $points
+                'client' => $client,
+                'history' => $history,
             ));
         }
         return back()->with('status','User not found');

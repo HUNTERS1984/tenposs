@@ -559,7 +559,7 @@ class PointController extends Controller
 
     public function history_list()
     {
-        $check_items = array('app_id', 'pageindex', 'pagesize');
+        $check_items = array('app_id', 'pageindex', 'pagesize', 'user_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -574,11 +574,11 @@ class PointController extends Controller
         if ($auth_id > 0) {
             try {
                 $total_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
-                    ->where('status', 1)->count();
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->count();
                 $total_request_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
-                    ->where('status', 1)->where('action', 'get')->count();
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->where('action', 'get')->count();
                 $total_use_item = PointRequestHistory::where('app_app_id', Input::get('app_id'))
-                    ->where('status', 1)->where('action', 'use')->count();
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->where('action', 'use')->count();
                 if ($total_item > 0) {
                     $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
                     ->where('status', 1)->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
