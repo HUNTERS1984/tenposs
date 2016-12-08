@@ -581,7 +581,7 @@ class PointController extends Controller
                     ->where('status', 1)->where('user_request_id', Input::get('user_id'))->where('action', 'use')->count();
                 if ($total_item > 0) {
                     $items = PointRequestHistory::orderBy('updated_at', 'desc')->where('app_app_id', Input::get('app_id'))
-                    ->where('status', 1)->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    ->where('status', 1)->where('user_request_id', Input::get('user_id'))->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                     $this->body['data']['total_item'] = $total_item;
                     $this->body['data']['total_request_item'] = $total_request_item;
                     $this->body['data']['total_use_item'] = $total_use_item;

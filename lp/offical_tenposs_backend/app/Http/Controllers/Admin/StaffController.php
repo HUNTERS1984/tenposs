@@ -328,7 +328,9 @@ class StaffController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $staff_cat = StaffCat::find($id);
+            $staff_cat = StaffCat::whereId($id)->whereNull('deleted_at')->first();
+            if (!$staff_cat)
+                return abort(404)
         }
         return view('admin.pages.staff.editcat',compact('staff_cat', 'list_store'));
        

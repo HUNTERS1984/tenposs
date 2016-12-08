@@ -291,7 +291,9 @@ class NewsController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $news_cat = NewsCat::find($id);
+            $news_cat = NewsCat::whereId($id)->whereNull('deleted_at')->first();
+            if (!$news_cat)
+                return abort(404);
         }
         return view('admin.pages.news.editcat',compact('news_cat', 'list_store'));
        

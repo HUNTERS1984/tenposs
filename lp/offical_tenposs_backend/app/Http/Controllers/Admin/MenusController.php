@@ -95,10 +95,11 @@ class MenusController extends Controller
     {   
         $stores = $this->request->stores;
         $list_store = array();
-
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $menu = $this->menu->find($menu_id);
+            $menu = $this->menu->whereId($menu_id)->whereNull('deleted_at')->first();
+            if (!$menu)
+                return abort(404);
         }
         return view('admin.pages.menus.editcat',compact('menu', 'list_store'));
        

@@ -102,7 +102,7 @@
                         <div class="col-md-6 col-xs-6">
                             <div class="tab-no">
                                 <p>来店回数</p>
-                                <h3> {{ $history->total_request_item }}回</h3>
+                                <h3> {{ $history ? $history->total_request_item: 0 }}回</h3>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -117,41 +117,43 @@
                                     ポイント利用 . 獲得履歷
                                 </div>
                                 <div id="vt1" class="vtimeline">
-                                    @foreach($history->items as $item)
-                                    @if ($item->action == "get")
-                                    <div class="vtimeline-point">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-blue">
-                                                    {{ $item->updated_at }}
-                                                </p>
-                                                <p class="text-no-blue">{{ $item->miles }}マイル 獲得</p>
-                                                <p class="text-des-blue">
-                                                    <span>グローバル</span><br>
-                                                    <strong>顧客管理</strong>
-                                                </p>
-                                                <p class="text-img-blue">
-                                                    <span>クポン覧クポン</span> <br>
-                                                    <img src="images/p-user.png" alt="">
-                                                </p>
+                                    @if (count($history) >0 )
+                                        @foreach($history->items as $item)
+                                        @if ($item->action == "get")
+                                        <div class="vtimeline-point">
+                                            <div class="vtimeline-icon" style="background: #3c90c8;"></div>
+                                            <div class="vtimeline-block">
+                                                <div class="vtimeline-content">
+                                                    <p class="text-year-blue">
+                                                        {{ date('Y年m月d日', strtotime($item->updated_at))  }}
+                                                    </p>
+                                                    <p class="text-no-blue">{{ $item->miles }}マイル 獲得</p>
+                                                    <p class="text-des-blue">
+                                                        <span>ポイント獲得方法</span><br>
+                                                        <strong>サービス使用</strong>
+                                                    </p>
+                                                 <!--    <p class="text-img-blue">
+                                                        <span>獲得サービス</span> <br>
+                                                        <img src="images/p-user.png" alt="">
+                                                    </p> -->
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    @else
-                                    <div class="vtimeline-point vtimeline-right">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-yellow">
-                                                    {{ $item->updated_at }}
-                                                </p>
-                                                <p class="text-no-yellow">{{ $item->miles }}マイル 使用</p>
+                                        @else
+                                        <div class="vtimeline-point vtimeline-right">
+                                            <div class="vtimeline-icon"></div>
+                                            <div class="vtimeline-block">
+                                                <div class="vtimeline-content">
+                                                    <p class="text-year-yellow">
+                                                        {{ date('Y年m月d日', strtotime($item->updated_at))  }}
+                                                    </p>
+                                                    <p class="text-no-yellow">{{ $item->miles }}マイル 使用</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        @endif
+                                        @endforeach
                                     @endif
-                                    @endforeach
                                 </div>
                                     
                                 

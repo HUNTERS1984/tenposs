@@ -2669,11 +2669,11 @@ a.red {
   .vtimeline-point:last-child {
     margin-bottom: 0; }
 
-.vtimeline-point:first-child .vtimeline-icon,
+/*.vtimeline-point:first-child .vtimeline-icon,
 .vtimeline-point:last-child .vtimeline-icon{
   background: #3c90c8;
   border: 6px solid #e8f0f0;
-}
+}*/
 .vtimeline-icon {
   position: absolute;
   background: #ffab41;

@@ -394,7 +394,9 @@ class CouponController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $coupon_cat = CouponType::find($id);
+            $coupon_cat = CouponType::whereId($id)->whereNull('deleted_at')->first();
+            if (!$coupon_cat)
+                return abort(404);
         }
         return view('admin.pages.coupon.editcat',compact('coupon_cat', 'list_store'));
        

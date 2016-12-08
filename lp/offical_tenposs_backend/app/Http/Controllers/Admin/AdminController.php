@@ -633,6 +633,7 @@ class AdminController extends Controller
         if ($history) {
             $history = $history->data;
         }
+        dd($history);
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
