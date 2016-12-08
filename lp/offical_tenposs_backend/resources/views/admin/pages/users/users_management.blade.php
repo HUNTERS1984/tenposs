@@ -104,10 +104,7 @@
         </td>
         <td class="center">
             <a href="#" title="" class="blue-noneline">
-                <?php $session = $user->sessions()->orderBy('created_at','DESC')->first();  ?>
-                @if( $session )
-                {{ date('Y.m.d.H.i:s', strtotime( $session->created_at ) ) }}
-                @endif
+
                 </a>
         </td>
     </tr>

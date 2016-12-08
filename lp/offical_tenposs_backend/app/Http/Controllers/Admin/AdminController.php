@@ -177,6 +177,7 @@ class AdminController extends Controller
                     ->where('rel_app_settings_sidemenus.app_setting_id', '=', $app_settings->id)
                     ->whereNotNull('components.sidemenu')
                     ->select('name', 'id','sidemenu_icon')
+                    ->orderBy('rel_app_settings_sidemenus.order', 'ASC')
                     ->get();
                
                 if (count($data_component_dest) > 0) {
@@ -205,7 +206,7 @@ class AdminController extends Controller
             ->where('rel_apps_stores.app_id',$app_data->id)
             ->select('rel_apps_stores.*')
             ->first();
-         //   dd($list_font_size);
+        //dd($data_component_dest);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -260,6 +261,7 @@ class AdminController extends Controller
                             'order' => $i);
                         $i++;
                     }
+                    //dd($list_insert);
                      DB::table('rel_app_settings_sidemenus')->insert($list_insert);
                     
                 }
@@ -296,6 +298,7 @@ class AdminController extends Controller
                         'rel_apps_stores.app_icon_url' => $app_icon,
                         'rel_apps_stores.store_icon_url' => $store_image
                     ]);
+
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
@@ -600,6 +603,7 @@ class AdminController extends Controller
 
         $users = AppUser::with('profile')
             ->paginate(30);
+
         return view('admin.pages.users.users_management', array(
             'users' => $users
         ));

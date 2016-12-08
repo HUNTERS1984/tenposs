@@ -80,11 +80,7 @@
 
                         <li>
                             <span>真を確認</span>
-                            <a href="#" title="" class="blue-noneline">
-                                <?php $session = $app_user->sessions()->orderBy('created_at','DESC')->first();  ?>
-                                @if( $session )
-                                {{ date('Y.m.d.H.i:s', strtotime( $session->created_at ) ) }}
-                                @endif
+
                             </a>
                         </li>
                     </ul>
@@ -96,7 +92,7 @@
                         <div class="col-md-6 col-xs-6">
                             <div class="tab-no">
                                 <p>来店回数</p>
-                                <h3>{{ $app_user->sessions()->count() }} 回</h3>
+                                <h3> 回</h3>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
