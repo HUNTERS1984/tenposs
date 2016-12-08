@@ -53,15 +53,15 @@
                         <li>
                             <span>会員ステージ</span>
                             @if ($app_user->point->miles >= $client->point_setting->rank4)
-                            <p>4</p>
+                            <p>ダイアモンド会員</p>
                             @elseif ($app_user->point->miles >= $client->point_setting->rank3)
-                            <p>3</p>
+                            <p>プラチナ会員</p>
                             @elseif ($app_user->point->miles >= $client->point_setting->rank2)
-                            <p>2</p>
+                            <p>ゴールド会員</p>
                             @elseif ($app_user->point->miles >= $client->point_setting->rank1)
-                            <p>1</p>
+                            <p>シルバー会員</p>
                             @else
-                            <p>0</p>
+                            <p>普通会員</p>
                             @endif
                         </li>
                         <li>

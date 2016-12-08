@@ -603,8 +603,18 @@ class AdminController extends Controller
 
         $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')
             ->paginate(30);
+
+        // Client
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
+        }
+
         return view('admin.pages.users.users_management', array(
-            'users' => $users
+            'users' => $users,
+            'client' => $client
         ));
     }
 
@@ -612,7 +622,7 @@ class AdminController extends Controller
         $app_user = AppUser::where('id',$app_user_id)->with('profile')->first();
         //dd($app_user->toArray());
 
-        // Poins
+        // Client
         $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
         $client = json_decode($response->body);
@@ -633,7 +643,7 @@ class AdminController extends Controller
         if ($history) {
             $history = $history->data;
         }
-        dd($history);
+
 
         if( $app_user ){
             return view('admin.pages.users.users_detail',array(
