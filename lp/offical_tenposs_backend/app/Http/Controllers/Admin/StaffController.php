@@ -285,7 +285,7 @@ class StaffController extends Controller
 
     public function storeCat(){
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -330,7 +330,7 @@ class StaffController extends Controller
             $list_store = $stores->lists('name', 'id');
             $staff_cat = StaffCat::whereId($id)->whereNull('deleted_at')->first();
             if (!$staff_cat)
-                return abort(404)
+                return abort(404);
         }
         return view('admin.pages.staff.editcat',compact('staff_cat', 'list_store'));
        
@@ -339,7 +339,7 @@ class StaffController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

@@ -108,7 +108,7 @@ class MenusController extends Controller
     public function updateCat($menu_id)
     {   
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -271,7 +271,7 @@ class MenusController extends Controller
 
     public function storeMenu(){
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

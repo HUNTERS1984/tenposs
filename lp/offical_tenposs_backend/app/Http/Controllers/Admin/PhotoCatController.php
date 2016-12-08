@@ -146,7 +146,7 @@ class PhotoCatController extends Controller
     public function store()
     {
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:photo_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -201,7 +201,7 @@ class PhotoCatController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:photo_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

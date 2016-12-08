@@ -602,7 +602,7 @@ class AdminController extends Controller
     public function userManagement(Request $request){
 
         $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')
-            ->paginate(30);
+            ->paginate(10);
 
         // Client
         $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)

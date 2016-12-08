@@ -354,7 +354,7 @@ class CouponController extends Controller
 
     public function store_type(){
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -405,7 +405,7 @@ class CouponController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

@@ -186,7 +186,7 @@ class NewsController extends Controller
 
     public function storeCat(){
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -302,7 +302,7 @@ class NewsController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|Max:255',
+            'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
