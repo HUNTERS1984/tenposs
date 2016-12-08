@@ -51,6 +51,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->post('/point/approve/use/user','App\Http\Controllers\PointController@approve_use_point_for_end_user');
     $app->get('/point/request/list','App\Http\Controllers\PointController@request_list');
     $app->get('/point/use/list','App\Http\Controllers\PointController@use_list');
+    $app->get('/point/history','App\Http\Controllers\PointController@history_list');
 
     $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers','middleware' => 'jwt.auth'], function($app)
     {

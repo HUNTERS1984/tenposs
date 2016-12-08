@@ -354,7 +354,7 @@ class CouponController extends Controller
 
     public function store_type(){
         $rules = [
-            'name' => 'required|unique:coupon_types|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())
@@ -394,7 +394,9 @@ class CouponController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $coupon_cat = CouponType::find($id);
+            $coupon_cat = CouponType::whereId($id)->whereNull('deleted_at')->first();
+            if (!$coupon_cat)
+                return abort(404);
         }
         return view('admin.pages.coupon.editcat',compact('coupon_cat', 'list_store'));
        
@@ -403,7 +405,7 @@ class CouponController extends Controller
     public function updateCat($id)
     {   
         $rules = [
-            'name' => 'required|unique:coupon_types|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules);
         if ($v->fails())

@@ -56,6 +56,8 @@ class UserController extends Controller
         $responseLogin = json_decode($responseLogin->body);
        
         if( !empty($responseLogin) && isset( $responseLogin->code ) && $responseLogin->code == 1000 ){
+            Session::forget('jwt_token');
+            Session::forget('user');
             Session::put('jwt_token',$responseLogin->data);
             //dd($responseLogin);
             if ($responseLogin->data->is_active)

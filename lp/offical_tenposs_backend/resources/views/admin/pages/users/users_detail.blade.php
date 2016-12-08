@@ -16,10 +16,10 @@
             <div class="col-md-4">
                 <div class="left-user-re">
                     <div class="img-user-re">
-                        @if( file_exists( public_path($app_user->profile->avatar_url)) )
-                        <img src="{{ url($app_user->profile->avatar_url) }}" alt="">
+                        @if( isset($app_user->profile->avatar_url) && file_exists( public_path($app_user->profile->avatar_url)) )
+                        <img src="{{ url($app_user->profile->avatar_url) }}" class="img-user-big" alt="">
                         @else
-                        <img src="{{ url('admin/images/user-re.png') }}" alt="">
+                        <img src="{{ url('admin/images/icon-user.png') }}" class="img-user-big" alt="">
                         @endif
                         <span><img src="{{ url('admin/images/gold.png') }}" alt=""></span>
                     </div>
@@ -33,13 +33,9 @@
                             <p>{{ $app_user->profile->name }}</p>
                         </li>
                         <li>
-                            <span>メンバーステージ</span>
-                            <p>{{ $app_user->profile->stage }}</p>
-                        </li>
-                        <li>
                             <span>性別</span>
                             <p>@if( $app_user->profile->gender == 0 )
-                                利用不可
+                                不定義
                                 @elseif( $app_user->profile->gender == 1 )
                                 男性
                                 @elseif( $app_user->profile->gender == 2 )
@@ -47,15 +43,29 @@
                                 @endif</p>
                         </li>
                         <li>
-                            <span>年齢</span>
-                            <p>{{ $app_user->profile->age }}</p>
+                            <span>年代</span>
+                            <p>{{ $app_user->profile->age }}代</p>
                         </li>
                         <li>
-                            <span>ポジション</span>
+                            <span>地図</span>
                             <p>{{ $app_user->profile->position }}</p>
                         </li>
                         <li>
-                            <span>クポン覧クポン</span>
+                            <span>会員ステージ</span>
+                            @if ($app_user->point->miles >= $client->point_setting->rank4)
+                            <p>ダイアモンド会員</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank3)
+                            <p>プラチナ会員</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank2)
+                            <p>ゴールド会員</p>
+                            @elseif ($app_user->point->miles >= $client->point_setting->rank1)
+                            <p>シルバー会員</p>
+                            @else
+                            <p>普通会員</p>
+                            @endif
+                        </li>
+                        <li>
+                            <span>連携サービス</span>
                             <p>
                                 @if( $app_user->profile->facebook_status == 1 )
                                 <a href="#"><span class="fa-stack fa-lg">
@@ -79,12 +89,8 @@
                         </li>
 
                         <li>
-                            <span>真を確認</span>
-                            <a href="#" title="" class="blue-noneline">
-                                <?php $session = $app_user->sessions()->orderBy('created_at','DESC')->first();  ?>
-                                @if( $session )
-                                {{ date('Y.m.d.H.i:s', strtotime( $session->created_at ) ) }}
-                                @endif
+                            <span>最終ログイン</span>
+
                             </a>
                         </li>
                     </ul>
@@ -96,85 +102,61 @@
                         <div class="col-md-6 col-xs-6">
                             <div class="tab-no">
                                 <p>来店回数</p>
-                                <h3>{{ $app_user->sessions()->count() }} 回</h3>
+                                <h3> {{ $history ? $history->total_request_item: 0 }}回</h3>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
                             <div class="tab-no">
                                 <p>保有ポイント</p>
-                                <h3>7,823p</h3>
+                                <h3>{{ $app_user->point->miles }}マイル</h3>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="tab-ul-bottom">
                                 <div class="title-right-user-re">
-                                    ポイント别用 . 獲得履歷
+                                    ポイント利用 . 獲得履歷
                                 </div>
                                 <div id="vt1" class="vtimeline">
-                                    <div class="vtimeline-point">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-blue">
-                                                    2016プッシュ通知(客管理)
-                                                </p>
-                                                <p class="text-no-blue">20460p 通知</p>
-                                                <p class="text-des-blue">
-                                                    <span>グローバル</span><br>
-                                                    <strong>顧客管理</strong>
-                                                </p>
-                                                <p class="text-img-blue">
-                                                    <span>クポン覧クポン</span> <br>
-                                                    <img src="images/p-user.png" alt="">
-                                                </p>
+                                    @if (count($history) >0 )
+                                        @foreach($history->items as $item)
+                                        @if ($item->action == "get")
+                                        <div class="vtimeline-point">
+                                            <div class="vtimeline-icon" style="background: #3c90c8;"></div>
+                                            <div class="vtimeline-block">
+                                                <div class="vtimeline-content">
+                                                    <p class="text-year-blue">
+                                                        {{ date('Y年m月d日', strtotime($item->updated_at))  }}
+                                                    </p>
+                                                    <p class="text-no-blue">{{ $item->miles }}マイル 獲得</p>
+                                                    <p class="text-des-blue">
+                                                        <span>ポイント獲得方法</span><br>
+                                                        <strong>サービス使用</strong>
+                                                    </p>
+                                                 <!--    <p class="text-img-blue">
+                                                        <span>獲得サービス</span> <br>
+                                                        <img src="images/p-user.png" alt="">
+                                                    </p> -->
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="vtimeline-point vtimeline-right">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-yellow">
-                                                    2016プッシュ通知(客管理)
-                                                </p>
-                                                <p class="text-no-yellow">2040p 用保</p>
+                                        @else
+                                        <div class="vtimeline-point vtimeline-right">
+                                            <div class="vtimeline-icon"></div>
+                                            <div class="vtimeline-block">
+                                                <div class="vtimeline-content">
+                                                    <p class="text-year-yellow">
+                                                        {{ date('Y年m月d日', strtotime($item->updated_at))  }}
+                                                    </p>
+                                                    <p class="text-no-yellow">{{ $item->miles }}マイル 使用</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="vtimeline-point vtimeline-right">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-yellow">
-                                                    2016プッシュ通知(客管理)
-                                                </p>
-                                                <p class="text-no-yellow">300p 用保</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="vtimeline-point">
-                                        <div class="vtimeline-icon"></div>
-                                        <div class="vtimeline-block">
-                                            <div class="vtimeline-content">
-                                                <p class="text-year-blue">
-                                                    2016プッシュ通知(客管理)
-                                                </p>
-                                                <p class="text-no-blue">20460p 通知</p>
-                                                <p class="text-des-blue">
-                                                    <span>グローバル</span><br>
-                                                    <strong>顧客管理</strong>
-                                                </p>
-                                                <p class="text-img-blue">
-                                                    <span>クポン覧クポン</span> <br>
-                                                    <img src="images/p-user.png" alt="">
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        @endif
+                                        @endforeach
+                                    @endif
                                 </div>
+                                    
+                                
                             </div>
                         </div>
                     </div>

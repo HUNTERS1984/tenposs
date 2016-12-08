@@ -2579,6 +2579,14 @@ a.red {
   margin: 0;
   text-align: center;
 }
+.wrapp-user-re .left-user-re .img-user-re .img-user-big{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .wrapp-user-re .left-user-re .img-user-re span{
   position: absolute;
   top: 50px;
@@ -2661,11 +2669,11 @@ a.red {
   .vtimeline-point:last-child {
     margin-bottom: 0; }
 
-.vtimeline-point:first-child .vtimeline-icon,
+/*.vtimeline-point:first-child .vtimeline-icon,
 .vtimeline-point:last-child .vtimeline-icon{
   background: #3c90c8;
   border: 6px solid #e8f0f0;
-}
+}*/
 .vtimeline-icon {
   position: absolute;
   background: #ffab41;
