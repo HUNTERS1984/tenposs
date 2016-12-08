@@ -27,6 +27,7 @@ class LoginController extends Controller
     protected $url_api_profile_update = 'https://api.ten-po.com/api/v2/update_profile';
     protected $url_api_social_connect = 'https://api.ten-po.com/api/v2/social_profile';
     protected $url_api_social_cancel = 'https://api.ten-po.com/api/v2/social_profile_cancel';
+    protected $url_api_push_setting = 'https://apinotification.ten-po.com/v1/user/set_push_setting';
 
     public function __construct(Socialite $socialite, Request $request){
         parent::__construct($request);
@@ -144,6 +145,8 @@ class LoginController extends Controller
                 ->withErrors($v);
         }
 
+
+
         $curl = new Curl();
         $curl = $curl->post($this->url_api_signup, array(
             'email' => trim($request->input('email')) ,
@@ -169,6 +172,9 @@ class LoginController extends Controller
         {
             // This was a callback request from facebook, get the token
             $social_token = $fb->requestAccessToken($code);
+
+            $fb->getAccessToken();
+
             // Send a request with it
             $result = json_decode($fb->request('/me'), true);
             $curl = new Curl();
@@ -176,7 +182,7 @@ class LoginController extends Controller
                 'app_id' => $this->app->app_app_id,
                 'social_type' => 1 ,
                 'social_id' => $result['id'],
-                'social_token' => $social_token ,
+                'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => config('oauth-5-laravel.consumers.Facebook.client_secret') ,
                 'platform' => 'web'
             ));
@@ -206,11 +212,11 @@ class LoginController extends Controller
             $social_token = $tw->requestAccessToken($token, $verify);
             $result = json_decode($tw->request('account/verify_credentials.json'), true);
             $curl = new Curl();
-            $curl = $curl->post($this->url_api_social_login, array(
+            $curl = $curl->post($this->url_api_signup_social, array(
                 'app_id' => $this->app->app_app_id,
                 'social_type' => 2 ,
                 'social_id' => $result['id'],
-                'social_token' => $social_token ,
+                'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
                 'platform' => 'web'
             ));
