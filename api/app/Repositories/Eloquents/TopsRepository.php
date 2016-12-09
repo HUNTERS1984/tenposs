@@ -40,10 +40,8 @@ class TopsRepository implements TopsRepositoryInterface
         $app = $this->get_app_info($app_app_id);
         if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
-
-            $menus = Menu::whereHas('store', function ($query) use ($stores) {
-                $query->whereIn('store_id', $stores);
-            })->whereNull('deleted_at')->lists('id')->toArray();
+          
+            $menus = Menu::whereIn('store_id',$stores )->lists('id')->toArray();
 
             $menus_id = '(' . implode(',', $menus) . ')';
 
