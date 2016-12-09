@@ -195,6 +195,8 @@ class LoginController extends Controller
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
+            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
+            return back();
 
         }
         // if not ask for permission first
@@ -205,8 +207,7 @@ class LoginController extends Controller
             // return to facebook login url
             return redirect((string)$url);
         }
-        Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-        return back();
+
     }
 
     public function loginWithTwitter( Request $request){
@@ -231,6 +232,8 @@ class LoginController extends Controller
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
+            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
+            return back();
         }
         else
         {
@@ -241,8 +244,7 @@ class LoginController extends Controller
             // return to twitter login url
             return redirect((string)$url);
         }
-        Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-        return back();
+
     }
 
     public function socialConnect(Request $request){
