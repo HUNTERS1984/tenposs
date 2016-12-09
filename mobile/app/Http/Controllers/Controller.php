@@ -23,7 +23,6 @@ class Controller extends BaseController
     public function __construct(Request $request)
     {
         $this->request = $request;
-
         $this->app = Session::get('app');
         $get = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('appinfo', [
@@ -31,7 +30,6 @@ class Controller extends BaseController
                 $this->app->app_app_secret);
 
         $response = json_decode($get);
-
         if ( $response->code == 1000 ) {
             $this->app_info = $response;
             // write file manifest

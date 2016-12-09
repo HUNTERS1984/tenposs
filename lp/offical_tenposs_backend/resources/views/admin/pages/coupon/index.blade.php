@@ -158,9 +158,8 @@
                         <div class="col-md-8" align="left">
                             <div class="form-group">
                                 {{Form::label('Select Coupon Type','クーポンタイプ')}}
-                                @if(count($list_coupon_type) > 0)
-                                    {{Form::select('coupon_type_id',$list_coupon_type->pluck('name', 'id'),old('coupon_type_id'),['class'=>'form-control'])}}
-                                @endif
+                                {{Form::select('coupon_type_id',$list_coupon_type->pluck('name', 'id'),old('coupon_type_id'),['class'=>'form-control'])}}
+                               
                             </div>
                             <div class="form-group">
                                 {{Form::label('Title','クーポン名')}}

@@ -130,9 +130,7 @@
                         <div class="col-md-8" align="left">
                             <div class="form-group">
                                 {{Form::label('Select Photo Category','カテゴリー')}}
-                                @if(count($photocat)  > 0)
-                                    {{Form::select('photo_category_id',$photocat->pluck('name', 'id'),old('photo_category_id'),['class'=>'form-control'])}}
-                                @endif
+                                {{Form::select('photo_category_id',$photocat->pluck('name', 'id'),old('photo_category_id'),['class'=>'form-control'])}}
                             </div>
                         </div>
                     </div>

@@ -84,37 +84,58 @@ class StaffController extends Controller
 
     }
 
-    public function store(ImageRequest $imgrequest)
-    {
-         if($imgrequest->hasFile('img')){
-            $file = $imgrequest->file('img');
-            $destinationPath = env('UPLOAD_PATH');
-            $filename = time().'.'.$file->getClientOriginalName();
+    public function store()
+    {   
+        if ($this->request->image_create != null && $this->request->image_create->isValid()) {
 
-            $size = getimagesize($file);
-            if($size[0] > 300){
-                \Image::make($file->getRealPath())->resize(300,null,function($constraint){$constraint->aspectRatio();})->save($destinationPath.'/'.$filename);
-            }else{
-                $file->move($destinationPath,$filename);
+            $file = array('image_create' => $this->request->image_create);
+            $destinationPath = 'uploads'; // upload path
+            $extension = $this->request->image_create->getClientOriginalExtension(); // getting image extension
+            $fileName = md5($this->request->image_create->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            $allowedMimeTypes = ['image/jpeg', 'image/gif', 'image/png', 'image/bmp', 'image/svg+xml'];
+            $contentType = mime_content_type($this->request->image_create->getRealPath());
+
+            if (!in_array($contentType, $allowedMimeTypes)) {
+                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
             }
-            $img_url = $destinationPath.'/'.$filename;
-        }else{
-            $img_url = env('ASSETS_BACKEND').'/images/no-user-image.gif';
+            $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
+            $image_create = $destinationPath . '/' . $fileName;
+        } else {
+            return redirect()->back()->withInput()->withErrors('Please upload a image ');
         }
-        // dd(date('Y-m-d',strtotime($this->request->input('dob'))));
-        $data = [
-            'name' => $this->request->input('name'),
-            'price' => $this->request->input('price'),
-            'introduction' => $this->request->input('introduction'),
-            'gender' => $this->request->input('gender'),
-            'tel' => $this->request->input('tel'),
-            'birthday' => Carbon::createFromFormat('Y-m-d',$this->request->input('birthday'))->format('Y-m-d'),
-            'staff_category_id' => $this->request->input('staff_category_id'),
-            'image_url' => $img_url,
-        ];
-        $this->staff->create($data);
-        RedisControl::delete_cache_redis('staff');
-        return redirect()->route('admin.staff.index');
+
+        try {
+            $rules = [
+                'staff_category_id' => 'required',
+                'name' => 'required|Max:255',
+                'introduction' => 'required',
+                'price' => 'required',
+                'gender' => 'required',
+                'tel' => 'required',
+                'birthday' => 'required',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
+            $data = [
+                'name' => $this->request->input('name'),
+                'price' => $this->request->input('price'),
+                'introduction' => $this->request->input('introduction'),
+                'gender' => $this->request->input('gender'),
+                'tel' => $this->request->input('tel'),
+                'birthday' => Carbon::createFromFormat('Y-m-d',$this->request->input('birthday'))->format('Y-m-d'),
+                'staff_category_id' => $this->request->input('staff_category_id'),
+                'image_url' => $img_url,
+            ];
+            $this->staff->create($data);
+            RedisControl::delete_cache_redis('staff');
+            return redirect()->route('admin.staff.index')->with('status','Add staff successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.staff.index')->withInput()->withErrors('Cannot add staff');
+        }
     }
     public function show($id)
     {
@@ -133,19 +154,6 @@ class StaffController extends Controller
 
     public function update(ImageRequest $imgrequest,$id)
     {
-
-        $rules = [
-            'name' => 'required|Max:255',
-            'introduction' => 'required|Min:6',
-            'price' => 'required|numeric',
-            'tel' =>'required|numeric'
-        ];
-        $v = Validator::make($this->request->all(),$rules);
-        if ($v->fails())
-        {
-            return redirect()->back()->withInput()->withErrors($v);
-        }
-
         $image_edit = null;
         if($imgrequest->hasFile('image_edit')){
             $file = array('image_edit' => $this->request->image_edit);
@@ -163,12 +171,26 @@ class StaffController extends Controller
         }
 
         try {
+
+            $rules = [
+                'staff_category_id' => 'required',
+                'name' => 'required|Max:255',
+                'introduction' => 'required|Min:6',
+                'price' => 'required|numeric',
+                'tel' =>'required|numeric',
+                'gender' =>'required'
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $item = Staff::find($id);
             $item->name = $this->request->input('name');
             $item->introduction = $this->request->input('introduction');
             $item->price = $this->request->input('price');
             $item->gender = $this->request->input('gender');
-            $item->tel = $this->request->input('tel');
             $item->tel = $this->request->input('tel');
             $item->staff_category_id = $this->request->input('staff_category_id');
             if ($image_edit)
@@ -390,18 +412,6 @@ class StaffController extends Controller
 
     public function storestaff()
     {
-        $rules = [
-            'name' => 'required|Max:255',
-            'introduction' => 'required|Min:6',
-            'price' => 'required|numeric',
-            'tel' =>'required|numeric'
-        ];
-        $v = Validator::make($this->request->all(),$rules);
-        if ($v->fails())
-        {
-            return redirect()->back()->withInput()->withErrors($v);
-        }
-
         if ($this->request->image_create != null && $this->request->image_create->isValid()) {
             $file = array('image_create' => $this->request->image_create);
             $destinationPath = 'uploads'; // upload path
@@ -420,6 +430,20 @@ class StaffController extends Controller
         }
        
         try {
+            $rules = [
+                'name' => 'required|Max:255',
+                'introduction' => 'required|Min:6',
+                'staff_category_id' => 'required|Max:255',
+                'price' => 'required|numeric',
+                'tel' =>'required|numeric',
+                'gender' =>'required'
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $item = new Staff();
 //          dd($this->request->all());
             $item->image_url = $image_create;
@@ -433,9 +457,9 @@ class StaffController extends Controller
             $item->save();
             RedisControl::delete_cache_redis('staff_cat');
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.index')->with('status','Create the staff successfully');
+            return redirect()->route('admin.staff.index')->with('status','Add staff successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot create the staff');
+            return redirect()->back()->withInput()->withErrors('Cannot add staff');
         }
     }
 

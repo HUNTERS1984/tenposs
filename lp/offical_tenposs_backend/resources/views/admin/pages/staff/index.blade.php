@@ -147,9 +147,7 @@
                         <div class="col-md-8" align="left">
                             <div class="form-group">
                                 {{Form::label('staff_category_id','カテゴリー')}}
-                                @if($staff_cat)
-                                    {{Form::select('staff_category_id',$staff_cat->pluck('name', 'id'),old('staff_category_id'),['class'=>'form-control'])}}
-                                @endif
+                                {{Form::select('staff_category_id',$staff_cat->pluck('name', 'id'),old('staff_category_id'),['class'=>'form-control'])}}
                             </div>
                             <div class="form-group">
                                 {{Form::label('name','名')}}

@@ -13,7 +13,7 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
                 ">
-                {{ $app_info->data->name }}</h1>
+                {{ $app_info->data->app_setting->title }}</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="img/icon/h_nav.png" alt="nav"/>
             </a>
@@ -44,12 +44,13 @@
                 </div>
                 <div id="template-2">
                     <div id="recentry">
-                        <h2 class="aligncenter">最近</h2>
+                        @if( isset( $app_top->data->items->data)
+                                    && count($app_top->data->items->data) > 0 )
+                        <h2 class="aligncenter">ニュー</h2>
                         <div class="container-fluid">
                             <div class="container-photo-section clearfix">
-                                @if( isset( $app_top->data->items->data)
-                                    && count($app_top->data->items->data) > 0 )
-                                    @foreach( $app_top->data->items->data as $item )
+                                
+                                @foreach( $app_top->data->items->data as $item )
                                 <div class="item-product">
                                     <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
                                         <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
@@ -57,24 +58,26 @@
                                     <p>{{ $item->title }}</p>
                                     <span>¥{{number_format($item->price, 0, '', ',')}}</span>
                                 </div>
-                                    @endforeach
-                                @endif
+                                 @endforeach
+                                
                             </div>
                             @if( isset( $app_top->data->photos->data)
                                     && count($app_top->data->photos->data) > 0 )
                                 <a href="{{ route('menus.index') }}" class="btn tenposs-readmore">もっと見る</a>
                             @endif
                         </div>
+                        @endif
                     </div><!-- End recentry -->
                 </div>
                 <div id="template-5">
                     <div id="photogallery">
+                        @if( isset( $app_top->data->photos->data)
+                                    && count($app_top->data->photos->data) > 0 )
                         <h2 class="aligncenter">フォトギャラリー</h2>
                         <div class="container-fluid">
                             <div class="container-photo-section clearfix">
-                                @if( isset( $app_top->data->photos->data)
-                                    && count($app_top->data->photos->data) > 0 )
-                                    @foreach( $app_top->data->photos->data as $photo )
+                                
+                                @foreach( $app_top->data->photos->data as $photo )
                                 <div class="item-photogallery">
                                     <div class="crop">
                                         <div class="inner-crop">
@@ -87,23 +90,24 @@
 
                                 </div>
                                 @endforeach
-                                @endif
+                                
                             </div>
                             @if( isset( $app_top->data->photos->data)
                                     && count($app_top->data->photos->data) > 0 )
                                 <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
                             @endif
                         </div>
-                            
+                        @endif  
                     </div><!-- End photogallery -->
                 </div>
                 <div id="template-3">
                     <div id="news">
+                        @if( isset( $app_top->data->news->data)
+                                    && count($app_top->data->news->data) > 0 )
                         <h2 class="aligncenter">ニュース</h2>
                         <div class="container-fluid">
-                             @if( isset( $app_top->data->news->data)
-                                    && count($app_top->data->news->data) > 0 )
-                                @foreach( $app_top->data->news->data as $news )
+                             
+                            @foreach( $app_top->data->news->data as $news )
 
                             <div class="item-coupon imageleft clearfix">
                                 <div class="image">
@@ -120,11 +124,11 @@
                                     <p>{{ str_limit($news->description,100,'...') }}</p>
                                 </div>
                             </div><!-- End item coupon -->
-                                @endforeach
-                            @endif
+                            @endforeach
 
                             <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
                         </div>
+                         @endif
                     </div><!-- End News -->
                 </div>
                 <div id="template-4">
@@ -156,7 +160,8 @@
                                             <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
                                         </div>
                                         <div class="right-table-cell text-left">
-                                            {{ $contact->start_time }} - {{ $contact->end_time }}
+
+                                            {{date('a h:i', strtotime($contact->start_time))}} - {{ date('a h:i', strtotime($contact->end_time)) }}
                                         </div>
                                     </div>
                                 </div>
@@ -189,6 +194,7 @@
                             });
 
                         </script>
+                        <?php break; ?>
                         @endforeach
                         @endif
 
@@ -230,7 +236,7 @@
                 paginationClickable: true
             });
         }
-        
+
         $(maps).each(function(index, item){
             $("#map-"+item.id).googleMap();
             $("#map-"+item.id).addMarker({

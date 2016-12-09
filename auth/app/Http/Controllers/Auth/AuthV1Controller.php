@@ -45,8 +45,8 @@ class AuthV1Controller extends Controller
     {
         // set the new configurations
         Twitter::reconfig([
-            // "token" => '2248083320-oz6gVmtW8vRal4sO1ouM34lklztCQ61pyaQX2Hb',
-            // "secret" => 'hXc9ShqBGF0ajy8MakX7zsbJ87EXILuhpDnVVYGvQSSW6',
+//             "token" => '2248083320-oz6gVmtW8vRal4sO1ouM34lklztCQ61pyaQX2Hb',
+//             "secret" => 'hXc9ShqBGF0ajy8MakX7zsbJ87EXILuhpDnVVYGvQSSW6',
             "token" => $token,
             "secret" => $secret,
         ]);
