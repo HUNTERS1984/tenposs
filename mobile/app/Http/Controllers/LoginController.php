@@ -28,6 +28,7 @@ class LoginController extends Controller
     protected $url_api_social_connect = 'https://api.ten-po.com/api/v2/social_profile';
     protected $url_api_social_cancel = 'https://api.ten-po.com/api/v2/social_profile_cancel';
     protected $url_api_push_setting = 'https://apinotification.ten-po.com/v1/user/set_push_setting';
+    protected $url_api_signout = 'https://auth.ten-po.com/v1/auth/signout';
 
     public function __construct(Socialite $socialite, Request $request){
         parent::__construct($request);
@@ -109,7 +110,12 @@ class LoginController extends Controller
     }
     
     public function logout(){
-        Session::forget('user');
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+        $curl = $curl->post($this->url_api_signout);
+        if( $curl->code == 1000 ){
+            Session::forget('user');
+        }
         return redirect('/');
     }
     
@@ -175,19 +181,23 @@ class LoginController extends Controller
             // Send a request with it
             $result = json_decode($fb->request('/me'), true);
             $curl = new Curl();
-            $curl = $curl->post($this->url_api_signup_social, array(
+            $params = array(
                 'app_id' => $this->app->app_app_id,
                 'social_type' => 1 ,
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => config('oauth-5-laravel.consumers.Facebook.client_secret') ,
                 'platform' => 'web'
-            ));
+            );
+            $curl = $curl->post($this->url_api_signup_social, $params);
 
             if( $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
+            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
+            return redirect()->route('login');
+
         }
         // if not ask for permission first
         else
@@ -197,6 +207,7 @@ class LoginController extends Controller
             // return to facebook login url
             return redirect((string)$url);
         }
+
     }
 
     public function loginWithTwitter( Request $request){
@@ -217,10 +228,14 @@ class LoginController extends Controller
                 'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
                 'platform' => 'web'
             ));
-            if( $curl->code == 1000 ){
+
+            if( isset( $curl->code ) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
+
+            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
+            return redirect()->route('login');
         }
         else
         {
@@ -231,6 +246,7 @@ class LoginController extends Controller
             // return to twitter login url
             return redirect((string)$url);
         }
+
     }
 
     public function socialConnect(Request $request){
@@ -328,6 +344,19 @@ class LoginController extends Controller
         $reqTokenTw = $tw->requestRequestToken();
         // get Authorization Uri sending the request token
         $url_tw = $tw->getAuthorizationUri(['oauth_token' => $reqTokenTw->getRequestToken()]);
+        // get profile
+        // update session profile
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+        $curl->get( $this->url_api_profile ,array(
+            'app_id' => $this->app->app_app_id
+        ));
+
+        if( $curl->response->code == 1000 ){
+            $currentUser = Session::get('user');
+            $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
+            Session::put('user',$updateProfile );
+        }
 
         return view('profile',
         [
@@ -399,19 +428,6 @@ class LoginController extends Controller
 
         if( $curl->code == 1000 ){
             Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
-            // update session profile
-            $curl = new Curl();
-            $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
-            $curl->get( $this->url_api_profile ,array(
-                'app_id' => $this->app->app_app_id
-            ));
-
-            if( $curl->response->code == 1000 ){
-                $currentUser = Session::get('user');
-                $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
-                Session::put('user',$updateProfile );
-            }
-
             return back();
         }
         Session::flash('message', \App\Utils\Messages::customMessage( 2001, 'alert-danger' ));
