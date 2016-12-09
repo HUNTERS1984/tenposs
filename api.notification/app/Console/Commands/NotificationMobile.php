@@ -60,11 +60,21 @@ class NotificationMobile extends Command
             } catch
             (ConnectionException $ex) {
                 $isloop = true;
-                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $ex->getMessage();
+                Log::error($ex);
+//                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $ex->getMessage();
             } catch (\RedisException $e) {
                 $isloop = true;
-                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $e->getMessage();
+                Log::error($e);
+//                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $e->getMessage();
+            } catch (\HttpException $e) {
+                $isloop = true;
+                Log::error($e);
+            } catch (\ErrorException $e) {
+                $isloop = true;
+                Log::error($e);
+//                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $e->getMessage();
             }
+
         }
     }
 }
