@@ -90,20 +90,24 @@ class CouponController extends Controller
 
             for ($i = 0; $i < count($posts); $i++) {
                 $posts[$i]->tags = Post::find($posts[$i]->id)->tags()->get();
+                $posts[$i]->status = DB::table('rel_apps_posts')
+                                        ->whereAppId($this->request->app->id)
+                                        ->wherePostId($posts[$i]->id)
+                                        ->count() > 0;
                 if ($posts[$i]->avatar == null)
                     $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
             }
 
-            $notapproved_posts = DB::table('posts')
-            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            $notapproved_posts =Post::whereDoesntHave('apps', function($query) {
+                $query->where('app_id', $this->request->app->id);
+            })->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
             ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
             ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
             ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
             ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
             ->where('posts.deleted_at', '=', null)
-            ->where('posts.status', '=', false)
             ->where(function ($query) use ($search_str) {
                 return $query->where('tags.tag', 'LIKE', '%'.$search_str.'%')->orWhere('user_profiles.name', 'LIKE', '%'.$search_str.'%');
             })
@@ -113,6 +117,7 @@ class CouponController extends Controller
 
             for ($i = 0; $i < count($notapproved_posts); $i++) {
                 $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
+                $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
                     $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
@@ -125,8 +130,9 @@ class CouponController extends Controller
             ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
             ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
             ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->join('rel_apps_posts', 'posts.id', '=', 'rel_apps_posts.post_id')
+            ->where('rel_apps_posts.app_id', '=', $this->request->app->id)
             ->where('posts.deleted_at', '=', null)
-            ->where('posts.status', '=', true)
             ->where(function ($query) use ($search_str) {
                 return $query->where('tags.tag', 'LIKE', '%'.$search_str.'%')->orWhere('user_profiles.name', 'LIKE', '%'.$search_str.'%');
             })
@@ -136,6 +142,7 @@ class CouponController extends Controller
 
             for ($i = 0; $i < count($approved_posts); $i++) {
                 $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
+                $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
                     $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
@@ -151,7 +158,10 @@ class CouponController extends Controller
                 $app_user = Post::find($posts[$i]->id)->app_user()->first();
                 $posts[$i]->username = $app_user->profile()->first()->name;
                 $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-
+                $posts[$i]->status = DB::table('rel_apps_posts')
+                                        ->whereAppId($this->request->app->id)
+                                        ->wherePostId($posts[$i]->id)
+                                        ->count() > 0;
                 if ($posts[$i]->avatar == null)
                     $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
@@ -159,31 +169,35 @@ class CouponController extends Controller
 
             }
 
-            $notapproved_posts = Post::whereNull('deleted_at')->whereStatus(false)->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+            $notapproved_posts = Post::whereNull('deleted_at')->whereDoesntHave('apps', function($query) {
+                $query->where('app_id', $this->request->app->id);
+            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
             
             for ($i = 0; $i < count($notapproved_posts); $i++) {
                 $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
                 $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
                 $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-
+                $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
                     $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
-
-            $approved_posts = Post::whereNull('deleted_at')->whereStatus(true)->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+            $approved_posts = Post::whereNull('deleted_at')->whereHas('apps', function($query) {
+                $query->where('app_id', $this->request->app->id);
+            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
             
             for ($i = 0; $i < count($approved_posts); $i++) {
                 $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
                 $approved_posts[$i]->username = $app_user->profile()->first()->name;
                 $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-
+                $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
                     $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
                 else
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
+           // dd($notapproved_posts);
         }
        
 
@@ -207,24 +221,12 @@ class CouponController extends Controller
         ->where('coupons.end_date', '>=', date('Y-m-d H:i:s'))
         ->where('coupons.start_date', '<=', date('Y-m-d H:i:s'))
         ->get();
-
-//           dd($coupons);
         foreach ($coupons as $coupon) {
             $coupon_id = $coupon->id;
+            //dd($coupon_id);
             try {
-                $app_user->coupons()->attach($coupon_id);
-                //create code for QR
-                $data_info = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
-                    ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])->get();
-                if (count($data_info) > 0) {
-                    if (empty($data_info[0]->code)) {
-                        \Illuminate\Support\Facades\DB::table('users')
-                            ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])
-                            ->update(['code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
-                    }
-                }
-                //push notify to all user on app
-        //        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
+                $app_user->coupons()->attach($coupon_id, ['status' => 1, 'code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
+               
                 if (count($app_user) > 0) {
                     $data_push = array(
                         'app_user_id' => $app_user->id,
@@ -232,7 +234,7 @@ class CouponController extends Controller
                         'data_id' => $coupon_id,
                         'data_title' => '',
                         'data_value' => '',
-                        'created_by' => \Illuminate\Support\Facades\Auth::user()->email
+                        'created_by' => Session::get('user')->name
                     );
                     $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_user_id'), $data_push);
                     if (!$push)
@@ -242,10 +244,9 @@ class CouponController extends Controller
             } catch (\Illuminate\Database\QueryException $e) {
 
             }
-        }
-        
-        $post->status = true;
-        $post->save(); 
+        } 
+
+        $post->apps()->attach($this->request->app->id);
 
         if ($return)  
             return redirect()->back()->with('status','Approve the coupon successfully');
@@ -339,7 +340,8 @@ class CouponController extends Controller
 
             }
         }
-        
+        $post->apps()->detach($this->request->app->id);
+
         $post->status = false;
         $post->save();
         return redirect()->back()->with('status','Unapprove the coupon successfully');
