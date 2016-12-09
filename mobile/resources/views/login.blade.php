@@ -10,7 +10,7 @@
 @section('page')
 <div id="main">    
     <div id="sign-up-page">
-       
+        @include('partials.message')
         <div class="bottom-layout">
             <a href="{{ route('login.facebook') }}" class="btn tenposs-button bg-fb">
                 Facebook ではじめる</a>

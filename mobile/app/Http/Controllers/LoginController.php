@@ -196,7 +196,7 @@ class LoginController extends Controller
                 return redirect('/');
             }
             Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-            return back();
+            return redirect()->route('login');
 
         }
         // if not ask for permission first
@@ -228,12 +228,14 @@ class LoginController extends Controller
                 'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
                 'platform' => 'web'
             ));
-            if( $curl->code == 1000 ){
+
+            if( isset( $curl->code ) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
+
             Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-            return back();
+            return redirect()->route('login');
         }
         else
         {
