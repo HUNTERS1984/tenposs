@@ -13,7 +13,7 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
                 ">
-                {{ $app_info->data->name }}</h1>
+                {{ $app_info->data->app_setting->title }}</h1>
             <a href="javascript:void(0)" class="h_control-nav">
                 <img src="img/icon/h_nav.png" alt="nav"/>
             </a>
@@ -44,7 +44,7 @@
                 </div>
                 <div id="template-2">
                     <div id="recentry">
-                        <h2 class="aligncenter">最近</h2>
+                        <h2 class="aligncenter">ニュー</h2>
                         <div class="container-fluid">
                             <div class="container-photo-section clearfix">
                                 @if( isset( $app_top->data->items->data)
@@ -156,7 +156,8 @@
                                             <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
                                         </div>
                                         <div class="right-table-cell text-left">
-                                            {{ $contact->start_time }} - {{ $contact->end_time }}
+
+                                            {{date('a h:i', strtotime($contact->start_time))}} - {{ date('a h:i', strtotime($contact->end_time)) }}
                                         </div>
                                     </div>
                                 </div>
@@ -189,6 +190,7 @@
                             });
 
                         </script>
+                        <?php break; ?>
                         @endforeach
                         @endif
 
@@ -230,7 +232,7 @@
                 paginationClickable: true
             });
         }
-        
+
         $(maps).each(function(index, item){
             $("#map-"+item.id).googleMap();
             $("#map-"+item.id).addMarker({

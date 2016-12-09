@@ -138,7 +138,7 @@ h3,.h3{font-size: 28px;}
 /* Content */
 #content h2{
     margin: 40px 0 26px;
-    font-weight: 600;
+    font-weight: 700;
 }
 @media screen and (max-width:479px){
     #content h2{
