@@ -248,23 +248,36 @@ class MenusController extends Controller
             $img_url = env('ASSETS_BACKEND').'/images/no-user-image.gif';
         }
 
-        $data =
-        [
-            'title'=>$this->request->input('title'),
-            'price'=>str_replace('.', '', $this->request->input('price')),
-            'description' => $this->request->input('description'),
-            'image_url'=>$img_url,
-            'coupon_id'=> $this->request->input('coupon_id'),
-        ];
-        $item = $this->item->create($data);
-        //delete cache redis
-        RedisControl::delete_cache_redis('items');
-        if($this->request->has('menu_id')){
+        try {
+            $rules = [
+                'menu_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required',
+                'price' => 'required|numeric',
+                'item_link' => 'Url',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
+            $data =
+            [
+                'title'=>$this->request->input('title'),
+                'price'=>str_replace('.', '', $this->request->input('price')),
+                'description' => $this->request->input('description'),
+                'image_url'=>$img_url,
+                'coupon_id'=> $this->request->input('coupon_id'),
+            ];
+            $item = $this->item->create($data);
+            //delete cache redis
+            RedisControl::delete_cache_redis('items');
             $menu = $this->request->input('menu_id');
             $item->menus()->sync($menu);
-            return redirect()->route('admin.menus.index');
-        }else{
-            return redirect()->route('admin.menus.index');
+            return redirect()->route('admin.menus.index')->with('status','Add item successfully'); 
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withInput()->withErrors('Cannot edit item');
         }
     }
 
@@ -296,18 +309,6 @@ class MenusController extends Controller
 
     public function storeitem()
     {
-        $rules = [
-            'title' => 'required|Max:255',
-            'description' => 'required|Min:6',
-            'price' => 'required|numeric',
-            'item_link' => 'Url',
-        ];
-        $v = Validator::make($this->request->all(),$rules);
-        if ($v->fails())
-        {
-            return redirect()->back()->withInput()->withErrors($v);
-        }
-
         if ($this->request->image_create != null && $this->request->image_create->isValid()) {
             $file = array('image_create' => $this->request->image_create);
             $destinationPath = 'uploads'; // upload path
@@ -326,6 +327,20 @@ class MenusController extends Controller
         }
 
         try {
+
+            $rules = [
+                'menu_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required|Min:6',
+                'price' => 'required|numeric',
+                'item_link' => 'Url',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $item = new Item();
             $item->image_url = $image_create;
             $item->title = $this->request->input('title');
@@ -384,19 +399,6 @@ class MenusController extends Controller
 
     public function update(ImageRequest $imgrequest, $id)
     {
-        $rules = [
-            'title' => 'required|Max:255',
-            'description' => 'required|Min:6',
-            'price' => 'required|numeric',
-            'item_link' => 'Url',
-        ];
-
-        $v = Validator::make($this->request->all(),$rules);
-        if ($v->fails())
-        {
-            return redirect()->back()->withInput()->withErrors($v);
-        }
-
         $image_edit = null;
         if($imgrequest->hasFile('image_edit')){
             $file = array('image_edit' => $this->request->image_edit);
@@ -415,6 +417,19 @@ class MenusController extends Controller
         }
 
         try {
+            $rules = [
+                'menu_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required',
+                'price' => 'required|numeric',
+                'item_link' => 'Url',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $item = Item::find($id);
             $item->title = $this->request->input('title');
             $item->description = $this->request->input('description');

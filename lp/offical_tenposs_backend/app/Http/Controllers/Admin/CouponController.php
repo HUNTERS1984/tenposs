@@ -473,7 +473,19 @@ class CouponController extends Controller
 
 
         try {
-
+            $rules = [
+                'coupon_type_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required',
+                'hashtag' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
 
             $data = [
                 'title' => $this->request->input('title'),
@@ -527,9 +539,9 @@ class CouponController extends Controller
                 Log::info('push fail: ' . json_decode($push));
             //end push
 
-            return redirect()->route('admin.coupon.index')->with('status','Create the coupon successfully');
+            return redirect()->route('admin.coupon.index')->with('status','Add coupon successfully');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot create the coupon');
+            return redirect()->back()->withInput()->withErrors('Cannot add coupon');
         }
 
     }
@@ -601,6 +613,21 @@ class CouponController extends Controller
         }
 
         try {
+            
+            $rules = [
+                'coupon_type_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required',
+                'hashtag' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $this->entity = $this->entity->find($id);
             $this->entity->title = $this->request->input('title');
             $this->entity->description = $this->request->input('description');

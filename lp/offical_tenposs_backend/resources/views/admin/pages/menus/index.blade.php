@@ -154,9 +154,8 @@
                         <div class="col-md-8" align="left">
                             <div class="form-group">
                                 {{Form::label('menu','メニュー')}}
-                                @if(count($menus) > 0)
-                                    {{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
-                                @endif
+                                {{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
+                                
                             </div>
                             <div class="form-group">
                                 {{Form::label('title','タイトル')}}

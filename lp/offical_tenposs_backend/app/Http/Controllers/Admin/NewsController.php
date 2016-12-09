@@ -96,33 +96,49 @@ class NewsController extends Controller
         } else {
             return redirect()->back()->withInput()->withErrors('Please upload an image');
         }
-        $date = Carbon::now()->toDateString();
+        
+        try {
+            $rules = [
+                'new_category_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required'
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
 
-        $this->entity = new News();
-        $this->entity->title = $this->request->input('title');
-        $this->entity->description = $this->request->input('description');
-        $this->entity->image_url = $image_create;
-        $this->entity->date = $date;
-        $this->entity->new_category_id = intval($this->request->input('new_category_id'));
-        $this->entity->save();
-        RedisControl::delete_cache_redis('news');
-        RedisControl::delete_cache_redis('top_news');
-        //push notify to all user on app
-        $app_data = App::where('user_id', Session::get('user')->id )->first();
-        $data_push = array(
-            'app_id' => $app_data->id,
-            'type' => 'news',
-            'data_id' => $this->entity->id,
-            'data_title' => '',
-            'data_value' => '',
-            'created_by' => Session::get('user')->email
-        );
-        $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
-       
+            $date = Carbon::now()->toDateString();
+
+            $this->entity = new News();
+            $this->entity->title = $this->request->input('title');
+            $this->entity->description = $this->request->input('description');
+            $this->entity->image_url = $image_create;
+            $this->entity->date = $date;
+            $this->entity->new_category_id = intval($this->request->input('new_category_id'));
+            $this->entity->save();
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
+            //push notify to all user on app
+            $app_data = App::where('user_id', Session::get('user')->id )->first();
+            $data_push = array(
+                'app_id' => $app_data->id,
+                'type' => 'news',
+                'data_id' => $this->entity->id,
+                'data_title' => '',
+                'data_value' => '',
+                'created_by' => Session::get('user')->email
+            );
+            $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
+            return redirect()->route('admin.news.index')->with('status','Add news successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.news.index')->withInput()->withErrors('Cannot add news');
+        }   
         //if (!$push)
             //Log::info('push fail: ' . json_decode($data_push));
         //end push
-        return redirect()->route('admin.news.index')->with('status','Add a news successfully');
+        
 
     }
 
@@ -157,16 +173,31 @@ class NewsController extends Controller
             $image_edit = $destinationPath . '/' . $fileName;
         }
 
-        $news = $this->entity->find($id);
-        $news->title = $this->request->input('title');
-        $news->description = $this->request->input('description');
-        $news->new_category_id = $this->request->input('new_category_id');
-        if ($image_edit)
-            $news->image_url = $image_edit;
-        $news->save();
-        RedisControl::delete_cache_redis('news');
-        RedisControl::delete_cache_redis('top_news');
-        return redirect()->route('admin.news.index')->with('status','Up the news successfully');
+        try {
+            $rules = [
+                'new_category_id' => 'required',
+                'title' => 'required|Max:255',
+                'description' => 'required'
+            ];
+            $v = Validator::make($this->request->all(),$rules);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
+            $news = $this->entity->find($id);
+            $news->title = $this->request->input('title');
+            $news->description = $this->request->input('description');
+            $news->new_category_id = $this->request->input('new_category_id');
+            if ($image_edit)
+                $news->image_url = $image_edit;
+            $news->save();
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
+            return redirect()->route('admin.news.index')->with('status','Update news successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.news.index')->withInput()->withErrors('Cannot update news');
+        } 
     }
 
     public function destroy($id)
