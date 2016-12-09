@@ -24,6 +24,7 @@
                 </a>
             </div>
             <p class="font32"><a href="{{ route('login') }}" style="
+                font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
             ">ログイン</a></p>
@@ -36,24 +37,25 @@
             background: #{{ $app_info->data->app_setting->menu_background_color}}
         ">
         @foreach ( $app_info->data->side_menu as $menu )
+        <?php $menuItem = \App\Utils\Menus::page($menu->id) ?>
+        @if( $menuItem['display'] )
         <li class="{{ $menu->icon }}">
-            <a class="active" href="{{ \App\Utils\Menus::page($menu->id) }}" style="
-                font-size: {{ $app_info->data->app_setting->menu_font_size }};
-                font-family: {{ $app_info->data->app_setting->menu_font_family }};
-                color: #{{ $app_info->data->app_setting->menu_font_color }};
-            ">
-            {{ $menu->name }}
-        </a></li>            
+                <a class="active" href="{{ $menuItem['href'] }}" style="
+                    font-size: {{ $app_info->data->app_setting->menu_font_size }};
+                    font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                    color: #{{ $app_info->data->app_setting->menu_font_color }};
+                ">{{ $menu->name }} </a>
+        </li>
+        @endif
         @endforeach
-<!--         @if( Session::has('user') )
+        @if( Session::has('user') )
         <li class="ti-unlock">
             <a class="active" href="{{ route('logout') }}" style="
                 font-size: {{ $app_info->data->app_setting->menu_font_size }};
                 font-family: {{ $app_info->data->app_setting->menu_font_family }};
                 color: #{{ $app_info->data->app_setting->menu_font_color }};
-            ">
-            ログアウト
-        </a></li> 
-        @endif -->
+            ">ログアウト</a>
+        </li>
+        @endif
     </ul>
 </div><!-- End side -->
