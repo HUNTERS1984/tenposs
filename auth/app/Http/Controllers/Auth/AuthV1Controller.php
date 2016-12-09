@@ -86,7 +86,7 @@ class AuthV1Controller extends Controller
 
             $email = $result->id . '@fb.com';
 //            $email = "123234234324234234234" . '@fb.com';
-            $password = Input::get('social_token');
+            $password = $email;//Input::get('social_token');
         } else if (Input::get('social_type') == 2) {
             $check_items = array('social_token', 'social_secret');
             $twitter_status = 1;
@@ -96,7 +96,7 @@ class AuthV1Controller extends Controller
             }
 
             $email = $result->id . '@tw.com';
-            $password = Input::get('social_token');
+            $password = $email;//Input::get('social_token');
         } else {
             return $this->error(1004);
         }
