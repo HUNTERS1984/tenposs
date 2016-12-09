@@ -25,8 +25,8 @@ return [
 		],
 		
 		'Twitter' => [
-			'client_id'     => 'RwA2MxYOwBwVC8AvjbWzL34Sw',
-			'client_secret' => 'Ise1bqJluX3ZN2SwOZw3rSPBRYOJwsQt72Pxct7S2HYRrglDKc',
+			'client_id'     => 'qY0dnYDqh99zztg8gBWkLIFrm',
+			'client_secret' => 'Byy6PCW51zvhVrDZayLm8PhenqkHXiRIqLMpK7A5H5XNEzlKYi',
 		],
 
 		'Instagram' => [

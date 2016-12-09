@@ -24,7 +24,7 @@
             </button>
 
             </h1>
-        <a href="{{URL::previous()}}" class="">
+        <a href="/" class="">
             <img src="{{ url('img/icon/h_back-arrow.jpg') }}" alt="nav"/>
         </a>
 

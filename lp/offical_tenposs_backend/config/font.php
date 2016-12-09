@@ -1,11 +1,11 @@
 <?php
 return [
     'size' => [
-        'micro' => 'Micro',
+        'x-small' => 'X-Small',
         'small' => 'Small',
         'medium' => 'Medium',
         'large' => 'Large',
-        'extra_large' => 'Extra Large',
+        'larger' => 'Larger',
     ],
     'family' => [
         'roboto' => 'Roboto',

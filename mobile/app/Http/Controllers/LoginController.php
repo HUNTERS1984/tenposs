@@ -110,12 +110,7 @@ class LoginController extends Controller
     }
     
     public function logout(){
-        $curl = new Curl();
-        $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
-        $curl = $curl->post($this->url_api_signout);
-        if( $curl->code == 1000 ){
-            Session::forget('user');
-        }
+        Session::forget('user');
         return redirect('/');
     }
     
@@ -220,15 +215,15 @@ class LoginController extends Controller
             $social_token = $tw->requestAccessToken($token, $verify);
             $result = json_decode($tw->request('account/verify_credentials.json'), true);
             $curl = new Curl();
-            $curl = $curl->post($this->url_api_signup_social, array(
+            $params = array(
                 'app_id' => $this->app->app_app_id,
                 'social_type' => 2 ,
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
                 'platform' => 'web'
-            ));
-
+            );
+            $curl = $curl->post($this->url_api_signup_social,$params );
             if( isset( $curl->code ) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
