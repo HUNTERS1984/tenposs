@@ -654,7 +654,8 @@ class AppUserController extends Controller
         $app_user_profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $app_user_profile->avatar_url);
         $app_user->profile = $app_user_profile;
         $this->body['data']['user'] = $app_user;
-        RedisUtil::getInstance()->set_cache($key, $this->body);
+        if (count($app_user) > 0)
+            RedisUtil::getInstance()->set_cache($key, $this->body);
         return $this->output($this->body);
     }
 
