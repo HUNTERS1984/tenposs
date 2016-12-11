@@ -23,4 +23,6 @@ interface TopsRepositoryInterface
     public function check_share_code($app_id, $code, $source, $app_uuid, $email);
 
     public function get_app_id_and_app_user_id($app_app_id, $auth_user_id);
+
+    public function get_app_info_by_user($user_id,$app_app_id);
 }

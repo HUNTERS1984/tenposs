@@ -123,6 +123,7 @@ Route::group(array('prefix' => 'api/v2'), function () {
         Route::post('coupon_use_new', 'CouponController@v2_coupon_use_new');
         Route::post('update_profile_social_signup', 'AppUserController@v2_update_profile_from_social_signup');
         Route::get('coupon_detail_login', 'CouponController@v2_coupon_detail_login');
+        Route::get('list_user', 'AppUserController@get_list_user');
     });
 });
 

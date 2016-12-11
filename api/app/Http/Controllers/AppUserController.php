@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\App;
 use App\Models\Coupon;
 use App\Models\News;
+use App\Models\ShareCodeHistory;
 use App\Models\ShareCodeInfo;
 use App\Models\ShareCodes;
 use App\Models\User;
@@ -205,11 +206,16 @@ class AppUserController extends Controller
         $token = '';
         $login = array();
         try {
-            // them 3 param moi: app_uuid,source,code
+            // check code da duo su dung hay chua
             if (!empty(Input::get('code'))) {
-                $error_code = $this->_topRepository->check_share_code($app['id'], Input::get('code'), Input::get('source'), Input::get('app_uuid'), Input::get('email'));
-                if ($error_code > 1000)
-                    return $this->error($error_code);
+                //check code + email
+                $check_share_code = ShareCodeHistory::where('code', Input::get('code'))
+                    ->where('email', Input::get('email'))
+                    ->where('app_id', $app['id'])
+                    ->first();
+                if (count($check_share_code) > 0) {
+                    return $this->error(1016);
+                }
             }
             $call_api = HttpRequestUtil::getInstance()->get_data_with_basic_auth(Config::get('api.url_auth_check_user_exist'),
                 [
@@ -272,13 +278,12 @@ class AppUserController extends Controller
 
             //save info used code
             if (!empty(Input::get('code'))) {
-                $share_code = ShareCodeInfo::where('code', Input::get('code'))
-                    ->where('app_id', $app['id'])->first();
-                if (count($share_code) > 0) {
-                    $share_code->status = 1;
-                    $share_code->app_uuid = Input::get('app_uuid');
-                    $share_code->email = Input::get('email');
-                    $share_code->save();
+                //process code
+                $iProcess = $this->process_share_code($app['id'], Input::get('app_id'), Input::get('code'),
+                    Input::get('email'), $user->id, $auth_user_id, $login->token);
+                if ($iProcess != 1) {
+                    DB::rollBack();
+                    $this->error(1020);
                 }
             }
             DB::commit();
@@ -781,13 +786,13 @@ class AppUserController extends Controller
             return $this->error(1004);
 
         //validate sig
-//        $check_sig_items = Config::get('api.sig_social_profile');
-//        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
-//        if ($app == null || count($app) == 0)
-//            return $this->error(1004);
-//        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
-//        if ($ret_sig)
-//            return $ret_sig;
+        $check_sig_items = Config::get('api.sig_social_profile');
+        $app = $this->_topRepository->get_app_info_from_token(Input::get('token'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
 
         try {
             $social = SocialProfile::where('social_id', Input::get('social_id'))
@@ -1392,7 +1397,7 @@ class AppUserController extends Controller
 
     public function v2_update_profile_from_social_signup()
     {
-        $check_items = array('app_id');
+        $check_items = array('app_id', 'email');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -1406,12 +1411,127 @@ class AppUserController extends Controller
         if (count($app_info) < 1)
             return $this->error(1004);
         try {
+            if (!empty(Input::get('code'))) {
+                //check code + email
+                $check_share_code = ShareCodeHistory::where('code', Input::get('code'))
+                    ->where('email', Input::get('email'))
+                    ->where('app_id', $app_info['app_id'])
+                    ->first();
+                if (count($check_share_code) > 0) {
+                    return $this->error(1016);
+                }
+            }
+            DB::beginTransaction();
+            $user_profiles = UserProfile::find($app_info['profile_id']);
+            if (!$user_profiles)
+                $user_profiles = new UserProfile();
+            if (!empty(Input::get('birthday')))
+                $user_profiles->birthday = Input::get('birthday');
+            if (!empty(Input::get('address')))
+                $user_profiles->address = Input::get('address');
+            $user_profiles->save();
+            if (!empty(Input::get('code'))) {
+                //process code
+                $iProcess = $this->process_share_code($app_info['app_id'], $app_app_id, Input::get('code'),
+                    Input::get('email'), $app_info['app_user_id'], $this->request->token_info['id'], $this->request->token);
+                if ($iProcess != 1) {
+                    DB::rollBack();
+                    $this->error(1020);
+                }
+            }
+            DB::commit();
             return $this->output($this->body);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
+            DB::rollBack();
             return $this->error(9999);
         }
     }
 
+    /**
+     * @param $app_id
+     * @param $app_app_id
+     * @param $code
+     * @param $email
+     * @param $app_user_id
+     * @param $auth_user_id
+     * @param $token
+     * @return int: 1 sucess, 2: code not exist, -1: error
+     */
+    private function process_share_code($app_id, $app_app_id, $code, $email, $app_user_id, $auth_user_id, $token)
+    {
+        $iValue = -1;
+        try {
+            $share_codes = ShareCodes::where('code', $code)
+                ->where('app_id', $app_id)->first();
+            if (count($share_codes) > 0) {
+                $share_code_history = new ShareCodeHistory();
+                $share_code_history->code = $code;
+                $share_code_history->app_id = $app_id;
+                $share_code_history->app_id = $app_id;
+                $share_code_history->app_user_id = $app_user_id;
+                $share_code_history->email = $email;
+                $share_code_history->save();
+                //call api add point
+                $data = HttpRequestUtil::getInstance()->post_data_with_token(
+                    Config::get('api.url_point_bonus'),
+                    [
+                        'app_id' => $app_app_id,
+                        'user_id' => $auth_user_id
+                    ],
+                    $token
+                );
+                //validate data post
+                $iValue = 1;
+            } else
+                $iValue = 2;
+        } catch (QueryException $e) {
+            Log::error($e);
+        }
+        return $iValue;
+    }
+
+    public function get_list_user()
+    {
+        $check_items = array('pageindex', 'pagesize');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        if (Input::get('pageindex') < 1 || Input::get('pagesize') < 1)
+            return $this->error(1004);
+
+        $skip = (Input::get('pageindex') - 1) * Input::get('pagesize');
+
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $apps = $this->_topRepository->get_app_info_by_user($this->request->token_info['id'], Input::get('app_id'));
+        if (count($apps) > 0) {
+            try {
+                $total_data = DB::table('app_users')
+                    ->join('user_profiles', 'user_profiles.app_user_id', '=', 'app_users.id')
+                    ->where('app_users.app_id', $apps->id)
+                    ->count();
+                $data = DB::table('app_users')
+                    ->join('user_profiles', 'user_profiles.app_user_id', '=', 'app_users.id')
+                    ->where('app_users.app_id', $apps->id)
+                    ->select("user_profiles.*", "app_users.last_login")
+                    ->orderBy('updated_at', 'desc')
+                    ->take(Input::get('pagesize'))->skip($skip)
+                    ->get();
+                if (count($data) > 0) {
+                    for ($i = 0; $i < count($data); $i++) {
+                        $data[$i]->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $data[$i]->avatar_url);
+                    }
+                }
+                $this->body['data']['users'] = $data;
+                $this->body['data']['total_users'] = $total_data;
+                return $this->output($this->body);
+            } catch (QueryException $e) {
+                Log::error($e->getMessage());
+                return $this->error(9999);
+            }
+        } else
+            return $this->error(1004);
+    }
 
 }

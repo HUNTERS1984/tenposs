@@ -4,6 +4,7 @@ namespace App\Repositories\Eloquents;
 use App\Models\AppSetting;
 use App\Models\App;
 use App\Models\Address;
+use App\Models\AppUser;
 use App\Models\News;
 use App\Models\NewCat;
 use App\Models\ShareCodeInfo;
@@ -40,8 +41,8 @@ class TopsRepository implements TopsRepositoryInterface
         $app = $this->get_app_info($app_app_id);
         if ($app) {
             $stores = $app->stores()->lists('id')->toArray();
-          
-            $menus = Menu::whereIn('store_id',$stores )->lists('id')->toArray();
+
+            $menus = Menu::whereIn('store_id', $stores)->lists('id')->toArray();
 
             $menus_id = '(' . implode(',', $menus) . ')';
 
@@ -283,10 +284,10 @@ class TopsRepository implements TopsRepositoryInterface
                 ->select('app_users.*', 'user_profiles.id as profile_id')
                 ->where('app_users.app_id', $app_id)
                 ->where('app_users.auth_user_id', $auth_user_id)
-                ->first();
+                ->get();
             if (count($app_user) > 0) {
-                $app_user_id = $app_user->id;
-                $profile_id = $app_user->profile_id;
+                $app_user_id = $app_user[0]->id;
+                $profile_id = $app_user[0]->profile_id;
             }
             if ($app_id > 0 && $app_user_id > 0)
                 return array('app_id' => $app_id,
@@ -294,6 +295,20 @@ class TopsRepository implements TopsRepositoryInterface
                 , 'profile_id' => $profile_id);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
+        }
+        return null;
+    }
+
+    public function get_app_info_by_user($user_id, $app_app_id)
+    {
+        try {
+            if (!empty($app_app_id))
+                return App::where('user_id', $user_id)->where('app_app_id', $app_app_id)->first();
+            else
+                return App::where('user_id', $user_id)->first();
+        } catch (QueryException $e) {
+            Log:
+            error($e->getMessage());
         }
         return null;
     }

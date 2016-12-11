@@ -104,4 +104,7 @@ return [
     'url_auth_check_user_exist' => 'https://auth.ten-po.com/v1/auth/check_user_exist',
     'url_auth_register' => 'https://auth.ten-po.com/v1/auth/register',
     'url_auth_social_login' => 'https://auth.ten-po.com/v1/auth/social_login',
+
+    //point path
+    'url_point_bonus' => 'https://apipoints.ten-po.com/point/bonus/0',
 ];

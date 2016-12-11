@@ -198,7 +198,8 @@ class HttpRequestUtil
     public function post_data_with_token($service_url, $data_params,$token)
     {
         try {
-
+//            print_r($service_url);
+//            print_r(json_encode($data_params));
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data_params));
@@ -219,6 +220,7 @@ class HttpRequestUtil
             curl_close($curl);
 //            print_r($curl_response);
             $decoded = json_decode($curl_response);
+//            print_r($decoded);
             if (isset($decoded->code) && $decoded->code == '1000') {
                 return $decoded->data;
             } else {
