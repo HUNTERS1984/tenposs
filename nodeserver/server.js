@@ -425,7 +425,12 @@ io.on('connection', function (socket) {
             timestamp: package.timestamp,
             profile: socket.user.profile
         };
-        
+
+        //Update lineaccount to app_user_id
+        LineAccounts.updateLineAccount(package.app_user_id,package.to, function(){
+            logger.info('update success line account '+ package.app_user_id + ' to'+ package.to);
+        });
+
         // Find if enduser online
         findClientInRoomByMid( socket.room, package.to, function( client ){
             if( client ){

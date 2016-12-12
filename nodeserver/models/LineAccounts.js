@@ -40,3 +40,29 @@ exports.checkExistAccounts = function(user, _callback){
             });
         
     }
+
+exports.updateLineAccount = function(app_user_id,mid, _callback){
+    var sql = " UPDATE line_accounts SET app_user_id = ? WHERE mid = ? ";
+    connection = mysql.createConnection(mysqlConfig);
+    connection.connect();
+
+    var query = connection.query({
+        sql: sql,
+        values: [app_user_id, mid ]
+    }, function (error, results, fields) {
+
+        if(error){
+            connection.end();
+            return _callback(false);
+        }
+
+        if( results){
+            connection.end();
+            return _callback(results);
+        }else{
+            connection.end();
+            return _callback(false);
+        }
+
+    });
+}

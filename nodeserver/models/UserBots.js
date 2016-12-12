@@ -12,8 +12,8 @@ var connection;
 exports.getBot = function(chanel_id, _callback){
     
         var sql =   " SELECT * "+
-                	" FROM user_bots "+
-                	" WHERE user_bots.chanel_id = ? LIMIT 1";
+                	" FROM app_bots "+
+                	" WHERE app_bots.chanel_id = ? LIMIT 1";
 
         connection = mysql.createConnection(mysqlConfig);
         connection.connect();       	
