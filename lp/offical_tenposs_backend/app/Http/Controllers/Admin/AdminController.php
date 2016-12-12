@@ -394,6 +394,7 @@ class AdminController extends Controller
     }
 
     public function account(){
+
         $user_info = UserInfos::find( Session::get('user')->id );
         if(!$user_info){
             return abort(503,'User info not found' );
@@ -546,6 +547,29 @@ class AdminController extends Controller
 
     }
 
+    public function deleteSplashImage(Request $request){
+        if( $request->has('img_name') ){
+            $arrNames = array(
+                'splash_image_1',
+                'splash_image_2',
+                'splash_image_3',
+                'splash_image_4',
+                'splash_image_5'
+            );
+            $img_name = $request->input('img_name');
+            if( in_array($img_name,$arrNames ) ){
+                $rel_app_stores = DB::table('rel_apps_stores')
+                    ->where('app_id', $request->app->id )
+                    ->update(array(
+                        $img_name => ''
+                    ));
+                if( $rel_app_stores ){
+                    return response()->json(array('success' => true));
+                }
+            }
+        }
+        return response()->json(array('success' => false));
+    }
 
     public function globalSaveSplashImage(Request $request){
 
@@ -601,12 +625,18 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')
-            ->paginate(10);
+        $reqUserLists = cURL::newRequest('get', 'https://api.ten-po.com/api/v2/list_user?pageindex=1&pagesize=10',array(
+            'app_id' => $this->request->app->app_app_id
+        ))->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
+            ->send();
+
+        $users = json_decode($reqUserLists->body);
+        dd($users);
 
         // Client
         $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
+            ->send();
         $client = json_decode($response->body);
         if ($client) {
             $client = $client->data;

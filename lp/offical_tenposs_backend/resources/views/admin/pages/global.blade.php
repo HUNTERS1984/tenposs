@@ -302,7 +302,7 @@
                                     <div class="wrap-content-prview">
                                         <div id="template-1" class="banner-preview">
                                             <!-- Slider main container -->
-                                            <div class="swiper-container">
+                                            <div id="swiper-app-splash" class="swiper-container">
                                                 <div class="swiper-wrapper">
                                                     <?php
                                                         $slides = array();
@@ -316,16 +316,17 @@
                                                     @foreach( $slides as $slide )
                                                     @if( !empty($slide) )
                                                     <div class="swiper-slide">
-                                                        <img width="100%" style="object-fit: cover; object-position: center; width: 210px;" src="{{ url($slide) }}" alt=""/>
+                                                        <img width="210" src="{{ url($slide) }}" alt=""/>
                                                     </div>
                                                     @endif
                                                     @endforeach
                                                     @endif
-
-
                                                 </div>
                                                 <!-- If we need pagination -->
                                                 <div class="swiper-pagination"></div>
+                                                <!-- If we need navigation buttons -->
+                                                <div class="swiper-button-prev"></div>
+                                                <div class="swiper-button-next"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -418,9 +419,11 @@
                     $('body').removeClass('loading');
                     if( response.success ){
                         $('p#upload-response').text(response.msg).addClass('text-success');
+                        $( file).parent().append( '<a href="#" class="remove-app-splash" data-control="'+$(file).attr('name')+'"></a>' );
                     }else{
                         $('p#upload-response').text(response.msg).addClass('text-danger');
                         $('img'+$(file).attr('data-review')).attr('src',currentImg);
+
                     }
 
                 }
@@ -468,6 +471,8 @@
         }
 
 
+
+
         $(document).ready(function () {
 
             $('.nav-left, .nav-right').on('click', 'li', function (e) {
@@ -476,15 +481,20 @@
                 $(this).find('a').toggleClass('active');
             });
 
-            var bannerSwiper = new Swiper('.swiper-container', {
-                autoplay: 1000,
-                speed: 400,
-                loop: true,
-                spaceBetween: 0,
-                slidesPerView: 1,
-                pagination: ".swiper-pagination",
-                paginationClickable: true
-            });
+
+
+                var bannerSwiper = new Swiper('#swiper-app-splash', {
+                    autoplay: 2000,
+                    speed: 300,
+                    loop: true,
+                    spaceBetween: 0,
+                    slidesPerView: 1,
+                    pagination: ".swiper-pagination",
+                    // Navigation arrows
+                    nextButton: '.swiper-button-next',
+                    prevButton: '.swiper-button-prev',
+                    paginationClickable: true
+                });
 
             // With JQuery
             $('#app_ico_image_scale').slider({
@@ -515,6 +525,7 @@
         }
 
         var currentImg ;
+        var no_splash_img = '{{ url('admin/images/no-image.jpg') }}';
         $('input[name^="splash_image"]').each(function(index,item){
             $(item).change(function (event) {
                 event.stopPropagation();
@@ -536,7 +547,26 @@
             });
         });
 
-
+        $('.splash-img').on('click','a.remove-app-splash',function(e){
+            e.preventDefault();
+            var that = this;
+            $.ajax({
+                url: '{{ route("admin.client.global.delete.splash_img") }}',
+                data:{ img_name : $(this).attr('data-control') },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function(){
+                    $('body').addClass('loading');
+                },
+                success: function(response){
+                    $('body').removeClass('loading');
+                    if( response.success ){
+                        $(that).parent().find('img').attr('src', no_splash_img);
+                        $(that).remove();
+                    }
+                }
+            });
+        })
 
         $('#scroll-global-phone-review-1').slimScroll({
             height: '374px',

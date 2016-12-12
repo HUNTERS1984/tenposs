@@ -5455,3 +5455,32 @@ div[class^=app-ico-review-type3] img{
  body.loading .modal-loading {
    display: block !important;
  }
+
+ .splash-img{
+     position: relative;
+ }
+ .remove-app-splash{
+     position: absolute;
+     background: rgba(255,255,255,0.7);
+     display: block;
+     width: 25px;
+     height: 25px;
+     top: 5px;
+     right: 5px;
+     border-radius: 50%;
+
+ }
+.remove-app-splash:hover{
+    background: rgba(18, 175, 212, 0.7);
+}
+
+.remove-app-splash:after{
+    content:"x";
+    color: #000;
+    line-height:25px;
+}
+
+#swiper-app-splash {
+    width: 210px;
+    height: 374px;
+}
