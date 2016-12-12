@@ -222,6 +222,7 @@ function sendMessage(target) {
     var package = {
         'from' : profile.mid,
         'to': $(closest).attr('data-id'),
+        'app_user_id' : '{{ Session::get("user")->id }}',
         'message': $(closest).find('input').val(),
         'timestamp': d.getTime()
     };
