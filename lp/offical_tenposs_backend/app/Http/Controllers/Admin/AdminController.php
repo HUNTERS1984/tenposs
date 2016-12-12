@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class AdminController extends Controller
 {
@@ -207,6 +209,9 @@ class AdminController extends Controller
             ->select('rel_apps_stores.*')
             ->first();
         //dd($data_component_dest);
+        if( is_null($app_stores) || is_null($app_settings)  )
+            abort(404);
+
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
@@ -625,27 +630,42 @@ class AdminController extends Controller
 
     public function userManagement(Request $request){
 
-        $reqUserLists = cURL::newRequest('get', 'https://api.ten-po.com/api/v2/list_user?pageindex=1&pagesize=10',array(
-            'app_id' => $this->request->app->app_app_id
-        ))->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
+        $pageindex = 1;
+        if( $request->has('page') ){
+            $pageindex = $request->input('page');
+        }
+        $pagesize = 10;
+        $reqUserLists = cURL::newRequest('get', 'https://api.ten-po.com/api/v2/list_user?pageindex='.$pageindex.'&pagesize='.$pagesize,array(
+                'app_id' => $this->request->app->app_app_id
+            ))->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
             ->send();
 
         $users = json_decode($reqUserLists->body);
-        dd($users);
+        if( isset($users->code) && $users->code == 1000  ){
+            // Client
+            $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
+                ->send();
+            $client = json_decode($response->body);
 
-        // Client
-        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
-            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
-            ->send();
-        $client = json_decode($response->body);
-        if ($client) {
-            $client = $client->data;
+            if ($client->code && $client->code == 1000) {
+                $client = $client->data;
+
+                $pagination = $this->createLinks( 3 , 'pagination' ,$users->data->total_users,  $pageindex, $pagesize );
+                return view('admin.pages.users.users_management', array(
+                    'users' => $users->data,
+                    'client' => $client,
+                    'pagination' => $pagination
+                ));
+            }
         }
 
-        return view('admin.pages.users.users_management', array(
-            'users' => $users,
-            'client' => $client
-        ));
+        abort(404);
+    }
+
+    public function userManagementPost(Request $request){
+        dd($request->all());
+        // API remove
     }
 
     public function userManagementDetail(Request $request, $app_user_id){

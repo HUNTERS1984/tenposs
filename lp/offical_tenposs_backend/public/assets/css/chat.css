@@ -1,5 +1,5 @@
 #seach-wrapper{
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .input-message .form-control {
@@ -30,22 +30,22 @@
 }
 
 .status{
-  float:right;
+    float:right;
 }
 .status:after{
-  content: '';
-  width: 10px;
-  height: 10px;
-  display: inline-block;
-  border-radius: 50%;
+    content: '';
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
 }
 
 .status.on:after{
-  background: green;
+    background: green;
 }
 
 .status.off:after{
-  background: #d1d1d1;
+    background: #d1d1d1;
 }
 .timestamp{
     font-size: 11px;
@@ -53,117 +53,117 @@
     float: right;
 }
 .messages {
-  position: relative;
-  list-style: none;
-  padding: 20px 10px 0 10px;
-  margin: 0;
-  height: 347px;
-  overflow: scroll;
+    position: relative;
+    list-style: none;
+    padding: 20px 10px 0 10px;
+    margin: 0;
+    height: 347px;
+    overflow: scroll;
 }
 .messages .message {
-  clear: both;
-  overflow: hidden;
-  margin-bottom: 20px;
-  transition: all 0.5s linear;
-  opacity: 0;
+    clear: both;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: all 0.5s linear;
+    opacity: 0;
 }
 .messages .message.left .avatar {
-  background-color: #f5886e;
-  float: left;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+    background-color: #f5886e;
+    float: left;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .messages .message.left .avatar img{
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
 }
 
 .messages .message.left .text_wrapper {
-  background-color: #f4f6f7;
-  margin-left: 20px;
+    background-color: #f4f6f7;
+    margin-left: 20px;
 }
 .messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
-  right: 100%;
-  border-right-color: #f4f6f7;
+    right: 100%;
+    border-right-color: #f4f6f7;
 }
 .messages .message.left .text {
-  color: #c48843;
+    color: #c48843;
 }
 .messages .message.right .avatar {
-  background-color: #fdbf68;
-  float: right;
+    background-color: #fdbf68;
+    float: right;
 }
 
 .messages .message.right .avatar img{
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
 }
 
 .messages .message.right .text_wrapper {
-  background-color: #f4f6f7;
-  margin-right: 20px;
-  float: right;
+    background-color: #f4f6f7;
+    margin-right: 20px;
+    float: right;
 }
 .messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
-  left: 100%;
-  border-left-color: #f4f6f7;
+    left: 100%;
+    border-left-color: #f4f6f7;
 }
 .messages .message.right .text {
-  color: #45829b;
+    color: #45829b;
 }
 .messages .message.appeared {
-  opacity: 1;
+    opacity: 1;
 }
 .messages .message .avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: inline-block;
-  overflow:hidden;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: inline-block;
+    overflow:hidden;
 }
 .messages .message .text_wrapper {
-  display: inline-block;
-  padding: 10px;
-  border-radius: 6px;
-  width: calc(100% - 85px);
-  min-width: 100px;
-  position: relative;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 6px;
+    width: calc(100% - 85px);
+    min-width: 100px;
+    position: relative;
 }
 .messages .message .text_wrapper::after, .messages .message .text_wrapper:before {
-  top: 10px;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
+    top: 10px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
 }
 .messages .message .text_wrapper::after {
-  border-width: 13px;
-  margin-top: 0px;
+    border-width: 13px;
+    margin-top: 0px;
 }
 .messages .message .text_wrapper::before {
-  border-width: 15px;
-  margin-top: -2px;
+    border-width: 15px;
+    margin-top: -2px;
 }
 .messages .message .text_wrapper .text {
-  font-size: 18px;
-  font-weight: 300;
+    font-size: 18px;
+    font-weight: 300;
 }
 
-      
+
 .scroll-wrapper {
     overflow: hidden !important;
     padding: 0 !important;
     position: relative;
 }
- 
+
 .scroll-wrapper > .scroll-content {
     border: none !important;
     box-sizing: content-box !important;
@@ -178,29 +178,29 @@
     top: 0;
     width: auto !important;
 }
- 
+
 .scroll-wrapper > .scroll-content::-webkit-scrollbar {
     height: 0;
     width: 0;
 }
- 
+
 .scroll-element {
     display: none;
 }
 .scroll-element, .scroll-element div {
     box-sizing: content-box;
 }
- 
+
 .scroll-element.scroll-x.scroll-scrollx_visible,
 .scroll-element.scroll-y.scroll-scrolly_visible {
     display: block;
 }
- 
+
 .scroll-element .scroll-bar,
 .scroll-element .scroll-arrow {
     cursor: default;
 }
- 
+
 .scroll-textarea {
     border: 1px solid #cccccc;
     border-top-color: #999999;
@@ -226,12 +226,12 @@
     height: 0;
     width: 0;
 }
- 
- 
- 
- 
+
+
+
+
 /*************** SCROLLBAR MAC OS X ***************/
- 
+
 .scrollbar-macosx > .scroll-element,
 .scrollbar-macosx > .scroll-element div
 {
@@ -242,7 +242,7 @@
     position: absolute;
     z-index: 10;
 }
- 
+
 .scrollbar-macosx > .scroll-element div {
     display: block;
     height: 100%;
@@ -250,20 +250,20 @@
     top: 0;
     width: 100%;
 }
- 
+
 .scrollbar-macosx > .scroll-element .scroll-element_track { display: none; }
 .scrollbar-macosx > .scroll-element .scroll-bar {
     background-color: #6C6E71;
     display: block;
- 
+
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     filter: alpha(opacity=0);
     opacity: 0;
- 
+
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;
- 
+
     -webkit-transition: opacity 0.2s linear;
     -moz-transition: opacity 0.2s linear;
     -o-transition: opacity 0.2s linear;
@@ -276,8 +276,8 @@
     filter: alpha(opacity=70);
     opacity: 0.7;
 }
- 
- 
+
+
 .scrollbar-macosx > .scroll-element.scroll-x {
     bottom: 0px;
     height: 0px;
@@ -286,7 +286,7 @@
     overflow: visible;
     width: 100%;
 }
- 
+
 .scrollbar-macosx > .scroll-element.scroll-y {
     height: 100%;
     min-height: 100%;
@@ -294,18 +294,18 @@
     top: 0;
     width: 0px;
 }
- 
+
 
 /* scrollbar height/width & offset from container borders */
 .scrollbar-macosx > .scroll-element.scroll-x .scroll-bar { height: 7px; min-width: 10px; top: -9px; }
 .scrollbar-macosx > .scroll-element.scroll-y .scroll-bar { left: -9px; min-height: 10px; width: 7px; }
- 
+
 .scrollbar-macosx > .scroll-element.scroll-x .scroll-element_outer { left: 2px; }
 .scrollbar-macosx > .scroll-element.scroll-x .scroll-element_size { left: -4px; }
- 
+
 .scrollbar-macosx > .scroll-element.scroll-y .scroll-element_outer { top: 2px; }
 .scrollbar-macosx > .scroll-element.scroll-y .scroll-element_size { top: -4px; }
- 
+
 /* update scrollbar offset if both scrolls are visible */
 .scrollbar-macosx > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -11px; }
 .scrollbar-macosx > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -11px; }

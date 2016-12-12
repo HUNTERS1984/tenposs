@@ -2,7 +2,7 @@
 
 return [
 
-    "CHAT_SERVER"=>"https://ten-po.com:8081",
+    "CHAT_SERVER"=>"https://ten-po.com:3000",
     // LINE LOGIN SERVICE
     "LINE_CHANEL_ID" =>"1477592731",
     "LINE_CHANEL_SECRET" =>"789ac444af36a5020a5b4c74a9455f5f",

@@ -88,6 +88,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
 
     //Users managements
     Route::get('users/management',['as' => 'admin.users.management', 'uses' => 'Admin\AdminController@userManagement' ] );
+    Route::post('users/management',['as' => 'admin.users.management.post', 'uses' => 'Admin\AdminController@userManagementPost' ] );
     Route::get('users/management/{app_user_id}/detail',['as' => 'admin.users.management.detail', 'uses' => 'Admin\AdminController@userManagementDetail' ] );
 
     //Help
@@ -118,10 +119,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
 
 });
 
-// Enduser chat
-Route::get('chat/screen/{app_user_id}', 'Admin\ChatLineController@chatScreen');
-Route::post('chat/bot', array('as' => 'line.bot', 'uses' => 'Admin\ChatLineController@index'));
-Route::get('chat/line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'Admin\ChatLineController@verifinedToken'));
-Route::get('chat/verifined', array('as' => 'chat.authentication', 'uses' => 'Admin\ChatLineController@verifined'));
-Route::get('chat/login', array('as' => 'chat.login', 'uses' => 'Admin\ChatLineController@login'));
 
+// Chat for Enduser
+
+Route::group(array('prefix' => 'chat'), function () {
+
+    Route::any('bot/{chanel_id}', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
+    Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
+    Route::get('request', array('as' => 'chat.request', 'uses' => 'ChatLineController@requestFriend'));
+    Route::get('line/{app_user_id}/{mid}', array('as' => 'chat.line', 'uses' => 'ChatLineController@chat'));
+    /*
+    Route::get('line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'ChatLineController@verifinedToken'));
+    Route::get('verifined', array('as' => 'chat.authentication', 'uses' => 'ChatLineController@verifined'));
+    Route::get('login', array('as' => 'chat.login', 'uses' => 'ChatLineController@login'));
+    */
+});

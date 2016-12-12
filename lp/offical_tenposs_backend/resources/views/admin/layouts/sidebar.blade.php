@@ -30,38 +30,41 @@
             <li class="{{ (Request::route()->getName() == 'admin.coupon.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.coupon.index') }}"><span>クーポン</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/photo-cate*') ? 'active' : '' }}">
                 <a href="{{route('admin.photo-cate.index')}}"><span>フォトギャラリー</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/staff*') ? 'active' : '' }}">
                 <a href="{{route('admin.staff.index')}}"><span>スタッフ</span></a>
             </li>
 
             <li class="none">
                 <span>Other</span>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/push*') ? 'active' : '' }}">
                 <a href="{{route('admin.push.index')}}"><span>プッシュ通知</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/analytic*') ? 'active' : '' }}">
                 <a href="{{route('admin.analytic.google')}}"><span>アクセス解析</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/cost*') ? 'active' : '' }}">
                 <a href="{{ route('admin.cost.index') }}"><span>コスト管理</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/chat*') ? 'active' : '' }}">
+                <a href="{{ route('admin.client.chat') }}"><span>チャット</span></a>
+            </li>
+            <li class="{{ Request::is('admin/users*') ? 'active' : '' }}">
                 <a href="{{ route('admin.users.management') }}"><span>顧客管理</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/coupon*') ? 'active' : '' }}">
                 <a href="{{ route('admin.coupon.accept') }}"><span>承認管理</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/account*') ? 'active' : '' }}">
                 <a href="{{ route('admin.client.account') }}"><span>アカウント設定</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/help*') ? 'active' : '' }}">
                 <a href="{{route('admin.client.help')}}"><span>ヘルプ</span></a>
             </li>
-            <li>
+            <li class="{{ Request::is('admin/contact*') ? 'active' : '' }}">
                 <a href="{{route('admin.client.contact')}}"><span>お問い合わせ</span></a>
             </li>
             <li>

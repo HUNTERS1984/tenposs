@@ -118,7 +118,7 @@
 
 @stop
 @section('footerJS')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>  
+<script src="{{ secure_asset('assets/js/socket.io.min.js') }}"></script>
 <script src="{{ url('admin/js/simple-scrollbar.js') }}"></script>
 <script src="{{ url('admin/js/moment.min.js') }}"></script>
 <script type="text/javascript">SimpleScrollbar.initAll();</script>
@@ -233,7 +233,7 @@ function sendMessage(target) {
 
 // Connect to server 
 function connectToChat() {
-    socket = new io.connect("{{ env('CHAT_SERVER') }}", {
+    socket = new io.connect("{{ config('line.CHAT_SERVER') }}", {
         'reconnection': true,
         'reconnectionDelay': 1000,
         'reconnectionDelayMax' : 5000,
