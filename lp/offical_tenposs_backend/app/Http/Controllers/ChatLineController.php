@@ -11,7 +11,7 @@ use App\Models\Message;
 use App\Models\LineAccount;
 use App\Models\Users;
 use App\Models\AppUser;
-use App\Models\UserBots;
+use App\Models\AppBots;
 use App\Models\App as AppClient;
 
 use DB;
@@ -54,7 +54,7 @@ class ChatLineController extends Controller
         Log::info(print_r($data, true));
         $data = $data->events[0];
         
-        $botInfo = UserBots::where('chanel_id',$chanel_id )->first();
+        $botInfo = AppBots::where('chanel_id',$chanel_id )->first();
         if( $botInfo ){
             
             $LineAccount = LineAccount::where('mid',$data->source->userId )->first();
@@ -96,12 +96,11 @@ class ChatLineController extends Controller
         if(! $app_user){
             abort(502);
         }
-
         $lineAccounts = DB::table('line_accounts')
             ->where('line_accounts.app_user_id',$app_user->id)
             ->select('mid','pictureUrl','displayName','statusMessage')
             ->get();
-   
+
         if(count($lineAccounts) <= 0 ){
             return redirect()->route('chat.request');
         }
@@ -110,25 +109,28 @@ class ChatLineController extends Controller
     }
     
     public function chat($app_user_id, $mid){
-        $LineAccount = LineAccount::where('mid',$mid )->first();
+        $LineAccount = LineAccount::where('mid',$mid )
+            ->select('mid','pictureUrl','displayName','statusMessage')
+            ->first();
+
         if( $LineAccount ){
 
-            $bot = DB::table('apps')
-                ->join('app_users','app_users.app_id','=','apps.id')
-                ->join('user_bots','user_bots.user_id','=','apps.user_id')
+            $bot = DB::table('app_users')
+                ->join('app_bots','app_bots.app_id','=','app_users.app_id')
                 ->where('app_users.id', $app_user_id )
-                ->select('user_bots.*')
+                ->select('app_bots.*')
                 ->first();
-            
+
             if( $bot ){
                 return view('chat.message',[
                     'profile' => json_encode($LineAccount), 
                     'channel' => $bot->chanel_id]);
             }
                 
-            return abort(503);
+            abort(404);
         }
-        return 'Cannot get lineaccounts';
+
+        abort(404);
         
     }
      public function requestFriend() {

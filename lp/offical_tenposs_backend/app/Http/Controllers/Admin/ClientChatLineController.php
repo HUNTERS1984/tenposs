@@ -13,7 +13,7 @@ use Log;
 use App;
 use App\Models\Message;
 use App\Models\LineAccount;
-use App\Models\UserBots;
+use App\Models\AppBots;
 use App\Models\AppUser;
 use App\Models\App as AppClient;
 
@@ -41,9 +41,9 @@ class ClientChatLineController extends Controller
     * Route: /admin/chat
     * 
     */
-    public function chatAdmin(){
+    public function chatAdmin(Request $request){
     
-        $botService = UserBots::where('user_id', Session::get('user')->id )->first();
+        $botService = AppBots::where('app_id', $request->app->id )->first();
     	if( !$botService ){
     	    return view('admin.pages.chat.clients')->withErrors('Please config your BOT LINE info!' );
     	}
@@ -53,18 +53,17 @@ class ClientChatLineController extends Controller
              
         $responseProfile = $requestProfile->send();
         $profile = json_decode($responseProfile->body);
-        
+
         if( !$profile ){
             return view('admin.pages.chat.clients')->withErrors('Try again!' );
         }
     
-        $contacts = DB::table('apps')
-            ->join('app_users','app_users.app_id','=','apps.id')
+        $contacts = DB::table('app_users')
             ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
-            ->where('apps.user_id', Session::get('user')->id )
+            ->where('app_users.app_id', $request->app->id )
             ->select('line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
             ->orderBy('displayName')
-            ->paginate(20);
+            ->get();
 
         return view('admin.pages.chat.clients',[
             'contacts' => json_encode($contacts),
@@ -76,10 +75,8 @@ class ClientChatLineController extends Controller
     
         if( $request->ajax() ){
             $contacts = DB::table('app_users')
-            ->join('apps','app_users.app_id','=','apps.id')
-            ->join('users','users.id','=','apps.user_id')
             ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
-            ->where('users.id',Auth::user()->id)
+            ->where('app_users.app_id',$request->app->id)
             ->where('displayName','like','%'.$request->input('s').'%')
             ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
             ->orderBy('displayName')

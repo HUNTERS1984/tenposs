@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserBots extends Model
+class AppBots extends Model
 {
     //
-    protected $table = 'user_bots';
+    protected $table = 'app_bots';
     
 }
