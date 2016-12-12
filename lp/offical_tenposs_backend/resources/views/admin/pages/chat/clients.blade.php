@@ -392,7 +392,7 @@ $(document).ready(function(){
     // Connect chat
     connectToChat();
     // Renders list chat
-    renderChatLists(contactsData.data);
+    renderChatLists(contactsData);
     // Enter send message
     $('#message-wrapper').on('keyup','#message_input',function (e) {
         if (e.which === 13) {
