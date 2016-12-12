@@ -118,7 +118,18 @@ class AnalyticController extends Controller
 
     public function store_analytic()
     {
-        return view('admin.pages.analytic.store');
+        //dd($this->request->stores->pluck('id')->toArray());
+        $visits = DB::table('rel_app_users_coupons')
+                ->join('staffs', 'rel_app_users_coupons.staff_id', '=', 'staffs.id')
+                ->join('staff_categories', 'staff_categories.id', '=', 'staffs.staff_category_id')
+                ->join('stores', 'stores.id', '=', 'staff_categories.store_id')
+                ->whereIn('staff_categories.store_id', $this->request->stores->pluck('id')->toArray())
+                ->whereNotNull('rel_app_users_coupons.user_use_date')
+                ->groupBy('staff_categories.store_id')
+                ->select([DB::raw('count(staff_categories.id) as total'), 'stores.name'])
+                ->get();
+        //dd($visits);
+        return view('admin.pages.analytic.store', array('visits' => $visits));
     }
 
     private function cp_total_use($from_date, $to_date)
@@ -147,10 +158,14 @@ class AnalyticController extends Controller
     {
         $total_post = 0;
         try {
-            $total_post = \Illuminate\Support\Facades\DB::table('apps')
-                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
-                ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
-                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+            // $total_post = \Illuminate\Support\Facades\DB::table('apps')
+            //     ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+            //     ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
+            //     ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+            //     ->whereBetween('posts.created_at',
+            //         array(new \DateTime($from_date), new \DateTime($to_date)))
+            //     ->count('posts.id');
+            $total_post = \Illuminate\Support\Facades\DB::table('posts')
                 ->whereBetween('posts.created_at',
                     array(new \DateTime($from_date), new \DateTime($to_date)))
                 ->count('posts.id');
@@ -204,16 +219,24 @@ class AnalyticController extends Controller
     {
         $total_post = null;
         try {
-            $total_post = \Illuminate\Support\Facades\DB::table('apps')
-                ->join('app_users', 'apps.id', '=', 'app_users.app_id')
-                ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
-                ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+            // $total_post = \Illuminate\Support\Facades\DB::table('apps')
+            //     ->join('app_users', 'apps.id', '=', 'app_users.app_id')
+            //     ->join('posts', 'app_users.id', '=', 'posts.app_user_id')
+            //     ->where('apps.user_id', '=', \Illuminate\Support\Facades\Session::get('user')->id)
+            //     ->whereBetween('posts.created_at',
+            //         array(new \DateTime($from_date), new \DateTime($to_date)))
+            //     ->groupBy(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\')'))
+            //     ->select(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\') as DateId'),
+            //         DB::raw('count(posts.id) as total'))
+            //     ->get();
+            $total_post = \Illuminate\Support\Facades\DB::table('posts')
                 ->whereBetween('posts.created_at',
                     array(new \DateTime($from_date), new \DateTime($to_date)))
                 ->groupBy(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\')'))
                 ->select(DB::raw('DATE_FORMAT(posts.created_at, \''.$format_date.'\') as DateId'),
-                    DB::raw('count(posts.id) as total'))
+                    DB::raw('count(DISTINCT posts.id) as total'))
                 ->get();
+            //dd($total_post);
         } catch (QueryException $e) {
             \Illuminate\Support\Facades\Log::error($e->getMessage());
         }

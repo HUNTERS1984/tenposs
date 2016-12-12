@@ -87,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <label>タイトルカラー</label>
-                            <div class="wrapp-draw">
+                            <div class="global-wrapp-draw">
                                 
                                 {{Form::text('title_color',$app_settings->title_color
                                         ,array('id'=>'title_color','class'=>'form-control supper-short jscolor', 'placeholder'=>''))}}
@@ -111,7 +111,7 @@
                         </div>
                         <div class="form-group">
                             <label>ヘッダーカラー</label>
-                            <div class="wrapp-draw">
+                            <div class="global-wrapp-draw">
                                 
                                 {{Form::text('header_color',$app_settings->header_color,
                                         array('id'=>'header_color','class'=>'form-control supper-short jscolor', 'placeholder'=>''))}}
@@ -122,7 +122,7 @@
                         </div>
                         <div class="form-group">
                             <label>メニューイコンカラー</label>
-                            <div class="wrapp-draw">
+                            <div class="global-wrapp-draw">
                                
                                 {{Form::text('menu_icon_color',$app_settings->menu_icon_color,
                                         array('id'=>'menu_icon_color','class'=>'jscolor form-control supper-short', 'placeholder'=>''))}}
@@ -178,7 +178,7 @@
                   
                         <div class="form-group">
                             <label>バックグラウンドカラー</label>
-                            <div class="wrapp-draw">
+                            <div class="global-wrapp-draw">
                                 
                                 {{Form::text('menu_background_color',$app_settings->menu_background_color,
                                     array(
@@ -195,7 +195,7 @@
                         </div>
                         <div class="form-group">
                             <label>フォントカラー</label>
-                            <div class="wrapp-draw">
+                            <div class="global-wrapp-draw">
 
                                 {{Form::text('menu_font_color',$app_settings->menu_font_color,
                                     array('id'=>'menu_font_color', 
@@ -372,7 +372,8 @@
     {{Html::style('admin/js/swiper/swiper.min.css')}}
     {{Html::style('admin/js/slider/bootstrap-slider.css')}}
     {{Html::script('admin/js/slider/bootstrap-slider.min.js')}}
-
+    {{Html::script('admin/js/jquery-filestyle.min.js')}}
+    {{Html::style('admin/css/jquery-filestyle.min.css')}}
     <script type="text/javascript">
         // Global function
         // Save icon
@@ -417,9 +418,10 @@
                 },
                 success: function(response){
                     $('body').removeClass('loading');
+
                     if( response.success ){
                         $('p#upload-response').text(response.msg).addClass('text-success');
-                        $( file).parent().append( '<a href="#" class="remove-app-splash" data-control="'+$(file).attr('name')+'"></a>' );
+                        $( file).parent().parent().append( '<a href="#" class="remove-app-splash" data-control="'+$(file).attr('name')+'"></a>' );
                     }else{
                         $('p#upload-response').text(response.msg).addClass('text-danger');
                         $('img'+$(file).attr('data-review')).attr('src',currentImg);
@@ -481,20 +483,16 @@
                 $(this).find('a').toggleClass('active');
             });
 
-
-
-                var bannerSwiper = new Swiper('#swiper-app-splash', {
-                    autoplay: 2000,
-                    speed: 300,
-                    loop: true,
-                    spaceBetween: 0,
-                    slidesPerView: 1,
-                    pagination: ".swiper-pagination",
-                    // Navigation arrows
-                    nextButton: '.swiper-button-next',
-                    prevButton: '.swiper-button-prev',
-                    paginationClickable: true
-                });
+            var bannerSwiper = new Swiper('#swiper-app-splash', {
+                autoplay: 2000,
+                speed: 300,
+                loop: true,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: ".swiper-pagination",
+                // Navigation arrows
+                paginationClickable: true
+            });
 
             // With JQuery
             $('#app_ico_image_scale').slider({
@@ -686,5 +684,7 @@
                 }
             });
         });
+
+        $(":file").jfilestyle({placeholder: "選択されていません", buttonText: "ファイルを選択", 'inputSize': '150px'});
     </script>
 @endsection

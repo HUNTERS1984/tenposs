@@ -35,10 +35,10 @@
         <th></th>
         <th class="center">ユーザーネーム</th>
         <th class="center">ユーザーID</th>
-        <th class="center">メンバーステージ</th><!-- Member stage -->
+        <th class="center">会員ステージ</th><!-- Member stage -->
         <th class="center">性別</th><!-- Gender -->
         <th class="center">年齢</th><!-- Age -->
-        <th class="center">地図</th><!-- Position -->
+        <th class="center">地域</th><!-- Position -->
         <th class="center">サービス連携</th><!-- Service connect -->
         <th class="center">最終ログイン</th><!-- Last login -->
     </tr>
@@ -69,15 +69,15 @@
         </td>
         <td class="center">
             @if ($user->point->miles >= $client->point_setting->rank4)
-                <p>ダイアモンド会員</p>
+                <p>ダイアモンド</p>
                 @elseif ($user->point->miles >= $client->point_setting->rank3)
-                <p>プラチナ会員</p>
+                <p>プラチナ</p>
                 @elseif ($user->point->miles >= $client->point_setting->rank2)
-                <p>ゴールド会員</p>
+                <p>ゴールド</p>
                 @elseif ($user->point->miles >= $client->point_setting->rank1)
-                <p>シルバー会員</p>
+                <p>シルバー</p>
                 @else
-                <p>普通会員</p>
+                <p>普通</p>
             @endif
 
         </td>

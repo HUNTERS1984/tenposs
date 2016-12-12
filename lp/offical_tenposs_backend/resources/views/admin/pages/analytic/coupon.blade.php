@@ -46,9 +46,9 @@
 
                                             <select name="report_type" id="report_type"
                                                     class="form-control option-chart">
-                                                <option value="coupon_use">ユーザー数</option>
-                                                <option value="post">セッション</option>
-                                                <option value="coupon_created">スクリーンビュー</option>
+                                                <option value="coupon_use">クーポン利用者数</option>
+                                                <option value="post">投稿写真数</option>
+                                                <option value="coupon_created">クーポン作成数</option>
                                             </select>
                                             <div class="btn-group">
                                                 <button type="button" name="time-type" data-time-type="D"
@@ -78,19 +78,19 @@
                                     <div class="row">
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
-                                                <p>ユーザー数</p>
+                                                <p>クーポン利用者数</p>
                                                 <h3 id="cp_coupon_use">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
-                                                <p>セッション</p>
+                                                <p>投稿写真数</p>
                                                 <h3 id="cp_post">0</h3>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
-                                                <p>スクリーンビュー</p>
+                                                <p>クーポン作成数</p>
                                                 <h3 id="cp_coupon_created">0</h3>
                                             </div>
                                         </div>

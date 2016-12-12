@@ -173,7 +173,7 @@
             e.preventDefault();
             x++;
             $(wrapper).append('<div><input type="file" class="form-control short" style="display:inline" name="image_viewer['+x+']" class="jfilestyle" data-buttonText="" ><a href="#" class="remove_field"><span aria-hidden="true" style="font-size:25px; vertical-align: middle;"> ×</span></a></div>'); //add input box
-            $(":file").jfilestyle({buttonText: "ファイルを選択"});
+            $(":file").jfilestyle({placeholder: "選択されていません", buttonText: "ファイルを選択"});
         });
         
         $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
