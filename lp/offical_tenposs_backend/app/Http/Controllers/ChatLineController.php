@@ -1,10 +1,6 @@
 <?php
 
-namespace Modules\Admin\Http\Controllers;
-
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use File;
@@ -22,7 +18,7 @@ use DB;
 use Auth;
 use Config;
 use LRedis;
-
+use Illuminate\Http\Request;
 class ChatLineController extends Controller
 {
     //
