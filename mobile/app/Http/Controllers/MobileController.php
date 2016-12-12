@@ -8,6 +8,7 @@ use App\Http\Requests;
 use DB;
 use Session;
 use Auth;
+use \Curl\Curl;
 
 
 class MobileController extends Controller
@@ -32,25 +33,21 @@ class MobileController extends Controller
     }
     
     public function configuration(){
-        
-        $get = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('get_push_setting',[
-                'token' => Session::get('user')->token
-            ],
-            $this->app->app_app_secret);    
-        
-        $response = json_decode($get);
-   
-        if( \App\Utils\Messages::validateErrors($response) ){
-            return view('configurations', 
-            [ 
-                'configs' => $response,
-                'app_info' => $this->app_info
-            ]);
-        }else{
-            Session::flash('message', \App\Utils\Messages::customMessage( 2001 ));
-            return back();
+
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+        $curl->get( 'https://apinotification.ten-po.com/v1/user/get_push_setting' );
+
+        if( isset($curl->response->code) && $curl->response->code == 1000 ){
+            return view('configurations',
+                [
+                    'configs' => $curl->response->data,
+                    'app_info' => $this->app_info
+                ]);
         }
+        Session::flash('message', array( 'class' => 'alert-danger', 'detail' => 'Error!' ));
+        return back();
+
     }
     
     public function configurationSave(Request $request){
@@ -66,22 +63,17 @@ class MobileController extends Controller
                     }
                 } 
             }
-            
-            $arrParams['token'] = Session::get('user')->token;
-            
-            $get = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('set_push_setting',
-                    $arrParams,
-                    $this->app->app_app_secret);    
-            
-            $response = json_decode($get);
-            
-            if( \App\Utils\Messages::validateErrors($response) ){
-                return response()->json($response);
-            }else{
-                return response()->json(['success' => false ]);
+
+            $arrParams['app_id'] = $this->app->app_app_id;
+            $curl = new Curl();
+            $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+            $curl->post( 'https://apinotification.ten-po.com/v1/user/set_push_setting',$arrParams );
+
+            if( isset($curl->response->code) && $curl->response->code){
+                return response()->json(['success' => true ]);
             }
-            
+            return response()->json(['success' => false ]);
+
         }   
     }
     

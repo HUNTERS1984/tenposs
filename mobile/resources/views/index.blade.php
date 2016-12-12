@@ -247,7 +247,7 @@
         });
         lightbox.option({
           'showImageNumberLabel': false
-        })
+        });
 
         @if( Session::has('user') && !Session::get('setpushkey') )
         $.ajax({

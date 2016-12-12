@@ -80,7 +80,7 @@ class LoginController extends Controller
             'role' => 'user',
             'platform' => 'web'
         ));
-        if ( $curl->code == 1000 && isset( $curl->data )){
+        if ( isset($curl->code) && $curl->code == 1000 && isset( $curl->data )){
             if( $curl->data->is_active != 1 )
             {
                 Session::flash('message', array('class' => 'alert-danger', 'detail' => 'アカウントは有効ではありません') );
@@ -93,7 +93,8 @@ class LoginController extends Controller
             $curl->get( $this->url_api_profile ,array(
                     'app_id' => $this->app->app_app_id
                 ));
-            if( $curl->response->code == 1000 ){
+
+            if( isset($curl->response->code) && $curl->response->code == 1000 ){
                 $user = $curl->response->data->user;
                 $data = (object)array_merge((array)$token, (array)$user);
                 Session::put( 'user', $data );
@@ -156,7 +157,7 @@ class LoginController extends Controller
             'name' => $request->input('name')
         ));
 
-        if( $curl->code == 1000 ){
+        if( isset($curl->code) && $curl->code == 1000 ){
             Session::put('user', $curl->data);
             return redirect('/');
         }
@@ -186,7 +187,7 @@ class LoginController extends Controller
             );
             $curl = $curl->post($this->url_api_signup_social, $params);
 
-            if( $curl->code == 1000 ){
+            if( isset($curl->code) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
@@ -224,7 +225,7 @@ class LoginController extends Controller
                 'platform' => 'web'
             );
             $curl = $curl->post($this->url_api_signup_social,$params );
-            if( isset( $curl->code ) && $curl->code == 1000 ){
+            if( isset($curl->code) && isset( $curl->code ) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
@@ -303,7 +304,7 @@ class LoginController extends Controller
             'social_secret' => $social_secret ,
             'nickname' => $name
         ));
-        if( $curl->code == 1000 ){
+        if( isset($curl->code) && $curl->code == 1000 ){
             Session::flash('message', array('class' => 'alert alert-success', 'detail' => '社会的成功をつなぐ' ) );
         }else{
             Session::flash('message',  array('class' => 'alert alert-success', 'detail' => 'ソーシャルフェイルを接続する' ));
@@ -320,7 +321,7 @@ class LoginController extends Controller
                 'app_id' => $this->app->app_app_id,
                 'social_type' => $type ,
             ));
-            if( $curl->code == 1000 ){
+            if( isset($curl->code) && $curl->code == 1000 ){
                 Session::flash('message', array('class' => 'alert-success', 'detail' => 'プロファイルをキャンセルする!' ) );
                 return redirect()->route('profile');
             }
@@ -347,7 +348,7 @@ class LoginController extends Controller
             'app_id' => $this->app->app_app_id
         ));
 
-        if( $curl->response->code == 1000 ){
+        if( isset($curl->response->code) && $curl->response->code == 1000 ){
             $currentUser = Session::get('user');
             $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
             Session::put('user',$updateProfile );
@@ -421,7 +422,7 @@ class LoginController extends Controller
         $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
         $curl = $curl->post($this->url_api_profile_update, $params);
 
-        if( $curl->code == 1000 ){
+        if( isset($curl->code) && $curl->code == 1000 ){
             Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
             return back();
         }
@@ -446,7 +447,7 @@ class LoginController extends Controller
                 'social_secret' => config('oauth-5-laravel.consumers.Instagram.client_secret') ,
                 'nickname' => $data->user->full_name
             ));
-            if( $curl->code == 1000 ){
+            if( isset($curl->code) && $curl->code == 1000 ){
                 Session::flash('message', array('class' => 'alert alert-success', 'detail' => '社会的成功をつなぐ' ) );
             }else{
                 Session::flash('message',  array('class' => 'alert alert-success', 'detail' => 'ソーシャルフェイルを接続する' ));
@@ -459,22 +460,21 @@ class LoginController extends Controller
     public function setPushKey(Request $request){
         // set push key after login
         if( $request->ajax() && $request->has('key') ){
+            $curl = new Curl();
+            $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+            $curl = $curl->post('https://apinotification.ten-po.com/v1/user/set_push_key',array(
+                'key' => $request->input('key'),
+                'client' => 'web',
+                'app_id' => $this->app->app_app_id
+            ));
 
-            $postPushKey = \App\Utils\HttpRequestUtil::getInstance()
-                ->post_data('set_push_key',[
-                        'token' => Session::get('user')->token,
-                        'client' =>  3,
-                        'key' => $request->input('key')
-                    ],
-                    $this->app->app_app_secret);
-            $responsePushKey = json_decode($postPushKey);
-
-            if( $responsePushKey->code == 1000 ){
+            if( isset($curl->code) && $curl->code == 1000 ){
                 Session::put('setpushkey', true );
                 return response()->json(['msg' => 'Set push key success' ]);
             }
-        }
 
+            return response()->json(['msg' => 'Set push key fail' ]);
+        }
     }
 
 }

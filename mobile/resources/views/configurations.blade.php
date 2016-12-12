@@ -29,8 +29,8 @@
                     <a href="#">ランキング</a>
                     <!-- Rounded switch -->
                     <label class="switch">
-                        <input name="ranking" type="checkbox" {{ ($configs->data->push_setting->ranking == 1 )? 'checked':'' }} 
-                        value="{{ $configs->data->push_setting->ranking }}">
+                        <input name="ranking" type="checkbox" {{ ($configs->ranking == 1 )? 'checked':'' }}
+                        value="{{ $configs->ranking }}">
                         <div class="slider round"></div>
                     </label>
                 </li>
@@ -38,8 +38,8 @@
                     <a href="#">ニュース</a>
                     <!-- Rounded switch -->
                     <label class="switch">
-                        <input name="news" type="checkbox" {{ ($configs->data->push_setting->news == 1 )? 'checked':'' }} 
-                        value="{{ $configs->data->push_setting->news }}">
+                        <input name="news" type="checkbox" {{ ($configs->news == 1 )? 'checked':'' }}
+                        value="{{ $configs->news }}">
                         <div class="slider round"></div>
                     </label>
                 </li>
@@ -47,8 +47,8 @@
                     <a href="#">クーポン</a>
                     <!-- Rounded switch -->
                     <label class="switch">
-                        <input name="coupon" type="checkbox" {{ ($configs->data->push_setting->coupon == 1 )? 'checked':'' }} 
-                        value="{{ $configs->data->push_setting->coupon }}">
+                        <input name="coupon" type="checkbox" {{ ($configs->coupon == 1 )? 'checked':'' }}
+                        value="{{ $configs->coupon }}">
                         <div class="slider round"></div>
                     </label>
                 </li>
@@ -56,8 +56,8 @@
                     <a href="#">チャット</a>
                     <!-- Rounded switch -->
                     <label class="switch">
-                        <input name="chat" type="checkbox" {{ ($configs->data->push_setting->chat == 1 )? 'checked':'' }} 
-                        value="{{ $configs->data->push_setting->chat }}">
+                        <input name="chat" type="checkbox" {{ ($configs->chat == 1 )? 'checked':'' }}
+                        value="{{ $configs->chat }}">
                         <div class="slider round"></div>
                     </label>
                 </li>
