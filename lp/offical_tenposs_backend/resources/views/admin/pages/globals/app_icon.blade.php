@@ -44,8 +44,6 @@
                             <div class="form-group">
                                 <label>画像アップロード</label>
                                 <div class="wrapp-draw">
-                                    <span class="left">選択されていません</span>
-                                    <input type="text" name="app_ico_image_trigger" class="form-control long" id="" placeholder="ファイルを選択">
                                     <input type="file" id="app-ico-image" name="app_ico_image" class="hidden"/>
                                 </div>
                             </div>
@@ -55,7 +53,7 @@
                             </div>
                             <div class="form-group">
                                 <label>タイトルカラー</label>
-                                <div class="wrapp-draw">
+                                <div class="global-wrapp-draw">
                                     <input  name="app_ico_title_color" id="app-ico-title-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_title_color(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-title-color').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -64,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label>背景カラー</label>
-                                <div class="wrapp-draw">
+                                <div class="global-wrapp-draw">
                                     <input name="app_ico_bg_color" id="app-ico-bg-color" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_bg_color(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-bg-color').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -134,7 +132,7 @@
                             </div>
                             <div class="form-group">
                                 <label>タイトルカラー</label>
-                                <div class="wrapp-draw">
+                                <div class="global-wrapp-draw">
                                     <input  name="app_ico_title_color_type2" id="app-ico-title-color-type2" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_title_color_type2(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-title-color-type2').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -143,7 +141,7 @@
                             </div>
                             <div class="form-group">
                                 <label>背景カラー</label>
-                                <div class="wrapp-draw">
+                                <div class="global-wrapp-draw">
                                     <input name="app_ico_bg_color_type2" id="app-ico-bg-color-type2" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_bg_color_type2(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-bg-color-type2').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -225,15 +223,13 @@
                             <div class="form-group">
                                 <label>画像アップロード</label>
                                 <div class="wrapp-draw">
-                                    <span class="left">選択されていません</span>
-                                    <input type="text" name="app_ico_image_trigger_type3" class="form-control long" id="" placeholder="ファイルを選択">
                                     <input type="file" id="app-ico-file-type3" name="app_ico_file_type3" class="hidden"/>
                                 </div>
 
                             </div>
                             <div class="form-group">
-                                <label>タイトルカラー</label>
-                                <div class="wrapp-draw">
+                                <label>背景カラー1</label>
+                                <div class="global-wrapp-draw">
                                     <input  name="app_ico_back_color_type3" id="app-ico-back-color-type3" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_back_color_type3(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-back-color-type3').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -241,8 +237,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>背景カラー</label>
-                                <div class="wrapp-draw">
+                                <label>背景カラー2</label>
+                                <div class="global-wrapp-draw">
                                     <input name="app_ico_bg_color_type3" id="app-ico-bg-color-type3" type="text" class="form-control middle jscolor {onFineChange:'change_app_ico_bg_color_type3(this)'}" placeholder="000000">
                                     <img onclick="document.getElementById('app-ico-bg-color-type3').jscolor.show()"
                                          src="/assets/backend/images/draw.jpg"
@@ -251,7 +247,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Scale</label>
-                                <div class="wrapp-draw">
+                                <div class="global-wrapp-draw">
                                     <input id="app_ico_image_scale" name="app_ico_image_scale" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50"/>
                                 </div>
                             </div>

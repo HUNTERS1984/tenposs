@@ -216,6 +216,7 @@ var tenposs = {
             bind_total_data: function (report_type, data_value) {
                 data_value = parseFloat(data_value);
                 data_value = Number(data_value.toFixed(2)).toLocaleString();
+
                 switch (report_type) {
                     case 'coupon_use':
                         $('#cp_coupon_use').html(data_value);

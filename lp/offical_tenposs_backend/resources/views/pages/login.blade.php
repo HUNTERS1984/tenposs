@@ -39,7 +39,7 @@
 						<input type="submit" name="submit" class="form-control btn-submit btn-xanhduong" value="次へ">
 					</div>
 					<p class="register">　<a href="{{route('password.reset')}}">パスワードをお忘れですか?</a></p>
-					<p class="register">もう登録されていますか?　<a href="{{url('signup')}}">ログイン</a></p>
+					<p class="register">もう登録されていますか?　<a href="{{url('signup')}}">新規登録</a></p>
 
 				</form>
 				@include('layouts.messages')

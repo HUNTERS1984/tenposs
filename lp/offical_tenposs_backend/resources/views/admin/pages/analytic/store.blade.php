@@ -33,7 +33,7 @@
 
                     <div class="tab-content analytic">
                         <div role="tabpanel" class="tab-pane active" id="tab-analytic-3">
-                            <div class="drop-analytic">
+                            <!-- <div class="drop-analytic">
                                 <select name="" id="" class="form-control">
                                     <option value="">客管理</option>
                                     <option value="">オンライン</option>
@@ -41,47 +41,19 @@
                                     <option value="">オンライン</option>
                                     <option value="">オンライン</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <!-- wrapp_analytics -->
                             <div class="wrapp_analytics">
                                 <div class="tab_top">
                                     <div class="row">
+                                        @foreach($visits as $visit)
                                         <div class="col-md-4 col-xs-6">
                                             <div class="content_tab_top">
-                                                <p>ユーザー数</p>
-                                                <h3>29,147</h3>
+                                                <p>{{ $visit->name }}店</p>
+                                                <h3>{{ $visit->total }}人</h3>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-xs-6">
-                                            <div class="content_tab_top">
-                                                <p>セッション</p>
-                                                <h3>247,837</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-xs-6">
-                                            <div class="content_tab_top">
-                                                <p>スクリーンビュー</p>
-                                                <h3>1,002,719</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-xs-6">
-                                            <div class="content_tab_top">
-                                                <p>離脱率</p>
-                                                <h3>64.07%</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-xs-6">
-                                            <div class="content_tab_top">
-                                                <p>平均セッション時間</p>
-                                                <h3>00:01:48</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-xs-6">
-                                            <div class="content_tab_top">
-                                                <p>新規セッション率</p>
-                                                <h3>0.29%</h3>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>

@@ -83,7 +83,7 @@ class InstagramPaginationJob extends Job implements ShouldQueue
                 if ($item->caption !== null) {
                     $post->caption = $item->caption->text;
                 }
-                $post->created_at = $item->created_time;
+                $post->created_time = $item->created_time;
                 $post->save();
             }
 

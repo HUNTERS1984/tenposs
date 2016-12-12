@@ -43,12 +43,14 @@
                                                     : url('admin/images/no-image.jpg');
                                             ?>
                                             <img id="review-splash-img-1" class="img-responsive" src="{{ $image }}" alt=""/>
-                                            <input type="file" class="hidden" data-review="#review-splash-img-1" name="splash_image_1"/>
+                                            <div style="display:none">
+                                                <input type="file" class="hidden" data-review="#review-splash-img-1" name="splash_image_1"/>
+                                            </div>
                                             <p>&nbsp;</p>
                                             @if( $app_stores->splash_image_1 != '' )
                                             <a href="#" data-control="splash_image_1" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn btn-primary">Upload</button>
+                                            <button class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -62,12 +64,14 @@
                                                 : url('admin/images/no-image.jpg');
                                             ?>
                                             <img id="review-splash-img-2" class="img-responsive" src="{{ $image }}" alt=""/>
-                                            <input type="file" class="hidden" data-review="#review-splash-img-2" name="splash_image_2"/>
+                                            <div style="display:none">
+                                                <input type="file" class="hidden" data-review="#review-splash-img-2" name="splash_image_2"/>
+                                            </div>
                                             <p>&nbsp;</p>
                                             @if( $app_stores->splash_image_2 != '' )
                                             <a href="#" data-control="splash_image_2" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn btn-primary">Upload</button>
+                                            <button class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -81,12 +85,14 @@
                                                 : url('admin/images/no-image.jpg');
                                             ?>
                                             <img id="review-splash-img-3" class="img-responsive" src="{{ $image }}" alt=""/>
-                                            <input type="file" class="hidden" data-review="#review-splash-img-3" name="splash_image_3"/>
+                                            <div style="display:none">
+                                                <input type="file" class="hidden" data-review="#review-splash-img-3" name="splash_image_3"/>
+                                            </div>
                                             <p>&nbsp;</p>
                                             @if( $app_stores->splash_image_3 != '' )
                                             <a href="#" data-control="splash_image_3" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn btn-primary">Upload</button>
+                                            <button class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -100,12 +106,14 @@
                                                 : url('admin/images/no-image.jpg');
                                             ?>
                                             <img id="review-splash-img-4" class="img-responsive" src="{{ $image }}" alt=""/>
-                                            <input type="file" class="hidden" data-review="#review-splash-img-4" name="splash_image_4"/>
+                                            <div style="display:none">
+                                                <input type="file" class="hidden" data-review="#review-splash-img-4" name="splash_image_4"/>
+                                            </div>
                                             <p>&nbsp;</p>
                                             @if( $app_stores->splash_image_4 != '' )
                                             <a href="#" data-control="splash_image_4" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn btn-primary">Upload</button>
+                                            <button class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -119,14 +127,16 @@
                                                 : url('admin/images/no-image.jpg');
                                             ?>
                                             <img id="review-splash-img-5" class="img-responsive" src="{{ $image }}" alt=""/>
-                                            <input type="file" class="hidden" name="splash_image_5" data-review="#review-splash-img-5"/>
+                                            <div style="display:none">
+                                                <input type="file" class="hidden" name="splash_image_5" data-review="#review-splash-img-5"/>
+                                            </div>
                                             <p>&nbsp;</p>
                                             @if( $app_stores->splash_image_5 != '' )
                                             <a href="#" data-control="splash_image_5" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn btn-primary">Upload</button>
+                                            <button class="btn-gb-rd">アップロード</button>
                                         </div>
-                                    </div>
+                                    </div>  
                                 </div>
                             </div>
 

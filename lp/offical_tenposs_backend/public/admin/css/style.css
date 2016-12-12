@@ -633,15 +633,15 @@ a:hover.btn-1{
 .supper-short{
   width: 15%;
 }
-.wrapp-draw{
+.global-wrapp-draw{
   width: 100%;
   margin-bottom: 25px;
   overflow: hidden;
 }
-.wrapp-draw input{
+.global-wrapp-draw input{
   float: left;
 }
-.wrapp-draw img{
+.global-wrapp-draw img{
   float: left;
   padding-left: 10px;
   padding-top: 5px;
@@ -850,12 +850,36 @@ ul.link-top-2 li a.active{
   font-weight: bold;
   color: #fff;
 }
+
+
 .btn-global-redesign a:hover.btn-gb-rd{
   background: #1e86d6;
   color: #fff;
   border:1px solid #116eb5;
   box-shadow: 0 0 3px #1e86d6 inset;
 }
+
+button.btn-gb-rd{
+  width: 100px;
+  height: 34px;
+  background: #2890e0;
+  border-radius: 4px;
+  text-align: center;
+  display: inline-table;
+  border: 1px solid #1e86d6;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: #fff;
+}
+
+button:hover.btn-gb-rd{
+  background: #1e86d6;
+  color: #fff;
+  border:1px solid #116eb5;
+  box-shadow: 0 0 3px #1e86d6 inset;
+}
+
 .modal-dialog.modal-global-redesign{
   width: 80%;
   margin-top: 60px;
@@ -949,12 +973,19 @@ ul.link-top-2 li a.active{
   float: left;
   padding: 50px 30px;
 }
-.wrapp-draw span{
+.global-wrapp-draw span{
   float: left;
   line-height: 36px;
   padding-right: 10px;
   color: #c1c5c7;
   font-size: 12px;
+}
+
+.focus-jfilestyle label span{
+  color: #c1c5c7;
+}
+.jfilestyle input {
+  background: white;
 }
 .right-global-redesign input.form-control.long{
   width: 50%;
@@ -5461,12 +5492,12 @@ div[class^=app-ico-review-type3] img{
  }
  .remove-app-splash{
      position: absolute;
-     background: rgba(255,255,255,0.7);
+     background: rgba(0,0,0,0.4);
      display: block;
-     width: 25px;
-     height: 25px;
-     top: 5px;
-     right: 5px;
+     width: 30px;
+     height: 30px;
+     top: -15px;
+     right: -15px;
      border-radius: 50%;
 
  }
@@ -5476,8 +5507,11 @@ div[class^=app-ico-review-type3] img{
 
 .remove-app-splash:after{
     content:"x";
-    color: #000;
-    line-height:25px;
+    color: #fff;
+    line-height:30px;
+    font-size: 16px;
+    font-weight: 700;
+    padding-left: 3px;
 }
 
 #swiper-app-splash {
