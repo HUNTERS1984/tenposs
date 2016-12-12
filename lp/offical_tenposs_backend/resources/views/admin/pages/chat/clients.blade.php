@@ -422,7 +422,7 @@ $(document).ready(function(){
                }
             });
         }else if( s.length === 0 ){
-            renderChatLists(contactsData.data);
+            renderChatLists(contactsData);
         }
     });
     
