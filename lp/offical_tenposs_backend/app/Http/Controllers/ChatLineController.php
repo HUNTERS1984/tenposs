@@ -17,7 +17,7 @@ use App\Models\App as AppClient;
 use DB;
 use Auth;
 use Config;
-use LRedis;
+use Redis;
 use Illuminate\Http\Request;
 class ChatLineController extends Controller
 {
@@ -81,7 +81,7 @@ class ChatLineController extends Controller
                 'data' => $data
             ); 
             
-            $redis = LRedis::connection();
+            $redis = Redis::connection();
             $redis->publish('message', json_encode($arrPackage));
         }
         
