@@ -9,6 +9,7 @@
 namespace App\Utils;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class PushNotification
 {
@@ -48,7 +49,7 @@ class PushNotification
         );
         if (count($array_append_data) > 0)
             $message = array_merge($message, $array_append_data);
-        
+
         $headers = array(
             'Authorization: key=' . $api_access_key,
             'Content-Type: application/json'
@@ -60,6 +61,7 @@ class PushNotification
         );
 
         $result = $this->useCurl($this->gooole_url, $headers, json_encode($fields));
+        Log::info("android: " . $result);
         if ($this->isJson($result)) {
             return true;
         } else {
@@ -138,6 +140,7 @@ class PushNotification
 
         // Close the connection to the server
         fclose($fp);
+        Log::info("ios: " . $result);
         if (!$result)
             return false;//'Message not delivered' . PHP_EOL;
         else
