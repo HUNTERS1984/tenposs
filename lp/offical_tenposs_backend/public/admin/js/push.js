@@ -54,7 +54,7 @@ $('#btnSubmit').click(function (e) {
                 $('select[name=time_detail_minutes]').val('00');
             }
             else
-                alert('fail');
+                alert('プッシュに失敗しました');
         }
     });
 

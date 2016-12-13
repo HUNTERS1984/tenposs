@@ -93,6 +93,9 @@ class AdminController extends Controller
             ->join('photo_categories','photo_categories.store_id','=','stores.id')
             ->join('photos','photos.photo_category_id','=','photo_categories.id' )
             ->where('apps.id', $app_data->id)
+            ->whereNull('photos.deleted_at')
+            ->whereNull('photo_categories.deleted_at')
+            ->whereNull('stores.deleted_at')
             ->select('photos.image_url')
             ->paginate(9);
             
@@ -101,6 +104,9 @@ class AdminController extends Controller
             ->join('new_categories','new_categories.store_id','=','stores.id')
             ->join('news','news.new_category_id','=','new_categories.id' )
             ->where('apps.id', $app_data->id)
+            ->whereNull('news.deleted_at')
+            ->whereNull('new_categories.deleted_at')
+            ->whereNull('stores.deleted_at')
             ->select('news.*')
             ->paginate(4);   
 
@@ -110,6 +116,9 @@ class AdminController extends Controller
             ->join('rel_menus_items','menus.id','=','rel_menus_items.menu_id' )
             ->join('items','items.id','=','rel_menus_items.item_id' )
             ->where('apps.id', $app_data->id)
+            ->whereNull('items.deleted_at')
+            ->whereNull('menus.deleted_at')
+            ->whereNull('stores.deleted_at')
             ->select('items.*')
             ->paginate(4);
        
@@ -117,6 +126,7 @@ class AdminController extends Controller
             ->join('stores','apps.id','=','stores.app_id')
             ->join('addresses','addresses.store_id','=','stores.id')
             ->where('apps.id', $app_data->id)
+            ->whereNull('stores.deleted_at')
             ->select('addresses.*')
             ->paginate(1);
 
@@ -375,19 +385,27 @@ class AdminController extends Controller
             $list_id = [];
             $list_insert = [];
             $i = 1;
-            foreach ($data_component as $item) {
-                $list_id[] = $item;
-                $list_insert[] = array('app_setting_id' => $app_setting->id,
-                    'component_id' => $item,
-                    'order' => $i);
-                $i++;
-            }
-            if (count($list_id) > 0)
+            if ($data_component) {
+                foreach ($data_component as $item) {
+                    $list_id[] = $item;
+                    $list_insert[] = array('app_setting_id' => $app_setting->id,
+                        'component_id' => $item,
+                        'order' => $i);
+                    $i++;
+                }
+                if (count($list_id) > 0)
+                    DB::table('rel_app_settings_components')->where('app_setting_id', $app_setting->id)->delete();
+                if (count($list_insert) > 0)
+                    DB::table('rel_app_settings_components')->insert($list_insert);
+
+            } else {
                 DB::table('rel_app_settings_components')->where('app_setting_id', $app_setting->id)->delete();
-            if (count($list_insert) > 0)
-                DB::table('rel_app_settings_components')->insert($list_insert);
+            }
+            
+           
             //delete cache redis
             RedisControl::delete_cache_redis('app_info');
+            RedisControl::delete_cache_redis('top_images');
             DB::commit();
             return back()->with('status', 'Setting successfully');
         } catch (QueryException $e) {

@@ -50,7 +50,7 @@ class TopsRepository implements TopsRepositoryInterface
                 from rel_menus_items 
                 INNER JOIN items on rel_menus_items.item_id=items.id 
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
-                where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
+                where items.deleted_at is null AND menus.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
             }
@@ -117,7 +117,7 @@ class TopsRepository implements TopsRepositoryInterface
             $news_cat = NewCat::whereHas('store', function ($query) use ($stores) {
                 $query->whereIn('store_id', $stores);
             })->whereNull('deleted_at')->lists('id')->toArray();
-            $news = News::whereIn('new_category_id', $news_cat)->whereNull('deleted_at')->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
+            $news = News::whereIn('new_category_id', $news_cat)->with('news_cat')->whereNull('deleted_at')->take(TOP_MAX_ITEM)->orderBy('created_at', 'desc')->get()->toArray();
             for ($i = 0; $i < count($news); $i++) {
                 $news[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news[$i]['image_url']);
             }

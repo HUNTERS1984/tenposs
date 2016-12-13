@@ -112,7 +112,7 @@ class NewsController extends Controller
             if ($category_id > 0) {
                 $total_news = News::where('new_category_id', $category_id)->whereNull('deleted_at')->count();
                 if ($total_news > 0) {
-                    $news = News::where('new_category_id', $category_id)->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
+                    $news = News::where('new_category_id', $category_id)->with('news_cat')->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
                 }
             } 
             else {
@@ -127,7 +127,7 @@ class NewsController extends Controller
                     }
                     if ($total_news > 0)
                     {
-                        $news = News::whereIn('new_category_id',$news_cat->pluck('id')->toArray())->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
+                        $news = News::whereIn('new_category_id',$news_cat->pluck('id')->toArray())->with('news_cat')->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get()->toArray();
                     }        
                 }
                     
@@ -180,7 +180,7 @@ class NewsController extends Controller
             return $this->output($this->body);
         }
         try {
-            $news = News::where('id', Input::get('id'))->whereNull('deleted_at')->first()->toArray();
+            $news = News::where('id', Input::get('id'))->with('news_cat')->whereNull('deleted_at')->first()->toArray();
             if (count($news) > 0 && array_key_exists('image_url', $news))
                 $news['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $news['image_url']);
 
