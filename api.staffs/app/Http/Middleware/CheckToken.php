@@ -4,7 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Middleware\BaseMiddleware;
+use JWTAuth;
 
 class CheckToken extends BaseMiddleware
 {
@@ -23,8 +27,9 @@ class CheckToken extends BaseMiddleware
             return $this->respond('tymon.jwt.absent', 'token_not_provided', 400);
         }
         try {
-            $this->auth->parseToken();
-           
+            $payload = JWTAuth::parseToken()->getPayload()->toArray();
+            $request->token_info = $payload;
+            $request->token = (string)$this->auth->setRequest($request)->getToken();
         } catch (TokenExpiredException $e) {
             return new JsonResponse(['code' => 10011,
                 'message' => $e->getMessage(),

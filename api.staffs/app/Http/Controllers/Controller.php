@@ -37,6 +37,7 @@ class Controller extends BaseController
         '1018' => 'App have register with share code.',
         '1019' => 'Staff not found.',
         '1020' => 'Action invalid.',
+        '1022' => 'Notification to user fail.',
         '2000' => 'The specified property value is required; it cannot be null, empty, or blank.',
         '2002' => 'The specified property value is invalid.',
         '7100' => 'Login attempt failed because the specified password is incorrect.',
