@@ -55,7 +55,7 @@
                                     <a href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
                                         <img class="center-cropped" src="{{ $item->image_url }}" alt="{{ $item->title }}"/>
                                     </a>
-                                    <p>{{ $item->title }}</p>
+                                    <p>{{ $item->news_cat->name }}</p>
                                     <span>¥{{number_format($item->price, 0, '', ',')}}</span>
                                 </div>
                                  @endforeach

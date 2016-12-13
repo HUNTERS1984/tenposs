@@ -36,17 +36,18 @@ class NewsController extends Controller
                 foreach ($cate->data->news_categories as $item){
                     $new = \App\Utils\HttpRequestUtil::getInstance()
                         ->get_data('news',['app_id'=>$this->app->app_app_id,'category_id'=>$item->id,'pageindex'=>1,'pagesize'=>PAGESIZE],$this->app->app_app_secret);
-                        $new_decode = json_decode($new);
-                        if($new_decode->data->news != null){
-                            array_push($news_detail,$new_decode);
-                        } else {
-                            array_push($news_detail, null);
-                        }
+                    
+                    $new_decode = json_decode($new);
+                    if($new_decode->data->news != null){
+                        array_push($news_detail,$new_decode);
+                    } else {
+                        array_push($news_detail, null);
+                    }
                 }
             }
         }
         //dd($news_cate);
-        dd($news_detail);
+        //dd($news_detail);
     	return view('news',compact('app_info','news_cate','news_detail'))->with('pagesize',PAGESIZE);
     }
 

@@ -60,7 +60,7 @@
                                                 </a>
                                                 <div class="info clearfix">
                                                     <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->title}}</a>
-                                                    <h3>{{$news_title->title}}</h3>
+                                                    <h3>{{$news_title->news_cat->name}}</h3>
                                                     <p>{{Str::words($news_title->description,20, '..')}}</p>
                                                 </div>
                                             </div><!-- End item coupon -->

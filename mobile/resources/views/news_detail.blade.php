@@ -28,7 +28,7 @@
                         <p><a href="javascrip:void(0)">{{$detail->data->news->title}}</a></p>
                         <div class="wrap-title-detail">
                             <!-- <h3>{{$detail->data->news->title}}</h3> -->
-                            <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</h3>
+                            <h3>$detail->data->news->news_cat->name</h3>
                             <span class="news-dateadd">{{ str_replace('-','.',$detail->data->news->date) }}</span>
                         </div>
                         
