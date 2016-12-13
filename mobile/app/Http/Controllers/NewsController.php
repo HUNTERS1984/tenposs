@@ -46,7 +46,7 @@ class NewsController extends Controller
             }
         }
         //dd($news_cate);
-        //dd($news_detail);
+        dd($news_detail);
     	return view('news',compact('app_info','news_cate','news_detail'))->with('pagesize',PAGESIZE);
     }
 

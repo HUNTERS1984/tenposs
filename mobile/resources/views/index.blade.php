@@ -232,7 +232,7 @@
                 loop: true,
                 spaceBetween: 0,
                 slidesPerView: 1,
-                pagination: "#banner .swiper-pagination",
+                pagination: ".swiper-pagination",
                 paginationClickable: true
             });
         }
