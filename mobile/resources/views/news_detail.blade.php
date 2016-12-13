@@ -25,10 +25,10 @@
                 @if(isset($detail))
                 <div class="infodetail">
                     <div class="container-fluid">
-                        <p><a href="javascrip:void(0)">{{$detail->data->news->title}}</a></p>
+                        <p><a href="javascrip:void(0)">{{ $detail->data->news->news_cat->name }} </a></p>
                         <div class="wrap-title-detail">
                             <!-- <h3>{{$detail->data->news->title}}</h3> -->
-                            <h3>{{ $detail->data->news->news_cat->name }} </h3>
+                            <h3>{{$detail->data->news->title}} </h3>
                             <span class="news-dateadd">{{ str_replace('-','.',$detail->data->news->date) }}</span>
                         </div>
                         

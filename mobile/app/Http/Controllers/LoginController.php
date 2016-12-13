@@ -99,13 +99,13 @@ class LoginController extends Controller
                 $data = (object)array_merge((array)$token, (array)$user);
                 Session::put( 'user', $data );
             }else{
-                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'アクセス権がありません') );
+                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'ログインはできません') );
                 return back()->withInput();
             }
             return redirect('/');
         }
 
-        Session::flash('message', array('class' => 'alert-danger', 'detail' => '間違ったメールアドレスまたはパスワード') );
+        Session::flash('message', array('class' => 'alert-danger', 'detail' => 'ログインはできません') );
         return back()->withInput();
         
     }
