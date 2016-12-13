@@ -50,7 +50,7 @@ class TopsRepository implements TopsRepositoryInterface
                 from rel_menus_items 
                 INNER JOIN items on rel_menus_items.item_id=items.id 
                 INNER JOIN menus on rel_menus_items.menu_id=menus.id 
-                where items.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
+                where items.deleted_at is null AND where menus.deleted_at is null AND rel_menus_items.menu_id IN ' . $menus_id . 'ORDER BY items.created_at DESC LIMIT ' . TOP_MAX_ITEM));
             for ($i = 0; $i < count($items); $i++) {
                 $items[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]->image_url);
             }

@@ -46,7 +46,7 @@
                     <div id="recentry">
                         @if( isset( $app_top->data->items->data)
                                     && count($app_top->data->items->data) > 0 )
-                        <h2 class="aligncenter">ニュー</h2>
+                        <h2 class="aligncenter">メニュー</h2>
                         <div class="container-fluid">
                             <div class="container-photo-section clearfix">
                                 
