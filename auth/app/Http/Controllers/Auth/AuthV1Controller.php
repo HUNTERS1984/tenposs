@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\UserRefreshToken;
+use App\Utils\HttpRequestUtil;
 use App\Utils\HttpUtils;
 use App\Utils\PseudoCrypt;
 use Carbon\Carbon;
@@ -12,17 +13,13 @@ use Illuminate\Support\Facades\Log;
 use JWTAuth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Namshi\JOSE\JWT;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Http\Exception\HttpResponseException;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use Twitter;
 use DB;
 use Bican\Roles\Models\Role;
-use Tymon\JWTAuth\Facades\JWTFactory;
-use Tymon\JWTAuth\Token;
 
 class AuthV1Controller extends Controller
 {
@@ -169,6 +166,9 @@ class AuthV1Controller extends Controller
                 $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
                 $refresh->save();
             }
+            //updtae last_login to tenposs
+            if (!empty(Input::get('app_id')))
+                $this->update_last_login(Input::get('app_id'), $token);
             return $this->output($this->body);
         } else {
             return $this->error(9995);
@@ -232,6 +232,9 @@ class AuthV1Controller extends Controller
                     $refresh->time_expire = Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp;
                     $refresh->save();
                 }
+                //updtae last_login to tenposs
+                if (!empty(Input::get('app_id')))
+                    $this->update_last_login(Input::get('app_id'), $token);
                 return $this->output($this->body);
             } else {
                 return $this->error(9995);
@@ -309,8 +312,6 @@ class AuthV1Controller extends Controller
             } else {
                 return $this->error(99954);
             }
-            print_r($refresh);
-            die;
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             return $this->error(9999);
@@ -319,5 +320,18 @@ class AuthV1Controller extends Controller
             return $this->error(9999);
         }
         return $this->output($this->body);
+    }
+
+    private function update_last_login($app_app_id, $token)
+    {
+        $url_last_login = 'https://api.ten-po.com/api/v2/update_last_login';
+
+        HttpRequestUtil::getInstance()->post_data_with_token(
+            $url_last_login,
+            [
+                'app_id' => $app_app_id
+            ],
+            $token
+        );
     }
 }
