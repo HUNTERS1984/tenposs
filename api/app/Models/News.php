@@ -12,6 +12,6 @@ class News extends Model
     protected $fillable = ['title', 'date', 'description', 'image_url'];
 
     public function news_cat(){
-    	 return $this->belongsTo(NewCat::class);
+    	 return $this->belongsTo(NewCat::class, 'new_category_id');
     }
 }
