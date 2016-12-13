@@ -53,6 +53,9 @@ class HttpRequestUtil
             case 'staff_detail':
                 $params = Config::get('api.sig_staff_detail');
                 break;
+            case 'get_app_user':
+                $params = Config::get('api.sig_get_auth_user_from_app_user_id');
+                break;
             default:
                 break;
         }
@@ -67,13 +70,17 @@ class HttpRequestUtil
         return $sig;
     }
 
-    public function get_data($function, $data_params, $app_secret_key = null)
+    public function get_data($function, $data_params, $app_secret_key = null, $service_url = '')
     {
         try {
 
             $data_params['time'] = ValidateUtil::get_miliseconds_gmt0();
             $data_params['sig'] = $this->get_sig_param_by_function($function, $data_params, $app_secret_key);
-            $service_url = $this->_url . $function . '?' . http_build_query($data_params);
+            if (empty($service_url))
+                $service_url = $this->_url . $function . '?' . http_build_query($data_params);
+            else
+                $service_url = $service_url . $function . '?' . http_build_query($data_params);
+
 //            print_r($service_url);
             $curl = curl_init($service_url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

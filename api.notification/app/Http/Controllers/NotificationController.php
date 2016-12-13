@@ -159,6 +159,7 @@ class NotificationController extends Controller
                 $check_items = array('app_id', 'type', 'title', 'message');
                 break;
             default:
+                $check_items = array('app_id', 'type');
                 break;
         }
         if (count($check_items) < 1)

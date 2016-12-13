@@ -21,7 +21,7 @@ class PushNotification
     {
         $this->gooole_url = Config::get('api.noti_google_url');
         $this->apple_url = Config::get('api.noti_apple_url');
-        $this->web_url =  Config::get('api.noti_web_url');
+        $this->web_url = Config::get('api.noti_web_url');
     }
 
     public static function getInstance()
@@ -33,7 +33,7 @@ class PushNotification
     }
 
     // Sends Push notification for Android users
-    public function android($data, $reg_id, $api_access_key)
+    public function android($data, $reg_id, $api_access_key, $array_append_data = array())
     {
         $message = array(
             'title' => $data['title'],
@@ -46,7 +46,9 @@ class PushNotification
             'type' => $data['type'],
             'image_url' => $data['image_url']
         );
-
+        if (count($array_append_data) > 0)
+            $message = array_merge($message, $array_append_data);
+        
         $headers = array(
             'Authorization: key=' . $api_access_key,
             'Content-Type: application/json'
@@ -66,7 +68,7 @@ class PushNotification
     }
 
     // Sends Push notification for Android users
-    public function web($data, $reg_id, $api_access_key)
+    public function web($data, $reg_id, $api_access_key, $array_append_data = array())
     {
         $message = array(
             'title' => $data['title'],
@@ -79,6 +81,8 @@ class PushNotification
             'type' => $data['type'],
             'image_url' => $data['image_url']
         );
+        if (count($array_append_data) > 0)
+            $message = array_merge($message, $array_append_data);
 
         $headers = array(
             'Authorization: key=' . $api_access_key,
@@ -100,7 +104,7 @@ class PushNotification
     }
 
     // Sends Push notification for iOS users
-    public function iOS($data, $device_token, $path_pem_file, $pass_cer)
+    public function iOS($data, $device_token, $path_pem_file, $pass_cer, $array_append_data = array())
     {
         $ctx = stream_context_create();
         // ck.pem is your certificate file
@@ -122,6 +126,9 @@ class PushNotification
         );
         $body['data'] = array('type' => $data['type'],
             'id' => $data['id'], 'image_url' => $data['image_url']);
+        if (count($array_append_data) > 0)
+            $body['data'] = array_merge($body['data'], $array_append_data);
+
         // Encode the payload as JSON
         $payload = json_encode($body);
         // Build the binary notification
