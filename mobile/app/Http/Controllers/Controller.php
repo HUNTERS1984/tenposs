@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 
 use Session;
 use File;
+use \Curl\Curl;
 
 class Controller extends BaseController
 {
@@ -22,6 +23,7 @@ class Controller extends BaseController
 
     public function __construct(Request $request)
     {
+
         $this->request = $request;
         $this->app = Session::get('app');
         $get = \App\Utils\HttpRequestUtil::getInstance()
@@ -45,6 +47,5 @@ class Controller extends BaseController
         }
 
     }
-
 
 }

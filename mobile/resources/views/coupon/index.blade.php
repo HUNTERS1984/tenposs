@@ -1,7 +1,12 @@
 @extends('master')
 @section('headCSS')
-    <link href="{{ url('css/menu.css') }}" rel="stylesheet">
-    <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+<link href="{{ url('css/menu.css') }}" rel="stylesheet">
+<link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+<style>
+    .h_control-nav:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
+</style>
 @endsection
 @section('page')
     <div id="header">
@@ -9,10 +14,7 @@
             <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
             ">クーポン</h1>
-            {{--<h1>Menu</h1>--}}
-            <a href="javascript:void(0)" class="h_control-nav">
-                <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
-            </a>
+            <a href="javascript:void(0)" class="h_control-nav"></a>
         </div>
     </div><!-- End header -->
     <div id="main">

@@ -7,6 +7,10 @@
         font-size: {{ $app_info->data->app_setting->font_size }};
         font-family: '{{ $app_info->data->app_setting->font_family }}';
     }
+
+    .h_control-back:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
 </style>
 @endsection
 
@@ -24,11 +28,7 @@
             </button>
 
             </h1>
-        <a href="/" class="">
-            <img src="{{ url('img/icon/h_back-arrow.jpg') }}" alt="nav"/>
-        </a>
-
-
+        <a href="{{URL::previous()}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 <div id="main">

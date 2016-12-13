@@ -48,7 +48,9 @@ class LoginController extends Controller
     }
     
     public function loginNormal(){
-        return view('login_normal');
+        return view('login_normal',[
+            'app_info' => $this->app_info,
+        ]);
     }
     
     public function loginNormalPost(Request $request){
@@ -80,11 +82,11 @@ class LoginController extends Controller
             'role' => 'user',
             'platform' => 'web'
         ));
+
         if ( isset($curl->code) && $curl->code == 1000 && isset( $curl->data )){
             if( $curl->data->is_active != 1 )
             {
-                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'アカウントは有効ではありません') );
-                return back()->withInput();
+                return back()->withErrors('アカウントは有効ではありません');
             }
             $token = $curl->data;
             // Get profile user
@@ -99,14 +101,16 @@ class LoginController extends Controller
                 $data = (object)array_merge((array)$token, (array)$user);
                 Session::put( 'user', $data );
             }else{
-                Session::flash('message', array('class' => 'alert-danger', 'detail' => 'アクセス権がありません') );
-                return back()->withInput();
+                return back()
+                    ->withErrors('アカウントは有効ではありません')
+                    ->withInput();
             }
             return redirect('/');
         }
 
-        Session::flash('message', array('class' => 'alert-danger', 'detail' => '間違ったメールアドレスまたはパスワード') );
-        return back()->withInput();
+        return back()
+            ->withErrors('間違ったメールアドレスまたはパスワード')
+            ->withInput();
         
     }
     
@@ -116,7 +120,9 @@ class LoginController extends Controller
     }
     
     public function register(){
-        return view('signup_email');
+        return view('signup_email',[
+        'app_info' => $this->app_info,
+        ]);
     }
     
     public function registerPost(Request $request){
@@ -147,8 +153,6 @@ class LoginController extends Controller
                 ->withErrors($v);
         }
 
-
-
         $curl = new Curl();
         $curl = $curl->post($this->url_api_signup, array(
             'email' => trim($request->input('email')) ,
@@ -161,8 +165,10 @@ class LoginController extends Controller
             Session::put('user', $curl->data);
             return redirect('/');
         }
-        Session::flash('message', array('class'=>'alert-danger', 'detail'=>'再試行する') );
-        return back()->withInput();
+
+        return back()
+            ->withErrors('再試行する')
+            ->withInput();
     }
     
     public function loginWithFacebook( Request $request ){
@@ -191,8 +197,10 @@ class LoginController extends Controller
                 Session::put('user', $curl->data);
                 return redirect('/');
             }
-            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-            return redirect()->route('login');
+
+            return redirect()
+                ->withErrors('社会的にサインアップできない')
+                ->route('login');
 
         }
         // if not ask for permission first
@@ -221,7 +229,7 @@ class LoginController extends Controller
                 'social_type' => 2 ,
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
-                'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
+                'social_secret' => $social_token->getAccessTokenSecret(),
                 'platform' => 'web'
             );
             $curl = $curl->post($this->url_api_signup_social,$params );
@@ -230,8 +238,10 @@ class LoginController extends Controller
                 return redirect('/');
             }
 
-            Session::flash('message', array('class'=>'alert-danger', 'detail'=>'社会的にサインアップできない') );
-            return redirect()->route('login');
+
+            return redirect()
+                ->withErrors('社会的にサインアップできない')
+                ->route('login');
         }
         else
         {
@@ -305,11 +315,13 @@ class LoginController extends Controller
             'nickname' => $name
         ));
         if( isset($curl->code) && $curl->code == 1000 ){
-            Session::flash('message', array('class' => 'alert alert-success', 'detail' => '社会的成功をつなぐ' ) );
+            $msg = '社会的成功をつなぐ';
         }else{
-            Session::flash('message',  array('class' => 'alert alert-success', 'detail' => 'ソーシャルフェイルを接続する' ));
+            $msg ='ソーシャルフェイルを接続する';
         }
-        return redirect()->route('profile');
+        return redirect()
+            ->withErrors($msg)
+            ->route('profile');
     }
     
     public function socialCancelConnect(Request $request, $type){
@@ -322,12 +334,15 @@ class LoginController extends Controller
                 'social_type' => $type ,
             ));
             if( isset($curl->code) && $curl->code == 1000 ){
-                Session::flash('message', array('class' => 'alert-success', 'detail' => 'プロファイルをキャンセルする!' ) );
-                return redirect()->route('profile');
+                return redirect()
+                    ->withErrors('プロファイルをキャンセルする!')
+                    ->route('profile');
             }
         }
-        Session::flash('message', array('class' => 'alert-success', 'detail' => 'プロファイルのキャンセルをキャンセルする!' ) );
-        return redirect()->route('profile');
+
+        return redirect()
+            ->withErrors('プロファイルのキャンセルをキャンセルする!' )
+            ->route('profile');
     }
     
     public function profile(Request $request){
@@ -350,18 +365,21 @@ class LoginController extends Controller
 
         if( isset($curl->response->code) && $curl->response->code == 1000 ){
             $currentUser = Session::get('user');
+            unset($currentUser->profile);
             $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
             Session::put('user',$updateProfile );
+            return view('profile',
+                [
+                    'fb_url' => (string)$url_fb,
+                    'tw_url' => (string)$url_tw,
+                    'instagram_login_url' => $this->instagram->getLoginUrl(),
+                    'user' => Session::get('user'),
+                    'app_info' => $this->app_info
+                ]);
         }
 
-        return view('profile',
-        [
-            'fb_url' => (string)$url_fb,
-            'tw_url' => (string)$url_tw,
-            'instagram_login_url' => $this->instagram->getLoginUrl(),
-            'user' => Session::get('user'),
-            'app_info' => $this->app_info
-        ]);
+        return back()->withErrors('再試行する');
+
     }
     
     public function profilePost( Request $request ){
@@ -423,11 +441,9 @@ class LoginController extends Controller
         $curl = $curl->post($this->url_api_profile_update, $params);
 
         if( isset($curl->code) && $curl->code == 1000 ){
-            Session::flash('message', \App\Utils\Messages::customMessage( 2002, 'alert-success' ));
-            return back();
+            return back()->withErrors('成功');
         }
-        Session::flash('message', \App\Utils\Messages::customMessage( 2001, 'alert-danger' ));
-        return back();
+        return back()->withErrors('失敗します');
         
     }
     
@@ -448,12 +464,13 @@ class LoginController extends Controller
                 'nickname' => $data->user->full_name
             ));
             if( isset($curl->code) && $curl->code == 1000 ){
-                Session::flash('message', array('class' => 'alert alert-success', 'detail' => '社会的成功をつなぐ' ) );
+                $msg = '社会的成功をつなぐ' ;
             }else{
-                Session::flash('message',  array('class' => 'alert alert-success', 'detail' => 'ソーシャルフェイルを接続する' ));
+                $msg ='ソーシャルフェイルを接続する';
             }
-
-            return redirect()->route('profile');
+            return redirect()
+                ->withErrors($msg)
+                ->route('profile');
         }
     }
 

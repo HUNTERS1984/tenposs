@@ -1,19 +1,28 @@
 @extends('master')
 
 @section('headCSS')
-    <link href="{{ url('css/staff.css') }}" rel="stylesheet">
+<link href="{{ url('css/staff.css') }}" rel="stylesheet">
+<style>
+    .h_control-back:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+    }
+    #header h1{
+        color: #{{ $app_info->data->app_setting->title_color }};
+    }
+    #header > .container-fluid{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+    }
+
+</style>
 @stop
 
 @section('page')
     <div id="header">
-         <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
-            <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color }};
-                    ">
-                {{ $app_info->data->name }}</h1>
-            <a href="{{URL::previous()}}" class="h_control-back">
-                <img src="/img/icon/h_back-arrow.jpg" alt="nav"/>
-            </a>
+         <div class="container-fluid">
+            <h1 class="aligncenter">
+                {{ $app_info->data->name }}
+            </h1>
+            <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
     </div><!-- End header -->
     <div id="main">

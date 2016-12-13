@@ -5,6 +5,9 @@
         font-size: {{ $app_info->data->app_setting->font_size }};
         font-family: "{{ $app_info->data->app_setting->font_family }}";
     }
+    .h_control-back:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
 </style>
 <!-- Custom styles for this template -->
 <link href="{{ url('css/setting.css') }}" rel="stylesheet">
@@ -15,9 +18,7 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
             ">採用情報</h1>
-        <a href="{{URL::previous()}}" class="">
-            <img src="img/icon/h_back-arrow.jpg" alt="nav"/>
-        </a>
+        <a href="{{URL::previous()}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 <div id="main">
