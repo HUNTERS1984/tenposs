@@ -5,8 +5,8 @@
         <img class="center-cropped" src="{{$item->image_url}}" alt="Nakayo"/>
     </div>
     <div class="info clearfix">
-        <a href="{{route('news.detail',[$item->id])}}">{{$item->title}}</a>
-        <h3>{{$item->news_cat->name}}</h3>
+        <a href="{{route('news.detail',[$item->id])}}">{{$item->news_cat->name}}</a>
+        <h3>{{$item->title}}</h3>
         <p>{{Str::words($item->description,20)}}</p>
     </div>
 </div><!-- End item coupon -->

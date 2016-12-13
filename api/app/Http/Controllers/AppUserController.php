@@ -1541,7 +1541,7 @@ class AppUserController extends Controller
 
     public function v2_remove_user()
     {
-        $check_items = array('app_id', 'app_user_id');
+        $check_items = array('app_id', 'list_app_user_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -1549,21 +1549,26 @@ class AppUserController extends Controller
             return $this->error(1004);
         $apps = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
         if (count($apps) > 0) {
-            try {
-                DB::beginTransaction();
-                DB::table('social_profiles')
-                    ->where('app_user_id', Input::get('app_user_id'))
-                    ->update(['deleted_at' => Carbon::now()]);
-                DB::table('user_profiles')
-                    ->where('app_user_id', Input::get('app_user_id'))
-                    ->update(['deleted_at' => Carbon::now()]);
-                DB::table('app_users')
-                    ->where('id', Input::get('app_user_id'))
-                    ->update(['deleted_at' => Carbon::now()]);
-                DB::commit();
-            } catch (\Illuminate\Database\QueryException $e) {
-                DB::rollBack();
-                return $this->error(9999);
+            $arr_list_id = explode(',', Input::get('list_app_user_id'));
+            if (count($arr_list_id) > 0) {
+                foreach ($arr_list_id as $item) {
+                    try {
+                        DB::beginTransaction();
+                        DB::table('social_profiles')
+                            ->where('app_user_id', $item)
+                            ->update(['deleted_at' => Carbon::now()]);
+                        DB::table('user_profiles')
+                            ->where('app_user_id', $item)
+                            ->update(['deleted_at' => Carbon::now()]);
+                        DB::table('app_users')
+                            ->where('id', $item)
+                            ->update(['deleted_at' => Carbon::now()]);
+                        DB::commit();
+                    } catch (\Illuminate\Database\QueryException $e) {
+                        DB::rollBack();
+                        return $this->error(9999);
+                    }
+                }
             }
             return $this->output($this->body);
         } else

@@ -183,16 +183,13 @@ class CouponController extends Controller
                 $coupons['taglist'] = Coupon::find(Input::get('id'))->tags()->lists('tag')->toArray();
 
                 if (Input::get('token')) { // in case login
-                    $session = UserSession::where('token', Input::get('token'))->first();
-
-                    if ($session) {
-                        $user = $session->app_user()->first();
+                    if ($this->request->token_info['id'] > 0) {
                         $coupons['can_use'] = DB::table('rel_app_users_coupons')
-                                ->whereAppUserId($user->id)
+                                ->whereAppUserId($this->request->token_info['id'])
                                 ->whereCouponId($coupons['id'])
                                 ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                         $coupon_code = DB::table('rel_app_users_coupons')
-                            ->whereAppUserId($user->id)
+                            ->whereAppUserId($this->request->token_info['id'])
                             ->whereCouponId($coupons['id'])
                             ->where('status', 1)->get();
                         if (count($coupon_code) > 0) {

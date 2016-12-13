@@ -1,4 +1,4 @@
-<div id="side">
+<div id="side" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
     <div class="h_side" style="
             background: #{{ $app_info->data->app_setting->menu_background_color}}
         ">
@@ -10,7 +10,7 @@
                        if( strpos( Session::get('user')->profile->avatar_url , '.jpg' ) !== false ){
                             $avatar_url = Session::get('user')->profile->avatar_url;
                        }else{
-                           $avatar_url = url('/img/tkNdnb1.jpg');
+                           $avatar_url = url('/img/icon/icon-user.png');
                        }
                     ?>
                     <img class="img-circle" src="{{ $avatar_url }}" alt=""/>
