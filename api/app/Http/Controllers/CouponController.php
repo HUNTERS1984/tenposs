@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\CouponType;
+use App\Models\Staff;
 use App\Repositories\Contracts\TopsRepositoryInterface;
+use App\Utils\HttpRequestUtil;
 use App\Utils\RedisUtil;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -304,7 +306,7 @@ class CouponController extends Controller
                 $dateEnd = date('Y-m-d', strtotime($coupons['end_date']));
 
                 $coupons['taglist'] = Coupon::find(Input::get('id'))->tags()->lists('tag')->toArray();
-               
+
                 if ($app_info['app_user_id'] > 0) { // in case login
                     $coupons['can_use'] = DB::table('rel_app_users_coupons')
                             ->whereAppUserId($app_info['app_user_id'])
@@ -383,23 +385,47 @@ class CouponController extends Controller
         if ($ret)
             return $ret;
         $app_info = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+
         if (count($app_info) < 1)
             return $this->error(1004);
         if ($app_info['app_user_id'] != Input::get("app_user_id"))
             return $this->error(1004);
-
         try {
-            $coupon = DB::table('rel_app_users_coupons')
+            $check_exist = DB::table('rel_app_users_coupons')
                 ->whereAppUserId(Input::get('app_user_id'))
-                ->whereCouponId(Input::get('coupon_id'))->update(
-                    ['status' => 2,
-                        'staff_id' => Input::get('staff_id'),
-                        'user_use_date' => Carbon::now()]);
-            if ($coupon == 0)
+                ->whereStatus(1)
+                ->whereCouponId(Input::get('coupon_id'))->get();
+            if (count($check_exist) > 0) {
+                try {
+//            DB::enableQueryLog();
+                    DB::beginTransaction();
+                    $coupon = DB::table('rel_app_users_coupons')
+                        ->whereAppUserId(Input::get('app_user_id'))
+                        ->whereStatus(1)
+                        ->whereCouponId(Input::get('coupon_id'))->update(
+                            ['status' => 2,
+                                'staff_id' => Input::get('staff_id'),
+                                'user_use_date' => Carbon::now()]);
+//            print_r(DB::getQueryLog());
+//            die;
+                    if ($coupon == 0)
+                        return $this->error(1014);
+                    //call notification to staff
+                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), Input::get('coupon_id'), Input::get('app_user_id'), Input::get('staff_id'), $check_exist[0]->code, $this->request->token);
+                    if (!$isCall) {
+                        DB::rollBack();
+                        return $this->error(1021);
+                    }
+                    DB::commit();
+                } catch (QueryException $e) {
+                    Log::error($e->getMessage());
+                    DB::rollBack();
+                    return $this->error(9999);
+                }
+            } else
                 return $this->error(1014);
-
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage());;
             return $this->error(9999);
         }
         return $this->output($this->body);
@@ -451,19 +477,64 @@ class CouponController extends Controller
         if (count($app_info) < 1)
             return $this->error(1004);
         try {
-            $coupon = DB::table('rel_app_users_coupons')
-                ->whereCode(Input::get('code'))->update(
-                    ['status' => 2,
-                        'staff_id' => Input::get('staff_id'),
-                        'user_use_date' => Carbon::now()]);
-            if ($coupon == 0)
-                return $this->error(1014);
+            $check_exist = DB::table('rel_app_users_coupons')
+                ->whereStatus(1)
+                ->whereCode(Input::get('code'))->get();
+            if (count($check_exist) > 0) {
+                try {
 
+                    DB::beginTransaction();
+                    $coupon = DB::table('rel_app_users_coupons')
+                        ->whereStatus(1)
+                        ->whereCode(Input::get('code'))->update(
+                            ['status' => 2,
+                                'staff_id' => Input::get('staff_id'),
+                                'user_use_date' => Carbon::now()]);
+                    if ($coupon == 0)
+                        return $this->error(1014);
+                    //call notification to staff
+                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), $check_exist[0]->coupon_id, $check_exist[0]->app_user_id, Input::get('staff_id'), Input::get('code'), $this->request->token);
+                    if (!$isCall) {
+                        DB::rollBack();
+                        return $this->error(1021);
+                    }
+                    DB::commit();
+                } catch (QueryException $e) {
+                    Log::error($e->getMessage());
+                    DB::rollBack();
+                    return $this->error(9999);
+                }
+            } else
+                return $this->error(1014);
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage());;
             return $this->error(9999);
         }
         return $this->output($this->body);
 
+    }
+
+    private function call_notification_to_staff($app_app_id, $coupon_id, $app_user_id, $staff_id, $code, $token)
+    {
+        $type = 'coupon_use';
+        $staffs = array();
+        try {
+            $staffs = Staff::find($staff_id);
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+        }
+        if (count($staffs) > 0) {
+            return HttpRequestUtil::getInstance()->post_data_with_token_return_boolean(
+                Config::get('api.url_staff_notification'),
+                ['app_id' => $app_app_id,
+                    'type' => $type,
+                    'notification_to' => $staffs->auth_user_id,
+                    'staff_id' => $staff_id,
+                    'code' => $code,
+                    'coupon_id' => $coupon_id,
+                    'app_user_id' => $app_user_id],
+                $token
+            );
+        }
     }
 }

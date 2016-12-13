@@ -112,6 +112,7 @@ Route::group(array('prefix' => 'api/v2'), function () {
     Route::post('signup', 'AppUserController@v2_signup');
     Route::post('signup_social', 'AppUserController@v2_signup_social');
     Route::get('coupon_detail', 'CouponController@v2_coupon_detail');
+    Route::get('get_app_user', 'AppUserController@get_auth_user_from_app_user_id');
 
     Route::group(['middleware' => 'api.auth.jwt'], function () {
         Route::get('profile', 'AppUserController@v2_profile');
@@ -124,6 +125,8 @@ Route::group(array('prefix' => 'api/v2'), function () {
         Route::post('update_profile_social_signup', 'AppUserController@v2_update_profile_from_social_signup');
         Route::get('coupon_detail_login', 'CouponController@v2_coupon_detail_login');
         Route::get('list_user', 'AppUserController@get_list_user');
+        Route::post('remove_user', 'AppUserController@v2_remove_user');
+        Route::post('update_last_login', 'AppUserController@v2_update_last_login');
     });
 });
 

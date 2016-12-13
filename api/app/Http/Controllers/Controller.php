@@ -44,7 +44,9 @@ class Controller extends BaseController
         '1017' => 'Email have register with share code.',
         '1018' => 'App have register with share code.',
         '1019' => 'Domain type not found.',
-        '1020' => 'Code not exist.'
+        '1020' => 'Code not exist.',
+        '1021' => 'Notification to staff fail.',
+        '1022' => 'Notification to user fail.'
     );
     protected $body = array(
         'code' => '1000',

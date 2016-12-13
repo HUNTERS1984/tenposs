@@ -8,6 +8,7 @@ use App\Models\News;
 use App\Models\ShareCodeHistory;
 use App\Models\ShareCodeInfo;
 use App\Models\ShareCodes;
+use App\Models\Staff;
 use App\Models\User;
 use App\Models\WebPushCurrent;
 use App\Repositories\Contracts\TopsRepositoryInterface;
@@ -1429,6 +1430,8 @@ class AppUserController extends Controller
                 $user_profiles->birthday = Input::get('birthday');
             if (!empty(Input::get('address')))
                 $user_profiles->address = Input::get('address');
+            if (!empty(Input::get('gender')))
+                $user_profiles->gender = Input::get('gender');
             $user_profiles->save();
             if (!empty(Input::get('code'))) {
                 //process code
@@ -1510,10 +1513,12 @@ class AppUserController extends Controller
                 $total_data = DB::table('app_users')
                     ->join('user_profiles', 'user_profiles.app_user_id', '=', 'app_users.id')
                     ->where('app_users.app_id', $apps->id)
+                    ->whereNotNull('app_users.deleted_at')
                     ->count();
                 $data = DB::table('app_users')
                     ->join('user_profiles', 'user_profiles.app_user_id', '=', 'app_users.id')
                     ->where('app_users.app_id', $apps->id)
+                    ->whereNotNull('app_users.deleted_at')
                     ->select("user_profiles.*", "app_users.last_login")
                     ->orderBy('updated_at', 'desc')
                     ->take(Input::get('pagesize'))->skip($skip)
@@ -1533,5 +1538,88 @@ class AppUserController extends Controller
         } else
             return $this->error(1004);
     }
+
+    public function v2_remove_user()
+    {
+        $check_items = array('app_id', 'app_user_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $apps = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($apps) > 0) {
+            try {
+                DB::beginTransaction();
+                DB::table('social_profiles')
+                    ->where('app_user_id', Input::get('app_user_id'))
+                    ->update(['deleted_at' => Carbon::now()]);
+                DB::table('user_profiles')
+                    ->where('app_user_id', Input::get('app_user_id'))
+                    ->update(['deleted_at' => Carbon::now()]);
+                DB::table('app_users')
+                    ->where('id', Input::get('app_user_id'))
+                    ->update(['deleted_at' => Carbon::now()]);
+                DB::commit();
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollBack();
+                return $this->error(9999);
+            }
+            return $this->output($this->body);
+        } else
+            return $this->error(1004);
+    }
+
+    public function get_auth_user_from_app_user_id()
+    {
+
+        $check_items = array('app_id', 'app_user_id', 'time', 'sig');
+
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        //start validate app_id and sig
+        $check_sig_items = Config::get('api.sig_get_auth_user_from_app_user_id');
+        // check app_id in database
+        $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
+        if ($app == null || count($app) == 0)
+            return $this->error(1004);
+        //validate sig
+        $ret_sig = $this->validate_sig($check_sig_items, $app['app_app_secret']);
+        if ($ret_sig)
+            return $ret_sig;
+        //end validate app_id and sig
+        try {
+            $app_users = AppUser::where('id', Input::get('app_user_id'))->whereNull('deleted_at')->first();
+            $this->body['data']['app_users'] = $app_users;
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(9999);
+        }
+
+        return $this->output($this->body);
+    }
+
+    public function v2_update_last_login()
+    {
+        $check_items = array('app_id');
+        $ret = $this->validate_param($check_items);
+        if ($ret)
+            return $ret;
+        if (!$this->request->token_info)
+            return $this->error(1004);
+        $apps = $this->_topRepository->get_app_id_and_app_user_id(Input::get('app_id'), $this->request->token_info['id']);
+        if (count($apps) > 0) {
+            try {
+                DB::table('app_users')
+                    ->whereId($apps['app_user_id'])->update(
+                        ['last_login' => Carbon::now()]);
+            } catch (\Illuminate\Database\QueryException $e) {
+            }
+            return $this->output($this->body);
+        } else
+            return $this->error(1004);
+    }
+
 
 }

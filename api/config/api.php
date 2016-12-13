@@ -43,6 +43,7 @@ return [
     'sig_share_get_code' => array('app_id', 'time'),
     'sig_social_profile_cancel' => array('token', 'social_type', 'time'),
     'sig_create_virtual_host' => array('domain', 'domain_type', 'time'),
+    'sig_get_auth_user_from_app_user_id' => array('app_id', 'time', 'app_user_id'),
 
     'cache_news' => 'news_%s_%s_%s_%s', //app_id,category_id,pageindex,pagesize
     'cache_news_cat' => 'news_cat_%s_%s', // app_id,store_id
@@ -107,4 +108,6 @@ return [
 
     //point path
     'url_point_bonus' => 'https://apipoints.ten-po.com/point/bonus/0',
+    //url notification to staff
+    'url_staff_notification' => 'https://apinotification.ten-po.com/v1/staff/notification',
 ];
