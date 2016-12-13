@@ -76,7 +76,7 @@ class CouponController extends Controller
         $app_info = $this->app_info;
         $token = '';
         if (Session::get('user'))
-            $token = Session::get('jwt')->token;
+            $token = Session::get('user')->token;
 
         $items_detail = HttpRequestUtil::getInstance()->get_data('coupon_detail',
             [
@@ -87,11 +87,13 @@ class CouponController extends Controller
             , $this->app->app_app_secret);
         if (!empty($items_detail)) {
             $items_detail = json_decode($items_detail);
-            if ($items_detail->code == '1000') {
+            if ($items_detail && $items_detail->code == '1000') {
                 $items_detail_data = $items_detail->data->coupons;
+            } else {
+                return redirect()->back(); 
             }
         }
-       dd($items_detail);
+       
         return view('coupon.detail', compact('app_info', 'items_detail_data'));
     }
 

@@ -221,7 +221,7 @@ class LoginController extends Controller
                 'social_type' => 2 ,
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
-                'social_secret' => config('oauth-5-laravel.consumers.Twitter.client_secret') ,
+                'social_secret' => $social_token->getAccessTokenSecret() ,
                 'platform' => 'web'
             );
             $curl = $curl->post($this->url_api_signup_social,$params );
@@ -286,7 +286,7 @@ class LoginController extends Controller
                 $result = json_decode($tw->request('account/verify_credentials.json'), true);
                 $social_id = $result['id'];
                 $social_token = $token->getAccessToken();
-                $social_secret = config('oauth-5-laravel.consumers.Twitter.client_secret');
+                $social_secret = $social_token->getAccessTokenSecret();
                 $name = $result['name'];
                 $social_type = 2;
             }else{
