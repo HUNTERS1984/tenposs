@@ -57,14 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $dimension = Utilities::get_dimension_from_time_type($_GET['time_type']);
                 $results = $ga->get_data($_GET['from_date'], $_GET['to_date'],
                     $_GET['report_type'], $dimension);
+
                 if (null != $results) {
                     if (count($results->getRows()) > 0) {
                         $profileName = $results->getProfileInfo()->getProfileName();
                         $rows = $results->getRows();
+
                         $arr_label = array();
                         $arr_data = array();
                         for ($i = 0; $i < count($rows); $i++) {
-                            $arr_label[] = $rows[$i][0];
+                            $arr_label[] = Utilities::convertDateToJapan($rows[$i][0], $_GET['time_type'], $_GET['to_date']);
                             $arr_data[] = $rows[$i][1];
                         }
                         $arr_data = array(

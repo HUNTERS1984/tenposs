@@ -163,6 +163,41 @@ class HttpRequestUtil
         }
     }
 
+    public function post_data_file_without_token($url, $data_params)
+    {
+        try {
+            $curl = curl_init($url);
+
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_params);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: multipart/form-data'
+                )
+            );
+            $curl_response = curl_exec($curl);
+
+            if ($curl_response === false) {
+                $info = curl_getinfo($curl);
+                Log::error(json_encode($info));
+                return false;
+            }
+            curl_close($curl);
+//            print_r($curl_response);
+            $decoded = json_decode($curl_response);
+            if (isset($decoded->code) && $decoded->code == '1000') {
+                return true;
+            } else {
+                Log::error(json_encode($decoded));
+                return false;
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
+
     public function get_data_with_token($service_url, $token)
     {
         try {

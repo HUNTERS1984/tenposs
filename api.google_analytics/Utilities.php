@@ -47,6 +47,27 @@ class Utilities
 
     public static function get_list_metric()
     {
-        return array('ga:users','ga:sessions','ga:screenviews','ga:bounceRate','ga:avgSessionDuration','ga:percentNewSessions');
+        return array('ga:users', 'ga:sessions', 'ga:screenviews', 'ga:bounceRate', 'ga:avgSessionDuration', 'ga:percentNewSessions');
+    }
+
+    public static function convertDateToJapan($value, $type, $from_date)
+    {
+        $rs = "";
+        if (!empty($value)) {
+            switch ($type) {
+                case "D":
+                    $rs = substr($value, 0, 4) . '年' . substr($value, 4, 2) . '月' . substr($value, 6, 2) . '日';
+                    break;
+                case "M":
+                    $rs = substr($from_date, 0, 4) . '年' . $value . '月';
+                    break;
+                case "Y":
+                    $rs = $value . '年';
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $rs;
     }
 }
