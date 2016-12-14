@@ -96,12 +96,12 @@ class StaffController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withInput()->withErrors('Please upload a image ');
+            return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
 
         try {
@@ -132,9 +132,9 @@ class StaffController extends Controller
             ];
             $this->staff->create($data);
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.index')->with('status','Add staff successfully');
+            return redirect()->route('admin.staff.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('admin.staff.index')->withInput()->withErrors('Cannot add staff');
+            return redirect()->route('admin.staff.index')->withInput()->withErrors('追加に失敗しました');
         }
     }
     public function show($id)
@@ -164,7 +164,7 @@ class StaffController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -199,9 +199,9 @@ class StaffController extends Controller
             $item->save();
             //delete cache redis
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.index')->with('status','Update the staff successfully');
+            return redirect()->route('admin.staff.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the staff');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -212,13 +212,13 @@ class StaffController extends Controller
             if ($this->staff) {
                 $this->staff->destroy($id);
                 RedisControl::delete_cache_redis('staff');
-                return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
+                return redirect()->route('admin.staff.index')->with('status','削除しました');
             } else {
-                return redirect()->back()->withErrors('Cannot delete the staff');
+                return redirect()->back()->withErrors('削除に失敗しました');
             }
             
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot delete the staff');
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
     }
 
@@ -229,13 +229,13 @@ class StaffController extends Controller
             if ($this->staff) {
                 $this->staff->destroy($id);
                 RedisControl::delete_cache_redis('staff');
-                return redirect()->route('admin.staff.index')->with('status','Delete the staff successfully');
+                return redirect()->route('admin.staff.index')->with('status','削除しました');
             } else {
-                return redirect()->back()->withErrors('Cannot delete the staff');
+                return redirect()->back()->withErrors('削除に失敗しました');
             }
             
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot delete the staff');
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
         
     }
@@ -323,9 +323,9 @@ class StaffController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('staff_cat');
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.cat')->with('status','Create the category successfully');
+            return redirect()->route('admin.staff.cat')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
 
@@ -376,9 +376,9 @@ class StaffController extends Controller
             $item->save();
             RedisControl::delete_cache_redis('staff_cat');
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.staff.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -421,12 +421,12 @@ class StaffController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withInput()->withErrors('Please upload an image');
+            return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
        
         try {
@@ -457,9 +457,9 @@ class StaffController extends Controller
             $item->save();
             RedisControl::delete_cache_redis('staff_cat');
             RedisControl::delete_cache_redis('staff');
-            return redirect()->route('admin.staff.index')->with('status','Add staff successfully');
+            return redirect()->route('admin.staff.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot add staff');
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');
         }
     }
 

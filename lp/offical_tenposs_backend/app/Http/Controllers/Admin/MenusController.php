@@ -124,9 +124,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.menus.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -275,9 +275,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('items');
             $menu = $this->request->input('menu_id');
             $item->menus()->sync($menu);
-            return redirect()->route('admin.menus.index')->with('status','Add item successfully'); 
+            return redirect()->route('admin.menus.index')->with('status','追加しました'); 
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot edit item');
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');
         }
     }
 
@@ -301,9 +301,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->back()->with('status','Create the category successfully');
+            return redirect()->back()->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
 
@@ -318,12 +318,12 @@ class MenusController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-               return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+               return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-           return redirect()->back()->withInput()->withErrors('Please upload an image');
+           return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
 
         try {
@@ -353,9 +353,9 @@ class MenusController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.index')->with('status','Add the item successfully');
+            return redirect()->route('admin.menus.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot add the item');;
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');;
         }
     }
 
@@ -390,7 +390,7 @@ class MenusController extends Controller
             return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
                 'size_type','size_categories','size_value'));
         } else {
-            return redirect()->back()->withInput()->withErrors('Cannot edit the item');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
        
     }
@@ -409,7 +409,7 @@ class MenusController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
+                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'アップロードファイルは写真ではありません') );
                 return back()->withInput();
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
@@ -466,9 +466,9 @@ class MenusController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.index')->with('status','Update the item successfully');
+            return redirect()->route('admin.menus.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the item');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 

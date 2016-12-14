@@ -84,11 +84,11 @@ class CostController extends Controller
                  ])->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
             $result = json_decode($response->body);
             if ($result && $result->code && $result->code == '1000')
-                return redirect()->back()->with('status','Update POM setting successfully');
+                return redirect()->back()->with('status','設定しました');
             else
-                return redirect()->back()->withErrors('Cannot update POM setting');
+                return redirect()->back()->withErrors('設定に失敗しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update POM setting');
+            return redirect()->back()->withInput()->withErrors('設定に失敗しました');
         }
     }
 
@@ -110,11 +110,11 @@ class CostController extends Controller
                  ])->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
             $result = json_decode($response->body);
             if ($result && $result->code && $result->code == '1000')
-                return redirect()->back()->with('status','Update POM payment method successfully');
+                return redirect()->back()->with('status','設定しました');
             else
-                return redirect()->back()->withErrors('Cannot update POM payment method');
+                return redirect()->back()->withErrors('設定に失敗しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update POM payment method');
+            return redirect()->back()->withInput()->withErrors('設定に失敗しました');
         }
     }
 
@@ -144,10 +144,10 @@ class CostController extends Controller
             {
                 return redirect($agree->data->approveUrl);
             } else {
-                return redirect()->back()->withErrors('Payment fail');
+                return redirect()->back()->withErrors('失敗しました');
             }
         } else {
-            return redirect()->back()->withErrors('No billing plan');
+            return redirect()->back()->withErrors('請求プランありません');
         }
        
         

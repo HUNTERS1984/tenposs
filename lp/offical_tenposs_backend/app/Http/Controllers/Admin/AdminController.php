@@ -161,9 +161,9 @@ class AdminController extends Controller
             $contact->message = $this->request->input('message');
 
             $contact->save();
-            return redirect()->route('admin.client.contact')->with('status','Add contact successfully');
+            return redirect()->route('admin.client.contact')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot add contact');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
     
@@ -318,12 +318,12 @@ class AdminController extends Controller
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
-                return back()->with('status', 'Setting successfully');
+                return back()->with('status', '設定しました');
             }
         } catch (QueryException $e) {
             Log::error("globalstore: " . $e->getMessage());
             
-            return back()->with('warning', 'Setting fail');
+            return back()->with('warning', '設定に失敗しました');
         }
     }
     
@@ -336,9 +336,9 @@ class AdminController extends Controller
                 $app = new AppSetting();
                 $app_setting = $app->whereAppId($app_data->id)->with('components')->first();
                 if (!$app_setting)
-                    return back()->with('warning', 'Add App Setting fail');
+                    return back()->with('warning', '設定に失敗しました');
             } else {
-                return back()->with('warning', 'Add App Setting fail');
+                return back()->with('warning', '設定に失敗しました');
             }
 
             DB::beginTransaction();
@@ -368,7 +368,7 @@ class AdminController extends Controller
                         $contentType = mime_content_type($image_file->getRealPath());
 
                         if(! in_array($contentType, $allowedMimeTypes) ){
-                            return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                            return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
                         }
                         $image_file->move($destinationPath, $fileName); // uploading file to given path
                         
@@ -408,12 +408,12 @@ class AdminController extends Controller
             RedisControl::delete_cache_redis('app_info');
             RedisControl::delete_cache_redis('top_images');
             DB::commit();
-            return back()->with('status', 'Setting successfully');
+            return back()->with('status', '設定しました');
         } catch (QueryException $e) {
             dd($e);
             Log::error($e->getMessage());
             DB::rollBack();
-            return back()->with('warning', 'Setting fail');
+            return back()->with('warning', '設定に失敗しました');
         }
     }
 
@@ -735,7 +735,7 @@ class AdminController extends Controller
                 'history' => $history,
             ));
         }
-        return back()->with('status','User not found');
+        return redirect()->back();
     }
 
 
