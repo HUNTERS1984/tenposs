@@ -1,18 +1,24 @@
 @extends('master')
 @section('headCSS')
-    <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+<link href="{{ url('css/coupon.css') }}" rel="stylesheet">
+<style>
+    .h_control-back:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
+    #header h1{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
+    #header > .container-fluid{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+
+</style>
 @endsection
 @section('page')
     <div id="header">
-        <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
-            <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color }};
-                    ">
-                {{$items_detail_data->title}}</h1>
-
-            <a href="javascript:void(0)" class="h_control-nav">
-                <img src="{{ url('img/icon/h_nav.png') }}" alt="nav"/>
-            </a>
+        <div class="container-fluid">
+            <h1 class="aligncenter" >{{ $app_info->data->app_setting->title }}</h1>
+            <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
     </div><!-- End header -->
     @if(count($items_detail_data) > 0)
@@ -47,8 +53,8 @@
                         </div>
                         <div class="form-mail">
                             <div class="input-group">
+                                <?php $ls_tag = '';?>
                                 @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
-                                    <?php $ls_tag = '';?>
                                     @foreach($items_detail_data->taglist as $item)
                                         <?php $ls_tag .= $item . ',';?>
                                     @endforeach
@@ -114,7 +120,8 @@
     <script src="{{ url('js/custom.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $(document).on("click", "#copy_hashtag", function () {               
+            $(document).on("click", "#copy_hashtag", function (e) {
+                e.preventDefault();
                 $(this).parent().parent();
                 copyToClipboard(document.getElementById("target_copy"));
                 $('#appy-copy-success').show();

@@ -49,6 +49,9 @@
         <script type="application/javascript">
             $(document).ready(function () {
                 notify.init('{{ url("js/notification_worker.js") }}');
+                @if (count($errors) > 0)
+                $('#modal-message').modal();
+                @endif
             });
         </script>
 

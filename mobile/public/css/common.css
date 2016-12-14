@@ -422,6 +422,9 @@ h3,.h3{font-size: 28px;}
 #side img{
     width: 100px;
     border: 2px solid #ddd;
+    height: 100px;
+    object-fit: cover;
+    object-position: top;
 }
 #side .h_side{
     padding: 70px 0 70px 30px;
@@ -544,4 +547,44 @@ h3,.h3{font-size: 28px;}
 .wrap-content-config{
     padding:10px 15px;
     font-size:18px;
+}
+
+.h_control-back{
+    position: absolute;
+    top: 15px;
+}
+.h_control-back:before{
+    content: "\e64a";
+    font-family: themify;
+    font-size: 32px;
+}
+@media screen and (max-width:479px){
+    .h_control-back{
+        top: 10px;
+    }
+    .h_control-back:before{
+        font-size: 20px;
+    }
+}
+.h_control-nav{
+    position: absolute;
+    top: 8px;
+}
+.h_control-nav:before{
+    content: "\e68e";
+    font-family: "themify";
+    font-size: 40px;
+}
+@media screen and (max-width:479px){
+    .h_control-nav{
+        top: 4px;
+    }
+    .h_control-nav:before{
+        font-size: 28px;
+    }
+}
+@media screen and (max-width:479px){
+    #side img{
+        height: 80px;
+    }
 }

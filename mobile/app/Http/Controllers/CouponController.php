@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
-
+use Curl\Curl;
 define('TOTAL_COUPON', 10);
 
 class CouponController extends Controller
@@ -73,28 +73,37 @@ class CouponController extends Controller
 
     public function detail($id)
     {
-        $app_info = $this->app_info;
-        $token = '';
-        if (Session::get('user'))
-            $token = Session::get('user')->token;
 
-        $items_detail = HttpRequestUtil::getInstance()->get_data('coupon_detail',
-            [
+        $curl = new Curl();
+        if( Session::has('user') ){
+
+            $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+            $curl->get( 'https://api.ten-po.com/api/v2/coupon_detail_login' ,array(
                 'app_id' => $this->app->app_app_id,
                 'id' => $id,
-                'token' => $token
-            ]
-            , $this->app->app_app_secret);
-        if (!empty($items_detail)) {
-            $items_detail = json_decode($items_detail);
-            if ($items_detail && $items_detail->code == '1000') {
-                $items_detail_data = $items_detail->data->coupons;
-            } else {
-                return redirect()->back(); 
-            }
+            ));
+        }else{
+            $curl->get( 'https://api.ten-po.com/api/v2/coupon_detail_login' ,array(
+                'app_id' => $this->app->app_app_id,
+                'id' => $id,
+            ));
         }
-       
-        return view('coupon.detail', compact('app_info', 'items_detail_data'));
+
+        if( $this->validResponse($curl->response)){
+
+
+        }
+
+        if( isset($curl->response->code) && $curl->response->code == 1000 ){
+            $items_detail_data = $curl->response->data->coupons;
+
+            return view('coupon.detail', array(
+                'app_info' => $this->app_info ,
+                'items_detail_data' => $items_detail_data
+            ));
+        }
+
+        return back();
     }
 
 }

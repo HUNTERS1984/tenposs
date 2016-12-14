@@ -5,6 +5,9 @@
         font-size: {{ $app_info->data->app_setting->font_size }};
         font-family: "{{ $app_info->data->app_setting->font_family }}";
     }
+    .h_control-nav:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
 </style>
 <!-- Custom styles for this template -->
 <link href="{{ url('css/setting.css') }}" rel="stylesheet">
@@ -15,9 +18,7 @@
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
             ">設定</h1>
-        <a href="javascript:void(0)" class="h_control-nav">
-            <img src="img/icon/h_nav.png" alt="nav"/>
-        </a>
+         <a href="javascript:void(0)" class="h_control-nav"></a>
     </div>
 </div><!-- End header -->
 <div id="main">    

@@ -29,7 +29,10 @@ class MobileController extends Controller
     }
     
     public function chat(){
-        return view( 'chat', ['app_info' => $this->app_info] );
+        return view( 'chat',
+            array(
+                'app_info' => $this->app_info
+            ));
     }
     
     public function configuration(){

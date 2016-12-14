@@ -160,6 +160,7 @@ return [
         Artdarek\OAuth\OAuthServiceProvider::class,
         
         Laracasts\Flash\FlashServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
     ],
 
     /*
@@ -210,6 +211,8 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'OAuth'     => Artdarek\OAuth\Facade\OAuth::class,
         'Flash' => Laracasts\Flash\Flash::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
         
     ],
 

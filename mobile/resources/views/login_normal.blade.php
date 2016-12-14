@@ -1,16 +1,25 @@
 @extends('master')
 
 @section('headCSS')
-    <link href="{{ url('/css/login.css') }}" rel="stylesheet">
+<link href="{{ url('/css/login.css') }}" rel="stylesheet">
+<style>
+    .h_control-back:before{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
+    #header h1{
+        color: #{{ $app_info->data->app_setting->title_color }};
+        }
+    #header > .container-fluid{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+</style>
 @stop
 
 @section('page')
  <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter">ログイン</h1>
-        <a href="{{ route('login') }}">
-            <img src="{{ url('/img/icon/cross.png') }}" alt="arrow"/>
-        </a>
+        <a href="{{URL::previous()}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 

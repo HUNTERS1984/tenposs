@@ -13,8 +13,7 @@
 
 $appRoutes = function(){
     Route::group( [ 
-        'middleware' => ['verify.app'] ,
-        'middlewareGroups' => ['web'] ], function(){
+        'middleware' => ['verify.app'] ], function(){
 
         Route::get('/',['as' => 'index', 'uses' => 'MobileController@index'] );
         //User
