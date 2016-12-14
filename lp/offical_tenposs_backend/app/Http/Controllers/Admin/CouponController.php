@@ -149,9 +149,9 @@ class CouponController extends Controller
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
             
-            $posts->appends($this->request->only('pattern'))->links();
-            $notapproved_posts->appends($this->request->only('pattern'))->links();
-            $approved_posts->appends($this->request->only('pattern'))->links();
+            $posts->appends($this->request->only('search_pattern'))->links();
+            $notapproved_posts->appends($this->request->only('search_pattern'))->links();
+            $approved_posts->appends($this->request->only('search_pattern'))->links();
         } else {
             $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
             for ($i = 0; $i < count($posts); $i++) {

@@ -9,6 +9,7 @@ use App\Http\Requests;
 
 use Cache;
 use JWTAuth;
+use Carbon\Carbon;
 
 use App\Models\App;
 use App\Models\AppStores;
@@ -647,43 +648,57 @@ class AdminController extends Controller
     }
 
     public function userManagement(Request $request){
-
-        $pageindex = 1;
-        if( $request->has('page') ){
-            $pageindex = $request->input('page');
+        $search_str = $this->request->input('search_pattern'); 
+        if ($search_str)
+        {
+            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereHas('profile', function($query) use ($search_str){
+                $query->where('name', 'LIKE', '%'. $search_str .'%' );
+            })->whereNull('deleted_at')
+                ->paginate(10);
+            $users->appends($this->request->only('search_pattern'))->links();
+        } else {
+            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereNull('deleted_at')
+                ->paginate(10);
         }
-        $pagesize = 10;
-        $reqUserLists = cURL::newRequest('get', 'https://api.ten-po.com/api/v2/list_user?pageindex='.$pageindex.'&pagesize='.$pagesize,array(
-                'app_id' => $this->request->app->app_app_id
-            ))->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
-            ->send();
-
-        $users = json_decode($reqUserLists->body);
-        if( isset($users->code) && $users->code == 1000  ){
-            // Client
-            $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
-                ->send();
-            $client = json_decode($response->body);
-
-            if ($client->code && $client->code == 1000) {
-                $client = $client->data;
-
-                $pagination = $this->createLinks( 3 , 'pagination' ,$users->data->total_users,  $pageindex, $pagesize );
-                return view('admin.pages.users.users_management', array(
-                    'users' => $users->data,
-                    'client' => $client,
-                    'pagination' => $pagination
-                ));
-            }
+        //dd($users);
+        // Client
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
         }
+        //dd($client);
 
-        abort(404);
+        return view('admin.pages.users.users_management', array(
+            'users' => $users,
+            'client' => $client
+        ));
     }
 
     public function userManagementPost(Request $request){
-        dd($request->all());
-        // API remove
+        if (count(Input::get('del_list')) > 0) {
+            foreach (Input::get('del_list') as $item) {
+                try {
+                    DB::beginTransaction();
+                    DB::table('social_profiles')
+                        ->where('app_user_id', $item)
+                        ->update(['deleted_at' => Carbon::now()]);
+                    DB::table('user_profiles')
+                        ->where('app_user_id', $item)
+                        ->update(['deleted_at' => Carbon::now()]);
+                    DB::table('app_users')
+                        ->where('id', $item)
+                        ->update(['deleted_at' => Carbon::now()]);
+                    DB::commit();
+                } catch (\Illuminate\Database\QueryException $e) {
+                    DB::rollBack();
+                    return json_encode(array('status' => 0));
+                }
+            }
+            
+            return json_encode(array('status' => 1));
+        }
     }
 
     public function userManagementDetail(Request $request, $app_user_id){
