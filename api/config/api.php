@@ -110,4 +110,5 @@ return [
     'url_point_bonus' => 'https://apipoints.ten-po.com/point/bonus/0',
     //url notification to staff
     'url_staff_notification' => 'https://apinotification.ten-po.com/v1/staff/notification',
+    'url_upload_ga_config' => 'https://apiga.ten-po.com/upload_config.php',
 ];

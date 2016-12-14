@@ -163,6 +163,8 @@ class AppsController extends Controller
             $staff_ios_status = 0;
             $ga_status = 0;
             $array = 0;
+            $mobile_ga_id = '';
+            $web_ga_id = '';
             if ($data != null) {
                 if (!empty($data[0]->android_push_api_key) && !empty($data[0]->android_push_service_file))
                     $android_status = 1;
@@ -174,8 +176,11 @@ class AppsController extends Controller
                     $staff_android_status = 1;
                 if (!empty($data[0]->staff_apple_push_cer_file) && !empty($data[0]->staff_apple_push_cer_password))
                     $staff_ios_status = 1;
-                if (!empty($data[0]->google_analytics_file))
+                if (!empty($apps->mobile_ga_id) && !empty($apps->web_ga_id)) {
                     $ga_status = 1;
+                    $mobile_ga_id = $apps->mobile_ga_id;
+                    $web_ga_id = $apps->web_ga_id;
+                }
                 $array = json_decode(json_encode($data[0]), True);
             }
             return view('admin.apps.setting',
@@ -189,6 +194,8 @@ class AppsController extends Controller
                     'staff_ios_status' => $staff_ios_status,
                     'web_status' => $web_status,
                     'ga_status' => $ga_status,
+                    'mobile_ga_id' => $mobile_ga_id,
+                    'web_ga_id' => $web_ga_id,
                     'data' => $array
                 ]);
         }
@@ -206,6 +213,11 @@ class AppsController extends Controller
                     'senderid' => 'required',
                     'apikey' => 'required'
                 ];
+            } else if ($flatform == 'ga') {
+                $rules = [
+                    'mobile_ga_id' => 'required',
+                    'web_ga_id' => 'required'
+                ];
             } else {
                 $rules = [
                     'file' => 'required',
@@ -218,8 +230,7 @@ class AppsController extends Controller
             }
             try {
                 $apps = App::find($app_id);
-            }catch (QueryException $e)
-            {
+            } catch (QueryException $e) {
                 Log::error($e->getMessage());
             }
             if (count($apps) < 1)
@@ -283,14 +294,31 @@ class AppsController extends Controller
                         'sender_id' => $request->input('senderid')
                     ];
                     break;
+                case 'ga':
+                    $params = [
+                        'user_id' => $app_app_id,
+                        'file' => $cFile
+                    ];
+                    //update database
+                    $apps = App::find($app_id);
+                    $apps->mobile_ga_id = $request->input('mobile_ga_id');
+                    $apps->web_ga_id = $request->input('web_ga_id');
+                    $apps->save();
+                    break;
                 default:
                     break;
             }
-//            print_r($params);
+//
             if ($params != null && count($params) > 0) {
-                $updated = HttpRequestUtil::getInstance()->post_data_file(Config::get('api.url_upload_file_notification_configure')
-                    , $params, \Illuminate\Support\Facades\Session::get('jwt_token'));
-//print_r($updated);die;
+                if ($flatform == 'ga') {
+                    $updated = HttpRequestUtil::getInstance()->post_data_file_without_token(
+                        Config::get('api.url_upload_ga_config'),
+                        $params
+                    );
+                } else {
+                    $updated = HttpRequestUtil::getInstance()->post_data_file(Config::get('api.url_upload_file_notification_configure')
+                        , $params, \Illuminate\Support\Facades\Session::get('jwt_token'));
+                }
                 if ($updated) {
                     Session::flash('message', array('class' => 'alert-success', 'detail' => 'Configure successful!'));
 
