@@ -355,10 +355,15 @@ class CouponController extends Controller
 
 
     public function store_type(){
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -406,10 +411,15 @@ class CouponController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:coupon_types,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules,$message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -473,6 +483,17 @@ class CouponController extends Controller
 
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'クーポン名は255文字以下でなければなりません。',
+                'title.required' => 'クーポン名が必要です。',
+                'description.required' => '説明が必要です。',
+                'hashtag.required' => 'ハッシュタグが必要です。',
+                'start_date.required' => '開始日が必要です。',
+                'end_date.required' => '終了日必要です。',
+            );
+
             $rules = [
                 'coupon_type_id' => 'required',
                 'title' => 'required|Max:255',
@@ -481,7 +502,7 @@ class CouponController extends Controller
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -618,6 +639,16 @@ class CouponController extends Controller
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'クーポン名は255文字以下でなければなりません。',
+                'title.required' => 'クーポン名が必要です。',
+                'description.required' => '説明が必要です。',
+                'hashtag.required' => 'ハッシュタグが必要です。',
+                'start_date.required' => '開始日が必要です。',
+                'end_date.required' => '終了日必要です。',
+            );
             
             $rules = [
                 'coupon_type_id' => 'required',
@@ -627,7 +658,7 @@ class CouponController extends Controller
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);

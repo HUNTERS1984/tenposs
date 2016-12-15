@@ -98,12 +98,21 @@ class NewsController extends Controller
         }
         
         try {
+            
+            $message = array(
+                'new_category_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+            );
+
             $rules = [
                 'new_category_id' => 'required',
                 'title' => 'required|Max:255',
-                'description' => 'required'
+                'description' => 'required|Min:6'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -174,12 +183,20 @@ class NewsController extends Controller
         }
 
         try {
+            $message = array(
+                'new_category_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+            );
+
             $rules = [
                 'new_category_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -230,10 +247,15 @@ class NewsController extends Controller
     }
 
     public function storeCat(){
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -346,10 +368,15 @@ class NewsController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);

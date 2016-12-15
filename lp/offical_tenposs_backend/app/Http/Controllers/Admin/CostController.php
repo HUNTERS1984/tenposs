@@ -62,10 +62,14 @@ class CostController extends Controller
 
     public function setting()
     {   
+        $message = array(
+            'name.required' => '付与金額が必要です。',
+        );
+
         $rules = [
             'yen_to_mile' => 'required',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules,$message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -94,10 +98,15 @@ class CostController extends Controller
 
     public function payment_method()
     {   
+
+        $message = array(
+            'name.required' => '决滴方法が必要です。',
+        );
+
         $rules = [
             'payment_method' => 'required',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);

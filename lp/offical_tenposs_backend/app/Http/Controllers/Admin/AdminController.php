@@ -17,6 +17,7 @@ use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
 use App\Models\AdminContacts;
 use App\Models\UserInfos;
+use App\Models\Template;
 
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
@@ -211,7 +212,8 @@ class AdminController extends Controller
         
         $list_font_size = Config::get('font.size');
         $list_font_family = Config::get('font.family');
-        
+        $list_theme = Template::whereNull('deleted_at')->get()->pluck('name', 'id');
+        //dd($list_theme);
         // Get app_stores
         $app_stores = DB::table('app_stores')
             ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')
@@ -229,6 +231,7 @@ class AdminController extends Controller
                 'app_settings' => $app_settings,
                 'data_component_dest' => $data_component_dest,
                 'data_component_source' => $data_component_source,
+                'list_theme' => $list_theme,
                 'list_font_size' => $list_font_size,
                 'list_font_family' => $list_font_family));
     }
@@ -256,7 +259,7 @@ class AdminController extends Controller
                 $app_setting->menu_font_family = $this->request->input('menu_font_family');
                 $app_setting->company_info = $this->request->input('company_info');
                 $app_setting->user_privacy = $this->request->input('user_privacy');
-                $app_setting->template_id = 1;
+                $app_setting->template_id = $this->request->input('app_theme');
                 $app_setting->save();
                 
                 
@@ -425,7 +428,7 @@ class AdminController extends Controller
 
         $user_info = UserInfos::find( Session::get('user')->id );
         if(!$user_info){
-            return abort(503,'User info not found' );
+            return abort(503,'ユーザーを見つけることができません' );
         }
 
         return view('admin.pages.users.account', ['user' => $user_info]);
@@ -448,9 +451,14 @@ class AdminController extends Controller
             return abort(503);
         }
         if( $request->has('name') ){
+            $message = array(
+                'name.required' => '名前が必要です。',
+                'name.min' => '名前は6文字以上でなければなりません。'
+            );
+
             $validator = Validator::make( $request->all() , [
                 'name' => 'required|min:3',
-            ]);
+            ],$message);
 
             if ( $validator->fails() ) {
                 return back()
@@ -471,15 +479,25 @@ class AdminController extends Controller
                 && $responseUpdateName->code == 1000 ){
                 //$status[] = 'Update password success!';
             }else{
-                $warning[] = 'Update name fail!';
+                $warning[] = '名前を編集できません';
             }
         }
         if( $request->has('password') ){
+
+            $message = array(
+                'current_password.required' => '現在パスワードフィールドが必要です。',
+                'current_password.min' => '現在パスワードは6文字以上でなければなりません。',
+                'password.required' => 'パスワードフィールドが必要です。',
+                'password.min' => 'パスワードは6文字以上でなければなりません。',
+                'password_confirm.same' => 'パスワードは一致しなければなりません。',
+            );
+
             $validator = Validator::make( $request->all() , [
                 'current_password' => 'required|min:6',
-                'password' => 'required|min:6|confirmed',
-                'password_confirmation' => 'required|min:6',
-            ]);
+                'password' => 'required|min:6',
+                'password_confirm' => 'required|same:password',
+            ], $message);
+
 
             if ( $validator->fails() ) {
                 return back()
@@ -489,7 +507,7 @@ class AdminController extends Controller
             $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
                     'old_password' => $request->input('current_password'),
-                    'new_password' => $request->input('password_confirmation'),
+                    'new_password' => $request->input('password_confirm'),
                 ])
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
@@ -501,7 +519,7 @@ class AdminController extends Controller
                 && $responseUpdatePassWord->code == 1000 ){
                 //$status[] = 'Update password success!';
             }else{
-                $warning[] = 'Update password fail!';
+                $warning[] = 'パスワードを編集できません';
             }
 
         }
@@ -524,7 +542,7 @@ class AdminController extends Controller
         $user_info->save();
         Session::put('user', null);
 
-        $status[] = 'Update account setting success!';
+        $status[] = 'アカウントを編集しました';
         return back()
             ->with('warning',$warning )
             ->with('status',$status);

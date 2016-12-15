@@ -107,10 +107,15 @@ class MenusController extends Controller
 
     public function updateCat($menu_id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -249,14 +254,25 @@ class MenusController extends Controller
         }
 
         try {
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -283,10 +299,16 @@ class MenusController extends Controller
 
 
     public function storeMenu(){
+        
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -328,14 +350,25 @@ class MenusController extends Controller
 
         try {
 
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required|Min:6',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -417,14 +450,26 @@ class MenusController extends Controller
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);

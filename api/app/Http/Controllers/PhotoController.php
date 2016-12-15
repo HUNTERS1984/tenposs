@@ -110,7 +110,7 @@ class PhotoController extends Controller
             if ($category_id > 0) {
                 $total_photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->count();
                 if ($total_photos > 0) {
-                    $photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $photos = Photo::where('photo_category_id', Input::get('category_id'))->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('updated_at', 'desc')->get()->toArray();
                 }
             } 
             else {
