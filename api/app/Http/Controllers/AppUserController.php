@@ -936,6 +936,14 @@ class AppUserController extends Controller
         $app = $this->_topRepository->get_app_info_array(Input::get('app_id'));
         if (!$app)
             return $this->error(1004);
+        $path_file = "";
+        if (Input::file('avatar') != null && Input::file('avatar')->isValid()) {
+            $destinationPath = 'uploads'; // upload path
+            $extension = Input::file('avatar')->getClientOriginalExtension(); // getting image extension
+            $fileName = md5(Input::file('avatar')->getClientOriginalName() . date('Y-m-d H:i:s')) . '.' . $extension; // renameing image
+            Input::file('avatar')->move($destinationPath, $fileName); // uploading file to given path
+            $path_file = $destinationPath . '/' . $fileName;
+        }
         $arr_param = array();
         if (Input::get('social_type') == 1) {
             $arr_param = [
@@ -974,10 +982,10 @@ class AppUserController extends Controller
                             $user->save();
 
                             $profile = new UserProfile();
-                            $profile->name = '';
+                            $profile->name = Input::get('username');
                             $profile->gender = 0;
                             $profile->address = null;
-                            $profile->avatar_url = null;
+                            $profile->avatar_url = $path_file;
                             $profile->facebook_status = 0;
                             $profile->twitter_status = 0;
                             $profile->instagram_status = 0;
