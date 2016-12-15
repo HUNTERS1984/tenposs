@@ -45,7 +45,7 @@ class StaffController extends Controller
         $list_store = array();
         $staff_cat = array();
         if (count($stores) > 0) {
-            $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
+            $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();
 
             $list_store = $stores->lists('name', 'id');
             //dd($menus->pluck('id')->toArray());
@@ -157,8 +157,7 @@ class StaffController extends Controller
 
     public function edit($id)
     {
-        $staff_cat = $this->staffcat->orderBy('id', 'DESC')->get();;
-
+        $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $this->request->stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
         $item = $this->staff->find($id);
 //      dd($item);
         return view('admin.pages.staff.edit',compact('item','staff_cat'));

@@ -304,7 +304,7 @@ class PhotoCatController extends Controller
     public function edit($id)
     {
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();
         $list_store = $stores->lists('name','id');
         $photo = Photo::find($id);
         return view('admin.pages.photocats.edit',compact('photo','list_store','photocat'));

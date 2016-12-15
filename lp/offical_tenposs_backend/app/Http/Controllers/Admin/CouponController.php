@@ -156,8 +156,15 @@ class CouponController extends Controller
             $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
             for ($i = 0; $i < count($posts); $i++) {
                 $app_user = Post::find($posts[$i]->id)->app_user()->first();
-                $posts[$i]->username = $app_user->profile()->first()->name;
-                $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $profile = $app_user->profile()->first();
+                if ($profile) {
+                    $posts[$i]->username = $app_user->profile()->first()->name;
+                    $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                } else {
+                    $posts[$i]->username = '';
+                    $posts[$i]->avatar = '';
+                }
+                   
                 $posts[$i]->status = DB::table('rel_apps_posts')
                                         ->whereAppId($this->request->app->id)
                                         ->wherePostId($posts[$i]->id)
@@ -175,8 +182,14 @@ class CouponController extends Controller
             
             for ($i = 0; $i < count($notapproved_posts); $i++) {
                 $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
-                $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
-                $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $profile = $app_user->profile()->first();
+                if ($profile) {
+                    $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
+                    $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                } else {
+                    $notapproved_posts[$i]->username = '';
+                    $notapproved_posts[$i]->avatar = '';
+                }
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
                     $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
@@ -189,8 +202,14 @@ class CouponController extends Controller
             
             for ($i = 0; $i < count($approved_posts); $i++) {
                 $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
-                $approved_posts[$i]->username = $app_user->profile()->first()->name;
-                $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $profile = $app_user->profile()->first();
+                if ($profile) {
+                    $approved_posts[$i]->username = $app_user->profile()->first()->name;
+                    $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                } else {
+                    $approved_posts[$i]->username = '';
+                    $approved_posts[$i]->avatar = '';
+                }
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
                     $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';

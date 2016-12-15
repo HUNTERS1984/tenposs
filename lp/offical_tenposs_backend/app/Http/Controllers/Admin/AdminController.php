@@ -702,28 +702,28 @@ class AdminController extends Controller
     }
 
     public function userManagementPost(Request $request){
-        if (count(Input::get('del_list')) > 0) {
-            foreach (Input::get('del_list') as $item) {
-                try {
-                    DB::beginTransaction();
-                    DB::table('social_profiles')
-                        ->where('app_user_id', $item)
-                        ->update(['deleted_at' => Carbon::now()]);
-                    DB::table('user_profiles')
-                        ->where('app_user_id', $item)
-                        ->update(['deleted_at' => Carbon::now()]);
-                    DB::table('app_users')
-                        ->where('id', $item)
-                        ->update(['deleted_at' => Carbon::now()]);
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollBack();
-                    return json_encode(array('status' => 0));
-                }
-            }
+        // if (count(Input::get('del_list')) > 0) {
+        //     foreach (Input::get('del_list') as $item) {
+        //         try {
+        //             DB::beginTransaction();
+        //             DB::table('social_profiles')
+        //                 ->where('app_user_id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::table('user_profiles')
+        //                 ->where('app_user_id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::table('app_users')
+        //                 ->where('id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::commit();
+        //         } catch (\Illuminate\Database\QueryException $e) {
+        //             DB::rollBack();
+        //             return json_encode(array('status' => 0));
+        //         }
+        //     }
             
-            return json_encode(array('status' => 1));
-        }
+        //     return json_encode(array('status' => 1));
+        // }
     }
 
     public function userManagementDetail(Request $request, $app_user_id){
