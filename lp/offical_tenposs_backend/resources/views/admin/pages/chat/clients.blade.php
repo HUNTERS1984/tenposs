@@ -359,7 +359,7 @@ function connectToChat() {
         $('#messages-windows').empty();
 
 
-        for ( i = package.history.length ; i >= 0; i--) {
+        for ( i = package.history.length - 1; i >= 0; i--) {
             drawMessage({
                 text: package.history[i].message,
                 timestamp: moment( parseInt(package.history[i].created_at) ).format() ,
