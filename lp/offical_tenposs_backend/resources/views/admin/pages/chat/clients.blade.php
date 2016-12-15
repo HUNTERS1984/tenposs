@@ -279,7 +279,12 @@ function connectToChat() {
     socket.on('receive.admin.message',function( package ){
         console.log('Receive messages from endusers');
         console.log(package);
-        drawMessage(package.message);
+
+        // draw if windown active
+        if( $('#message-wrapper').attr('data-id') == package.message.profile.mid ){
+            drawMessage(package.message);
+        }
+
         // draw in to chat list
         if( ! $('ul.nav-list-user li#con'+package.message.profile.mid).length ){
             var $template;
@@ -292,11 +297,11 @@ function connectToChat() {
             }
 
             $template.find('.users-name').html(package.message.profile.displayName);
-            $template.find('.users-status').text( trimwords(package.message.text,5) );
+            $template.find('.users-status').text( trimwords(package.message.text,30) );
             $('.nav-list-user').prepend($template);
         }else{
             // update online status text
-            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.users-status').text( trimwords(package.message.text,5) );
+            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.users-status').text( trimwords(package.message.text,30) );
         }
 
     })
@@ -389,8 +394,11 @@ function drawSystemMessage(package){
 }
 
 function trimwords( words, number ){
-    return jQuery.trim(words).substring(0, number)
-        .split(" ").slice(0, -1).join(" ") + "...";
+
+    //trim the string to the maximum length
+    var trimmedString = words.substr(0, number);
+    //re-trim if we are in the middle of a word
+    trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")))
 }
 
 function renderChatLists(contacts){
