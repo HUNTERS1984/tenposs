@@ -102,6 +102,7 @@
             </div>
             <div class="right-list-user">
                 <p class="time-user-chat"></p>
+                <p class="count-user-chat"></p>
             </div>
         </a>
     </li>
@@ -267,7 +268,7 @@ function connectToChat() {
         $( contactsData.data ).each(function(index, item) {
             for( i in users){
                 if( users[i].mid === item.mid ){
-                    $('#con'+item.mid).find('.right-list-user').html('<p class="count-user-chat"></p>');
+                    $('#con'+item.mid).find('.count-user-chat').addClass('on');
                 }
             }
             
@@ -298,6 +299,7 @@ function connectToChat() {
 
             $template.find('.users-name').html(package.message.profile.displayName);
             $template.find('.users-status').text( trimwords(package.message.text,30) );
+            $template.find('.count-user-chat').addClass('on');
             $('.nav-list-user').prepend($template);
         }else{
             // update online status text
@@ -398,7 +400,8 @@ function trimwords( words, number ){
     //trim the string to the maximum length
     var trimmedString = words.substr(0, number);
     //re-trim if we are in the middle of a word
-    trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")))
+    trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+    return trimmedString;
 }
 
 function renderChatLists(contacts){
