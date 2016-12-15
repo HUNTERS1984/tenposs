@@ -9,6 +9,7 @@ use App\Http\Requests;
 
 use Cache;
 use JWTAuth;
+use Carbon\Carbon;
 
 use App\Models\App;
 use App\Models\AppStores;
@@ -16,6 +17,7 @@ use App\Models\AppSetting;
 use App\Models\AppTopMainImage;
 use App\Models\AdminContacts;
 use App\Models\UserInfos;
+use App\Models\Template;
 
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
@@ -160,9 +162,9 @@ class AdminController extends Controller
             $contact->message = $this->request->input('message');
 
             $contact->save();
-            return redirect()->route('admin.client.contact')->with('status','Add contact successfully');
+            return redirect()->route('admin.client.contact')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot add contact');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
     
@@ -210,7 +212,8 @@ class AdminController extends Controller
         
         $list_font_size = Config::get('font.size');
         $list_font_family = Config::get('font.family');
-        
+        $list_theme = Template::whereNull('deleted_at')->get()->pluck('name', 'id');
+        //dd($list_theme);
         // Get app_stores
         $app_stores = DB::table('app_stores')
             ->join('rel_apps_stores','rel_apps_stores.app_store_id','=','app_stores.id')
@@ -228,6 +231,7 @@ class AdminController extends Controller
                 'app_settings' => $app_settings,
                 'data_component_dest' => $data_component_dest,
                 'data_component_source' => $data_component_source,
+                'list_theme' => $list_theme,
                 'list_font_size' => $list_font_size,
                 'list_font_family' => $list_font_family));
     }
@@ -255,13 +259,14 @@ class AdminController extends Controller
                 $app_setting->menu_font_family = $this->request->input('menu_font_family');
                 $app_setting->company_info = $this->request->input('company_info');
                 $app_setting->user_privacy = $this->request->input('user_privacy');
-                $app_setting->template_id = 1;
+                $app_setting->template_id = $this->request->input('app_theme');
                 $app_setting->save();
                 
                 
                 // Save rel_app_settings_sidemenus
                 $data_sidemenus = $this->request->input('data_sidemenus');
                
+
                 if (count($data_sidemenus) > 0) {
                     DB::table('rel_app_settings_sidemenus')
                         ->where('app_setting_id', $app_setting->id)->delete();
@@ -279,6 +284,9 @@ class AdminController extends Controller
                     //dd($list_insert);
                      DB::table('rel_app_settings_sidemenus')->insert($list_insert);
                     
+                } else {
+                     DB::table('rel_app_settings_sidemenus')
+                        ->where('app_setting_id', $app_setting->id)->delete();
                 }
                 
                 // save app_stores
@@ -317,12 +325,12 @@ class AdminController extends Controller
                 //delete cache redis
                 RedisControl::delete_cache_redis('app_info');
                 //Session::flash('message', array('class' => 'alert-success', 'detail' => 'Setting successfully'));
-                return back()->with('status', 'Setting successfully');
+                return back()->with('status', '設定しました');
             }
         } catch (QueryException $e) {
             Log::error("globalstore: " . $e->getMessage());
             
-            return back()->with('warning', 'Setting fail');
+            return back()->with('warning', '設定に失敗しました');
         }
     }
     
@@ -335,9 +343,9 @@ class AdminController extends Controller
                 $app = new AppSetting();
                 $app_setting = $app->whereAppId($app_data->id)->with('components')->first();
                 if (!$app_setting)
-                    return back()->with('warning', 'Add App Setting fail');
+                    return back()->with('warning', '設定に失敗しました');
             } else {
-                return back()->with('warning', 'Add App Setting fail');
+                return back()->with('warning', '設定に失敗しました');
             }
 
             DB::beginTransaction();
@@ -367,7 +375,7 @@ class AdminController extends Controller
                         $contentType = mime_content_type($image_file->getRealPath());
 
                         if(! in_array($contentType, $allowedMimeTypes) ){
-                            return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                            return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
                         }
                         $image_file->move($destinationPath, $fileName); // uploading file to given path
                         
@@ -407,12 +415,12 @@ class AdminController extends Controller
             RedisControl::delete_cache_redis('app_info');
             RedisControl::delete_cache_redis('top_images');
             DB::commit();
-            return back()->with('status', 'Setting successfully');
+            return back()->with('status', '設定しました');
         } catch (QueryException $e) {
             dd($e);
             Log::error($e->getMessage());
             DB::rollBack();
-            return back()->with('warning', 'Setting fail');
+            return back()->with('warning', '設定に失敗しました');
         }
     }
 
@@ -420,7 +428,7 @@ class AdminController extends Controller
 
         $user_info = UserInfos::find( Session::get('user')->id );
         if(!$user_info){
-            return abort(503,'User info not found' );
+            return abort(503,'ユーザーを見つけることができません' );
         }
 
         return view('admin.pages.users.account', ['user' => $user_info]);
@@ -443,9 +451,14 @@ class AdminController extends Controller
             return abort(503);
         }
         if( $request->has('name') ){
+            $message = array(
+                'name.required' => '名前が必要です。',
+                'name.min' => '名前は6文字以上でなければなりません。'
+            );
+
             $validator = Validator::make( $request->all() , [
                 'name' => 'required|min:3',
-            ]);
+            ],$message);
 
             if ( $validator->fails() ) {
                 return back()
@@ -466,15 +479,25 @@ class AdminController extends Controller
                 && $responseUpdateName->code == 1000 ){
                 //$status[] = 'Update password success!';
             }else{
-                $warning[] = 'Update name fail!';
+                $warning[] = '名前を編集できません';
             }
         }
         if( $request->has('password') ){
+
+            $message = array(
+                'current_password.required' => '現在パスワードフィールドが必要です。',
+                'current_password.min' => '現在パスワードは6文字以上でなければなりません。',
+                'password.required' => 'パスワードフィールドが必要です。',
+                'password.min' => 'パスワードは6文字以上でなければなりません。',
+                'password_confirm.same' => 'パスワードは一致しなければなりません。',
+            );
+
             $validator = Validator::make( $request->all() , [
                 'current_password' => 'required|min:6',
-                'password' => 'required|min:6|confirmed',
-                'password_confirmation' => 'required|min:6',
-            ]);
+                'password' => 'required|min:6',
+                'password_confirm' => 'required|same:password',
+            ], $message);
+
 
             if ( $validator->fails() ) {
                 return back()
@@ -484,7 +507,7 @@ class AdminController extends Controller
             $requestUpdatePassWord = cURL::newRequest('post', Config::get('api.api_auth_changepass'),
                 [
                     'old_password' => $request->input('current_password'),
-                    'new_password' => $request->input('password_confirmation'),
+                    'new_password' => $request->input('password_confirm'),
                 ])
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token  );
             $responseUpdatePassWord = $requestUpdatePassWord->send();
@@ -496,7 +519,7 @@ class AdminController extends Controller
                 && $responseUpdatePassWord->code == 1000 ){
                 //$status[] = 'Update password success!';
             }else{
-                $warning[] = 'Update password fail!';
+                $warning[] = 'パスワードを編集できません';
             }
 
         }
@@ -519,7 +542,7 @@ class AdminController extends Controller
         $user_info->save();
         Session::put('user', null);
 
-        $status[] = 'Update account setting success!';
+        $status[] = 'アカウントを編集しました';
         return back()
             ->with('warning',$warning )
             ->with('status',$status);
@@ -532,6 +555,9 @@ class AdminController extends Controller
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
         $file_name = uniqid() . '.png';
+        if (!file_exists(public_path('uploads/app_icons/'))) {
+            mkdir(public_path('uploads/app_icons/'), 0777, true);
+        }
         $file = public_path('uploads/app_icons/') . $file_name;
 
         $success = file_put_contents($file, $data);
@@ -620,7 +646,7 @@ class AdminController extends Controller
                 if( $image_info[0] != 750 && $image_info[1] != 1334 )
                     return response()->json([
                         'success' => false,
-                        'msg' => 'File demenstion is not valid'
+                        'msg' => 'ファイルサイズは無効です'
                     ]);
                 // save file
                 $destinationPath = public_path('uploads/app_plash'); // upload path
@@ -636,10 +662,10 @@ class AdminController extends Controller
                 if( $rel_app_stores )
                     return response()->json([
                         "success" => true,
-                        "msg"=>"Upload file success "]);
+                        "msg"=>"ファイルをアップロードしました"]);
                 return response()->json([
                     "success" => false,
-                    "msg"=>"Upload file fail "]);
+                    "msg"=>"ファイルをアップロードできません"]);
             }
 
         }
@@ -647,43 +673,57 @@ class AdminController extends Controller
     }
 
     public function userManagement(Request $request){
-
-        $pageindex = 1;
-        if( $request->has('page') ){
-            $pageindex = $request->input('page');
+        $search_str = $this->request->input('search_pattern'); 
+        if ($search_str)
+        {
+            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereHas('profile', function($query) use ($search_str){
+                $query->where('name', 'LIKE', '%'. $search_str .'%' );
+            })->whereNull('deleted_at')
+                ->paginate(10);
+            $users->appends($this->request->only('search_pattern'))->links();
+        } else {
+            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereNull('deleted_at')
+                ->paginate(10);
         }
-        $pagesize = 10;
-        $reqUserLists = cURL::newRequest('get', 'https://api.ten-po.com/api/v2/list_user?pageindex='.$pageindex.'&pagesize='.$pagesize,array(
-                'app_id' => $this->request->app->app_app_id
-            ))->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
-            ->send();
-
-        $users = json_decode($reqUserLists->body);
-        if( isset($users->code) && $users->code == 1000  ){
-            // Client
-            $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
-                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)
-                ->send();
-            $client = json_decode($response->body);
-
-            if ($client->code && $client->code == 1000) {
-                $client = $client->data;
-
-                $pagination = $this->createLinks( 3 , 'pagination' ,$users->data->total_users,  $pageindex, $pagesize );
-                return view('admin.pages.users.users_management', array(
-                    'users' => $users->data,
-                    'client' => $client,
-                    'pagination' => $pagination
-                ));
-            }
+        //dd($users);
+        // Client
+        $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
+                ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+        $client = json_decode($response->body);
+        if ($client) {
+            $client = $client->data;
         }
+        //dd($client);
 
-        abort(404);
+        return view('admin.pages.users.users_management', array(
+            'users' => $users,
+            'client' => $client
+        ));
     }
 
     public function userManagementPost(Request $request){
-        dd($request->all());
-        // API remove
+        // if (count(Input::get('del_list')) > 0) {
+        //     foreach (Input::get('del_list') as $item) {
+        //         try {
+        //             DB::beginTransaction();
+        //             DB::table('social_profiles')
+        //                 ->where('app_user_id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::table('user_profiles')
+        //                 ->where('app_user_id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::table('app_users')
+        //                 ->where('id', $item)
+        //                 ->update(['deleted_at' => Carbon::now()]);
+        //             DB::commit();
+        //         } catch (\Illuminate\Database\QueryException $e) {
+        //             DB::rollBack();
+        //             return json_encode(array('status' => 0));
+        //         }
+        //     }
+            
+        //     return json_encode(array('status' => 1));
+        // }
     }
 
     public function userManagementDetail(Request $request, $app_user_id){
@@ -720,7 +760,7 @@ class AdminController extends Controller
                 'history' => $history,
             ));
         }
-        return back()->with('status','User not found');
+        return redirect()->back();
     }
 
 

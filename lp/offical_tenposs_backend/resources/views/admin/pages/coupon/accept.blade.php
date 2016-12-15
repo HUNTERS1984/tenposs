@@ -20,7 +20,8 @@
                   </div>
                 </div>
             </div>
-    <section class="content">   
+    <section class="content modal-global-redesign">
+        <div class="col-xs-12">@include('admin.layouts.messages')</div>  
         <div class="col-md-12">
           <div class="main-search-btn">
             <div class="row">
@@ -36,10 +37,10 @@
               </div>
               <div class="col-md-6">
                 <div class="search-right">
-                  <a href="javascript:avoid()" class="btn-s-1" data-toggle="modal" data-target="#ApproveConfirm">
+                  <a href="javascript:avoid()" data-keyboard="false" class="btn-s-1" data-toggle="modal" data-target="#ApproveConfirm">
                       <i class="glyphicon glyphicon-plus"></i> 選択したユーザーを承認
                   </a>
-                  <a href="javascript:avoid()" class="btn-s-2" data-toggle="modal" data-target="#ApproveConfirmAll">
+                  <a href="javascript:avoid()" data-keyboard="false" class="btn-s-2" data-toggle="modal" data-target="#ApproveConfirmAll">
                       <i class="glyphicon glyphicon-plus"></i> すべてのユーザーを承認
                   </a>
                 </div>
@@ -255,10 +256,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="#" id="btn_approve" style="color:red; font-weight:bold;">承認</a></center>
+                            <center><a href="#" id="btn_approve" class="btn btn-primary btn_submit_form">承認</a></center>
                         </div>
                     </div>
                     
@@ -275,10 +276,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="{{route('admin.coupon.approve_all')}}" id="btn_approve" style="color:red; font-weight:bold;">承認</a></center>
+                            <center><a href="{{route('admin.coupon.approve_all')}}" id="btn_approve" class="btn btn-primary btn_submit_form">承認</a></center>
                         </div>
                     </div>
                     
@@ -308,6 +309,15 @@
             });
 
             console.log(approve_list);
+
+            if (approve_list.length == 0) {
+                $('#customer_message ul li').first().text('項目を選択してください');
+                $('#customer_message').show();
+                $('#customer_message').show();
+                $('#ApproveConfirm').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            }
 
             $.ajax({
                 type: "POST",

@@ -107,10 +107,15 @@ class MenusController extends Controller
 
     public function updateCat($menu_id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -124,9 +129,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.menus.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -249,14 +254,25 @@ class MenusController extends Controller
         }
 
         try {
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -275,18 +291,24 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('items');
             $menu = $this->request->input('menu_id');
             $item->menus()->sync($menu);
-            return redirect()->route('admin.menus.index')->with('status','Add item successfully'); 
+            return redirect()->route('admin.menus.index')->with('status','追加しました'); 
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot edit item');
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');
         }
     }
 
 
     public function storeMenu(){
+        
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:menus,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -301,9 +323,9 @@ class MenusController extends Controller
             RedisControl::delete_cache_redis('menus');
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->back()->with('status','Create the category successfully');
+            return redirect()->back()->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
 
@@ -318,24 +340,35 @@ class MenusController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-               return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+               return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-           return redirect()->back()->withInput()->withErrors('Please upload an image');
+           return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
 
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required|Min:6',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -353,9 +386,9 @@ class MenusController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.index')->with('status','Add the item successfully');
+            return redirect()->route('admin.menus.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot add the item');;
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');;
         }
     }
 
@@ -390,7 +423,7 @@ class MenusController extends Controller
             return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
                 'size_type','size_categories','size_value'));
         } else {
-            return redirect()->back()->withInput()->withErrors('Cannot edit the item');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
        
     }
@@ -409,7 +442,7 @@ class MenusController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'The uploaded file is not an image') );
+                Session::flash( 'message', array('class' => 'alert-danger', 'detail' => 'アップロードファイルは写真ではありません') );
                 return back()->withInput();
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
@@ -417,14 +450,26 @@ class MenusController extends Controller
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -466,9 +511,29 @@ class MenusController extends Controller
             //delete cache redis
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
-            return redirect()->route('admin.menus.index')->with('status','Update the item successfully');
+            return redirect()->route('admin.menus.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the item');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $item = $this->item->find($id);
+            if ($item) {
+                $item->menus()->detach();
+                $item->destroy($id);
+                RedisControl::delete_cache_redis('items');
+                RedisControl::delete_cache_redis('top_items');
+                return redirect()->route('admin.menus.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
     }
 
@@ -480,6 +545,7 @@ class MenusController extends Controller
         	$item->destroy($id);
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
+            return redirect()->route('admin.menus.index')->with('status','削除しました');
         }
         return redirect()->back();
     }

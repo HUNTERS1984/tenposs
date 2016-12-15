@@ -89,21 +89,30 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withInput()->withErrors('Please upload an image');
+            return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
         
         try {
+            
+            $message = array(
+                'new_category_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+            );
+
             $rules = [
                 'new_category_id' => 'required',
                 'title' => 'required|Max:255',
-                'description' => 'required'
+                'description' => 'required|Min:6'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -131,9 +140,9 @@ class NewsController extends Controller
                 'created_by' => Session::get('user')->email
             );
             $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
-            return redirect()->route('admin.news.index')->with('status','Add news successfully');
+            return redirect()->route('admin.news.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('admin.news.index')->withInput()->withErrors('Cannot add news');
+            return redirect()->route('admin.news.index')->withInput()->withErrors('追加に失敗しました');
         }   
         //if (!$push)
             //Log::info('push fail: ' . json_decode($data_push));
@@ -148,11 +157,11 @@ class NewsController extends Controller
 
     public function edit($id)
     {
-        $newsAll = $this->entity->orderBy('id', 'DESC')->get();
         $news = $this->entity->find($id);
         $list_store = $this->store->lists('name', 'id');
-        $new_cat = $this->new_cat->select('name','id')->get();
-        return view('admin.pages.news.edit', compact('news', 'list_store', 'newsAll','new_cat'));
+        $new_cat = $this->new_cat->orderBy('id', 'DESC')->whereIn('store_id', $this->request->stores->pluck('id')->toArray())
+                ->whereNull('deleted_at')->get();
+        return view('admin.pages.news.edit', compact('news', 'list_store','new_cat'));
     }
 
     public function update(ImageRequest $imgrequest, $id)
@@ -167,19 +176,27 @@ class NewsController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
         }
 
         try {
+            $message = array(
+                'new_category_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+            );
+
             $rules = [
                 'new_category_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -194,32 +211,51 @@ class NewsController extends Controller
             $news->save();
             RedisControl::delete_cache_redis('news');
             RedisControl::delete_cache_redis('top_news');
-            return redirect()->route('admin.news.index')->with('status','Update news successfully');
+            return redirect()->route('admin.news.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('admin.news.index')->withInput()->withErrors('Cannot update news');
+            return redirect()->route('admin.news.index')->withInput()->withErrors('編集に失敗しました');
         } 
     }
 
-    public function destroy($id)
+    public function delete()
     {
-//        $this->entity->destroy($id);
+        $id = $this->request->input('itemId');
         $news = $this->entity->find($id);
         if ($news) {
             News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
             RedisControl::delete_cache_redis('news');
             RedisControl::delete_cache_redis('top_news');
-            return redirect()->route('admin.news.index')->with('status','Delete the news successfully');
+            return redirect()->route('admin.news.index')->with('status','削除しました');
         } else {
-            return redirect()->back()->withErrors('Cannot delete the news');
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
+       
+    }
+
+    public function destroy($id)
+    {
+        $news = $this->entity->find($id);
+        if ($news) {
+            News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
+            return redirect()->route('admin.news.index')->with('status','削除しました');
+        } else {
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
        
     }
 
     public function storeCat(){
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -234,9 +270,9 @@ class NewsController extends Controller
             RedisControl::delete_cache_redis('news_cat');
             RedisControl::delete_cache_redis('news');
             RedisControl::delete_cache_redis('top_news');
-            return redirect()->route('admin.news.cat')->with('status','Create the category successfully');
+            return redirect()->route('admin.news.cat')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
 
     }
@@ -332,10 +368,15 @@ class NewsController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
             'name' => 'required|unique_with:new_categories,store_id|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -349,9 +390,9 @@ class NewsController extends Controller
             RedisControl::delete_cache_redis('news_cat');
             RedisControl::delete_cache_redis('news');
             RedisControl::delete_cache_redis('top_news');
-            return redirect()->route('admin.news.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.news.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 

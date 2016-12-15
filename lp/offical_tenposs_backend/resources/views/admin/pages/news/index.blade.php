@@ -105,11 +105,7 @@
                                             <p>{{ $item->category->name }}</p>
                                         </div>
                                         <div class="col-md-4 col-xs-12">
-                                            {{Form::open(array('route'=>array('admin.news.destroy',$item->id),'method'=>'DELETE'))}}
-                                            <input type="submit" class="btn-5" value="削除"
-                                                   onclick="return confirm('Are you sure you want to delete this item?');">
-                                            {{Form::close()}}
-
+                                            <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="btn-5 deleteConfirm">削除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -139,6 +135,30 @@
             </div>
         </div>
 
+        <div class="modal fade" id="DeleteConfirm" tabindex="-1" role="dialog" aria-labelledby="DeleteConfirmLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="DeleteConfirmLabel">本当に削除しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        {{Form::open(array('route'=>'admin.news.delete'))}}
+                        <input type="text" name="itemId" id="itemId" value="" hidden/>
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center>{{Form::submit('削除',['class'=>'btn btn-primary btn_submit_form'])}}</center>
+                        </div>
+                        {{Form::close()}}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <!-- Modal -->
         <div class="modal fade" id="AddNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
@@ -159,7 +179,7 @@
                         </div>
                         <div class="col-md-8" align="left">
                             <div class="form-group">
-                                {{Form::label('store','カテゴリー')}}
+                                {{Form::label('store','カテゴリ名')}}
                                 {{Form::select('new_category_id',$news_cat->pluck('name', 'id'),old('new_category_id'),['class'=>'form-control'])}}
 
                             </div>
@@ -243,7 +263,12 @@
 
         $("#image_create").change(function () {
             readURL(this);
-        });        
+        });  
+
+        $(document).on("click", ".deleteConfirm", function () {
+             var itemId = $(this).data('id');
+             $(".modal-body #itemId").val(itemId );
+        });       
     })
 </script>
 @endsection

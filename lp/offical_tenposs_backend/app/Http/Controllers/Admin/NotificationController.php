@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\App;
-use App\Models\AppUsers;
+use App\Models\AppUser;
 use App\Models\Push;
 use App\Models\PushRegularCurrent;
 use App\Utils\HttpRequestUtil;
@@ -20,7 +20,7 @@ use Session;
 use Log;
 use DB;
 
-define('REQUEST_NOTIFICATION_ITEMS', 2);
+define('REQUEST_NOTIFICATION_ITEMS', 10);
 
 class NotificationController extends Controller
 {
@@ -51,8 +51,8 @@ class NotificationController extends Controller
         $apps = App::where('user_id', $user->id)->first();
         $app_user = array();
         if (count($apps) > 0)
-            $app_user = AppUsers::where('app_id', $apps->id)->get();
-
+            $app_user = AppUser::where('app_id', $apps->id)->with('profile')->get();
+        
         //time_type: 1 send now, 2: regular, 3: temp
         switch ($type) {
             case 'A':
@@ -82,6 +82,7 @@ class NotificationController extends Controller
             default:
                 break;
         }
+        //dd($app_user);
         return view('admin.pages.push.index', compact('app_user', 'list_notification', 'type', 'search_value'));
     }
 

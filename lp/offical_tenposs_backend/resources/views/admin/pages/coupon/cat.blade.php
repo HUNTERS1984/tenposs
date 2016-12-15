@@ -14,13 +14,13 @@
         </div>
     </div>
     <section class="content modal-global-redesign">
-        @include('admin.layouts.messages')
+        <div class="col-xs-12">@include('admin.layouts.messages')</div>
         <div class="col-lg-12">
             <div class="btn-menu">
-                <a href="javascript:avoid()" class="btn-3" data-toggle="modal" data-target="#AddMenu">
+                <a href="javascript:avoid()" data-keyboard="false" class="btn-3" data-toggle="modal" data-target="#AddMenu">
                   <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
-                <a href="javascript:avoid()" class="btn-4" data-toggle="modal" data-target="#DeleteConfirm">
+                <a href="javascript:avoid()" data-keyboard="false" class="btn-4" data-toggle="modal" data-target="#DeleteConfirm">
                   <i class="glyphicon glyphicon-plus"></i> 選択した項目を削除
                 </a>
             </div>
@@ -76,10 +76,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="#" id="btn_delete" style="color:red; font-weight:bold;">削除</a></center>
+                            <center><a href="#" id="btn_delete" class="btn btn-primary btn_submit_form">削除</a></center>
                         </div>
                     </div>
                     
@@ -103,7 +103,7 @@
 
                         </div>
                         <div class="form-group">
-                            {{Form::label('Name', 'タイトル')}}
+                            {{Form::label('Name', 'カテゴリ名')}}
                             {{Form::text('name',old('name'),['class'=>'form-control'])}}
                         </div>
                     </div>
@@ -131,9 +131,18 @@
                 $("input[type=checkbox]:checked").each(function(){
                     del_list.push($(this).attr('id'));
                 });
-
+                
                 console.log(del_list);
 
+                if (del_list.length == 0) {
+                    $('#customer_message ul li').first().text('項目を選択してください');
+                    $('#customer_message').show();
+                    $('#customer_message').show();
+                    $('#DeleteConfirm').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                }
+                
                 $.ajax({
                     type: "POST",
                     url: "/admin/coupon/deletecat",

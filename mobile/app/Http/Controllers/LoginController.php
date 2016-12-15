@@ -184,10 +184,10 @@ class LoginController extends Controller
             'email.required' => '電子メールのフィールドは必須です。',
             'email.email' => 'メール誤タイプ',
             'password.required' => 'パスワードフィールドが必要です。',
-            'password.min' => 'パスワードは少なくとも6文字でなければなりません。',
+            'password.min' => 'パスワードは6文字以上でなければなりません。',
             'password_confirm.required' => 'パスワードの確認フィールドが必要です。',
-            'password_confirm.min' => 'パスワードの確認は、少なくとも6文字でなければなりません。',
-            'password_confirm.same' => 'パスワードの確認とパスワードが一致している必要があります。',
+            'password_confirm.min' => 'パスワードは6文字以上でなければなりません。',
+            'password_confirm.same' => 'パスワードは一致しなければなりません。',
             
         );
         

@@ -122,9 +122,9 @@
 					                    <div class="col-sm-4">
 					                        <select name="business_type" class="form-control">
 					                            <option value="">選択します</option>
-			                                    <option value="0">法人</option>
-			                                    <option value="1">個人</option>
-			                                    <option value="2">その他</option>
+			                                    <option value="0" {{ (old('business_type') == '0') ? 'selected' : '' }}>法人</option>
+			                                    <option value="1" {{ (old('business_type') == '1') ? 'selected' : '' }}>個人</option>
+			                                    <option value="2" {{ (old('business_type') == '2') ? 'selected' : '' }}>その他</option>
 
 					                        </select>
 					                    </div>
@@ -270,8 +270,7 @@
 							                    <label for="" class="col-sm-offset-2 col-sm-4">コメント・紹介文</label>
 							                    <div class="col-sm-4">
 							                        <textarea type="text" class="form-control" id="shop_description_register" name="shop_description_register"  
-							                        value="" placeholder="" rows="3" cols="10"> {{ old('shop_description_register') }}
-							                        </textarea>
+							                        value="" placeholder="" rows="3" cols="10">{{old('shop_description_register')}}</textarea>
 							                    </div>
 							                </div>
 								            

@@ -90,10 +90,7 @@
                                             <p class="date-copon">有効期間　{{$item->end_date}}まで</p>
                                         </div>
                                         <div class="col-md-4 col-xs-12">
-                                             {{Form::open(array('route'=>array('admin.coupon.destroy',$item->id),'method'=>'DELETE'))}}
-                                            <input type="submit" class="btn-5" value="削除"
-                                                   onclick="return confirm('Are you sure you want to delete this item?');">
-                                            {{Form::close()}}
+                                            <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="btn-5 deleteConfirm">削除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -138,6 +135,30 @@
             </div>
         </div>
 
+        <div class="modal fade" id="DeleteConfirm" tabindex="-1" role="dialog" aria-labelledby="DeleteConfirmLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="DeleteConfirmLabel">本当に削除しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        {{Form::open(array('route'=>'admin.coupon.delete'))}}
+                        <input type="text" name="itemId" id="itemId" value="" hidden/>
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center>{{Form::submit('削除',['class'=>'btn btn-primary btn_submit_form'])}}</center>
+                        </div>
+                        {{Form::close()}}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="AddCoupon" tabindex="-1" role="dialog" aria-labelledby="AddCoupon">
             <div class="modal-dialog" role="document">
                 {{Form::open(array('route'=>'admin.coupon.store','files'=>true))}}
@@ -171,7 +192,7 @@
                             </div>
                             <div class="form-group">
                                 {{Form::label('Hashtag','ハッシュタグ')}}
-                                {{Form::text('hashtag',old('hashtag'),['class'=>'form-control'])}}
+                                {{Form::text('hashtag',old('hashtag'),['class'=>'form-control', 'placeholder'=>'#hashtag1 #hashtag2...'])}}
                             </div>
 
                             <div class="form-group">
@@ -218,7 +239,12 @@
 
         $("#image_create").change(function () {
             readURL(this);
-        });        
+        });       
+
+        $(document).on("click", ".deleteConfirm", function () {
+             var itemId = $(this).data('id');
+             $(".modal-body #itemId").val(itemId );
+        }); 
     })
 </script>
 @endsection

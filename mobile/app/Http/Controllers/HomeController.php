@@ -20,7 +20,7 @@ class HomeController extends Controller
             ->get_data('appinfo',[
             'app_id' => '2a33ba4ea5c9d70f9eb22903ad1fb8b2' ],'33d3afaeefdffe55b185359f901d15e4');
 
-         dd($appInfos);
+        //dd($appInfos);
 
          $menu = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('menu',[

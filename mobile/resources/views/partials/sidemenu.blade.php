@@ -48,14 +48,5 @@
         </li>
         @endif
         @endforeach
-        @if( Session::has('user') )
-        <li class="ti-unlock">
-            <a class="active" href="{{ route('logout') }}" style="
-                font-size: {{ $app_info->data->app_setting->menu_font_size }};
-                font-family: {{ $app_info->data->app_setting->menu_font_family }};
-                color: #{{ $app_info->data->app_setting->menu_font_color }};
-            ">ログアウト</a>
-        </li>
-        @endif
     </ul>
 </div><!-- End side -->

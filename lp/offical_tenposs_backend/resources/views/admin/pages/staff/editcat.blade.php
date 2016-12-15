@@ -27,7 +27,7 @@
 
                     </div>
                     <div class="form-group">
-                        {{Form::label('Name', 'タイトル')}}
+                        {{Form::label('Name', 'カテゴリ名')}}
                         {{Form::text('name',old('name'),['class'=>'form-control'])}}
                     </div>        
                 </div>  <!-- wrap-content-->

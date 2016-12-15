@@ -45,7 +45,7 @@ class ClientChatLineController extends Controller
     
         $botService = AppBots::where('app_id', $request->app->id )->first();
     	if( !$botService ){
-    	    return view('admin.pages.chat.clients')->withErrors('Please config your BOT LINE info!' );
+    	    return view('admin.pages.chat.clients')->withErrors('BOT LINE情報を設定してください' );
     	}
         // Get profile
         $requestProfile = $this->curl->newRequest('get', self::API_REQUEST_PROFILE )
@@ -55,7 +55,7 @@ class ClientChatLineController extends Controller
         $profile = json_decode($responseProfile->body);
 
         if( !$profile ){
-            return view('admin.pages.chat.clients')->withErrors('Try again!' );
+            return view('admin.pages.chat.clients')->withErrors('再試行する!' );
         }
     
         $contacts = DB::table('app_users')

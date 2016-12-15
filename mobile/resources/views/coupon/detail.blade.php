@@ -49,7 +49,7 @@
                                         空の入力
                                     @endif</a></p>
                             <h3 class="title-coupon">{{$items_detail_data->title}}</h3>
-                            <span class="dateadd">有効期間: {{$items_detail_data->end_date}}</span>
+                            <span class="dateadd">有効期間: {{ date('Y年m月d日', strtotime($items_detail_data->end_date))  }}</span>
                         </div>
                         <div class="form-mail">
                             <div class="input-group">

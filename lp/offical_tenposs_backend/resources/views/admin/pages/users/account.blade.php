@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label for="">新しいパスワード(確認)</label>
-                                  <input type="password" class="form-control" id="" value="" name="password_confirmation" placeholder="新しいパスワード(確認)">
+                                  <input type="password" class="form-control" id="" value="" name="password_confirm" placeholder="新しいパスワード(確認)">
                                 </div>
                                 <div class="form-group">
                                   <label for="">事業形態</label>

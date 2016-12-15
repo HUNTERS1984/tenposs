@@ -1344,7 +1344,7 @@ ul.link-top-2 li a.active{
   text-align: left;
   font-size: 95%;
 }
-.wrapp-menu-img .content-menu-img .text-menu input{
+.wrapp-menu-img .content-menu-img .text-menu a{
   width: 100%;
   font-size: 95%;
   height: 36px;
@@ -1360,7 +1360,7 @@ ul.link-top-2 li a.active{
   font-weight: bold;
   color: #1e96d6;
 }
-.wrapp-menu-img .content-menu-img .text-menu input:hover{
+.wrapp-menu-img .content-menu-img .text-menu a:hover{
   border:1px solid #1e96d6;
 }
 .drop-btn select.form-control{
@@ -1516,7 +1516,7 @@ ul.link-top-2 li a.active{
 .title-news p{
   padding-top: 10px;
 }
-.title-news input.btn-5{
+.title-news a.btn-5{
   background: #fafafa;
   margin-right: 10px;
   width: 80px;
@@ -1530,7 +1530,7 @@ ul.link-top-2 li a.active{
   border-radius: 4px;
   border:1px solid transparent;
 }
-.title-news input:hover.btn-5{
+.title-news a:hover.btn-5{
   border: 1px solid #1e96d6;
 }
 .des-news{
@@ -1621,7 +1621,7 @@ ul.link-top-2 li a.active{
   padding-top: 10px;
   margin: 0;
 }
-.title-coupon input.btn-5{
+.title-coupon a.btn-5{
   background: #fafafa;
   margin-right: 10px;
   width: 80px;
@@ -1635,7 +1635,7 @@ ul.link-top-2 li a.active{
   border-radius: 4px;
   border:1px solid transparent;
 }
-.title-coupon input:hover.btn-5{
+.title-coupon a:hover.btn-5{
   border: 1px solid #1e96d6;
 }
 .des-coupon{
@@ -1739,7 +1739,7 @@ ul.link-top-2 li a.active{
   margin: 10px auto;
   text-align: center;
 }
-.wrapp-photo-img .content-photo-img .text-photo input{
+.wrapp-photo-img .content-photo-img .text-photo a{
   width: 100%;
   font-size: 95%;
   height: 36px;
@@ -1754,7 +1754,7 @@ ul.link-top-2 li a.active{
   font-weight: bold;
   color: #1e96d6;
 }
-.wrapp-photo-img .content-photo-img .text-photo input:hover{
+.wrapp-photo-img .content-photo-img .text-photo a:hover{
   border:1px solid #1e96d6;
 }
 /*-- //photo --*/
@@ -4675,6 +4675,20 @@ p.yen-cost-3-2-1-black{
   letter-spacing: 2px;
   font-weight: bold;
   color: #fff;
+}
+
+.btn_cancel_form {
+  width: 100px;
+  height: 34px;
+  background: #fff;
+  border-radius: 4px;
+  text-align: center;
+  display: inline-table;
+  border: 1px solid #c8d2d6;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #1e96d6;
 }
 
 .content .wrap-preview {

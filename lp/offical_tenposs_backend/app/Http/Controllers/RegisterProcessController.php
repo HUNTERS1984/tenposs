@@ -104,7 +104,6 @@ class RegisterProcessController extends Controller
         }else{
             //dd($request->all());
             $validator = Validator::make(  $request->all() , [
-                'shop_url_register'=>'required|active_url',
                 'shop_category'=>'required',
                 'shop_tel_register'=>'required',
                 'shop_close_register'=>'required|max:255',
@@ -127,7 +126,8 @@ class RegisterProcessController extends Controller
             }
            
             $userInfos->shop_category = $request->input('shop_category');
-            $userInfos->shop_url = $request->input('shop_url_register');
+            if ($request->input('shop_url_register'))
+                $userInfos->shop_url = $request->input('shop_url_register');
             $userInfos->shop_tel = $request->input('shop_tel_register');
             $userInfos->shop_regular_holiday = $request->input('shop_close_register');
             $userInfos->shop_business_hours = $request->input('shop_time_register');
