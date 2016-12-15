@@ -291,7 +291,7 @@ function connectToChat() {
             var $template;
             $template = $($('#members-template').clone().html());
             $template.attr('id','con'+ package.message.profile.mid).addClass('rendered');
-            if( item.pictureUrl === null  ){
+            if( package.message.profile.pictureUrl === null  ){
                 $template.find('img').attr('src',noavatar);
             }else{
                 $template.find('img').attr('src',package.message.profile.pictureUrl+'/small');
