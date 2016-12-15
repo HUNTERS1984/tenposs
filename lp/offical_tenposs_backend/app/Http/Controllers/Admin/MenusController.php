@@ -472,6 +472,26 @@ class MenusController extends Controller
         }
     }
 
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $item = $this->item->find($id);
+            if ($item) {
+                $item->menus()->detach();
+                $item->destroy($id);
+                RedisControl::delete_cache_redis('items');
+                RedisControl::delete_cache_redis('top_items');
+                return redirect()->route('admin.menus.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
+    }
+
     public function destroy($id)
     {
         $item = $this->item->find($id);
@@ -480,6 +500,7 @@ class MenusController extends Controller
         	$item->destroy($id);
             RedisControl::delete_cache_redis('items');
             RedisControl::delete_cache_redis('top_items');
+            return redirect()->route('admin.menus.index')->with('status','削除しました');
         }
         return redirect()->back();
     }

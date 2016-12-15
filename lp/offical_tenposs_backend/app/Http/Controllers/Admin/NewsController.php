@@ -200,9 +200,23 @@ class NewsController extends Controller
         } 
     }
 
+    public function delete()
+    {
+        $id = $this->request->input('itemId');
+        $news = $this->entity->find($id);
+        if ($news) {
+            News::where('id', $id)->update(['deleted_at' => Carbon::now()]);
+            RedisControl::delete_cache_redis('news');
+            RedisControl::delete_cache_redis('top_news');
+            return redirect()->route('admin.news.index')->with('status','削除しました');
+        } else {
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
+       
+    }
+
     public function destroy($id)
     {
-//        $this->entity->destroy($id);
         $news = $this->entity->find($id);
         if ($news) {
             News::where('id', $id)->update(['deleted_at' => Carbon::now()]);

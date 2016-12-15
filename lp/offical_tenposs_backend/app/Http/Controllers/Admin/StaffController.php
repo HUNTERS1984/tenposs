@@ -205,9 +205,10 @@ class StaffController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
         try {
+            $id = $this->request->input('itemId');
             $this->staff = $this->staff->find($id);
             if ($this->staff) {
                 $this->staff->destroy($id);

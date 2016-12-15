@@ -336,6 +336,25 @@ class PhotoCatController extends Controller
         }
     }
 
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $this->photo = $this->photo->find($id);
+            if ($this->photo) {
+                $this->photo->destroy($id);
+                RedisControl::delete_cache_redis('photos');
+                RedisControl::delete_cache_redis('top_photos');
+                return redirect()->route('admin.photo-cate.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
+    }
+
     public function destroy($id)
     {
         try {

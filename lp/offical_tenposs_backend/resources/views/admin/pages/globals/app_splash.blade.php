@@ -27,7 +27,7 @@
                 <div role="tabpanel" class="tab-pane active" id="tab-gb-re-1">
                     <div class="wrapp-form-tab-gb-1">
                         <label>ストア用スクリーンショット</label>
-                        <p class="text-danger">File dementions: 750px x 1334px</p>
+                        <p class="text-danger">ファイルサイズ: 750px x 1334px</p>
                         <p id="upload-response"></p>
                         <div class="panel panel-info">
                         <div class="panel-body">

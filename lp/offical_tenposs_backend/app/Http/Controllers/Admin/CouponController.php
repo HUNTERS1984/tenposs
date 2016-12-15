@@ -505,6 +505,11 @@ class CouponController extends Controller
                 $tag_list = $matches[1];
             }
 
+            if (count($tag_list) == 0)
+            {
+                return redirect()->back()->withInput()->withErrors('ハッシュタグが正しくありません。正しい形式は：#hashtag1 #hashtag2...'); 
+            }
+
             foreach ($tag_list as $tagName) {
                 $tag = Tag::whereTag($tagName)
                     ->first();
@@ -675,6 +680,25 @@ class CouponController extends Controller
         // $coupon->save();
 
         return redirect()->route('admin.coupon.index');
+    }
+
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $this->entity = $this->entity->find($id);
+            if ($this->entity) {
+                $this->entity->app_users()->detach();
+                $this->entity->destroy($id);
+                RedisControl::delete_cache_redis('coupons');
+                return redirect()->route('admin.coupon.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
     }
 
     public function destroy($id)

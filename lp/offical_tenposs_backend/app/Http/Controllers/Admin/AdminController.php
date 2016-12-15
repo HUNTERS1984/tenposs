@@ -263,6 +263,7 @@ class AdminController extends Controller
                 // Save rel_app_settings_sidemenus
                 $data_sidemenus = $this->request->input('data_sidemenus');
                
+
                 if (count($data_sidemenus) > 0) {
                     DB::table('rel_app_settings_sidemenus')
                         ->where('app_setting_id', $app_setting->id)->delete();
@@ -280,6 +281,9 @@ class AdminController extends Controller
                     //dd($list_insert);
                      DB::table('rel_app_settings_sidemenus')->insert($list_insert);
                     
+                } else {
+                     DB::table('rel_app_settings_sidemenus')
+                        ->where('app_setting_id', $app_setting->id)->delete();
                 }
                 
                 // save app_stores
@@ -533,6 +537,9 @@ class AdminController extends Controller
         $img = str_replace(' ', '+', $img);
         $data = base64_decode($img);
         $file_name = uniqid() . '.png';
+        if (!file_exists(public_path('uploads/app_icons/'))) {
+            mkdir(public_path('uploads/app_icons/'), 0777, true);
+        }
         $file = public_path('uploads/app_icons/') . $file_name;
 
         $success = file_put_contents($file, $data);
@@ -621,7 +628,7 @@ class AdminController extends Controller
                 if( $image_info[0] != 750 && $image_info[1] != 1334 )
                     return response()->json([
                         'success' => false,
-                        'msg' => 'File demenstion is not valid'
+                        'msg' => 'ファイルサイズは無効です'
                     ]);
                 // save file
                 $destinationPath = public_path('uploads/app_plash'); // upload path
@@ -637,10 +644,10 @@ class AdminController extends Controller
                 if( $rel_app_stores )
                     return response()->json([
                         "success" => true,
-                        "msg"=>"Upload file success "]);
+                        "msg"=>"ファイルをアップロードしました"]);
                 return response()->json([
                     "success" => false,
-                    "msg"=>"Upload file fail "]);
+                    "msg"=>"ファイルをアップロードできません"]);
             }
 
         }
