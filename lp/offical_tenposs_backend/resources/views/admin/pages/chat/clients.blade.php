@@ -313,8 +313,10 @@ function connectToChat() {
         console.log('Load history message');
         console.log(package);
         if( package.length > 0 ){
+
+
             $(package).each(function(index, item) {
-                
+
                 $(item.history).each(function(index1, item1){
                     var profileTemp = (function(){
                         if(item1.from_mid === profile.mid)
@@ -327,7 +329,7 @@ function connectToChat() {
                             }
                         }
                     })();
-                
+
                     drawMessage({
                         windows: item.windows,
                         message: item1.message,
@@ -355,7 +357,26 @@ function connectToChat() {
         console.log('History client');
         console.log(package);
         $('#messages-windows').empty();
-        
+
+
+        for ( i = package.history.length ; i >= 0; i--) {
+            drawMessage({
+                text: package.history[i].message,
+                timestamp: moment( parseInt(package.history[i].created_at) ).format() ,
+                profile: (function(){
+                    if(package.history[i].from_mid === profile.mid)
+                        return profile;
+                    else{
+                        return {
+                            displayName: package.windows.displayName,
+                            mid: package.windows.mid,
+                            pictureUrl: package.windows.pictureUrl,
+                        }
+                    }
+                })()
+            });
+        }
+        /*
         $(package.history).each(function(index, item){
             drawMessage({
                 text: item.message,
@@ -373,7 +394,7 @@ function connectToChat() {
                 })()
             });
         })
-
+        */
        
     });
 }
