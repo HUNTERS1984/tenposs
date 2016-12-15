@@ -265,7 +265,7 @@ function connectToChat() {
     socket.on('receive.admin.getClientOnline',function(users){
         console.log('List users online');
         console.log(users);
-        $( contactsData.data ).each(function(index, item) {
+        $( contactsData ).each(function(index, item) {
             for( i in users){
                 if( users[i].mid === item.mid ){
                     $('#con'+item.mid).find('.count-user-chat').addClass('on');
@@ -304,6 +304,7 @@ function connectToChat() {
         }else{
             // update online status text
             $('ul.nav-list-user li#con'+package.message.profile.mid).find('.users-status').text( trimwords(package.message.text,30) );
+            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.count-user-chat').addClass( 'on' );
         }
 
     })
@@ -397,11 +398,15 @@ function drawSystemMessage(package){
 
 function trimwords( words, number ){
 
-    //trim the string to the maximum length
-    var trimmedString = words.substr(0, number);
-    //re-trim if we are in the middle of a word
-    trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
-    return trimmedString;
+    if( words.length > number){
+
+        var trimmedString = words.substr(0, number);
+        //re-trim if we are in the middle of a word
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        return trimmedString;
+    }else{
+        return words;
+    }
 }
 
 function renderChatLists(contacts){
