@@ -97,9 +97,7 @@
                                     <p class="text-title-menu">
                                         {{$item->title}}
                                     </p>
-                                    {{Form::open(array('route'=>['admin.menus.destroy',$item->id],'method'=>'DELETE'))}}
-                                    {{Form::submit('削除',array())}}
-                                    {{Form::close()}}
+                                    <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="deleteConfirm">削除</a>
                                 </div>
                             </div>
                         </div>
@@ -134,6 +132,30 @@
             </div>
         </div>
 
+        <div class="modal fade" id="DeleteConfirm" tabindex="-1" role="dialog" aria-labelledby="DeleteConfirmLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="DeleteConfirmLabel">本当に削除しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        {{Form::open(array('route'=>'admin.menus.delete'))}}
+                        <input type="text" name="itemId" id="itemId" value="" hidden/>
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center>{{Form::submit('削除',['class'=>'btn btn-primary btn_submit_form'])}}</center>
+                        </div>
+                        {{Form::close()}}
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="AddItem" tabindex="-1" role="dialog" aria-labelledby="AddItem">
             <div class="modal-dialog" role="document">
                 {{Form::open(array('route'=>'admin.menus.storeitem','files'=>true))}}
@@ -153,7 +175,7 @@
                         </div>
                         <div class="col-md-8" align="left">
                             <div class="form-group">
-                                {{Form::label('menu','メニュー')}}
+                                {{Form::label('menu','カテゴリ名')}}
                                 {{Form::select('menu_id',$menus->pluck('name', 'id'),old('menu_id'),['class'=>'form-control'])}}
                                 
                             </div>
@@ -258,6 +280,11 @@
 
         $("#image_create").change(function () {
             readURL(this);
+        });
+
+        $(document).on("click", ".deleteConfirm", function () {
+             var itemId = $(this).data('id');
+             $(".modal-body #itemId").val(itemId );
         });
     })
 </script>

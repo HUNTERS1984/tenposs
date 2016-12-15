@@ -149,9 +149,9 @@ class CouponController extends Controller
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
             
-            $posts->appends($this->request->only('pattern'))->links();
-            $notapproved_posts->appends($this->request->only('pattern'))->links();
-            $approved_posts->appends($this->request->only('pattern'))->links();
+            $posts->appends($this->request->only('search_pattern'))->links();
+            $notapproved_posts->appends($this->request->only('search_pattern'))->links();
+            $approved_posts->appends($this->request->only('search_pattern'))->links();
         } else {
             $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
             for ($i = 0; $i < count($posts); $i++) {
@@ -249,7 +249,7 @@ class CouponController extends Controller
         $post->apps()->attach($this->request->app->id);
 
         if ($return)  
-            return redirect()->back()->with('status','Approve the coupon successfully');
+            return redirect()->back()->with('status','承認しました');
     }
     public function approve()
     {
@@ -269,7 +269,7 @@ class CouponController extends Controller
         foreach ($approve_list as $post_id) {
             $this->approve_post($post_id, false);
         }
-        return redirect()->back()->with('status','Approve all coupon successfully');  
+        return redirect()->back()->with('status','承認しました');  
     }
 
     public function approve_bk($coupon_id, $post_id)
@@ -304,7 +304,7 @@ class CouponController extends Controller
             //end push
         }
 
-        return redirect()->back()->with('status','Approve the coupon successfully');
+        return redirect()->back()->with('status','承認しました');
     }
 
     public function unapprove($coupon_id, $post_id)
@@ -344,7 +344,7 @@ class CouponController extends Controller
 
         $post->status = false;
         $post->save();
-        return redirect()->back()->with('status','Unapprove the coupon successfully');
+        return redirect()->back();
     }
 
 
@@ -369,9 +369,9 @@ class CouponController extends Controller
                 'store_id' => $this->request->input('store_id'),
             ];
             $this->type->create($data);
-            return redirect()->route('admin.coupon.cat')->with('status','Create the category successfully');
+            return redirect()->route('admin.coupon.cat')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
 
@@ -421,9 +421,9 @@ class CouponController extends Controller
             $item->store_id = $this->request->input('store_id');
             $item->save();
 
-            return redirect()->route('admin.coupon.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.coupon.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -463,12 +463,12 @@ class CouponController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withInput()->withErrors('Please upload a image ');
+            return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
 
 
@@ -505,6 +505,11 @@ class CouponController extends Controller
                 $tag_list = $matches[1];
             }
 
+            if (count($tag_list) == 0)
+            {
+                return redirect()->back()->withInput()->withErrors('ハッシュタグが正しくありません。正しい形式は：#hashtag1 #hashtag2...'); 
+            }
+
             foreach ($tag_list as $tagName) {
                 $tag = Tag::whereTag($tagName)
                     ->first();
@@ -539,9 +544,9 @@ class CouponController extends Controller
                 Log::info('push fail: ' . json_decode($push));
             //end push
 
-            return redirect()->route('admin.coupon.index')->with('status','Add coupon successfully');
+            return redirect()->route('admin.coupon.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot add coupon');
+            return redirect()->back()->withInput()->withErrors('追加に失敗しました');
         }
 
     }
@@ -606,7 +611,7 @@ class CouponController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if (!in_array($contentType, $allowedMimeTypes)) {
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -664,9 +669,9 @@ class CouponController extends Controller
             $this->dispatch(new InstagramHashtagJob($this->entity->id));
             //delete cache redis
             RedisControl::delete_cache_redis('coupons');
-            return redirect()->route('admin.coupon.index')->with('status','Edit the coupon successfully');
+            return redirect()->route('admin.coupon.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot edit the coupon');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
 
         // $coupon = $this->entity->find($id);
@@ -677,6 +682,25 @@ class CouponController extends Controller
         return redirect()->route('admin.coupon.index');
     }
 
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $this->entity = $this->entity->find($id);
+            if ($this->entity) {
+                $this->entity->app_users()->detach();
+                $this->entity->destroy($id);
+                RedisControl::delete_cache_redis('coupons');
+                return redirect()->route('admin.coupon.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
+        }
+    }
+
     public function destroy($id)
     {
         try {
@@ -685,13 +709,13 @@ class CouponController extends Controller
                 $this->entity->app_users()->detach();
                 $this->entity->destroy($id);
                 RedisControl::delete_cache_redis('coupons');
-                return redirect()->route('admin.coupon.index')->with('status','Delete the coupon successfully');
+                return redirect()->route('admin.coupon.index')->with('status','削除しました');
             } else {
-                return redirect()->back()->withErrors('Cannot delete the coupon');
+                return redirect()->back()->withErrors('削除に失敗しました');
             }
             
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot delete the coupon');
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
     }
 

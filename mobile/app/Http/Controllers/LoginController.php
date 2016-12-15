@@ -124,6 +124,51 @@ class LoginController extends Controller
         'app_info' => $this->app_info,
         ]);
     }
+
+    public function registerStep2(){
+        if( ! Session::has('user') )
+            return redirect()->route('login');
+        return view('signup_email_step2',[
+            'app_info' => $this->app_info,
+        ]);
+    }
+
+    public function registerStep2Post(Request $request){
+
+        if($request->has('birthday')){
+            $rules = array(
+                'birthday' => 'date_format:Y-m-d',
+            );
+            $message = array(
+                'birthday' => '誕生日の形式yyyy-mm-dd',
+            );
+            $v = Validator::make($request->all(), $rules,$message);
+            if( $v->fails() ){
+                return back()
+                    ->withInput()
+                    ->withErrors($v);
+            }
+        }
+
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '. Session::get('user')->token);
+        $curl = $curl->post( 'https://api.ten-po.com/api/v2/update_profile_social_signup', array(
+            'app_id' => $this->app->app_app_id ,
+            'birthday' => $request->input('birthday') ,
+            'address' => $request->input('address') ,
+            'code' => $request->input('code'),
+            'email' => $request->input('email'),
+            'gender' => $request->input('gender')
+        ));
+
+        if( isset($curl->code) && $curl->code == 1000 ){
+            return redirect('/');
+        }
+        return back()
+            ->withErrors('エラー')
+            ->withInput();
+
+    }
     
     public function registerPost(Request $request){
        
@@ -163,7 +208,7 @@ class LoginController extends Controller
 
         if( isset($curl->code) && $curl->code == 1000 ){
             Session::put('user', $curl->data);
-            return redirect('/');
+            return redirect()->route('register.step2');
         }
 
         return back()
@@ -195,6 +240,8 @@ class LoginController extends Controller
 
             if( isset($curl->code) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
+                if( $curl->data->first_login )
+                    return redirect()->route('register.step2');
                 return redirect('/');
             }
 
@@ -235,6 +282,8 @@ class LoginController extends Controller
             $curl = $curl->post($this->url_api_signup_social,$params );
             if( isset($curl->code) && isset( $curl->code ) && $curl->code == 1000 ){
                 Session::put('user', $curl->data);
+                if( $curl->data->first_login )
+                    return redirect()->route('register.step2');
                 return redirect('/');
             }
 

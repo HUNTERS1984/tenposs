@@ -49,7 +49,7 @@
                             </div>
                             <div class="form-group">
                                 <label>ロゴのタイトル</label>
-                                <input name="app_ico_title" type="text" class="form-control " id="app-ico-title" placeholder="12タイトル">
+                                <input name="app_ico_title" type="text" class="form-control " id="app-ico-title" placeholder="タイトル">
                             </div>
                             <div class="form-group">
                                 <label>タイトルカラー</label>
@@ -115,10 +115,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="text-center">
+                                <div class="col-md-3">
                                 <a id="convert-to-canvas" href="#" class="btn-box-px">作成依頼</a>
                                 <div class="hidden" id="app-ico-canvas"></div>
                                 <p>&nbsp;</p>
+                                </div>
+                                <div class="col-md-3">
                                 <p id="response-msg-type1" class="text-center"></p>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -128,7 +132,7 @@
                         <div class="col-md-5 col-xs-12">
                             <div class="form-group">
                                 <label>ロゴのタイトル</label>
-                                <input name="app_ico_title_type2" type="text" class="form-control " id="app-ico-title-type2" placeholder="12タイトル">
+                                <input name="app_ico_title_type2" type="text" class="form-control " id="app-ico-title-type2" placeholder="タイトル">
                             </div>
                             <div class="form-group">
                                 <label>タイトルカラー</label>
@@ -209,10 +213,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="text-center">
+                                <div class="col-md-3">
                                 <a id="convert-to-canvas-type2" href="#" class="btn-box-px">作成依頼</a>
                                 <div class="hidden" id="app-ico-canvas-type2"></div>
                                 <p>&nbsp;</p>
+                                </div>
+                                <div class="col-md-3">
                                 <p id="response-msg-type2" class="text-center"></p>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -312,10 +320,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="text-center">
+                                <div class="col-md-3">
                                 <a id="convert-to-canvas-type3" href="#" class="btn-box-px">作成依頼</a>
                                 <div class="hidden" id="app-ico-canvas-type3"></div>
                                 <p>&nbsp;</p>
+                                </div>
+                                <div class="col-md-3">
                                 <p id="response-msg-type3" class="text-center"></p>
+                                </div>
                             </div>
                         </div>
                     </form>

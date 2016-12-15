@@ -93,9 +93,7 @@
                                                         src="{{asset($item->image_url)}}"
                                                         class="img-responsive img-prview" alt="Photo"></a>
                                         <div class="text-photo">
-                                        {{Form::open(array('route'=>['admin.photo-cate.destroy',$item->id],'method'=>'DELETE'))}}
-                                        {{Form::submit('削除',array())}}
-                                        {{Form::close()}}
+                                        <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="btn-staff-2 deleteConfirm">削除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -108,6 +106,30 @@
                         @endif
                     </div>
             </div>    <!-- wrap-content-->
+        </div>
+
+        <div class="modal fade" id="DeleteConfirm" tabindex="-1" role="dialog" aria-labelledby="DeleteConfirmLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="DeleteConfirmLabel">本当に削除しますか？</h4>
+                    </div>
+                    <div class="modal-body"> 
+                        {{Form::open(array('route'=>'admin.photo-cate.delete'))}}
+                        <input type="text" name="itemId" id="itemId" value="" hidden/>
+                        <div class="col-md-6">
+                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                        </div>
+                        <div class="col-md-6">
+                            <center>{{Form::submit('削除',['class'=>'btn btn-primary btn_submit_form'])}}</center>
+                        </div>
+                        {{Form::close()}}
+                    </div>
+                    
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" id="AddImage" tabindex="-1" role="dialog" aria-labelledby="AddImage">
@@ -129,7 +151,7 @@
                         </div>
                         <div class="col-md-8" align="left">
                             <div class="form-group">
-                                {{Form::label('Select Photo Category','カテゴリー')}}
+                                {{Form::label('Select Photo Category','カテゴリ名')}}
                                 {{Form::select('photo_category_id',$photocat->pluck('name', 'id'),old('photo_category_id'),['class'=>'form-control'])}}
                             </div>
                         </div>
@@ -221,6 +243,10 @@
             readURL(this);
         });
         
+        $(document).on("click", ".deleteConfirm", function () {
+             var itemId = $(this).data('id');
+             $(".modal-body #itemId").val(itemId );
+        });
     })
 </script>
 @endsection

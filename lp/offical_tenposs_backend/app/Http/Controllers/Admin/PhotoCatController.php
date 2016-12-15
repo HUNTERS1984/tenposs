@@ -163,9 +163,9 @@ class PhotoCatController extends Controller
             RedisControl::delete_cache_redis('top_photos');
             $this->entity->save();
             
-            return redirect()->route('admin.photo-cate.cat')->with('status','Create the category successfully');
+            return redirect()->route('admin.photo-cate.cat')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the category');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
     }
 
@@ -217,9 +217,9 @@ class PhotoCatController extends Controller
             RedisControl::delete_cache_redis('photo_cat');
             RedisControl::delete_cache_redis('photos');
             RedisControl::delete_cache_redis('top_photos');
-            return redirect()->route('admin.photo-cate.cat')->with('status','Update the category successfully');
+            return redirect()->route('admin.photo-cate.cat')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->withErrors('Cannot update the category');
+            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
     }
 
@@ -263,12 +263,12 @@ class PhotoCatController extends Controller
             $contentType = mime_content_type($this->request->image_create->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_create->move($destinationPath, $fileName); // uploading file to given path
             $image_create = $destinationPath . '/' . $fileName;
         } else {
-            return redirect()->back()->withInput()->withErrors('Please upload an image');
+            return redirect()->back()->withInput()->withErrors('写真をアップロードしてください');
         }
 
         try {
@@ -279,9 +279,9 @@ class PhotoCatController extends Controller
             //delete cache
             RedisControl::delete_cache_redis('photos');
             RedisControl::delete_cache_redis('top_photos');
-            return redirect()->route('admin.photo-cate.index')->with('status','Add the photo successfully');
+            return redirect()->route('admin.photo-cate.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot create the photo');
+            return redirect()->back()->withErrors('追加に失敗しました');
         }
 
     }
@@ -313,7 +313,7 @@ class PhotoCatController extends Controller
             $contentType = mime_content_type($this->request->image_edit->getRealPath());
 
             if(! in_array($contentType, $allowedMimeTypes) ){
-                return redirect()->back()->withInput()->withErrors('The uploaded file is not an image');
+                return redirect()->back()->withInput()->withErrors('アップロードファイルは写真ではありません');
             }
             $this->request->image_edit->move($destinationPath, $fileName); // uploading file to given path
             $image_edit = $destinationPath . '/' . $fileName;
@@ -330,9 +330,28 @@ class PhotoCatController extends Controller
             RedisControl::delete_cache_redis('photos');
             RedisControl::delete_cache_redis('top_photos');
 
-            return redirect()->route('admin.photo-cate.index')->with('status','Update the photo successfully');
+            return redirect()->route('admin.photo-cate.index')->with('status','編集しました');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot update the photo');
+            return redirect()->back()->withErrors('編集に失敗しました');
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            $id = $this->request->input('itemId');
+            $this->photo = $this->photo->find($id);
+            if ($this->photo) {
+                $this->photo->destroy($id);
+                RedisControl::delete_cache_redis('photos');
+                RedisControl::delete_cache_redis('top_photos');
+                return redirect()->route('admin.photo-cate.index')->with('status','削除しました');
+            } else {
+                return redirect()->back()->withErrors('削除に失敗しました');
+            }
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
     }
 
@@ -344,13 +363,13 @@ class PhotoCatController extends Controller
                 $this->photo->destroy($id);
                 RedisControl::delete_cache_redis('photos');
                 RedisControl::delete_cache_redis('top_photos');
-                return redirect()->route('admin.photo-cate.index')->with('status','Delete the photo successfully');
+                return redirect()->route('admin.photo-cate.index')->with('status','削除しました');
             } else {
-                return redirect()->back()->withErrors('Cannot delete the photo');
+                return redirect()->back()->withErrors('削除に失敗しました');
             }
             
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withErrors('Cannot delete the photo');
+            return redirect()->back()->withErrors('削除に失敗しました');
         }
     }
 }

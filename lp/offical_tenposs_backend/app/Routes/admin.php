@@ -22,6 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('news/nextcat', ['as' => 'admin.news.nextcat', 'uses' => 'Admin\NewsController@nextcat']);
     Route::get('news/nextpreview', ['as' => 'admin.news.nextpreview', 'uses' => 'Admin\NewsController@nextpreview']);
     Route::post('news/storeCat', ['as' => 'admin.news.storeCat', 'uses' => 'Admin\NewsController@storeCat']);
+    Route::post('news/delete', ['as' => 'admin.news.delete', 'uses' => 'Admin\NewsController@delete']);
     Route::resource('news', 'Admin\NewsController');
     
     // MENUS
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('menus/nextpreview', ['as' => 'admin.menus.nextpreview', 'uses' => 'Admin\MenusController@nextpreview']);
     Route::post('menus/storeitem', ['as' => 'admin.menus.storeitem', 'uses' => 'Admin\MenusController@storeitem']);
     Route::post('menus/storeMenu', ['as' => 'admin.menus.storeMenu', 'uses' => 'Admin\MenusController@storeMenu']);
+    Route::post('menus/delete', ['as' => 'admin.menus.delete', 'uses' => 'Admin\MenusController@delete']);
     Route::resource('menus', 'Admin\MenusController');
     // PHOTO CATS
     Route::get('photo-cate/cat', ['as' => 'admin.photo-cate.cat', 'uses' => 'Admin\PhotoCatController@cat']);
@@ -43,6 +45,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::post('photo-cate/storephoto', ['as' => 'admin.photo-cate.storephoto', 'uses' => 'Admin\PhotoCatController@storephoto']);
     Route::get('photo-cate/nextcat', ['as' => 'admin.photo-cate.nextcat', 'uses' => 'Admin\PhotoCatController@nextcat']);
     Route::get('photo-cate/nextpreview', ['as' => 'admin.photo-cate.nextpreview', 'uses' => 'Admin\PhotoCatController@nextpreview']);
+    Route::post('photo-cate/delete', ['as' => 'admin.photo-cate.delete', 'uses' => 'Admin\PhotoCatController@delete']);
     Route::resource('photo-cate', 'Admin\PhotoCatController');
     // STAFF
     Route::get('staff/cat', ['as' => 'admin.staff.cat', 'uses' => 'Admin\StaffController@cat']);
@@ -54,7 +57,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('staff/nextpreview', ['as' => 'admin.staff.nextpreview', 'uses' => 'Admin\StaffController@nextpreview']);
     Route::post('staff/storestaff', ['as' => 'admin.staff.storestaff', 'uses' => 'Admin\StaffController@storestaff']);
     Route::post('staff/storeCat', ['as' => 'admin.staff.storeCat', 'uses' => 'Admin\StaffController@storeCat']);
-    Route::get('staff/delete/{id}', ['as' => 'admin.staff.delete', 'uses' => 'Admin\StaffController@delete']);
+    Route::post('staff/delete', ['as' => 'admin.staff.delete', 'uses' => 'Admin\StaffController@delete']);
     Route::resource('staff', 'Admin\StaffController');
     // COUPON
     Route::get('coupon/cat', ['as' => 'admin.coupon.cat', 'uses' => 'Admin\CouponController@cat']);
@@ -67,6 +70,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
     Route::get('coupon/approve_post/{post_id}', ['as' => 'admin.coupon.approve.post', 'uses' => 'Admin\CouponController@approve_post']);
     Route::get('coupon/unapprove/{post_id}', ['as' => 'admin.coupon.unapprove.post', 'uses' => 'Admin\CouponController@unapprove_post']);
     Route::post('coupon/store_type', ['as' => 'admin.coupon.store_type', 'uses' => 'Admin\CouponController@store_type']);
+    Route::post('coupon/delete', ['as' => 'admin.coupon.delete', 'uses' => 'Admin\CouponController@delete']);
     Route::get('coupon/accept', ['as' => 'admin.coupon.accept', 'uses' => 'Admin\CouponController@accept']);
     Route::resource('coupon', 'Admin\CouponController');
 
