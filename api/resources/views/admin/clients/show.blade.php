@@ -139,7 +139,9 @@
                 					        <i class="fa fa-remove"></i> Remove</a>
                 						<br />
                 						<a href="{{route('admin.clients.apps.setting',['user_id'=>$user->id,'app_id' => $app->id])}}">
-                						    <i class="fa fa-cog"></i> AppSetting</a>
+                						    <i class="fa fa-cog"></i> AppSetting</a><br />
+                                        <a href="{{route('admin.clients.bot.setting',['user_id'=>$user->id,'app_id' => $app->id])}}">
+                                            <i class="fa fa-cog"></i> LINE BOT Setting</a>
                 					</td>
                 				</tr>
                 				

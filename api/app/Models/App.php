@@ -52,5 +52,8 @@ class App extends Model
     public function app_users(){
         return $this->hasMany(AppUser::class);
     }
-    
+
+    public function line_bot(){
+        return $this->hasOne(AppBots::class);
+    }
 }
