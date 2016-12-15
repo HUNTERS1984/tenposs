@@ -155,10 +155,16 @@ function drawMessage(message){
 	    side = 'right';
 	    profileTemp = profile;
 	}
+
 	// Generate item message
 	$message = $($('#messages-template').clone().html());
     $message.addClass(side).find('.text').html( message.text );
-    $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
+    if( profileTemp.pictureUrl === null ){
+        $message.find('.avatar img').attr('src', noavatar)
+    }else{
+        $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
+    }
+
     $message.find('.time').text( moment(message.timestamp).format('LTS') );
     $message.addClass('appeared');
 	// Append to windows
@@ -274,7 +280,25 @@ function connectToChat() {
         console.log('Receive messages from endusers');
         console.log(package);
         drawMessage(package.message);
-        
+        // draw in to chat list
+        if( ! $('ul.nav-list-user li#con'+package.message.profile.mid).length ){
+            var $template;
+            $template = $($('#members-template').clone().html());
+            $template.attr('id','con'+ package.message.profile.mid).addClass('rendered');
+            if( item.pictureUrl === null  ){
+                $template.find('img').attr('src',noavatar);
+            }else{
+                $template.find('img').attr('src',package.message.profile.pictureUrl+'/small');
+            }
+
+            $template.find('.users-name').html(package.message.profile.displayName);
+            $template.find('.users-status').text( trimwords(package.message.text,5) );
+            $('.nav-list-user').prepend($template);
+        }else{
+            // update online status text
+            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.users-status').text( trimwords(package.message.text,5) );
+        }
+
     })
 
     socket.on('history',function(package){
@@ -364,6 +388,10 @@ function drawSystemMessage(package){
     
 }
 
+function trimwords( words, number ){
+    return jQuery.trim(words).substring(0, number)
+        .split(" ").slice(0, -1).join(" ") + "...";
+}
 
 function renderChatLists(contacts){
     if( contacts.length > 0){
@@ -373,7 +401,7 @@ function renderChatLists(contacts){
         var $template;
         $template = $($('#members-template').clone().html());
         $template.attr('id','con'+ item.mid).addClass('rendered');
-        if( item.pictureUrl === ''  ){
+        if( item.pictureUrl === null  ){
             $template.find('img').attr('src',noavatar);
         }else{
             $template.find('img').attr('src',item.pictureUrl+'/small');
