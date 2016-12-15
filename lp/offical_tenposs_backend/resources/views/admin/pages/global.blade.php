@@ -543,6 +543,10 @@
 
 
             });
+            // reset value when change
+            $(item).click(function (event) {
+                this.value = null;
+            });
         });
 
         $('.splash-img').on('click','a.remove-app-splash',function(e){
