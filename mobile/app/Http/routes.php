@@ -16,12 +16,13 @@ $appRoutes = function(){
         'middleware' => ['verify.app'] ], function(){
 
         Route::get('/',['as' => 'index', 'uses' => 'MobileController@index'] );
+        Route::get('/redirect/first-page',['as' => 'index.redirect', 'uses' => 'MobileController@redirectToFirstMenu'] );
         //User
         Route::get('/login', ['as'=> 'login', 'uses' => 'LoginController@login']);
         Route::get('/register', ['as'=> 'register', 'uses' => 'LoginController@register']);
         Route::post('/register', ['as'=> 'register.post', 'uses' => 'LoginController@registerPost','middleware' => 'auth.custom']);
         Route::get('/register/step2', ['as'=> 'register.step2', 'uses' => 'LoginController@registerStep2']);
-        Route::post('/register/step2', ['as'=> 'register.step2.post', 'uses' => 'LoginController@registerStep2Post']);
+        Route::post('/register/step2', ['middleware' => 'auth.custom', 'as'=> 'register.step2.post', 'uses' => 'LoginController@registerStep2Post']);
         Route::get('/login/normal', ['as'=> 'login.normal', 'uses' => 'LoginController@loginNormal']);
         Route::post('/login/normal', ['as'=> 'login.normal.post', 'uses' => 'LoginController@loginNormalPost']);
         Route::get('/logout', ['as'=> 'logout', 'uses' => 'LoginController@logout']);
@@ -68,7 +69,7 @@ $appRoutes = function(){
         Route::get('/photo',[ 'as' => 'photo.gallery', 'uses' => 'PhotoController@index']); 
         Route::post('/photo/ajaxLoadmore',[ 'as' => 'photo.ajax', 'uses' => 'PhotoController@ajaxLoadmore']); 
 
-        Route::get('/home',[ 'as' => 'home', 'uses' => 'MobileController@index']);
+        Route::get('/home',[ 'as' => 'home', 'uses' => 'MobileController@home']);
         Route::get('/chat',[ 'as' => 'chat', 'uses' => 'MobileController@chat','middleware' => 'auth.custom']); 
 
         Route::get('/staff',[ 'as' => 'staff', 'uses' => 'StaffController@index']);

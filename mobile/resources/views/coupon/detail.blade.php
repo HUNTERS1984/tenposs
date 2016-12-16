@@ -21,7 +21,7 @@
 @section('page')
     <div id="header">
         <div class="container-fluid">
-            <h1 class="aligncenter" >{{ $app_info->data->app_setting->title }}</h1>
+            <h1 class="aligncenter" >{{ Str::words($items_detail_data->title, 8,'..') }}</h1>
             <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
     </div><!-- End header -->
@@ -91,17 +91,19 @@
     </div><!-- End footer -->
     @if(count($items_detail_data) > 0)
         @if(array_key_exists('can_use',$items_detail_data) && $items_detail_data->can_use)
+            @if( Session::has('user') )
             <div id="below-content">
                 <a id="apply-cupon">
                     このクーボンを利用す
                 </a>
             </div>
-        @else
+            @else
             <div id="below-content" class="disable">
                 <a id="apply-cupon">
                     このクーポンは使用できません
                 </a>
             </div>
+            @endif
         @endif
     @endif
 

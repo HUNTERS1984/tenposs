@@ -91,7 +91,6 @@ class CouponController extends Controller
 
         if( isset($curl->response->code) && $curl->response->code == 1000 ){
             $items_detail_data = $curl->response->data->coupons;
-
             return view('coupon.detail', array(
                 'app_info' => $this->app_info ,
                 'items_detail_data' => $items_detail_data

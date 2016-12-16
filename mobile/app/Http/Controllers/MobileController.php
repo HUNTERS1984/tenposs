@@ -13,26 +13,49 @@ use \Curl\Curl;
 
 class MobileController extends Controller
 {
-  
-    public function index(Request $request){
-       
-        $appTop = \App\Utils\HttpRequestUtil::getInstance()
-            ->get_data('top',[
-            'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);    
 
-        return view('index', 
-        [ 
-            'app_info' => $this->app_info ,
-            'app_top' => json_decode($appTop),
-            
-        ]);
+    public function getFirstSideMenu(){
+        $pageOnFirstScreen = null;
+        foreach( $this->app_info->data->side_menu as $menu  ){
+            $itemFirstMenu = \App\Utils\Menus::page($menu->id);
+            if( $itemFirstMenu['display'] ){
+                $pageOnFirstScreen = $itemFirstMenu;
+                break;
+            }
+        }
+        return $itemFirstMenu['href'];
     }
-    
+    public function redirectToFirstMenu(){
+        return redirect( $this->getFirstSideMenu() );
+    }
+
+    public function index(Request $request){
+        if( ! Session::has('user') ){
+            return view('login',array(
+                'app_info' => $this->app_info
+            ));
+        }
+        return redirect( $this->getFirstSideMenu() );
+    }
+
     public function chat(){
         return view( 'chat',
             array(
                 'app_info' => $this->app_info
             ));
+    }
+
+    public function home(Request $request){
+        $appTop = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('top',[
+                'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
+
+        return view('index',
+            [
+                'app_info' => $this->app_info ,
+                'app_top' => json_decode($appTop),
+
+            ]);
     }
     
     public function configuration(){
