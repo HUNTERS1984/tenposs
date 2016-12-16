@@ -9,7 +9,7 @@
     }
 
     .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
         }
 </style>
 @endsection

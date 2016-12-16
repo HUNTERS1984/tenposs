@@ -4,7 +4,7 @@
 <link href="{{ url('css/staff.css') }}" rel="stylesheet">
 <style>
     .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
     }
     #header h1{
         color: #{{ $app_info->data->app_setting->title_color }};

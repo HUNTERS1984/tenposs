@@ -6,7 +6,7 @@
         font-family: {{ $app_info->data->app_setting->font_family }};
     }
     .h_control-nav:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
     }
 </style>
 @endsection
