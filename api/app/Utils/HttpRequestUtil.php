@@ -149,7 +149,6 @@ class HttpRequestUtil
                 return false;
             }
             curl_close($curl);
-//            print_r($curl_response);
             $decoded = json_decode($curl_response);
             if (isset($decoded->code) && $decoded->code == '1000') {
                 return true;

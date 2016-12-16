@@ -422,6 +422,16 @@
                                    style="background: #eee; width: 100%; padding: 10px; outline: 0;">
                         </div>
                         </p>
+                        <div class="form-group">
+                            <label for="apikey" style="font-weight: normal">Mobile GA ID</label>
+                            <input type="text" class="form-control" id="mobile_ga_id" name="mobile_ga_id" placeholder="Mobile"
+                                   value="{{$mobile_ga_id}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="apikey" style="font-weight: normal">Web GA ID</label>
+                            <input type="text" class="form-control" id="web_ga_id" name="web_ga_id" placeholder="Website"
+                                   value="{{$web_ga_id}}">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
