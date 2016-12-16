@@ -118,7 +118,6 @@
 .entry-productdetail p {
     text-align: justify;
     color: #6c7478;
-    font-size: 24px;
 }
 @media screen and (max-width:479px){
     .entry-productdetail p {
@@ -130,7 +129,6 @@
     padding:10px 0;
 }
 .entry-productdetail .content-staffDetail p.title-staff{
-    font-size:24px;
     padding:5px 0;
 }
 .tab-content .tab-pane{

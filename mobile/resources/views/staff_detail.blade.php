@@ -4,7 +4,7 @@
 <link href="{{ url('css/staff.css') }}" rel="stylesheet">
 <style>
     .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
     }
     #header h1{
         color: #{{ $app_info->data->app_setting->title_color }};
@@ -12,7 +12,10 @@
     #header > .container-fluid{
         background-color:#{{ $app_info->data->app_setting->header_color }};
     }
-
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: {{ $app_info->data->app_setting->font_family }};
+    }
 </style>
 @stop
 
@@ -20,7 +23,7 @@
     <div id="header">
          <div class="container-fluid">
             <h1 class="aligncenter">
-                {{ $app_info->data->name }}
+                {{ $detail->data->staffs->name }}
             </h1>
             <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
@@ -72,7 +75,7 @@
                                                 <label>価格</label>
                                             </td>
                                             <td>
-                                                <p class="title-staff">{{$detail->data->staffs->price}}</p>
+                                                <p class="title-staff">¥{{number_format($detail->data->staffs->price)}}</p>
 
                                             </td>
                                         </tr>
