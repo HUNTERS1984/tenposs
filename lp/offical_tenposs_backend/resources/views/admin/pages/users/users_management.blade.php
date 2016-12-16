@@ -62,11 +62,11 @@
             </div>
         </th>
         <td class="center">
-            <!-- @if( file_exists( public_path($user->profile->avatar_url) ) )
+            @if( isset($user->profile) && file_exists( public_path($user->profile->avatar_url) ) )
             <img src="{{ ( $user->profile->avatar_url != '' ) ? url($user->profile->avatar_url) : '' }}" alt="">
             @else
             <img src="{{ url('admin/images/icon-user.png') }}" alt="">
-            @endif -->
+            @endif
         </td>
         <td class="center">
             <a href="{{ route('admin.users.management.detail',$user->id) }}" title="" class="blue">

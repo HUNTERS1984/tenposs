@@ -3,7 +3,7 @@
     <link href="{{ url('css/menu.css') }}" rel="stylesheet">
 <style>
     .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->menu_icon_color }};
+        color: #{{ $app_info->data->app_setting->title_color }};
         }
 </style>
 @endsection

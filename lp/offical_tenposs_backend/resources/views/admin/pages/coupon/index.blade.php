@@ -60,7 +60,7 @@
         <div class="col-md-8">
             <div class="btn-menu">
                 <a href="{{ route('admin.coupon.cat') }}" class="btn-3">
-                    <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
+                    <i class="glyphicon glyphicon-plus"></i> クーポンタイプ追加
                 </a>
                 <a href="#" data-toggle="modal" data-target="#AddCoupon" class="btn-4">
                     <i class="glyphicon glyphicon-plus"></i> クーポン追加
@@ -85,9 +85,9 @@
                                 <div class="title-coupon">
                                     <div class="row">
                                         <div class="col-md-8 col-xs-12">
-                                            <a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-left">{{$item->title}}</a>
-                                            <p>{{$item->coupon_type->name}}</p>
-                                            <p class="date-copon">有効期間　{{$item->end_date}}まで</p>
+                                            <p href="javascript:avoid()" class="text-coupon-left">{{$item->coupon_type->name}}</p>
+                                            <p><a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-title">{{$item->title}}</a></p>
+                                            <p class="date-copon">有効期間　{{date('Y年m月d日', strtotime($item->end_date))}}まで</p>
                                         </div>
                                         <div class="col-md-4 col-xs-12">
                                             <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="btn-5 deleteConfirm">削除</a>
@@ -166,7 +166,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddCouponTitle">クーポン追加</h4>
+                        <h4 class="modal-title" id="AddCouponTitle">クーポンタイプ追加</h4>
                     </div>
                     <div class="modal-body">
                         <div class="col-md-4" align="left">

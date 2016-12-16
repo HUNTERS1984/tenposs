@@ -3,7 +3,10 @@
 @section('main')
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>顧客管理</span><span class="circle-bre">19</span></div>
+        <div class="left">
+            <span>チャット</span><!-- <span class="circle-bre">19</span> -->
+            <strong>顧客のチャットが可能 </strong>
+        </div>
     </div>
     <section class="content">
         <div class="col-sm-12">@include('admin.layouts.messages')</div>
@@ -13,7 +16,7 @@
                 <div class="wrapp_search_user_chat">
                     <form class="form-horizontal">
                         <div class="input-group">
-                            <input id="search_input" type="text" class="form-control" placeholder="ユーザーネ">
+                            <input id="search_input" type="text" class="form-control" placeholder="ユーザー名">
                             <a href="javascript:void(0)" class="input-group-addon">
                                 <img src="{{ url('admin/images/search.png') }}" alt="">
                             </a>
@@ -37,12 +40,12 @@
                     <div class="modal fade" id="log-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                       <div class="modal-dialog user-poup-log" role="document">
                         <div class="modal-content">
-                            <h4>アカウント設定?</h4>
+                            <h4>本当に削除しますか?</h4>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-left">表示項</a>
+                                <a href="" class="btn-user-poup-log-poup-left">キャンセル</a>
                             </div>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-right">表示項</a>
+                                <a href="" class="btn-user-poup-log-poup-right">削除</a>
                             </div>
                         </div>
                       </div>
@@ -54,7 +57,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dLabel">
                             <li>
                                 <a href="" data-toggle="modal" data-target="#log-user">
-                                    ムまでお問何かお困りです
+                                    スレッドを削除する
                                 </a>
                             </li>
                         </ul>
@@ -77,7 +80,7 @@
                             <input type="text" id="message_input" class="form-control" placeholder="">
                         </div>
                         <div class="col-md-2">
-                            <button id="send_message" type="button" class="btn btn-primary">ポ覧</button>
+                            <button id="send_message" type="button" class="btn btn-primary">送信</button>
                         </div>
                     </div>
                     

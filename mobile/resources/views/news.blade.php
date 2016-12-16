@@ -5,7 +5,7 @@
 <link href="{{ url('css/news.css') }}" rel="stylesheet">
 <style>
     .h_control-nav:before{
-        color: #{{ $app_info->data->app_setting->menu_icon_color }};
+        color: #{{ $app_info->data->app_setting->title_color }};
         }
 </style>
 @stop

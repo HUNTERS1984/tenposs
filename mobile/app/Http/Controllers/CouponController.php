@@ -89,6 +89,10 @@ class CouponController extends Controller
             ));
         }
 
+        if( $this->validResponse($curl->response)){
+
+
+        }
 
         if( isset($curl->response->code) && $curl->response->code == 1000 ){
             $items_detail_data = $curl->response->data->coupons;

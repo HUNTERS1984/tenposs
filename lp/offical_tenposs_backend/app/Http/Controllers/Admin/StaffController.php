@@ -338,7 +338,7 @@ class StaffController extends Controller
         );
 
         $rules = [
-            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id,deleted_at|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
@@ -397,7 +397,7 @@ class StaffController extends Controller
         );
 
         $rules = [
-            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id,deleted_at|Max:255',
         ];
         $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
