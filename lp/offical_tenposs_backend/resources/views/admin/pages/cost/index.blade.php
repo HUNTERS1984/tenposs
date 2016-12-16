@@ -4,8 +4,8 @@
 <aside class="right-side">
     <div class="wrapp-breadcrumds">
         <div class="left">
-            <span>お問い合わせ</span>
-            <strong>ポイントやコストの管理が可能</strong>
+            <span>コスト管理</span>
+            <strong>ポイントやコストの管理が可能 </strong>
         </div>
         <div class="right">
             <a href="" class="btn-cost-bre">収益の支払い申請</a>
@@ -46,7 +46,7 @@
 
                             <ol class="timeline_cost">
                                 <li class="timeline__step">
-                                    <span class="timeline__step-title-top">契約開始了月</span>
+                                    <span class="timeline__step-title-top">契約開始月</span>
                                     <input class="timeline__step-radio" id="" name="" type="radio">        
                                     <span class="timeline__step-title-bottom">{{$start_month}}</span>
                                     <i class="timeline__step-marker"></i>

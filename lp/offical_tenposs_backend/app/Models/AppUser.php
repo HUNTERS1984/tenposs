@@ -29,7 +29,7 @@ class AppUser extends Model {
                  'facebook_status',
                  'twitter_status',
                  'instagram_status',
-                 'app_user_id']);
+                 'app_user_id'])->whereNull('deleted_at');
     }
 
     public function getPointAttribute()

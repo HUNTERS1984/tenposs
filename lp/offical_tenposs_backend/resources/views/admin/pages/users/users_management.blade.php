@@ -22,13 +22,13 @@
                     {{Form::close()}}
                 </div>
             </div>
-          <!--   <div class="col-md-6">
+            <div class="col-md-6">
                 <div class="search-right">
                   <a href="javascript:avoid()" class="btn-s-1" data-toggle="modal" data-target="#DeleteConfirm">
                       <i class="glyphicon glyphicon-plus"></i> 選択したユーザーを削除
                   </a>
                 </div>
-              </div> -->
+              </div>
         </div>
     </div>
 </div>
