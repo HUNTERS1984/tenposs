@@ -3,7 +3,10 @@
 @section('main')
  <aside class="right-side">
     <div class="wrapp-breadcrumds">
-        <div class="left"><span>顧客管理</span><span class="circle-bre">19</span></div>
+        <div class="left">
+            <span>チャット</span><!-- <span class="circle-bre">19</span> -->
+            <strong>顧客のチャットが可能 </strong>
+        </div>
     </div>
     <section class="content">
         <div class="col-sm-12">@include('admin.layouts.messages')</div>
@@ -13,7 +16,7 @@
                 <div class="wrapp_search_user_chat">
                     <form class="form-horizontal">
                         <div class="input-group">
-                            <input id="search_input" type="text" class="form-control" placeholder="ユーザーネ">
+                            <input id="search_input" type="text" class="form-control" placeholder="ユーザー名">
                             <a href="javascript:void(0)" class="input-group-addon">
                                 <img src="{{ url('admin/images/search.png') }}" alt="">
                             </a>
@@ -37,12 +40,12 @@
                     <div class="modal fade" id="log-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                       <div class="modal-dialog user-poup-log" role="document">
                         <div class="modal-content">
-                            <h4>アカウント設定?</h4>
+                            <h4>本当に削除しますか?</h4>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-left">表示項</a>
+                                <a href="" class="btn-user-poup-log-poup-left">キャンセル</a>
                             </div>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-right">表示項</a>
+                                <a href="" class="btn-user-poup-log-poup-right">削除</a>
                             </div>
                         </div>
                       </div>
@@ -54,7 +57,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dLabel">
                             <li>
                                 <a href="" data-toggle="modal" data-target="#log-user">
-                                    ムまでお問何かお困りです
+                                    スレッドを削除する
                                 </a>
                             </li>
                         </ul>
@@ -77,7 +80,7 @@
                             <input type="text" id="message_input" class="form-control" placeholder="">
                         </div>
                         <div class="col-md-2">
-                            <button id="send_message" type="button" class="btn btn-primary">ポ覧</button>
+                            <button id="send_message" type="button" class="btn btn-primary">送信</button>
                         </div>
                     </div>
                     
@@ -102,6 +105,7 @@
             </div>
             <div class="right-list-user">
                 <p class="time-user-chat"></p>
+                <p class="count-user-chat"></p>
             </div>
         </a>
     </li>
@@ -155,10 +159,16 @@ function drawMessage(message){
 	    side = 'right';
 	    profileTemp = profile;
 	}
+
 	// Generate item message
 	$message = $($('#messages-template').clone().html());
     $message.addClass(side).find('.text').html( message.text );
-    $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
+    if( profileTemp.pictureUrl === null ){
+        $message.find('.avatar img').attr('src', noavatar)
+    }else{
+        $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
+    }
+
     $message.find('.time').text( moment(message.timestamp).format('LTS') );
     $message.addClass('appeared');
 	// Append to windows
@@ -258,10 +268,10 @@ function connectToChat() {
     socket.on('receive.admin.getClientOnline',function(users){
         console.log('List users online');
         console.log(users);
-        $( contactsData.data ).each(function(index, item) {
+        $( contactsData ).each(function(index, item) {
             for( i in users){
                 if( users[i].mid === item.mid ){
-                    $('#con'+item.mid).find('.right-list-user').html('<p class="count-user-chat"></p>');
+                    $('#con'+item.mid).find('.count-user-chat').addClass('on');
                 }
             }
             
@@ -273,16 +283,43 @@ function connectToChat() {
     socket.on('receive.admin.message',function( package ){
         console.log('Receive messages from endusers');
         console.log(package);
-        drawMessage(package.message);
-        
+
+        // draw if windown active
+        if( $('#message-wrapper').attr('data-id') == package.message.profile.mid ){
+            drawMessage(package.message);
+        }
+
+        // draw in to chat list
+        if( ! $('ul.nav-list-user li#con'+package.message.profile.mid).length ){
+            var $template;
+            $template = $($('#members-template').clone().html());
+            $template.attr('id','con'+ package.message.profile.mid).addClass('rendered');
+            if( package.message.profile.pictureUrl === null  ){
+                $template.find('img').attr('src',noavatar);
+            }else{
+                $template.find('img').attr('src',package.message.profile.pictureUrl+'/small');
+            }
+
+            $template.find('.users-name').html(package.message.profile.displayName);
+            $template.find('.users-status').text( trimwords(package.message.text,30) );
+            $template.find('.count-user-chat').addClass('on');
+            $('.nav-list-user').prepend($template);
+        }else{
+            // update online status text
+            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.users-status').text( trimwords(package.message.text,30) );
+            $('ul.nav-list-user li#con'+package.message.profile.mid).find('.count-user-chat').addClass( 'on' );
+        }
+
     })
 
     socket.on('history',function(package){
         console.log('Load history message');
         console.log(package);
         if( package.length > 0 ){
+
+
             $(package).each(function(index, item) {
-                
+
                 $(item.history).each(function(index1, item1){
                     var profileTemp = (function(){
                         if(item1.from_mid === profile.mid)
@@ -295,7 +332,7 @@ function connectToChat() {
                             }
                         }
                     })();
-                
+
                     drawMessage({
                         windows: item.windows,
                         message: item1.message,
@@ -323,7 +360,26 @@ function connectToChat() {
         console.log('History client');
         console.log(package);
         $('#messages-windows').empty();
-        
+
+
+        for ( i = package.history.length - 1; i >= 0; i--) {
+            drawMessage({
+                text: package.history[i].message,
+                timestamp: moment( parseInt(package.history[i].created_at) ).format() ,
+                profile: (function(){
+                    if(package.history[i].from_mid === profile.mid)
+                        return profile;
+                    else{
+                        return {
+                            displayName: package.windows.displayName,
+                            mid: package.windows.mid,
+                            pictureUrl: package.windows.pictureUrl,
+                        }
+                    }
+                })()
+            });
+        }
+        /*
         $(package.history).each(function(index, item){
             drawMessage({
                 text: item.message,
@@ -341,7 +397,7 @@ function connectToChat() {
                 })()
             });
         })
-
+        */
        
     });
 }
@@ -364,6 +420,18 @@ function drawSystemMessage(package){
     
 }
 
+function trimwords( words, number ){
+
+    if( words.length > number){
+
+        var trimmedString = words.substr(0, number);
+        //re-trim if we are in the middle of a word
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        return trimmedString;
+    }else{
+        return words;
+    }
+}
 
 function renderChatLists(contacts){
     if( contacts.length > 0){
@@ -373,7 +441,7 @@ function renderChatLists(contacts){
         var $template;
         $template = $($('#members-template').clone().html());
         $template.attr('id','con'+ item.mid).addClass('rendered');
-        if( item.pictureUrl === ''  ){
+        if( item.pictureUrl === null  ){
             $template.find('img').attr('src',noavatar);
         }else{
             $template.find('img').attr('src',item.pictureUrl+'/small');

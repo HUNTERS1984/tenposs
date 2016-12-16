@@ -1538,8 +1538,7 @@ ul.link-top-2 li a.active{
   clear: both;
 }
 .des-news p{
-  padding-top: 10px;
-  line-height: 20px;
+
 }
 .page-bottom{
   text-align: center;
@@ -1609,14 +1608,18 @@ ul.link-top-2 li a.active{
   color: #f078a0;
   font-weight: bold;
 }
-.title-coupon a.text-coupon-left{
+.title-coupon p.text-coupon-left{
   text-align: left;
   font-weight: bold;
   color: #1e96d6;
 }
-.title-coupon a:hover.text-coupon-left{
-  color: #f078a0;
+
+.title-coupon p a.text-coupon-title{
+  text-align: left;
+  color: #444444;
+  font-size: 13px;
 }
+
 .title-coupon p{
   padding-top: 10px;
   margin: 0;
@@ -2945,7 +2948,7 @@ ul.nav-list-user li .right-list-user p.time-user-chat{
   color: #a3adb1;
 }
 ul.nav-list-user li .right-list-user p.count-user-chat{
-  background: green;
+  background: transparent;
   width: 20px;
   height: 20px;
   text-align: center;
@@ -2955,6 +2958,9 @@ ul.nav-list-user li .right-list-user p.count-user-chat{
   font-size: 14px;
   font-weight: bold;
   vertical-align: middle;
+}
+ul.nav-list-user li .right-list-user p.count-user-chat.on{
+    background: green;
 }
 .wrapp-user-chat .right-user-chat {
   width: 66.66666666666666%;

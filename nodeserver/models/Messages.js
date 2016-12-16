@@ -16,7 +16,7 @@ exports.getMessageHistory = function(from, to, limit, _callback){
                 	" WHERE"+ 
                 	" 	(m.from_mid = ? AND m.to_mid = ?)"+
                 	"	OR (m.to_mid = ?  AND m.from_mid = ?)"+
-                	" ORDER BY created_at"+
+                	" ORDER BY created_at DESC"+
                 	" LIMIT ?";
         connection = mysql.createConnection(mysqlConfig);
         connection.connect();       	
@@ -50,6 +50,7 @@ exports.getMessageClientHistory = function(room_id, from,to, limit, _callback){
 		"	AND m.from_mid = ?)"+
 		" AND (m.room_id = ? )) as h"+
 	" ON h.from_mid = l.mid OR h.to_mid = l.mid"+
+	" ORDER BY h.created_at DESC"+
 	" LIMIT ?";
 
         connection = mysql.createConnection(mysqlConfig);

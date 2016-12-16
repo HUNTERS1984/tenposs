@@ -15,6 +15,8 @@ use Mail;
 use Session;
 use JWTAuth;
 use Config;
+use App\Models\AppBots;
+
 
 class ClientsController extends Controller
 {
@@ -25,20 +27,29 @@ class ClientsController extends Controller
 
     public function index()
     {
-        // Get profile
+        // Get approve list
+        /*
         $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
-
         $response = $response->send();
-
         $response = json_decode($response->body);
+        */
+        // Get user list
+        $requestUserLists = cURL::newRequest('get', 'https://auth.ten-po.com/userlist')
+            ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken())->send();
 
-        if (isset($response->code) && $response->code == 1000) {
-            return view('admin.clients.index', ['users' => $response->data]);
+        $userLists = json_decode($requestUserLists->body);
+        usort($userLists->data, function ($item1, $item2) {
+            if ($item1->active == $item2->active) return 0;
+            return $item1->active < $item2->active ? -1 : 1;
+        });
+
+        if ( isset($userLists->code) && $userLists->code == 1000 ) {
+            return view('admin.clients.index',
+                ['usersLists' => $userLists->data]);
         }
 
-        return redirect()->route('login');
-
+        return redirect()->route('login')->withErrors('Please login');
     }
 
     public function login(Request $request)
@@ -69,6 +80,7 @@ class ClientsController extends Controller
 //                return redirect()->route('admin.home');
 //            }
             if ($response != null) {
+
                 Session::put('jwt_token', $response->token);
                 Session::put('user', $request->all());
 
@@ -139,9 +151,44 @@ class ClientsController extends Controller
 
     }
 
+    public function configLineBOT($user_id, $app_id){
+        $appbot = AppBots::where('user_id', $user_id)
+            ->where('user_id',$user_id)
+            ->first();
 
-    public
-    function approvedUsersProcess(Request $request)
+        if( !$appbot ){
+            $appbot = new AppBots;
+            $appbot->user_id = $user_id;
+            $appbot->app_id = $app_id;
+            $appbot->save();
+        }
+        return view('admin.apps.linebot',array(
+            'linebot' => $appbot,
+            'user_id' => $user_id,
+            'app_id' => $app_id
+        ));
+
+    }
+
+    public function configLineBOTSave(Request $request, $user_id, $app_id){
+        $appbot = AppBots::where('user_id', $user_id)
+            ->where('user_id',$user_id)
+            ->first();
+        if($appbot){
+            $appbot->chanel_id = $request->input('chanel_id');
+            $appbot->chanel_secret = $request->input('chanel_secret');
+            $appbot->chanel_access_token = $request->input('chanel_access_token');
+            $appbot->add_friend_href = $request->input('add_friend_href');
+            $appbot->qr_code_href = $request->input('qr_code_href');
+            $appbot->save();
+        }
+        return back()->with('success', 'Update success');
+
+    }
+
+
+
+    public function approvedUsersProcess(Request $request)
     {
         // get all users
         $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))

@@ -1,6 +1,6 @@
 @if($errors->any())
 <div class="alert alert-danger">
-	<ul>
+	<ul style="list-style-type:none;padding: 0px;">
 		@foreach($errors->all() as $error)
 		<li>{!! $error!!}</li>
 		@endforeach
@@ -17,3 +17,8 @@
         {{ session('warning') }}
     </div>
 @endif
+<div id="customer_message" style="display:none" class="alert alert-danger">
+    <ul style="list-style-type:none;padding: 0px;">       
+        <li></li>
+    </ul>
+</div>

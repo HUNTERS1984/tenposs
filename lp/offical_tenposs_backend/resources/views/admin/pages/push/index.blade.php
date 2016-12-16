@@ -98,22 +98,22 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="メッセージ">メッセージ</label>
-                                            <textarea name="message" class="form-control" rows="5">メッセージ文を入力してください (○文字以内)</textarea>
+                                            <textarea name="message" class="form-control" rows="5" placeholder="メッセージ文を入力してください (○文字以内)"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="配信先のセグメント">配信先のセグメント</label>
-                                            {{--<select class="form-control">--}}
-                                            {{--<option>お店から1キロ以内のユーザー</option>--}}
-                                            {{--@if(count($app_user) > 0)--}}
-                                            {{--@foreach($app_user as $item)--}}
-                                            {{--<option value="{{$item->id}}">{{$item->email}}</option>--}}
-                                            {{--@endforeach--}}
+                                            <select name="app_user_id" class="form-control">
+                                            <option>お店から1キロ以内のユーザー</option>
+                                            @if(count($app_user) > 0)
+                                            @foreach($app_user as $item)
+                                            <option value="{{$item->id}}">{{$item->profile->name}}</option>
+                                            @endforeach
 
-                                            {{--@endif--}}
-                                            {{--</select>--}}
-                                            {{Form::select('app_user_id',$app_user->pluck('email', 'id'),old('app_user_id'),['class'=>'form-control'])}}
+                                            @endif
+                                            </select>
+                                            <!-- {{Form::select('app_user_id',$app_user->pluck('email', 'id'),old('app_user_id'),['class'=>'form-control'])}} -->
 
                                         </div>
                                         {{--<div class="form-group">--}}
@@ -126,7 +126,7 @@
                                                 <div class="form-group">
                                                     <label for="配信時間指定">配信時間指定</label>
                                                     <select id="time_type" name="time_type" class="form-control">
-                                                        <option value="0">時間を指定して配信</option>
+                                                        <option>時間を指定して配信</option>
                                                         <option value="1">今</option>
                                                         <option value="2">定期配信</option>
                                                         <option value="3">意図されました</option>

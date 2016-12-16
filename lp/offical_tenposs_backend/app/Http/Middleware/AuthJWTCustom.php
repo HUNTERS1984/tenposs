@@ -69,7 +69,7 @@ class AuthJWTCustom extends BaseMiddleware
                     if( isset($responseRefresh->code) && $responseRefresh->code == 1000 ){
                         Session::put('jwt_token', $responseRefresh->data);
                     }else{
-                        return redirect()->route('login')->withErrors('Session expired');
+                        return redirect()->route('login')->withErrors('セッションが終了しました');
                     }
 
                 }
@@ -87,7 +87,7 @@ class AuthJWTCustom extends BaseMiddleware
             
             Session::put('jwt_token', null);
             Session::put('user', null);
-            return redirect()->route('login')->withErrors('Session expired');
+            return redirect()->route('login')->withErrors('セッションが終了しました');
             
         } catch (JWTException $e) {
             return redirect()->route('login')->withErrors('Token Signature could not be verified.');
@@ -96,7 +96,7 @@ class AuthJWTCustom extends BaseMiddleware
             
             Session::put('jwt_token', null);
             Session::put('user', null);
-            return redirect()->route('login')->withErrors('Session expired');
+            return redirect()->route('login')->withErrors('セッションが終了しました');
         }
         
         $this->events->fire('tymon.jwt.valid', $user);

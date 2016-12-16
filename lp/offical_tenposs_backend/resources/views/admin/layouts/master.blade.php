@@ -28,5 +28,12 @@
     <script src="{{ url('admin/js/bootstrap.min.js') }}" type="text/javascript"></script>
     <script src="{{ url('admin/js/app.js') }}" type="text/javascript"></script>
     @yield('footerJS')
+    {{Html::script('admin/js/trumbowyg/trumbowyg.min.js')}}
+    {{Html::style('admin/js/trumbowyg/ui/trumbowyg.min.css')}}
+    <script>
+        $(document).ready(function(){
+            $('textarea').trumbowyg();
+        })
+    </script>
 </body>
 </html>

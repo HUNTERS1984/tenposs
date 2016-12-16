@@ -15,7 +15,7 @@
 		 @include('admin.partials.message')
 		<p>&nbsp;</p>
 		<div class="clearfix">
-            <p style="margin-bottom:10px;" class="">{{ count($users) }}results</p>
+            <p style="margin-bottom:10px;" class="">{{ count($usersLists) }} results</p>
 			<p>
 				<span class="noted-color bg-red block-20">User not approved</span>
 			</p>
@@ -25,38 +25,37 @@
 		<div class="panel panel-info">
 			<div class="panel-heading">Clients </div>
 			<div class="panel-body">
-				<table class="table table-responsive" >
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Email</th>
-					<th>Status</th>
-					<th>Function</th>
-				</tr>
-			</thead>
-			<tbody>
-				@if (count($users) > 0)
-				@foreach($users as $user)
-				<?php $class = ( $user->active == 0 ) ? 'bg-red' : '' ?>
-				<tr class="{{ $class }}">
-					<td><a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">{{ $user->name }}</a></td>
-					<td>{{ $user->email }}</td>
-					<td>{{ $user->active }}</td>
-					<td>
-						<a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">
-							<i class="fa fa-search"></i>
-							View</a>
-					</td>
-				</tr>
-				@endforeach
-				@else
-				<tr>
-					<td></td>
-				</tr>
-				@endif
-			</tbody>
-
-		</table>
+                <table class="table table-responsive" >
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Function</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (count($usersLists) > 0)
+                    @foreach($usersLists as $user)
+                    <?php $class = ( $user->active == 0 ) ? 'bg-red' : '' ?>
+                    <tr class="{{ $class }}">
+                        <td><a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">{{ $user->name }}</a></td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->active }}</td>
+                        <td>
+                            <a href="{{ route('admin.clients.show',['user_id' => $user->id]) }}">
+                                <i class="fa fa-search"></i>
+                                View</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                        <td></td>
+                    </tr>
+                    @endif
+                    </tbody>
+                </table>
 			</div>
 		</div>
 		

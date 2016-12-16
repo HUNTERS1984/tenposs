@@ -45,7 +45,7 @@ class StaffController extends Controller
         $list_store = array();
         $staff_cat = array();
         if (count($stores) > 0) {
-            $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
+            $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();
 
             $list_store = $stores->lists('name', 'id');
             //dd($menus->pluck('id')->toArray());
@@ -105,6 +105,19 @@ class StaffController extends Controller
         }
 
         try {
+            $message = array(
+                'staff_category_id.required' => 'カテゴリが必要です。',
+                'name.max' => 'タイトルは255文字以下でなければなりません。',
+                'name.required' => 'タイトルが必要です。',
+                'introduction.required' => '紹介が必要です。',
+                'introduction.min' => '紹介は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'tel.required' => '電話番号が必要です。',
+                'tel.numeric' => '電話番号の数値が無効です。',
+                'gender.required' => '性別が必要です。',
+            );
+
             $rules = [
                 'staff_category_id' => 'required',
                 'name' => 'required|Max:255',
@@ -114,7 +127,7 @@ class StaffController extends Controller
                 'tel' => 'required',
                 'birthday' => 'required',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -144,10 +157,10 @@ class StaffController extends Controller
 
     public function edit($id)
     {
-        $staff_cat = $this->staffcat->orderBy('id', 'DESC')->get();;
-
-        $item = $this->staff->find($id);
-//      dd($item);
+        $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $this->request->stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
+        $item = $this->staff->whereId($id)->whereIn('staff_category_id', $staff_cat->pluck('id')->toArray())->first();
+        if (!$item)
+            abort(404);
         return view('admin.pages.staff.edit',compact('item','staff_cat'));
 
     }
@@ -171,6 +184,18 @@ class StaffController extends Controller
         }
 
         try {
+            $message = array(
+                'staff_category_id.required' => 'カテゴリが必要です。',
+                'name.max' => 'タイトルは255文字以下でなければなりません。',
+                'name.required' => 'タイトルが必要です。',
+                'introduction.required' => '紹介が必要です。',
+                'introduction.min' => '紹介は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'tel.required' => '電話番号が必要です。',
+                'tel.numeric' => '電話番号の数値が無効です。',
+                'gender.required' => '性別が必要です。',
+            );
 
             $rules = [
                 'staff_category_id' => 'required',
@@ -180,7 +205,7 @@ class StaffController extends Controller
                 'tel' =>'required|numeric',
                 'gender' =>'required'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -307,10 +332,15 @@ class StaffController extends Controller
     }
 
     public function storeCat(){
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -351,7 +381,7 @@ class StaffController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $staff_cat = StaffCat::whereId($id)->whereNull('deleted_at')->first();
+            $staff_cat = StaffCat::whereId($id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$staff_cat)
                 return abort(404);
         }
@@ -361,10 +391,15 @@ class StaffController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:staff_categories,store_id|Max:255',
+            'name' => 'required|unique_with:staff_categories,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -431,15 +466,28 @@ class StaffController extends Controller
         }
        
         try {
+            $message = array(
+                'staff_category_id.required' => 'カテゴリが必要です。',
+                'name.max' => 'タイトルは255文字以下でなければなりません。',
+                'name.required' => 'タイトルが必要です。',
+                'introduction.required' => '紹介が必要です。',
+                'introduction.min' => '紹介は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'tel.required' => '電話番号が必要です。',
+                'tel.numeric' => '電話番号の数値が無効です。',
+                'gender.required' => '性別が必要です。',
+            );
+
             $rules = [
                 'name' => 'required|Max:255',
                 'introduction' => 'required|Min:6',
-                'staff_category_id' => 'required|Max:255',
+                'staff_category_id' => 'required',
                 'price' => 'required|numeric',
                 'tel' =>'required|numeric',
                 'gender' =>'required'
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);

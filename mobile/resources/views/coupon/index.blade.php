@@ -39,7 +39,7 @@
                                 </a>
                                 <a href="{{ route('coupon.detail',$item->id)}}"><h3>{{$item->title}}</h3></a>
                                 <p align="justify">
-                                    {{ Str::words($item->description,20,'..') }}
+                                    {{ Str::words(strip_tags($item->description),20,'..') }}
                                 </p>
                             </div>
                         </div><!-- End item coupon -->

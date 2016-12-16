@@ -97,7 +97,7 @@ class MenusController extends Controller
         $list_store = array();
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $menu = $this->menu->whereId($menu_id)->whereNull('deleted_at')->first();
+            $menu = $this->menu->whereId($menu_id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$menu)
                 return abort(404);
         }
@@ -107,10 +107,15 @@ class MenusController extends Controller
 
     public function updateCat($menu_id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:menus,store_id|Max:255',
+            'name' => 'required|unique_with:menus,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -249,14 +254,25 @@ class MenusController extends Controller
         }
 
         try {
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -283,10 +299,16 @@ class MenusController extends Controller
 
 
     public function storeMenu(){
+        
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:menus,store_id|Max:255',
+            'name' => 'required|unique_with:menus,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -328,14 +350,25 @@ class MenusController extends Controller
 
         try {
 
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required|Min:6',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules, $message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -366,32 +399,36 @@ class MenusController extends Controller
 
     public function edit($id)
     {
+        $menu_id = 0;
+        $stores = $this->request->stores;
+        $menus = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->select('name','id')->get();
+        }
+
         $item = Item::whereId($id)->with('menus')->first();
 
-        if ($item) {
-            $menu_id = 0;
-            $stores = $this->request->stores;
-            $menus = array();
-            if (count($stores) > 0) {
-                $list_store = $stores->lists('name', 'id');
-                $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->select('name','id')->get();
+        if (!$item)
+            abort(404);
+
+        foreach ($item->menus as $menu_item) {
+            if (in_array($menu_item->id, $menus->pluck('id')->toArray())) {
+                $menu_id = $menu_item->id;
+                break;
             }
-            foreach ($item->menus as $menu_item) {
-                if (in_array($menu_item->id, $menus->pluck('id')->toArray())) {
-                    $menu_id = $menu_item->id;
-                    break;
-                }
-            }
-            //size info
-            $size_type = DB::table('item_size_types')->get();
-            $size_categories = DB::table('item_size_categories')->get();
-            $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
-    //        dd($size_categories);
-            return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
-                'size_type','size_categories','size_value'));
-        } else {
-            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
         }
+
+        if ($menu_id == 0)
+            abort(404);
+
+        //size info
+        $size_type = DB::table('item_size_types')->get();
+        $size_categories = DB::table('item_size_categories')->get();
+        $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
+//        dd($size_categories);
+        return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
+            'size_type','size_categories','size_value'));
        
     }
 
@@ -417,14 +454,26 @@ class MenusController extends Controller
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'タイトルは255文字以下でなければなりません。',
+                'title.required' => 'タイトルが必要です。',
+                'description.required' => '説明が必要です。',
+                'description.min' => '説明は6文字以上でなければなりません。',
+                'price.required' => '価格が必要です。',
+                'price.numeric' => '価格の数値が無効です。',
+                'item_link.active_url' => 'URLの形式が無効です。',
+            );
+
             $rules = [
                 'menu_id' => 'required',
                 'title' => 'required|Max:255',
                 'description' => 'required',
                 'price' => 'required|numeric',
-                'item_link' => 'Url',
+                'item_link' => 'active_url',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);

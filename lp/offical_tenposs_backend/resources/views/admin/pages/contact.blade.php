@@ -15,12 +15,12 @@
                 {{Form::text('name',old('name'),['class'=>'form-control', 'placeholder' => '何について'])}}
             </div>
             <div class="form-group">
-                {{Form::textarea('message',old('message'),['class'=>'form-control', 'rows' => '5', 'placeholder' => '詳しくお聞かせください'])}}
+                {{Form::textarea('message',old('message'),['class'=>'form-control', 'rows' => '5', 'placeholder' => '詳しくお聞かせください' ,'style' => 'resize: none;'])}}
             </div>
             <center>{{Form::button('送信',['class'=>'btn btn-contact', 'type' => 'submit'])}}</center>
             
             {{Form::close()}}
-        </div>
+        </div>  
     </section>
 </aside>
 

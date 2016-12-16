@@ -145,10 +145,15 @@ class PhotoCatController extends Controller
 
     public function store()
     {
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:photo_categories,store_id|Max:255',
+            'name' => 'required|unique_with:photo_categories,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -190,7 +195,7 @@ class PhotoCatController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $photo_cat = PhotoCat::whereId($id)->whereNull('deleted_at')->first();
+            $photo_cat = PhotoCat::whereId($id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$photo_cat)
                 return abort(404);
         }
@@ -200,10 +205,15 @@ class PhotoCatController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:photo_categories,store_id|Max:255',
+            'name' => 'required|unique_with:photo_categories,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -272,6 +282,19 @@ class PhotoCatController extends Controller
         }
 
         try {
+            $message = array(
+                'photo_category_id.required' => 'カテゴリが必要です。',
+            );
+
+            $rules = [
+                'photo_category_id' => 'required',
+            ];
+            $v = Validator::make($this->request->all(),$rules, $message);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $photo = new Photo();
             $photo->image_url = $image_create;
             $photo->photo_category_id = $this->request->input('photo_category_id');
@@ -294,9 +317,11 @@ class PhotoCatController extends Controller
     public function edit($id)
     {
         $stores = $this->request->stores;
-        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->get();
+        $photocat = $this->entity->orderBy('id','DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->get();
         $list_store = $stores->lists('name','id');
-        $photo = Photo::find($id);
+        $photo = Photo::whereId($id)->whereIn('photo_category_id', $photocat->pluck('id')->toArray())->first();
+        if (!$photo)
+            abort(404);
         return view('admin.pages.photocats.edit',compact('photo','list_store','photocat'));
     }
 
@@ -320,6 +345,19 @@ class PhotoCatController extends Controller
         }
         
         try {
+            $message = array(
+                'photo_category_id.required' => 'カテゴリが必要です。',
+            );
+
+            $rules = [
+                'photo_category_id' => 'required',
+            ];
+            $v = Validator::make($this->request->all(),$rules, $message);
+            if ($v->fails())
+            {
+                return redirect()->back()->withInput()->withErrors($v);
+            }
+
             $photo = Photo::find($id);
             //dd($photo); die();
             $photo->photo_category_id = $this->request->input('photo_category_id');

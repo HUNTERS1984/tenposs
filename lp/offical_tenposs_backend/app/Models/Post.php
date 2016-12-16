@@ -23,6 +23,6 @@ class Post extends Model {
 
     public function app_user()
     {
-        return $this->belongsTo(AppUser::class);
+        return $this->belongsTo(AppUser::class)->whereNull('deleted_at');
     }
 }

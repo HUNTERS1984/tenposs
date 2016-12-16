@@ -33,7 +33,7 @@
                         <img src="https://m.ten-po.com/img/icon/f_time.png" alt="icon">
                     </div>
                     <div class="right-table-cell">
-                        {{$contact->start_time}} - {{$contact->end_time}}
+                        {{date('a h:i', strtotime($contact->start_time))}} - {{ date('a h:i', strtotime($contact->end_time)) }}
                     </div>
                 </div>
             </div>

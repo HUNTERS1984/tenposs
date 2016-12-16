@@ -51,7 +51,7 @@ class CouponController extends Controller
             $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->whereNull('deleted_at')->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
             for ($i = 0; $i < count($coupons); $i++) {
                 if ($coupons[$i]->image_url == null)
-                    $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $coupons[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupons[$i]->image_url);
             }
@@ -95,7 +95,7 @@ class CouponController extends Controller
                                         ->wherePostId($posts[$i]->id)
                                         ->count() > 0;
                 if ($posts[$i]->avatar == null)
-                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
             }
@@ -119,7 +119,7 @@ class CouponController extends Controller
                 $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
-                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
@@ -144,7 +144,7 @@ class CouponController extends Controller
                 $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
-                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
@@ -153,47 +153,131 @@ class CouponController extends Controller
             $notapproved_posts->appends($this->request->only('search_pattern'))->links();
             $approved_posts->appends($this->request->only('search_pattern'))->links();
         } else {
-            $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+            // $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+            // for ($i = 0; $i < count($posts); $i++) {
+            //     $app_user = Post::find($posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $posts[$i]->username = $app_user->profile()->first()->name;
+            //         $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $posts[$i]->username = '';
+            //         $posts[$i]->avatar = '';
+            //     }
+                   
+            //     $posts[$i]->status = DB::table('rel_apps_posts')
+            //                             ->whereAppId($this->request->app->id)
+            //                             ->wherePostId($posts[$i]->id)
+            //                             ->count() > 0;
+            //     if ($posts[$i]->avatar == null)
+            //         $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
+
+            // }
+
+            // $notapproved_posts = Post::whereNull('deleted_at')->whereDoesntHave('apps', function($query) {
+            //     $query->where('app_id', $this->request->app->id);
+            // })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+            
+            // for ($i = 0; $i < count($notapproved_posts); $i++) {
+            //     $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
+            //         $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $notapproved_posts[$i]->username = '';
+            //         $notapproved_posts[$i]->avatar = '';
+            //     }
+            //     $notapproved_posts[$i]->status = false;
+            //     if ($notapproved_posts[$i]->avatar == null)
+            //         $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
+            // }
+            // $approved_posts = Post::whereNull('deleted_at')->whereHas('apps', function($query) {
+            //     $query->where('app_id', $this->request->app->id);
+            // })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+            
+            // for ($i = 0; $i < count($approved_posts); $i++) {
+            //     $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $approved_posts[$i]->username = $app_user->profile()->first()->name;
+            //         $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $approved_posts[$i]->username = '';
+            //         $approved_posts[$i]->avatar = '';
+            //     }
+            //     $approved_posts[$i]->status = true;
+            //     if ($approved_posts[$i]->avatar == null)
+            //         $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
+            // }
+            $posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+
             for ($i = 0; $i < count($posts); $i++) {
-                $app_user = Post::find($posts[$i]->id)->app_user()->first();
-                $posts[$i]->username = $app_user->profile()->first()->name;
-                $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $posts[$i]->tags = Post::find($posts[$i]->id)->tags()->get();
                 $posts[$i]->status = DB::table('rel_apps_posts')
                                         ->whereAppId($this->request->app->id)
                                         ->wherePostId($posts[$i]->id)
                                         ->count() > 0;
                 if ($posts[$i]->avatar == null)
-                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
-
             }
-
-            $notapproved_posts = Post::whereNull('deleted_at')->whereDoesntHave('apps', function($query) {
-                $query->where('app_id', $this->request->app->id);
-            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
             
+            $notapproved_posts =Post::whereDoesntHave('apps', function($query) {
+                $query->where('app_id', $this->request->app->id);
+            })->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+
             for ($i = 0; $i < count($notapproved_posts); $i++) {
-                $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
-                $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
-                $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
-                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
-            $approved_posts = Post::whereNull('deleted_at')->whereHas('apps', function($query) {
-                $query->where('app_id', $this->request->app->id);
-            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
-            
+
+            $approved_posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->join('rel_apps_posts', 'posts.id', '=', 'rel_apps_posts.post_id')
+            ->where('rel_apps_posts.app_id', '=', $this->request->app->id)
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+
             for ($i = 0; $i < count($approved_posts); $i++) {
-                $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
-                $approved_posts[$i]->username = $app_user->profile()->first()->name;
-                $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+                $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
-                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
@@ -355,10 +439,15 @@ class CouponController extends Controller
 
 
     public function store_type(){
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules, $message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -396,7 +485,7 @@ class CouponController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $coupon_cat = CouponType::whereId($id)->whereNull('deleted_at')->first();
+            $coupon_cat = CouponType::whereId($id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$coupon_cat)
                 return abort(404);
         }
@@ -406,10 +495,15 @@ class CouponController extends Controller
 
     public function updateCat($id)
     {   
+        $message = array(
+            'name.required' => 'カテゴリ名が必要です。',
+            'name.unique_with' => 'カテゴリ名は既に存在します。',
+        );
+
         $rules = [
-            'name' => 'required|unique_with:coupon_types,store_id|Max:255',
+            'name' => 'required|unique_with:coupon_types,store_id,deleted_at|Max:255',
         ];
-        $v = Validator::make($this->request->all(),$rules);
+        $v = Validator::make($this->request->all(),$rules,$message);
         if ($v->fails())
         {
             return redirect()->back()->withInput()->withErrors($v);
@@ -473,6 +567,17 @@ class CouponController extends Controller
 
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'クーポン名は255文字以下でなければなりません。',
+                'title.required' => 'クーポン名が必要です。',
+                'description.required' => '説明が必要です。',
+                'hashtag.required' => 'ハッシュタグが必要です。',
+                'start_date.required' => '開始日が必要です。',
+                'end_date.required' => '終了日必要です。',
+            );
+
             $rules = [
                 'coupon_type_id' => 'required',
                 'title' => 'required|Max:255',
@@ -481,7 +586,7 @@ class CouponController extends Controller
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);
@@ -592,7 +697,10 @@ class CouponController extends Controller
         if (count($list_store) > 0) {
             $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
         }
-        $coupon = $this->entity->whereId($id)->with('tags')->first();
+
+        $coupon = $this->entity->whereId($id)->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('tags')->first();
+        if (!$coupon)
+            abort(404);
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
         RedisControl::delete_cache_redis('coupons');
         return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon', 'list_coupon_type'));
@@ -618,6 +726,16 @@ class CouponController extends Controller
         }
 
         try {
+
+            $message = array(
+                'coupon_type_id.required' => 'カテゴリが必要です。',
+                'title.max' => 'クーポン名は255文字以下でなければなりません。',
+                'title.required' => 'クーポン名が必要です。',
+                'description.required' => '説明が必要です。',
+                'hashtag.required' => 'ハッシュタグが必要です。',
+                'start_date.required' => '開始日が必要です。',
+                'end_date.required' => '終了日必要です。',
+            );
             
             $rules = [
                 'coupon_type_id' => 'required',
@@ -627,7 +745,7 @@ class CouponController extends Controller
                 'start_date' => 'required',
                 'end_date' => 'required',
             ];
-            $v = Validator::make($this->request->all(),$rules);
+            $v = Validator::make($this->request->all(),$rules,$message);
             if ($v->fails())
             {
                 return redirect()->back()->withInput()->withErrors($v);

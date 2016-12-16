@@ -32,6 +32,9 @@
                         <a href="#tab-global-2" aria-controls="tab-global-2" role="tab" data-toggle="tab">サイトメニュー</a>
                     </li>
                     <li role="presentation" >
+                        <a href="#tab-global-4" aria-controls="tab-global-4" role="tab" data-toggle="tab">テンプレート</a>
+                    </li>
+                    <li role="presentation" >
                         <a href="#tab-global-3" aria-controls="tab-global-3" role="tab" data-toggle="tab">Appストア</a>
                     </li>
                 </ul>
@@ -269,6 +272,59 @@
             </div>
             <!-- //tab-global-2 -->
 
+            <div role="tabpanel" class="tab-pane active" id="tab-global-4">
+                <div class="col-md-4">
+                     <div class="wrapp-phone">
+                        <div class="wrap-content-prview">
+                            <div class="sidebar-preview">
+                                <div class="mobile-side" style="background:#{{$app_settings->menu_background_color}};">
+                                    <div id="scroll-global-phone-review-1">
+                                        <div class="h_side">
+                                            <div class="imageleft">
+                                                <div class="image">
+                                                    <img class="img-circle" src="images/icon-user.png" height="35" width="35" alt="">
+                                                </div>
+                                                <p class="font32">User name</p>
+                                            </div>
+                                        </div>
+                                        <ul class="s_nav">
+                                             @if(count($data_component_dest) > 0)
+                                                @foreach ($data_component_dest as $v)
+                                                    <li id="side-item{{$v->id}}" 
+                                                        class="{{$v->sidemenu_icon}}" 
+                                                        data-id="{{$v->id}}" 
+                                                        data-value="{{$v->id}}">
+                                                        <a style="color:#{{$app_settings->menu_font_color}};
+                                                        font_family: '{{ $app_settings->menu_font_family }}';
+                                                        font-size: {{ $app_settings->menu_font_size }}"
+                                                        href="javascript:avoid();">{{$v->name}}</a>
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                        <div class="form-group">
+                            <label>テンプレートの選択</label>
+                            <div class="two-select">
+                                @if(count($list_theme) > 0)
+                                    {{Form::select('app_theme',$list_theme,$app_settings->template_id,['class'=>'form-control short-1'])}}
+                                @endif
+                                
+                            </div>
+                        </div>
+                    
+                                               
+                </div>
+            </div>
+            <!-- //tab-global-4 -->
+
             <div role="tabpanel" class="tab-pane" id="tab-global-3">
                 <div class="wrapp-global-redesign">
                     <div class="col-md-4">
@@ -324,9 +380,6 @@
                                                 </div>
                                                 <!-- If we need pagination -->
                                                 <div class="swiper-pagination"></div>
-                                                <!-- If we need navigation buttons -->
-                                                <div class="swiper-button-prev"></div>
-                                                <div class="swiper-button-next"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -391,7 +444,7 @@
                 success: function(response){
                     $('body').removeClass('loading');
                     if( response.success ){
-                        $(msgElement).addClass('text-success').html( '<a download target="_blank" href="'+response.file+'"> Click here to download app icon </a>');
+                        $(msgElement).addClass('text-success').html( '<a download target="_blank" href="'+response.file+'" class="btn-box-px" style="background:#f078a0;border: 1px solid #f078a0;"> ダウンロード </a>');
                     }else{
                         $(msgElement).addClass('text-danger').text( response.msg );
                     }
@@ -483,16 +536,6 @@
                 $(this).find('a').toggleClass('active');
             });
 
-            var bannerSwiper = new Swiper('#swiper-app-splash', {
-                autoplay: 2000,
-                speed: 300,
-                loop: true,
-                spaceBetween: 0,
-                slidesPerView: 1,
-                pagination: ".swiper-pagination",
-                // Navigation arrows
-                paginationClickable: true
-            });
 
             // With JQuery
             $('#app_ico_image_scale').slider({
@@ -504,6 +547,33 @@
                     });
                     return 'Current value: ' + value;
                 }
+            });
+
+            var bannerSwiper = new Swiper('#swiper-app-splash', {
+                autoplay: 2000,
+                speed: 300,
+                loop: true,
+                spaceBetween: 0,
+                slidesPerView: 1,
+                pagination: ".swiper-pagination",
+                // Navigation arrows
+                paginationClickable: true,
+                onProgressChange: function(swiper){
+                    for (var i = 0; i < swiper.slides.length; i++){
+                      var slide = swiper.slides[i];
+                      var progress = slide.progress;
+                      var translate = progress*swiper.width;  
+                      var opacity = 1 - Math.min(Math.abs(progress),1);
+                      slide.style.opacity = opacity;
+                      swiper.setTransform(slide,'translate3d('+translate+'px,0,0)');
+                    }
+                  },
+                onTouchStart:function(swiper){
+                    swiper.update();
+                    for (var i = 0; i < swiper.slides.length; i++){
+                      swiper.setTransition(swiper.slides[i], 0);
+                    }
+                },
             });
 
         });
@@ -542,6 +612,10 @@
                 } );
 
 
+            });
+            // reset value when change
+            $(item).click(function (event) {
+                this.value = null;
             });
         });
 

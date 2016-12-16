@@ -105,6 +105,11 @@ Route::group(array('prefix' => 'admin',
     Route::post('/clients/{user_id}/apps/{app_id}/upload', array('as' => 'admin.clients.apps.upload', 'uses' => 'Admin\AppsController@upload'));
     Route::post('/clients/{user_id}/apps/{app_id}/upload_web', array('as' => 'admin.clients.apps.uploadweb', 'uses' => 'Admin\AppsController@upload_web'));
 
+    // Clients/LINEBot
+    Route::get('/clients/{user_id}/apps/{app_id}/line-bot', array('as' => 'admin.clients.bot.setting', 'uses' => 'Admin\ClientsController@configLineBOT'));
+    Route::post('/clients/{user_id}/apps/{app_id}/line-bot', array('as' => 'admin.clients.bot.setting.save', 'uses' => 'Admin\ClientsController@configLineBOTSave'));
+
+
 });
 
 
