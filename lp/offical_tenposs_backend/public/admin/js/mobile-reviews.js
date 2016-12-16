@@ -15,7 +15,8 @@ MobileView = {
             size= 'x-small';
         if(size == 'extra_large')
             size = 'x-large';
-        $(".s_nav li > a").css('cssText','font-size: '+ size + ' !important');
+        $(".s_nav li > a").removeClass('font-size');
+        $(".s_nav li > a").css('font-size',size + ' !important');
     },
     
     updateMenuFontFamily: function(fontName){

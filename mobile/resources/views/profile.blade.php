@@ -101,11 +101,11 @@ $arrAddress = array(
                     <?php
                     $avatar = ($user->profile->avatar_url != '')
                         ? $user->profile->avatar_url
-                        : url('/img/wall.jpg');
+                        : url('/img/icon/icon-user.jpg');
                     ?>
 
                     <label class="avatar">
-                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"  style="border: 2px solid #ddd; object-fit: cover; width: 120px; height: 120px;"></label>
+                    <img id="app-icon-review" class="img-circle" src="{{ $avatar }}"></label>
                     <label class="label-title-user">
                         <a class="btn_upload_avatar create" href="javascript:void(0)">
                             <i class="fa fa-picture-o" aria-hidden="true"></i> プロフィール写真を変更
@@ -114,13 +114,13 @@ $arrAddress = array(
                     </label>
                 </li>
                 <li>
-                    <label>ユーザー名</label>
-                    <input type="text" name="name" value="{{ $user->profile->name }}"/>
+                    <label>ユーザーID</label>
+                    <input type="text" name="name" value="{{ $user->id }}"/>
 
                 </li>
                 <li>
-                    <label>パスワード</label>
-                    <input readonly type="text" value="******"/>
+                    <label>ユーザー名</label>
+                    <input readonly type="text" value="{{ $user->profile->name }}"/>
                 </li>
                 <li>
                     <label>メールアドレス</label>
