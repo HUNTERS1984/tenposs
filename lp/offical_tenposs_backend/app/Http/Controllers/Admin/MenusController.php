@@ -97,7 +97,7 @@ class MenusController extends Controller
         $list_store = array();
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $menu = $this->menu->whereId($menu_id)->whereNull('deleted_at')->first();
+            $menu = $this->menu->whereId($menu_id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$menu)
                 return abort(404);
         }

@@ -76,10 +76,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                            <center><a href="javascript:avoid()" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="#" id="btn_delete" class="btn btn-primary btn_submit_form">削除</a></center>
+                            <center><a href="javascript:avoid()" id="btn_delete" class="btn btn-primary btn_submit_form">削除</a></center>
                         </div>
                     </div>
                     

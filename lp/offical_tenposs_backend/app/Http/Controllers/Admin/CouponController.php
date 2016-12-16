@@ -420,7 +420,7 @@ class CouponController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $coupon_cat = CouponType::whereId($id)->whereNull('deleted_at')->first();
+            $coupon_cat = CouponType::whereId($id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$coupon_cat)
                 return abort(404);
         }
