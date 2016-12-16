@@ -71,7 +71,7 @@
                     <div class="entrydetail justify">
                         <div class="inner-entrydetail text-justify">
                             <p>
-                        {{$items_detail_data->description}}</p>
+                        {!! $items_detail_data->description !!}</p>
                         </div>
                     </div>
                 @else

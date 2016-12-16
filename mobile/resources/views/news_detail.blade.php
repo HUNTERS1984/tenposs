@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="entrydetail justify">
-                    <p>{{$detail->data->news->description}}</p>
+                    <p>{!! $detail->data->news->description !!}</p>
                 </div>
                 @endif
             </div><!-- End container fluid -->
