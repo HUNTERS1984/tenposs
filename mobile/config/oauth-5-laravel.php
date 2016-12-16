@@ -19,8 +19,8 @@ return [
 	'consumers' => [
 
 		'Facebook' => [
-			'client_id'     => '159391921181596',
-			'client_secret' => 'cc9ad24a6a123349ada67fb373067fbc',
+			'client_id'     => '570059106506930',
+			'client_secret' => '7493266245fb5e678e67f7de0c018d91',
 			'scope'         => ['email'],
 		],
 		
@@ -30,8 +30,8 @@ return [
 		],
 
 		'Instagram' => [
-			'client_id'     => '17d7e27257b74d05b352fc55692b2b59',
-			'client_secret' => '459fecbe46f04639852268e390189d1a',
+			'client_id'     => 'cd9f614f85f44238ace18045a51c44d1',
+			'client_secret' => 'd839149848c04447bd379ce8bff4d890',
 		],
 
 
