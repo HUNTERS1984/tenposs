@@ -234,7 +234,9 @@ class LoginController extends Controller
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => config('oauth-5-laravel.consumers.Facebook.client_secret') ,
-                'platform' => 'web'
+                'platform' => 'web',
+                'avartar_url' => "//graph.facebook.com/".$result['id']."/picture?type=large",
+                'username' => $result['name']
             );
             $curl = $curl->post($this->url_api_signup_social, $params);
 
@@ -277,7 +279,9 @@ class LoginController extends Controller
                 'social_id' => $result['id'],
                 'social_token' => $social_token->getAccessToken() ,
                 'social_secret' => $social_token->getAccessTokenSecret(),
-                'platform' => 'web'
+                'platform' => 'web',
+                'avartar_url' => (isset($result['profile_image_url'])) ? str_replace('_normal','',$result['profile_image_url']) : '',
+                'username' => (isset($result['name'])) ? $result['name'] : ''
             );
             $curl = $curl->post($this->url_api_signup_social,$params );
             if( isset($curl->code) && isset( $curl->code ) && $curl->code == 1000 ){
@@ -345,7 +349,7 @@ class LoginController extends Controller
                 $result = json_decode($tw->request('account/verify_credentials.json'), true);
                 $social_id = $result['id'];
                 $social_token = $token->getAccessToken();
-                $social_secret = config('oauth-5-laravel.consumers.Twitter.client_secret');
+                $social_secret = $social_token->getAccessTokenSecret();
                 $name = $result['name'];
                 $social_type = 2;
             }else{
