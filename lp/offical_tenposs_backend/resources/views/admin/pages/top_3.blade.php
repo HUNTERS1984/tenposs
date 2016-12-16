@@ -11,7 +11,7 @@
                style="font-size:9px; color:#14b4d2">{{$new->title}}</p>
             <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
             <p class="text-inner"
-               style="font-size:9px;">{{Str::words($new->description,12)}}</p>
+               style="font-size:9px;">{{Str::words( strip_tags($new->description),12)}}</p>
         </div>
     </div>
     @endforeach

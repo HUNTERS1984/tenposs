@@ -64,7 +64,7 @@
                                            style="font-size:9px; color:#14b4d2">{{$item_thumb->title}}</p>
                                         <!-- <p class="sub-inner" style="font-weight:600px; font-size:9px;">スタの新着情報</p> -->
                                         <p class="text-inner"
-                                           style="font-size:9px;">{{Str::limit($item_thumb->description,45)}}</p>
+                                           style="font-size:9px;">{!! Str::words( strip_tags($item_thumb->description),10,'..') !!}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -112,7 +112,7 @@
                                 <div class="des-news col-xs-12">
                                     <div class="row">
                                         <p>
-                                            {{ Str::limit($item->description, 200) }}
+                                            {!! Str::words( strip_tags($item->description), 50,'..') !!}
 
                                         </p>
                                     </div>
