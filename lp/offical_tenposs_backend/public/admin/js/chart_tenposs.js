@@ -219,13 +219,13 @@ var tenposs = {
 
                 switch (report_type) {
                     case 'coupon_use':
-                        $('#cp_coupon_use').html(data_value);
+                        $('#cp_coupon_use').html(data_value + '人');
                         break;
                     case 'post':
-                        $('#cp_post').html(data_value);
+                        $('#cp_post').html(data_value + '枚');
                         break;
                     case 'coupon_created':
-                        $('#cp_coupon_created').html(data_value);
+                        $('#cp_coupon_created').html(data_value + '枚');
                         break;
                     default:
                         break;
