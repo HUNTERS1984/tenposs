@@ -11,4 +11,5 @@ return [
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_secret_info' => array('app_id', 'time'),
     'sig_get_auth_user_from_app_user_id' => array('app_id', 'time', 'app_user_id'),
+    'url_profile_without_jwt' => 'https://auth.ten-po.com/v1/profile_without_jwt/',
 ];

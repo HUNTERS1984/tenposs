@@ -6,6 +6,7 @@ use App\AppSetting;
 use App\UserPush;
 use App\UserPushSetting;
 use App\Utils\ConvertUtils;
+use App\Utils\HttpRequestUtil;
 use App\Utils\ProcessNotification;
 use Carbon\Carbon;
 use DB;
@@ -413,9 +414,15 @@ class NotificationController extends Controller
 //        print_r(base_path('public'));
 //        $data = ProcessNotification::getInstance()->get_data_from_id_with_api('coupon', 192, '2a33ba4ea5c9d70f9eb22903ad1fb8b2');
 //        print_r($data);
-        $message = '{"app_id":"2a33ba4ea5c9d70f9eb22903ad1fb8b2","type":"news","notification_to":13,"data_id":40,"auth_user_id":13,"all_user":0,"user_type":"user","notification_time":""}';
-        ProcessNotification::getInstance()->process($message);
-        die;
+//        $message = '{"app_id":"2a33ba4ea5c9d70f9eb22903ad1fb8b2","type":"news","notification_to":13,"data_id":40,"auth_user_id":13,"all_user":0,"user_type":"user","notification_time":""}';
+//        ProcessNotification::getInstance()->process($message);
+        //die;
+        $id = 13;
+        $url = Config::get('api.url_profile_without_jwt') . $id;
+        $profile = HttpRequestUtil::getInstance()->get_data_with_basic_auth($url, null);
+        if (count($profile) > 0) {
+            print_r($profile->email);
+        }
     }
 
 }
