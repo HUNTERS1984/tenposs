@@ -22,13 +22,13 @@
                     {{Form::close()}}
                 </div>
             </div>
-            <div class="col-md-6">
+          <!--   <div class="col-md-6">
                 <div class="search-right">
                   <a href="javascript:avoid()" class="btn-s-1" data-toggle="modal" data-target="#DeleteConfirm">
                       <i class="glyphicon glyphicon-plus"></i> 選択したユーザーを削除
                   </a>
                 </div>
-              </div>
+              </div> -->
         </div>
     </div>
 </div>
@@ -62,11 +62,11 @@
             </div>
         </th>
         <td class="center">
-            <!-- @if( file_exists( public_path($user->profile->avatar_url) ) )
+            @if( isset($user->profile) && file_exists( public_path($user->profile->avatar_url) ) )
             <img src="{{ ( $user->profile->avatar_url != '' ) ? url($user->profile->avatar_url) : '' }}" alt="">
             @else
             <img src="{{ url('admin/images/icon-user.png') }}" alt="">
-            @endif -->
+            @endif
         </td>
         <td class="center">
             <a href="{{ route('admin.users.management.detail',$user->id) }}" title="" class="blue">

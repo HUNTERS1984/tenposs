@@ -3,7 +3,7 @@
 @section('main')
  <aside class="right-side">
             <div class="wrapp-breadcrumds">
-                <div class="left"><span>承認管理</span><span class="circle-bre">{{ count($posts) }}</span></div>
+                <div class="left"><span>承認管理</span><span class="circle-bre">{{ $posts->total() }}</span></div>
                 <div class="left">
                   <div class="tab-header-accept">
                       <ul class="nav nav-tabs" role="tablist">
