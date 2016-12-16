@@ -22,7 +22,7 @@
                 <i class="fa fa-facebook"></i>
                 メールアドレスではじめる</a> 
             
-            <a href="{{ route('index.redirect') }}" class="btn tenposs-button last bg-transparent">
+            <a href="{{ route('index') }}" class="btn tenposs-button last bg-transparent">
                 <i class="fa fa-facebook"></i>
                 スキップ</a>
         </p>

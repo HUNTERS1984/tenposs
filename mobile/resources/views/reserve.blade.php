@@ -4,7 +4,7 @@
 <link href="{{ url('css/main.css') }}" rel="stylesheet">
 <style>
     .h_control-nav:before{
-        color: #{{ $app_info->data->app_setting->menu_icon_color }};
+        color: #{{ $app_info->data->app_setting->title_color }};
         }
 </style>
 @stop
@@ -21,7 +21,7 @@
     <div id="main">
         <div id="content">
                 @if(isset($reserve_arr) && count($reserve_arr) > 0)
-                    <iframe src="{{$reserve_arr[0]->data->reserve[0]->reserve_url}}" width="100%" height="350" frameborder="0"></iframe>
+                    <p><iframe src="{{$reserve_arr[0]->data->reserve[0]->reserve_url}}" width="100%" height="350" frameborder="0"></iframe></p>
                 @endif
         </div><!-- End content -->
         @include('partials.sidemenu')

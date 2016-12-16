@@ -1609,14 +1609,18 @@ ul.link-top-2 li a.active{
   color: #f078a0;
   font-weight: bold;
 }
-.title-coupon a.text-coupon-left{
+.title-coupon p.text-coupon-left{
   text-align: left;
   font-weight: bold;
   color: #1e96d6;
 }
-.title-coupon a:hover.text-coupon-left{
-  color: #f078a0;
+
+.title-coupon p a.text-coupon-title{
+  text-align: left;
+  color: #444444;
+  font-size: 13px;
 }
+
 .title-coupon p{
   padding-top: 10px;
   margin: 0;
