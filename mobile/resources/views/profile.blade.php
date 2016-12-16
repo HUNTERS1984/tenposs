@@ -84,11 +84,6 @@ $arrAddress = array(
                 名前のありません
             @endif
         </h1>
-            <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
-            保存
-            </button>
-
-            </h1>
         <a href="{{URL::previous()}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
@@ -96,6 +91,7 @@ $arrAddress = array(
     <div id="content">
         @include('partials.message')
         <div id="user">
+            <div class="col-xs-12" style="padding:0px">
             <ul>
                 <li>
                     <?php
@@ -143,6 +139,11 @@ $arrAddress = array(
                     </select>
                 </li>
             </ul>
+            </div>
+            <div class="col-xs-12" style="padding:0px">
+                <button type="submit" class="btn tenposs-button1">保存</button>
+            </div>
+            <div class="col-xs-12" style="padding:0px">
             <ul class="social">
                 <li>
                     <i class="icon-face"></i>
@@ -186,6 +187,7 @@ $arrAddress = array(
 
                 </li>
             </ul>
+            </div>
         </div>
     </div><!-- End content -->
     @include('partials.sidemenu')

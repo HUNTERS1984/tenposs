@@ -35,8 +35,31 @@ h3,.h3{font-size: 28px;}
     position:relative;
     font-weight: 600;
 }
+
+.tenposs-button1{
+    display: block;
+    font-size: 24px;
+    background: #14c8c8;
+    color: #fff;
+    width: 50%;
+    margin-top: 20px;
+    display: block;
+    line-height: 50px;
+    position:relative;
+    font-weight: 600;
+    text-align: center;
+    margin:0 auto;
+
+}
+
 @media screen and (max-width:479px){
     .tenposs-button{
+        white-space: inherit;
+        line-height: 26px;
+        font-size:14px;
+    }
+
+    .tenposs-button1{
         white-space: inherit;
         line-height: 26px;
         font-size:14px;
