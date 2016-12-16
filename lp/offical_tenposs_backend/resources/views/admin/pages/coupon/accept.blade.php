@@ -256,10 +256,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn-user-poup-log-poup-left">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="#" id="btn_approve" class="btn btn-primary btn_submit_form">承認</a></center>
+                            <center><a href="#" id="btn_approve" class="btn-user-poup-log-poup-right">承認</a></center>
                         </div>
                     </div>
                     
@@ -276,10 +276,10 @@
                     </div>
                     <div class="modal-body"> 
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn-user-poup-log-poup-left">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center><a href="{{route('admin.coupon.approve_all')}}" id="btn_approve" class="btn btn-primary btn_submit_form">承認</a></center>
+                            <center><a href="{{route('admin.coupon.approve_all')}}" id="btn_approve" class="btn-user-poup-log-poup-right">承認</a></center>
                         </div>
                     </div>
                     
