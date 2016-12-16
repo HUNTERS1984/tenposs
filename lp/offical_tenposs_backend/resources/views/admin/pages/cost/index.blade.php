@@ -37,7 +37,11 @@
             <div role="tabpanel" class="tab-pane active" id="tab-cost-1">
                 <div class="content-cost-3">
                     <div class="panel panel-default">
-                        <div class="panel-heading">月間契約(1年4ヶ月)</div>
+                        @if ($member_months%12 == 0)
+                        <div class="panel-heading">月間契約({{$member_months/12}}年)</div>
+                        @else
+                        <div class="panel-heading">月間契約({{floor($member_months/12)}}年{{$member_months%12}}ヶ月)</div>
+                        @endif
                         <div class="panel-body">
 
                             <ol class="timeline_cost">
@@ -112,7 +116,7 @@
                         </p>
                     </div>
                     <div class="link-cost-tab-1">
-                        <a href="cost-4.html">
+                        <a href="{{route('admin.cost.register')}}">
                             年間契約に切り替える方、契約解除される方はこちら
                         </a>
                     </div>
@@ -153,7 +157,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="">会員ステージ設定</label>
+                            <label for="">付与設定（付与するマイルの設定）</label>
                             <div class="form-horizontal">
                                 <div class="form-group">
                                     <label for="" class="col-xs-3 control-label text-left-first">紹介:</label>

@@ -423,7 +423,7 @@ class MenusController extends Controller
             return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
                 'size_type','size_categories','size_value'));
         } else {
-            return redirect()->back()->withInput()->withErrors('編集に失敗しました');
+            abort(404);
         }
        
     }
