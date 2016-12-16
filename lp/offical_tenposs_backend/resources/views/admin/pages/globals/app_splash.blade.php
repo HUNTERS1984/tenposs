@@ -50,7 +50,7 @@
                                             @if( $app_stores->splash_image_1 != '' )
                                             <a href="#" data-control="splash_image_1" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn-gb-rd">アップロード</button>
+                                            <button type="button" class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                                             @if( $app_stores->splash_image_2 != '' )
                                             <a href="#" data-control="splash_image_2" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn-gb-rd">アップロード</button>
+                                            <button type="button" class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@
                                             @if( $app_stores->splash_image_3 != '' )
                                             <a href="#" data-control="splash_image_3" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn-gb-rd">アップロード</button>
+                                            <button type="button" class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@
                                             @if( $app_stores->splash_image_4 != '' )
                                             <a href="#" data-control="splash_image_4" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn-gb-rd">アップロード</button>
+                                            <button type="button" class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                             @if( $app_stores->splash_image_5 != '' )
                                             <a href="#" data-control="splash_image_5" class="remove-app-splash"></a>
                                             @endif
-                                            <button class="btn-gb-rd">アップロード</button>
+                                            <button type="button" class="btn-gb-rd">アップロード</button>
                                         </div>
                                     </div>  
                                 </div>

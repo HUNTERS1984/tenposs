@@ -578,9 +578,11 @@
 
         });
         // Spash image upload
-        $('.splash-img > button').on('click',function(e){
+        $('div.splash-img > button').on('click',function(e){
             e.preventDefault();
+            e.stopPropagation();
             $(this).parent().find('input[type="file"]').trigger('click');
+
         });
 
         function validImage(file, _callback){
