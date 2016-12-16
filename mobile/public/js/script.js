@@ -15,7 +15,7 @@ jQuery(document).scroll(function () {
     var y = jQuery(document).scrollTop(),
         header = $("#header");
 
-    if (y >= 80) {
+    if (y >= 40) {
         header.addClass('sticky');
     } else {
         header.removeClass('sticky');

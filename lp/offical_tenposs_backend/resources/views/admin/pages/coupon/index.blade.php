@@ -85,7 +85,7 @@
                                 <div class="title-coupon">
                                     <div class="row">
                                         <div class="col-md-8 col-xs-12">
-                                            <p href="javascript:avoid()" class="text-coupon-left">{{$item->coupon_type->name}}</p>
+                                            <a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-left">{{$item->coupon_type->name}}</a>
                                             <p><a href="{{route('admin.coupon.edit',$item->id)}}" class="text-coupon-title">{{$item->title}}</a></p>
                                             <p class="date-copon">有効期間　{{date('Y年m月d日', strtotime($item->end_date))}}まで</p>
                                         </div>

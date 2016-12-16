@@ -44,10 +44,10 @@
         <th></th>
         <th class="center">ユーザーネーム</th>
         <th class="center">ユーザーID</th>
-        <th class="center">メンバーステージ</th><!-- Member stage -->
+        <th class="center">会員ステージ</th><!-- Member stage -->
         <th class="center">性別</th><!-- Gender -->
         <th class="center">年齢</th><!-- Age -->
-        <th class="center">地図</th><!-- Position -->
+        <th class="center">地域</th><!-- Position -->
         <th class="center">サービス連携</th><!-- Service connect -->
         <th class="center">最終ログイン</th><!-- Last login -->
     </tr>
