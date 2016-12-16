@@ -78,7 +78,12 @@ $arrAddress = array(
         <h1 class="aligncenter" style="
                 color: #{{ $app_info->data->app_setting->title_color }};
             ">
-            {{ Str::words(Session::get('user')->profile->name,20) }}</h1>
+            @if( Session::get('user')->profile->name != '' )
+                {{ Str::words(Session::get('user')->profile->name,20) }}
+            @else
+                名前のありません
+            @endif
+        </h1>
             <button type="submit" class="btn pull-right btn-lg btn-submit-profile" style="background-color:white">
             保存
             </button>
@@ -136,7 +141,6 @@ $arrAddress = array(
                         <option {{ ($key == $user->profile->address ) ? 'selected' : '' }} value="{{ $key }}">{{ $val }}</option>
                         @endforeach
                     </select>
-                    <input type="text" name="address" value="{{ $user->profile->address }}"/>
                 </li>
             </ul>
             <ul class="social">
