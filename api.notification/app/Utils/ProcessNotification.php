@@ -255,7 +255,7 @@ class ProcessNotification
                 if (property_exists($obj, 'code'))
                     $code = $obj->code;
 
-                $this->staff_notification_to_one_user($obj->app_id, $obj->notification_to, $obj->type, $coupon_id, $app_user_id, $staff_id, $code, $obj->user_type);
+                $this->staff_notification_to_one_user($obj->app_id, $obj->notification_to, $obj->type, $coupon_id, $app_user_id, $staff_id, $code, $obj->user_type, $auth_user_id);
             }
         }
 
@@ -321,7 +321,7 @@ class ProcessNotification
         return $isValid;
     }
 
-    private function staff_notification_to_one_user($app_id, $notification_to, $type, $coupon_id, $app_user_id, $staff_id, $code, $user_type = '')
+    private function staff_notification_to_one_user($app_id, $notification_to, $type, $coupon_id, $app_user_id, $staff_id, $code, $user_type = '', $auth_user_id = 0)
     {
         $app_setting = $this->get_notification_setting($app_id);
         $user_setting = $this->get_user_setting($app_id, $notification_to, $user_type);
@@ -332,6 +332,14 @@ class ProcessNotification
             $data_notify = array();
             switch ($type) {
                 case 'coupon_use':
+                    $email = '';
+                    if ($auth_user_id > 0) {
+                        $url = Config::get('api.url_profile_without_jwt') . coupon_use;
+                        $profile = HttpRequestUtil::getInstance()->get_data_with_basic_auth($url, null);
+                        if (count($profile) > 0) {
+                            $email = $profile->email;
+                        }
+                    }
                     $data = $this->get_data_from_id_with_api('coupon', $coupon_id, $app_id);
                     if ($data != null && count($data) > 0) {
                         $data_notify = array('title' => $data->title,
@@ -340,12 +348,13 @@ class ProcessNotification
                             'tickertext' => '',
                             'id' => 0,
                             'type' => 'coupon_use',
-                            'image_url' => '');
+                            'image_url' => $data->image_url);
                         $arr_append_data = array(
                             'coupon_id' => $coupon_id,
                             'app_user_id' => $app_user_id,
                             'staff_id' => $staff_id,
-                            'code' => $code
+                            'code' => $code,
+                            'email' => $email
                         );
                     }
                     break;
