@@ -59,6 +59,20 @@ class UserV1Controller extends Controller
         return $this->output($this->body);
     }
 
+    public function profile_without_jwt($id)
+    {
+//        $data = User::find($user->id)->roles()->get();
+        $data = array();
+        try {
+            $data = User::find($id)->first();
+        } catch (QueryException $e) {
+            Log::error($e);
+            return $this->error(9999);
+        }
+        $this->body['data'] = $data;
+        return $this->output($this->body);
+    }
+
     public function change_password()
     {
         $check_items = array('old_password', 'new_password');
@@ -132,7 +146,7 @@ class UserV1Controller extends Controller
     public function register(Request $request)
     {
 
-        $check_items = array('email', 'password', 'role','platform');
+        $check_items = array('email', 'password', 'role', 'platform');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -203,8 +217,9 @@ class UserV1Controller extends Controller
         $credentials['password'] = Input::get('password');
 
 
-        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug, 
-                'id' => $user->id,'platform' => Input::get('platform')])) {
+        if ($user && $user->roles && count($user->roles) > 0 && $token = JWTAuth::attempt($credentials, ['role' => $user->roles[0]->slug,
+                'id' => $user->id, 'platform' => Input::get('platform')])
+        ) {
             $this->body['data']['token'] = (string)$token;
             $this->body['data']['auth_user_id'] = $user->id;
 //                $refresh_token = JWTAuth::attempt($credentials, ['exp' => Carbon::now()->addMinutes(Config::get('jwt.refresh_ttl'))->timestamp, 'id' => $user->id]);

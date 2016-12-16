@@ -37,6 +37,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 
 $app->group(array('prefix' => 'v1', 'middleware' => 'BasicAuth'), function ($app) {
     $app->get('/test', 'UserV1Controller@test');
+    $app->get('/profile_without_jwt/{id}', 'UserV1Controller@profile_without_jwt');
     $app->post('/auth/login', 'Auth\AuthV1Controller@postLogin');
     $app->get('/auth/check_user_exist', 'UserV1Controller@check_user_exist');
     $app->post('/auth/social_login', 'Auth\AuthV1Controller@socialLogin');

@@ -60,6 +60,12 @@ class Handler extends ExceptionHandler
             ], $e->getStatusCode());
         }
 
+        if ($e instanceof \ErrorException) {
+            return new JsonResponse([
+                'code' => '9999',
+                'message' => $e->getMessage(),
+            ], 200);
+        }
 
         return parent::render($request, $e);
     }
