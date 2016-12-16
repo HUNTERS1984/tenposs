@@ -16,7 +16,7 @@
                     <img class="img-circle" src="{{ $avatar_url }}" alt=""/>
                 </a>
             </div>
-            <p class="font32">{{ Session::get('user')->profile->name }}</p>
+            <p class="font32">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</p>
             @else
             <div class="image">
                 <a href="{{ route('login') }}">
