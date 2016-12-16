@@ -195,7 +195,7 @@ class PhotoCatController extends Controller
 
         if (count($stores) > 0) {
             $list_store = $stores->lists('name', 'id');
-            $photo_cat = PhotoCat::whereId($id)->whereNull('deleted_at')->first();
+            $photo_cat = PhotoCat::whereId($id)->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->first();
             if (!$photo_cat)
                 return abort(404);
         }
