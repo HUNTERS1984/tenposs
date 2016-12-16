@@ -4,8 +4,12 @@
 <link href="{{ url('css/coupon.css') }}" rel="stylesheet">
 <link href="{{ url('css/news.css') }}" rel="stylesheet">
 <style>
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: "{{ $app_info->data->app_setting->font_family }}";
+    }
     .h_control-nav:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
         }
 </style>
 @stop

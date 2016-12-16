@@ -2,8 +2,12 @@
 @section('headCSS')
     <link href="{{ url('css/menu.css') }}" rel="stylesheet">
 <style>
+    body{
+        font-size: {{ $app_info->data->app_setting->font_size }};
+        font-family: {{ $app_info->data->app_setting->font_family }};
+    }
     .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->title_color }};
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
         }
 </style>
 @endsection
