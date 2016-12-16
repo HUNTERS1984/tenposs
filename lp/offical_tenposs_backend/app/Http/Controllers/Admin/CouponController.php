@@ -153,18 +153,82 @@ class CouponController extends Controller
             $notapproved_posts->appends($this->request->only('search_pattern'))->links();
             $approved_posts->appends($this->request->only('search_pattern'))->links();
         } else {
-            $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
-            for ($i = 0; $i < count($posts); $i++) {
-                $app_user = Post::find($posts[$i]->id)->app_user()->first();
-                $profile = $app_user->profile()->first();
-                if ($profile) {
-                    $posts[$i]->username = $app_user->profile()->first()->name;
-                    $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-                } else {
-                    $posts[$i]->username = '';
-                    $posts[$i]->avatar = '';
-                }
+            // $posts = Post::whereNull('deleted_at')->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+            // for ($i = 0; $i < count($posts); $i++) {
+            //     $app_user = Post::find($posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $posts[$i]->username = $app_user->profile()->first()->name;
+            //         $posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $posts[$i]->username = '';
+            //         $posts[$i]->avatar = '';
+            //     }
                    
+            //     $posts[$i]->status = DB::table('rel_apps_posts')
+            //                             ->whereAppId($this->request->app->id)
+            //                             ->wherePostId($posts[$i]->id)
+            //                             ->count() > 0;
+            //     if ($posts[$i]->avatar == null)
+            //         $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
+
+            // }
+
+            // $notapproved_posts = Post::whereNull('deleted_at')->whereDoesntHave('apps', function($query) {
+            //     $query->where('app_id', $this->request->app->id);
+            // })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+            
+            // for ($i = 0; $i < count($notapproved_posts); $i++) {
+            //     $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
+            //         $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $notapproved_posts[$i]->username = '';
+            //         $notapproved_posts[$i]->avatar = '';
+            //     }
+            //     $notapproved_posts[$i]->status = false;
+            //     if ($notapproved_posts[$i]->avatar == null)
+            //         $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
+            // }
+            // $approved_posts = Post::whereNull('deleted_at')->whereHas('apps', function($query) {
+            //     $query->where('app_id', $this->request->app->id);
+            // })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+            
+            // for ($i = 0; $i < count($approved_posts); $i++) {
+            //     $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
+            //     $profile = $app_user->profile()->first();
+            //     if ($profile) {
+            //         $approved_posts[$i]->username = $app_user->profile()->first()->name;
+            //         $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
+            //     } else {
+            //         $approved_posts[$i]->username = '';
+            //         $approved_posts[$i]->avatar = '';
+            //     }
+            //     $approved_posts[$i]->status = true;
+            //     if ($approved_posts[$i]->avatar == null)
+            //         $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            //     else
+            //         $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
+            // }
+            $posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'all_coupon');
+
+            for ($i = 0; $i < count($posts); $i++) {
+                $posts[$i]->tags = Post::find($posts[$i]->id)->tags()->get();
                 $posts[$i]->status = DB::table('rel_apps_posts')
                                         ->whereAppId($this->request->app->id)
                                         ->wherePostId($posts[$i]->id)
@@ -173,43 +237,44 @@ class CouponController extends Controller
                     $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
-
             }
-
-            $notapproved_posts = Post::whereNull('deleted_at')->whereDoesntHave('apps', function($query) {
-                $query->where('app_id', $this->request->app->id);
-            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
             
+            $notapproved_posts =Post::whereDoesntHave('apps', function($query) {
+                $query->where('app_id', $this->request->app->id);
+            })->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'no_coupon');
+
             for ($i = 0; $i < count($notapproved_posts); $i++) {
-                $app_user = Post::find($notapproved_posts[$i]->id)->app_user()->first();
-                $profile = $app_user->profile()->first();
-                if ($profile) {
-                    $notapproved_posts[$i]->username = $app_user->profile()->first()->name;
-                    $notapproved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-                } else {
-                    $notapproved_posts[$i]->username = '';
-                    $notapproved_posts[$i]->avatar = '';
-                }
+                $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
                     $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
-            $approved_posts = Post::whereNull('deleted_at')->whereHas('apps', function($query) {
-                $query->where('app_id', $this->request->app->id);
-            })->orderBy('id', 'DESC')->with('tags')->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
-            
+
+            $approved_posts = DB::table('posts')
+            ->select('posts.*', 'user_profiles.name AS username', 'user_profiles.avatar_url AS avatar')
+            ->join('rel_posts_tags', 'posts.id', '=', 'rel_posts_tags.post_id')
+            ->join('tags', 'tags.id', '=', 'rel_posts_tags.tag_id')
+            ->join('app_users', 'app_users.id', '=', 'posts.app_user_id')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->join('rel_apps_posts', 'posts.id', '=', 'rel_apps_posts.post_id')
+            ->where('rel_apps_posts.app_id', '=', $this->request->app->id)
+            ->where('posts.deleted_at', '=', null)
+            ->groupBy('posts.id')
+            ->orderBy('id', 'DESC')
+            ->paginate(REQUEST_COUPON_ITEMS, ['*'], 'yes_coupon');
+
             for ($i = 0; $i < count($approved_posts); $i++) {
-                $app_user = Post::find($approved_posts[$i]->id)->app_user()->first();
-                $profile = $app_user->profile()->first();
-                if ($profile) {
-                    $approved_posts[$i]->username = $app_user->profile()->first()->name;
-                    $approved_posts[$i]->avatar = $app_user->profile()->first()->avatar_url;
-                } else {
-                    $approved_posts[$i]->username = '';
-                    $approved_posts[$i]->avatar = '';
-                }
+                $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
                     $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
