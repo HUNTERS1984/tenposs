@@ -62,28 +62,28 @@
             </div>
         </th>
         <td class="center">
-            @if( isset($user->profile) && file_exists( public_path($user->profile->avatar_url) ) )
-            <img src="{{ ( $user->profile->avatar_url != '' ) ? url($user->profile->avatar_url) : '' }}" alt="">
+            @if( file_exists(public_path($user->avatar) ) )
+            <img src="{{ url($user->avatar) }}" alt="">
             @else
             <img src="{{ url('admin/images/icon-user.png') }}" alt="">
             @endif
         </td>
         <td class="center">
             <a href="{{ route('admin.users.management.detail',$user->id) }}" title="" class="blue">
-                {{ $user->profile->name }}
+                {{ $user->username }}
             </a>
         </td>
         <td class="center">
             {{ $user->id }}
         </td>
         <td class="center">
-            @if ($user->point->miles >= $client->point_setting->rank4)
+            @if ($user->point >= $client->point_setting->rank4)
                 <p>ダイアモンド会員</p>
-                @elseif ($user->point->miles >= $client->point_setting->rank3)
+                @elseif ($user->point >= $client->point_setting->rank3)
                 <p>プラチナ会員</p>
-                @elseif ($user->point->miles >= $client->point_setting->rank2)
+                @elseif ($user->point >= $client->point_setting->rank2)
                 <p>ゴールド会員</p>
-                @elseif ($user->point->miles >= $client->point_setting->rank1)
+                @elseif ($user->point >= $client->point_setting->rank1)
                 <p>シルバー会員</p>
                 @else
                 <p>普通会員</p>
@@ -91,30 +91,30 @@
 
         </td>
         <td class="center">
-            @if( $user->profile->gender == 0 )
+            @if( $user->gender == 0 )
             不定義
-            @elseif( $user->profile->gender == 1 )
+            @elseif( $user->gender == 1 )
             男性
-            @elseif( $user->profile->gender == 2 )
+            @elseif( $user->gender == 2 )
             女性
             @endif
         </td>
-        <td class="center">{{ $user->profile->age }}</td>
-        <td class="center">{{ $user->profile->address }}</td>
+        <td class="center">{{ $user->age }}</td>
+        <td class="center">{{ $user->address }}</td>
         <td class="center">
-            @if( $user->profile->facebook_status == 1 )
+            @if( $user->facebook_status == 1 )
             <a href="#"><span class="fa-stack fa-lg">
               <i class="fa fa-square-o fa-stack-2x"></i>
               <i class="fa fa-facebook fa-stack-1x"></i>
             </span> </a>
             @endif
-            @if( $user->profile->twitter_status == 1 )
+            @if( $user->twitter_status == 1 )
             <a href="#"><span class="fa-stack fa-lg">
               <i class="fa fa-square-o fa-stack-2x"></i>
               <i class="fa fa-twitter fa-stack-1x"></i>
             </span> </a>
             @endif
-            @if( $user->profile->instagram_status == 1 )
+            @if( $user->instagram_status == 1 )
             <a href="#"><span class="fa-stack fa-lg">
               <i class="fa fa-square-o fa-stack-2x"></i>
               <i class="fa fa-instagram fa-stack-1x"></i>

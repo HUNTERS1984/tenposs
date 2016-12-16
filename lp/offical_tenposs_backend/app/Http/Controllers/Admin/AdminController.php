@@ -676,15 +676,58 @@ class AdminController extends Controller
         $search_str = $this->request->input('search_pattern'); 
         if ($search_str)
         {
-            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereHas('profile', function($query) use ($search_str){
+            $users = DB::table('app_users')
+            ->select('app_users.*', 
+                'user_profiles.name AS username', 
+                'user_profiles.avatar_url AS avatar', 
+                'user_profiles.age AS age',
+                'user_profiles.address AS address',
+                'user_profiles.facebook_status AS facebook_status',
+                'user_profiles.twitter_status AS twitter_status',
+                'user_profiles.instagram_status AS instagram_status',
+                'user_profiles.gender AS gender')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->whereNull('app_users.deleted_at')
+            ->whereNull('user_profiles.deleted_at')     
+            ->where(function ($query) use ($search_str) {
                 $query->where('name', 'LIKE', '%'. $search_str .'%' );
-            })->whereNull('deleted_at')
-                ->paginate(10);
+            })
+            ->orderBy('app_users.updated_at', 'DESC')
+            ->paginate(10);
+
             $users->appends($this->request->only('search_pattern'))->links();
         } else {
-            $users = AppUser::with(['profile'])->orderBy('updated_at', 'DESC')->whereNull('deleted_at')
-                ->paginate(10);
+            $users = DB::table('app_users')
+            ->select('app_users.*', 
+                'user_profiles.name AS username', 
+                'user_profiles.avatar_url AS avatar', 
+                'user_profiles.age AS age',
+                'user_profiles.address AS address',
+                'user_profiles.facebook_status AS facebook_status',
+                'user_profiles.twitter_status AS twitter_status',
+                'user_profiles.instagram_status AS instagram_status',
+                'user_profiles.gender AS gender')
+            ->join('user_profiles', 'app_users.id', '=', 'user_profiles.app_user_id')
+            ->whereNull('app_users.deleted_at')
+            ->whereNull('user_profiles.deleted_at')
+            ->orderBy('app_users.updated_at', 'DESC')
+            ->paginate(10);
+            
         }
+
+        for ($i = 0; $i < count($users); $i++) {
+            $response = cURL::newRequest('get', Config::get('api.api_point_user')."?app_id=".$this->request->app->app_app_id.'&user_id='.$users[$i]->id)
+            ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
+            $point_info = json_decode($response->body);
+            $users[$i]->point = 0;
+            if ($point_info)
+                $users[$i]->point = $point_info->data->miles;
+            if ($users[$i]->avatar == null)
+                $users[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
+            else
+                $users[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $users[$i]->avatar);
+        }
+
         //dd($users);
         // Client
         $response = cURL::newRequest('get', Config::get('api.api_point_client')."?app_id=".$this->request->app->app_app_id)
