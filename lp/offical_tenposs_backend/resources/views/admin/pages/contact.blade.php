@@ -20,7 +20,7 @@
             <center>{{Form::button('送信',['class'=>'btn btn-contact', 'type' => 'submit'])}}</center>
             
             {{Form::close()}}
-        </div>
+        </div>  
     </section>
 </aside>
 

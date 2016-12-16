@@ -632,7 +632,8 @@ class CouponController extends Controller
         if (count($list_store) > 0) {
             $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
         }
-        $coupon = $this->entity->whereId($id)->with('tags')->first();
+
+        $coupon = $this->entity->whereId($id)->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('tags')->first();
         if (!$coupon)
             abort(404);
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);

@@ -399,32 +399,36 @@ class MenusController extends Controller
 
     public function edit($id)
     {
+        $menu_id = 0;
+        $stores = $this->request->stores;
+        $menus = array();
+        if (count($stores) > 0) {
+            $list_store = $stores->lists('name', 'id');
+            $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->select('name','id')->get();
+        }
+
         $item = Item::whereId($id)->with('menus')->first();
 
-        if ($item) {
-            $menu_id = 0;
-            $stores = $this->request->stores;
-            $menus = array();
-            if (count($stores) > 0) {
-                $list_store = $stores->lists('name', 'id');
-                $menus = $this->menu->orderBy('id', 'DESC')->whereIn('store_id', $stores->pluck('id')->toArray())->whereNull('deleted_at')->with('store')->select('name','id')->get();
-            }
-            foreach ($item->menus as $menu_item) {
-                if (in_array($menu_item->id, $menus->pluck('id')->toArray())) {
-                    $menu_id = $menu_item->id;
-                    break;
-                }
-            }
-            //size info
-            $size_type = DB::table('item_size_types')->get();
-            $size_categories = DB::table('item_size_categories')->get();
-            $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
-    //        dd($size_categories);
-            return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
-                'size_type','size_categories','size_value'));
-        } else {
+        if (!$item)
             abort(404);
+
+        foreach ($item->menus as $menu_item) {
+            if (in_array($menu_item->id, $menus->pluck('id')->toArray())) {
+                $menu_id = $menu_item->id;
+                break;
+            }
         }
+
+        if ($menu_id == 0)
+            abort(404);
+
+        //size info
+        $size_type = DB::table('item_size_types')->get();
+        $size_categories = DB::table('item_size_categories')->get();
+        $size_value = DB::table('item_sizes')->where('item_id',$id)->get();
+//        dd($size_categories);
+        return view('admin.pages.menus.edit',compact('menus','item', 'menu_id',
+            'size_type','size_categories','size_value'));
        
     }
 
