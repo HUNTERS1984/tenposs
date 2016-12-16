@@ -15,6 +15,7 @@ use \Curl\Curl;
 use OAuth\OAuth2\Service\Facebook;
 use OAuth\Common\Storage\Session as OAuthSession;
 use OAuth\Common\Consumer\Credentials;
+use Artdarek\OAuth\Facade\OAuth;
 
 class LoginController extends Controller
 {
@@ -219,7 +220,7 @@ class LoginController extends Controller
     public function loginWithFacebook( Request $request ){
 
         $code = $request->get('code');
-        $fb = \OAuth::consumer('Facebook');
+        $fb = OAuth::consumer('Facebook');
         // if code is provided get user data and sign in
         if ( ! is_null($code))
         {
@@ -266,7 +267,7 @@ class LoginController extends Controller
     public function loginWithTwitter( Request $request){
         $token  = $request->get('oauth_token');
         $verify = $request->get('oauth_verifier');
-        $tw = \OAuth::consumer('Twitter');
+        $tw = OAuth::consumer('Twitter');
         // if code is provided get user data and sign in
         if ( ! is_null($token) && ! is_null($verify))
         {
@@ -309,8 +310,8 @@ class LoginController extends Controller
     }
 
     public function socialConnect(Request $request){
-        $fb = \OAuth::consumer('Facebook', route('social.connect') );
-        $tw = \OAuth::consumer('Twitter', route('social.connect') );
+        $fb = OAuth::consumer('Facebook', route('social.connect') );
+        $tw = OAuth::consumer('Twitter', route('social.connect') );
         
         $social_id = '';
         $social_token = '';
@@ -398,8 +399,8 @@ class LoginController extends Controller
     
     public function profile(Request $request){
         
-        $fb = \OAuth::consumer('Facebook', route('social.connect') );
-        $tw = \OAuth::consumer('Twitter', route('social.connect') );
+        $fb = OAuth::consumer('Facebook', route('social.connect') );
+        $tw = OAuth::consumer('Twitter', route('social.connect') );
     
         $url_fb = $fb->getAuthorizationUri();
         // get request token

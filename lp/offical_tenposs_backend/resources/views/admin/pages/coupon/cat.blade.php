@@ -18,7 +18,7 @@
         <div class="col-lg-12">
             <div class="btn-menu">
                 <a href="javascript:avoid()" data-keyboard="false" class="btn-3" data-toggle="modal" data-target="#AddMenu">
-                  <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
+                  <i class="glyphicon glyphicon-plus"></i> クーポンタイプ追加
                 </a>
                 <a href="javascript:avoid()" data-keyboard="false" class="btn-4" data-toggle="modal" data-target="#DeleteConfirm">
                   <i class="glyphicon glyphicon-plus"></i> 選択した項目を削除
@@ -32,7 +32,7 @@
                         <thead>
                         <tr>
                             <th class="center">選択</th>
-                            <th>カテゴリ</th>
+                            <th>クーポンタイプ</th>
                             <th>ストア</th>
                             <th></th>
                         </tr>
@@ -94,7 +94,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="AddMenuLabel">カテゴリ追加</h4>
+                        <h4 class="modal-title" id="AddMenuLabel">クーポンタイプ追加</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -103,7 +103,7 @@
 
                         </div>
                         <div class="form-group">
-                            {{Form::label('Name', 'カテゴリ名')}}
+                            {{Form::label('Name', 'クーポンタイプ名')}}
                             {{Form::text('name',old('name'),['class'=>'form-control'])}}
                         </div>
                     </div>

@@ -23,6 +23,8 @@
 }
 #user ul li label{
     width: 240px;
+    color: lightgray;
+    font-weight: 500;
 }
 #user ul li label.avatar img{
     max-width: 100%;
@@ -32,8 +34,8 @@
 }
 @media screen and (max-width: 479px){
     #user ul li label{
-        width:40%;
-        font-size:15px;
+        width: 40%;
+        font-size: 12px;
     }
     #user ul li label.label-title-user{
         width:50%;
@@ -55,10 +57,26 @@
     border:none;
     outline: none;
 }
+
+#app-icon-review {
+    border: 2px solid #ddd; 
+    object-fit: cover; 
+    width: 120px; 
+    height: 120px;
+}
+
 @media screen and (max-width: 479px){
     #user ul li input, #user ul li select{
-        font-size:15px;
+        font-size:14px;
         width:55%;
+        display:inline;
+    }
+
+    #app-icon-review {
+        border: 2px solid #ddd; 
+        object-fit: cover; 
+        width: 60px; 
+        height: 60px;
     }
 }
 #user ul li i.icon-clean{
@@ -150,9 +168,9 @@ ul.social{
         padding:10px 20px 10px 50px;
     }
     ul.social .icon-face, ul.social .icon-twitter, ul.social .icon-instagram{
-        transform:scale(0.7);
-        -webkit-transform:scale(0.7);
-        -moz-transform:scale(0.7);
+        transform:scale(0.5);
+        -webkit-transform:scale(0.5);
+        -moz-transform:scale(0.5);
         left: 10px;
     }
     #user ul.social li .wrap-ic{

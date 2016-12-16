@@ -205,13 +205,13 @@ body.lb-disable-scrolling {
   width:27px;
   height:27px;
   border-radius:100%;
-  padding:35px;
-  background:rgba(0,0,0,0.7) url('../images/close.png')no-repeat center center;
+  padding:30px;
+  background:rgba(0,0,0,0.5) url('../images/close.png')no-repeat center center;
   left:50%;
   transform:translateX(-50%);
   -moz-transform:translateX(-50%);
   -webkit-transform:translateX(-50%);
-  bottom:-25%;
+  bottom:-30%;
 }
 
 .lb-data .lb-close:hover {

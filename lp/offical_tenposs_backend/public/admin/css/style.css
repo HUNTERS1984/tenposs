@@ -1510,6 +1510,13 @@ ul.link-top-2 li a.active{
   font-weight: bold;
   color: #1e96d6;
 }
+
+.title-news p a.text-news-title{
+  text-align: left;
+  color: #444444;
+  font-size: 13px;
+}
+
 .title-news a:hover.text-news-left{
   color: #f078a0;
 }
@@ -1608,7 +1615,7 @@ ul.link-top-2 li a.active{
   color: #f078a0;
   font-weight: bold;
 }
-.title-coupon p.text-coupon-left{
+.title-coupon a.text-coupon-left{
   text-align: left;
   font-weight: bold;
   color: #1e96d6;

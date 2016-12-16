@@ -101,8 +101,8 @@
                                 <div class="title-news">
                                     <div class="row">
                                         <div class="col-md-8 col-xs-12">
-                                            <a href="{{route('admin.news.edit',$item->id)}}" class="text-news-left">{{$item->title}}</a>
-                                            <p>{{ $item->category->name }}</p>
+                                            <a href="{{route('admin.news.edit',$item->id)}}" class="text-news-left">{{$item->category->name}}</a>
+                                            <p><a href="{{route('admin.news.edit',$item->id)}}" class="text-news-title">{{$item->title}}</a></p>
                                         </div>
                                         <div class="col-md-4 col-xs-12">
                                             <a href="javascript:avoid()" data-toggle="modal" data-target="#DeleteConfirm" data-id="{{$item->id}}" class="btn-5 deleteConfirm">削除</a>

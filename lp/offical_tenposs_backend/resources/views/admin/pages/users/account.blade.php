@@ -186,8 +186,8 @@
     .user-avatar{
         border: 2px solid #ddd;
         object-fit: cover;
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
         border-radius: 50%;
     }
 </style>
