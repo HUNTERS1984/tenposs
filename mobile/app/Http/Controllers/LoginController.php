@@ -387,13 +387,13 @@ class LoginController extends Controller
                 'social_type' => $type ,
             ));
             if( isset($curl->code) && $curl->code == 1000 ){
-                return redirect()
+                return back()
                     ->withErrors('プロファイルをキャンセルする!')
                     ->route('profile');
             }
         }
 
-        return redirect()->back()
+        return back()
             ->withErrors('プロファイルのキャンセルをキャンセルする!' )
             ->route('profile');
     }
