@@ -23,19 +23,19 @@
     <div id="header">
          <div class="container-fluid">
             <h1 class="aligncenter">
-                {{ $detail->data->staffs->name }}
+                {{ $detail->name }}
             </h1>
             <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
     </div><!-- End header -->
     <div id="main">
         <div id="content" class="staff-detail-page item-detail">
-            <img class="image_size_detail center-cropped" src="{{$detail->data->staffs->image_url}}" style="width:100%" alt="Nakayo"/>
+            <img class="image_size_detail center-cropped" src="{{$detail->image_url}}" style="width:100%" alt="Nakayo"/>
             <div class="wrap-content-staff-detail">
                 <div class="info-productdetail">
                     <div class="container-fluid">
-                        <span class="sub-staff-name">{{$detail->data->staffs->name}}</span>
-                        <p class="font32 staff-name"><strong>{{$detail->data->staffs->name}}</strong></p>
+                        <span class="sub-staff-name">{{$detail->staff_category_name}}</span>
+                        <p class="font32 staff-name"><strong>{{$detail->name}}</strong></p>
                     </div>
                 </div>
                 <div class="entry-productdetail">
@@ -47,8 +47,8 @@
                     </div>
                     <div class="content-staffDetail" id="intro">
                         <div class="container-fluid">
-                            <p>{{$detail->data->staffs->introduction}}</p>
-                            @if(str_word_count($detail->data->staffs->introduction) > 40)
+                            <p>{{$detail->introduction}}</p>
+                            @if(str_word_count($detail->introduction) > 40)
                             <a href="javascript:void(0)" class="btn pad20 tenposs-readmore">もっと見る</a>
                             @endif
                         </div>
@@ -63,7 +63,7 @@
                                                 <label>性别</label>
                                             </td>
                                             <td>
-                                                @if($detail->data->staffs->gender == '0')
+                                                @if($detail->gender == '0')
                                                 <p class="title-staff">女性</p>
                                                 @else
                                                 <p class="title-staff">男性</p>
@@ -75,7 +75,7 @@
                                                 <label>価格</label>
                                             </td>
                                             <td>
-                                                <p class="title-staff">¥{{number_format($detail->data->staffs->price)}}</p>
+                                                <p class="title-staff">¥{{number_format($detail->price)}}</p>
 
                                             </td>
                                         </tr>
@@ -84,7 +84,7 @@
                                                 <label>電話番号</label>
                                             </td>
                                             <td>
-                                                <p class="title-staff">{{$detail->data->staffs->tel}}</p>
+                                                <p class="title-staff">{{$detail->tel}}</p>
 
                                             </td>
                                         </tr>

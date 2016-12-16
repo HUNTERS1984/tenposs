@@ -57,7 +57,8 @@ class StaffController extends Controller
                         ->get_data('staff_detail',['app_id'=>$this->app->app_app_id,'id'=>$id],$this->app->app_app_secret);
         $app_info = json_decode($appInfos);
         $detail = json_decode($staff_detail);
-        // dd($detail);
+        $detail = $detail->data->staffs[0];
+
         return view('staff_detail',compact('app_info','detail'));
 
     }
