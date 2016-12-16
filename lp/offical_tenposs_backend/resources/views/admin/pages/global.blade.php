@@ -272,7 +272,7 @@
             </div>
             <!-- //tab-global-2 -->
 
-            <div role="tabpanel" class="tab-pane active" id="tab-global-4">
+            <div role="tabpanel" class="tab-pane" id="tab-global-4">
                 <div class="col-md-4">
                      <div class="wrapp-phone">
                         <div class="wrap-content-prview">

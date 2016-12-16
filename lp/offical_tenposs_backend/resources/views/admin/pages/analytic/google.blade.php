@@ -4,7 +4,7 @@
     <link href="{{ url('admin/css/daterangepicker.css') }}" rel="stylesheet" type="text/css"/>
     <aside class="right-side">
         <div class="wrapp-breadcrumds">
-            <div class="left"><span>アクセス解析</span></div>
+            <div class="left"><span>アナリティクス</span><strong>各種データの確認が可能</strong></div>
             <div class="left">
                 <div class="tab-header-analytic">
                     <ul class="nav nav-tabs" role="tablist">
