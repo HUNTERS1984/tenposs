@@ -120,10 +120,10 @@
                         {{Form::open(array('route'=>'admin.photo-cate.delete'))}}
                         <input type="text" name="itemId" id="itemId" value="" hidden/>
                         <div class="col-md-6">
-                            <center><a href="#" data-dismiss="modal" class="btn btn-primary btn_cancel_form">キャンセル</a></center>
+                            <center><a href="#" data-dismiss="modal" class="btn-user-poup-log-poup-left">キャンセル</a></center>
                         </div>
                         <div class="col-md-6">
-                            <center>{{Form::submit('削除',['class'=>'btn btn-primary btn_submit_form'])}}</center>
+                            <center>{{Form::submit('削除',['class'=>'btn-user-poup-log-poup-right'])}}</center>
                         </div>
                         {{Form::close()}}
                     </div>
