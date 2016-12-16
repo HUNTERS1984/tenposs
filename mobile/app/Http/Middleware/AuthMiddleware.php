@@ -35,7 +35,7 @@ class AuthMiddleware
         } catch (TokenExpiredException $e) {
 
             $curl = new Curl();
-            $curl->setHeader('Authorization',  'Bearer '. $token );
+            $curl->setBasicAuthentication('tenposs','Tenposs@123');
             $params = array(
                 'id_code' => $currentSessionUser->refresh_token,
                 'refresh_token' => $currentSessionUser->access_refresh_token_href
@@ -50,12 +50,15 @@ class AuthMiddleware
                 $updateToken = (object)array_merge((array)$currentSessionUser, (array)$curl->data);
                 Session::put('user',$updateToken );
             }else{
+                Session::forget('user');
                 return redirect()->route('login')->withErrors('Session expired');
             }
 
         } catch (JWTException $e) {
+            Session::forget('user');
             return redirect()->route('login')->withErrors('Session expired');
         } catch (TokenBlacklistedException $e) {
+            Session::forget('user');
             return redirect()->route('login')->withErrors('Session expired');
         }
         return $next($request);
