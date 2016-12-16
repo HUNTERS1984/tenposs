@@ -78,7 +78,7 @@
                     <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
                 </a>
                 <a href="#" data-toggle="modal" data-target="#AddImage" class="btn-4">
-                    <i class="glyphicon glyphicon-plus"></i> メニュー追加
+                    <i class="glyphicon glyphicon-plus"></i> 写真追加
                 </a>
             </div>
             <div class="wrapp-photo-img">

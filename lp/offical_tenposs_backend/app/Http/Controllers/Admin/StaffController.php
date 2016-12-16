@@ -158,8 +158,9 @@ class StaffController extends Controller
     public function edit($id)
     {
         $staff_cat = $this->staffcat->orderBy('id', 'DESC')->whereIn('store_id', $this->request->stores->pluck('id')->toArray())->whereNull('deleted_at')->get();;
-        $item = $this->staff->find($id);
-//      dd($item);
+        $item = $this->staff->whereId($id)->whereIn('staff_category_id', $staff_cat->pluck('id')->toArray())->first();
+        if (!$item)
+            abort(404);
         return view('admin.pages.staff.edit',compact('item','staff_cat'));
 
     }

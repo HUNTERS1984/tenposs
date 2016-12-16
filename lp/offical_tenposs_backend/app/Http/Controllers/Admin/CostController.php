@@ -46,6 +46,7 @@ class CostController extends Controller
 
             if ($userplan->data->billingplan->type==1) // yearly plan
                 $member_months *= 12;
+
             $start_month =  date("Y.m", strtotime($userplan->data->updated_at));
             $end_month =  date("Y.m", strtotime($userplan->data->updated_at. "+ ".$member_months." months"));
 

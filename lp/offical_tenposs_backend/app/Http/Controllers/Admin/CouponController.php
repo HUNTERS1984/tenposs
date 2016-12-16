@@ -51,7 +51,7 @@ class CouponController extends Controller
             $coupons = $this->entity->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->whereNull('deleted_at')->with('coupon_type')->orderBy('updated_at', 'desc')->paginate(REQUEST_COUPON_ITEMS);
             for ($i = 0; $i < count($coupons); $i++) {
                 if ($coupons[$i]->image_url == null)
-                    $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $coupons[$i]->image_url = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $coupons[$i]->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupons[$i]->image_url);
             }
@@ -95,7 +95,7 @@ class CouponController extends Controller
                                         ->wherePostId($posts[$i]->id)
                                         ->count() > 0;
                 if ($posts[$i]->avatar == null)
-                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
             }
@@ -119,7 +119,7 @@ class CouponController extends Controller
                 $notapproved_posts[$i]->tags = Post::find($notapproved_posts[$i]->id)->tags()->get();
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
-                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
@@ -144,7 +144,7 @@ class CouponController extends Controller
                 $approved_posts[$i]->tags = Post::find($approved_posts[$i]->id)->tags()->get();
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
-                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
@@ -170,7 +170,7 @@ class CouponController extends Controller
                                         ->wherePostId($posts[$i]->id)
                                         ->count() > 0;
                 if ($posts[$i]->avatar == null)
-                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $posts[$i]->avatar);
 
@@ -192,7 +192,7 @@ class CouponController extends Controller
                 }
                 $notapproved_posts[$i]->status = false;
                 if ($notapproved_posts[$i]->avatar == null)
-                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $notapproved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $notapproved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $notapproved_posts[$i]->avatar);
             }
@@ -212,7 +212,7 @@ class CouponController extends Controller
                 }
                 $approved_posts[$i]->status = true;
                 if ($approved_posts[$i]->avatar == null)
-                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/wall.jpg';
+                    $approved_posts[$i]->avatar = env('ASSETS_BACKEND') . '/images/icon-user.jpg';
                 else
                     $approved_posts[$i]->avatar = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $approved_posts[$i]->avatar);
             }
@@ -632,7 +632,10 @@ class CouponController extends Controller
         if (count($list_store) > 0) {
             $list_coupon_type = $this->type->whereIn('store_id', $list_store->pluck('id')->toArray())->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
         }
-        $coupon = $this->entity->whereId($id)->with('tags')->first();
+
+        $coupon = $this->entity->whereId($id)->whereIn('coupon_type_id', $list_coupon_type->pluck('id')->toArray())->with('tags')->first();
+        if (!$coupon)
+            abort(404);
         $coupon->image_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $coupon->image_url);
         RedisControl::delete_cache_redis('coupons');
         return view('admin.pages.coupon.edit', compact('coupon', 'list_store', 'all_coupon', 'list_coupon_type'));

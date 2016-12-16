@@ -157,10 +157,12 @@ class NewsController extends Controller
 
     public function edit($id)
     {
-        $news = $this->entity->find($id);
         $list_store = $this->store->lists('name', 'id');
         $new_cat = $this->new_cat->orderBy('id', 'DESC')->whereIn('store_id', $this->request->stores->pluck('id')->toArray())
                 ->whereNull('deleted_at')->get();
+        $news = $this->entity->whereId($id)->whereIn('new_category_id', $new_cat->pluck('id')->toArray())->first();
+        if (!$news)
+            abort(404);
         return view('admin.pages.news.edit', compact('news', 'list_store','new_cat'));
     }
 
