@@ -309,6 +309,7 @@ class AppsController extends Controller
                     break;
             }
 //
+           
             if ($params != null && count($params) > 0) {
                 if ($flatform == 'ga') {
                     $updated = HttpRequestUtil::getInstance()->post_data_file_without_token(
@@ -318,6 +319,7 @@ class AppsController extends Controller
                 } else {
                     $updated = HttpRequestUtil::getInstance()->post_data_file(Config::get('api.url_upload_file_notification_configure')
                         , $params, \Illuminate\Support\Facades\Session::get('jwt_token'));
+                    
                 }
                 if ($updated) {
                     Session::flash('message', array('class' => 'alert-success', 'detail' => 'Configure successful!'));
