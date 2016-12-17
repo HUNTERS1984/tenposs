@@ -512,7 +512,7 @@ h3,.h3{font-size: 28px;}
 }
 @media screen and (max-width:479px){
     #side .s_nav li{
-        padding:15px 0 15px 45px;
+        padding:7px 0 7px 45px;
         position:relative;
     }
     #side .s_nav li:before{
