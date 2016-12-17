@@ -89,12 +89,12 @@ class MobileController extends Controller
                     }
                 } 
             }
-
+            
             $arrParams['app_id'] = $this->app->app_app_id;
             $curl = new Curl();
             $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
             $curl->post( 'https://apinotification.ten-po.com/v1/user/set_push_setting',$arrParams );
-
+            
             if( isset($curl->response->code) && $curl->response->code){
                 return response()->json(['success' => true ]);
             }

@@ -112,7 +112,7 @@ class NotificationController extends Controller
 
     public function user_set_push_setting()
     {
-        $check_items = array('app_id', 'ranking', 'news', 'coupon', 'chat');
+        $check_items = array('app_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -125,11 +125,14 @@ class NotificationController extends Controller
                     ->where('app_type', 'user')->first();
                 if (count($user_setting) < 1)
                     $user_setting = new UserPushSetting();
-                $user_setting->ranking = Input::get('ranking');
-                $user_setting->news = Input::get('news');
-                $user_setting->coupon = Input::get('coupon');
-                $user_setting->chat = Input::get('chat');
-                $user_setting->ranking = Input::get('ranking');
+                if (Input::get('ranking'))
+                    $user_setting->ranking = Input::get('ranking');
+                if (Input::get('news'))
+                    $user_setting->news = Input::get('news');
+                if (Input::get('coupon'))
+                    $user_setting->coupon = Input::get('coupon');
+                if (Input::get('chat'))
+                    $user_setting->chat = Input::get('chat');
                 $user_setting->other = 0;
                 $user_setting->app_type = 'user';
                 $user_setting->auth_user_id = $info['id'];
