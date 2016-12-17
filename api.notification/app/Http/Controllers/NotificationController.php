@@ -125,13 +125,13 @@ class NotificationController extends Controller
                     ->where('app_type', 'user')->first();
                 if (count($user_setting) < 1)
                     $user_setting = new UserPushSetting();
-                if (Input::get('ranking'))
+                if (isset(Input::get('ranking')))
                     $user_setting->ranking = intval(Input::get('ranking'));
-                if (Input::get('news'))
+                if (isset(Input::get('news')))
                     $user_setting->news = intval(Input::get('news'));
-                if (Input::get('coupon'))
+                if (isset(Input::get('coupon')))
                     $user_setting->coupon = intval(Input::get('coupon'));
-                if (Input::get('chat'))
+                if (isset(Input::get('chat')))
                     $user_setting->chat = intval(Input::get('chat'));
                 $user_setting->other = 0;
                 $user_setting->app_type = 'user';
