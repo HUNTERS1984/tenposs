@@ -90,35 +90,36 @@
             <div class="wrap-input">
                 <div class="wrap-inner">
                     <div class="form-group-login">
-                        <input data-date-format="yyyy/mm/dd" value="{{ old('birthday') }}"
-                                class="input-form input-lg" type="date" name="birthday" placeholder="お誕生日" />
+                        <input readonly value="{{ Session::get('user')->email }}" class="input-form last input-lg" type="text"
+                               name="email" placeholder="メール" />
                     </div>
-                     <div class="form-group-login">
+                    <div class="form-group-login">
                          <select name="address" id="" class="input-form input-lg">
                              @foreach( $arrAddress as $key => $val )
                              <option {{ ($key == old('address') ) ? 'selected' : '' }} value="{{ $key }}">{{ $val }}</option>
                              @endforeach
-                         </select>
-
+                         </select>　        
                      </div>
-                     <div class="form-group-login">
+                    <div class="form-group-login">
+                        <input data-date-format="yyyy/mm/dd" value="{{ old('birthday') }}"
+                                class="input-form input-lg" type="date" name="birthday" placeholder="お誕生日" />
+                    </div>
+
+<!--                      <div class="form-group-login">
                          <select name="gender" id="" class="input-form input-lg" >
                              <option value="0" {{ ( old('gender') == 0) ? 'selected' : '' }}>男性</option>
                              <option value="1" {{ ( old('gender') == 1) ? 'selected' : '' }}>女性</option>
                              <option value="2" {{ ( old('gender') == 2) ? 'selected' : '' }}>他の</option>
                          </select>
-                     </div>
+                     </div> -->
                     <div class="form-group-login">
                         <input value="{{ old('code') }}" class="input-form input-lg" type="text" name="code" placeholder="招待コード" />
                     </div>
-                    <div class="form-group-login">
-                        <input readonly value="{{ Session::get('user')->email }}" class="input-form last input-lg" type="text"
-                               name="email" placeholder="郵便物" />
-                    </div>
+
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-block btn-login" type="submit">新規会員</button>
+                <button class="btn btn-block btn-login" type="submit">こちらの内容で登録</button>
             </div>
         </form>
         <p class="text-center" style="font-size:14px">

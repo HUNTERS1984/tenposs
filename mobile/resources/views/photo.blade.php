@@ -46,50 +46,47 @@
             </div><!-- End photogallery -->
             <div id="category-detail">
                 <input type="hidden" name="token" value="{{ csrf_token() }}">
-
-                <div class="container-fluid">
-                    <!-- Slider main container -->
-                    <div class="swiper-container">
-                        <!-- Additional required wrapper -->
-                        <div class="swiper-wrapper">
-                            <!-- Slides -->
-                            @if(isset($photo_detail) && count($photo_detail) > 0)
-                                @foreach($photo_detail as $photo)
-                                @if($photo)
-                                <div class="swiper-slide">
-                                    <div class="container-all-img clearfix">
-                                        <div class="load-ajax">
-                                            @if( $photo !== null)
-                                                @foreach($photo->data->photos as $item)
-                                                <div class="item-photogallery">
-                                                    <input type="hidden" name="pagesize{{$item->photo_category_id}}" value="{{$pagesize}}">
-                                                    <div class="crop">
-                                                        <div class="inner-crop">
-                                                             <a href="{{$item->image_url}}" data-lightbox="lightbox">
-                                                                <img src="{{$item->image_url}}" class="img-responsive" alt="Nayako"/>
-                                                            </a>
-                                                        </div>
+                <!-- Slider main container -->
+                <div class="swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        @if(isset($photo_detail) && count($photo_detail) > 0)
+                            @foreach($photo_detail as $photo)
+                            @if($photo)
+                            <div class="swiper-slide">
+                                <div class="container-all-img clearfix">
+                                    <div class="load-ajax">
+                                        @if( $photo !== null)
+                                            @foreach($photo->data->photos as $item)
+                                            <div class="item-photogallery">
+                                                <input type="hidden" name="pagesize{{$item->photo_category_id}}" value="{{$pagesize}}">
+                                                <div class="crop">
+                                                    <div class="inner-crop">
+                                                         <a href="{{$item->image_url}}" data-lightbox="lightbox">
+                                                            <img src="{{$item->image_url}}" class="img-responsive" alt="Nayako"/>
+                                                        </a>
                                                     </div>
                                                 </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
+                                            </div>
+                                            @endforeach
+                                        @endif
                                     </div>
-                                    @if (count($photo->data->photos) ==  $pagesize)
-                                    <a href="#" class="btn tenposs-readmore more">もっと見る</a>
-                                    @endif
                                 </div>
-                                @else
-                                <div class="swiper-slide">
-                                    <p style="text-align: center; margin-top:20px">データなし</p>
-                                </div>
+                                @if (count($photo->data->photos) ==  $pagesize)
+                                <a href="#" class="btn tenposs-readmore more">もっと見る</a>
                                 @endif
-                                @endforeach
+                            </div>
+                            @else
+                            <div class="swiper-slide">
+                                <p style="text-align: center; margin-top:20px">データなし</p>
+                            </div>
                             @endif
+                            @endforeach
+                        @endif
 
-                        </div>
                     </div>
-                </div><!-- End container fluid -->
+                </div>
 
             </div><!-- End photogallery detail -->
         </div><!-- End content -->

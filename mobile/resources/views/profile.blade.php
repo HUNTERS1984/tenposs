@@ -71,8 +71,6 @@ $arrAddress = array(
     "okinawa" =>"沖縄県",
 );
 ?>
-<form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
-    <input type="hidden" value="{{ csrf_token() }}" name="_token">
 <div id="header">
     <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
         <h1 class="aligncenter" style="
@@ -87,6 +85,8 @@ $arrAddress = array(
         <a href="{{URL::previous()}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
+<form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" value="{{ csrf_token() }}" name="_token">
 <div id="main">
     <div id="content">
         @include('partials.message')
@@ -111,7 +111,7 @@ $arrAddress = array(
                 </li>
                 <li>
                     <label>ユーザーID</label>
-                    <input type="text" name="name" value="{{ $user->id }}"/>
+                    <input type="text" name="name" value="{{ $user->id }}" readonly="readonly"/>
 
                 </li>
                 <li>

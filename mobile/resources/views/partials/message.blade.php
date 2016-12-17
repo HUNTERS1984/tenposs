@@ -13,14 +13,14 @@
                 <h4 class="modal-title">お知らせ</h4>
             </div>
             <div class="modal-body">
-                <ul>
+                <ul style="list-style-type:none;padding: 0px;">
                     @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li class="modal-text">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                <button type="button" class="btn btn-default model-close" data-dismiss="modal">閉じる</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -28,24 +28,22 @@
     <div id="main">
         <div id="content" class="item-detail">
             <img class="center-cropped" src="{{$detail->data->news->image_url}}" alt=""/>
-            <div class="container-fluid">
-                @if(isset($detail))
-                <div class="infodetail">
-                    <div class="container-fluid">
-                        <p><a href="javascrip:void(0)">{{ $detail->data->news->news_cat->name }} </a></p>
-                        <div class="wrap-title-detail">
-                            <!-- <h3>{{$detail->data->news->title}}</h3> -->
-                            <h3>{{$detail->data->news->title}} </h3>
-                            <span class="news-dateadd">{{ str_replace('-','.',$detail->data->news->date) }}</span>
-                        </div>
-                        
+            @if(isset($detail))
+            <div class="infodetail">
+                <div class="">
+                    <p style="margin-bottom: 2px"><a href="javascrip:void(0)">{{ $detail->data->news->news_cat->name }} </a></p>
+                    <div class="wrap-title-detail">
+                        <!-- <h3>{{$detail->data->news->title}}</h3> -->
+                        <h3>{{$detail->data->news->title}} </h3>
+                        <span class="news-dateadd">{{ str_replace('-','.',$detail->data->news->date) }}</span>
                     </div>
+                    
                 </div>
-                <div class="entrydetail justify">
-                    <p>{!! $detail->data->news->description !!}</p>
-                </div>
-                @endif
-            </div><!-- End container fluid -->
+            </div>
+            <div class="entrydetail justify">
+                <p>{!! $detail->data->news->description !!}</p>
+            </div>
+            @endif
         </div><!-- End content -->
         @include('partials.sidemenu')
     </div><!-- End main -->

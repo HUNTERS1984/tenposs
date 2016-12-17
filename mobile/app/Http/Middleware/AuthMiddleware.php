@@ -27,6 +27,7 @@ class AuthMiddleware
             return redirect()->route('login');
         }
         $currentSessionUser = Session::get('user');
+
         try{
             JWTAuth::setToken( $currentSessionUser->token );
             $token = JWTAuth::getToken();
@@ -42,7 +43,7 @@ class AuthMiddleware
             );
 
             $curl = $curl->post($this->api_refresh_token,$params);
-            dd($curl);
+
             if ( isset($curl->code) && $curl->code == 1000 && isset( $curl->data )){
                 unset($currentSessionUser->token);
                 unset($currentSessionUser->refresh_token);

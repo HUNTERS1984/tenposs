@@ -47,7 +47,7 @@
                         @if( isset( $app_top->data->items->data)
                                     && count($app_top->data->items->data) > 0 )
                         <h2 class="aligncenter">メニュー</h2>
-                        <div class="container-fluid">
+                       
                             <div class="container-photo-section clearfix">
                                 
                                 @foreach( $app_top->data->items->data as $item )
@@ -63,9 +63,11 @@
                             </div>
                             @if( isset( $app_top->data->photos->data)
                                     && count($app_top->data->photos->data) > 0 )
-                                <a href="{{ route('menus.index') }}" class="btn tenposs-readmore">もっと見る</a>
+                                 <div class="component-fluid">
+                                    <a href="{{ route('menus.index') }}" class="btn tenposs-readmore">もっと見る</a>
+                                 </div>
                             @endif
-                        </div>
+                       
                         @endif
                     </div><!-- End recentry -->
                 </div>
@@ -74,7 +76,7 @@
                         @if( isset( $app_top->data->photos->data)
                                     && count($app_top->data->photos->data) > 0 )
                         <h2 class="aligncenter">フォトギャラリー</h2>
-                        <div class="container-fluid">
+                        
                             <div class="container-photo-section clearfix">
                                 
                                 @foreach( $app_top->data->photos->data as $photo )
@@ -94,19 +96,20 @@
                             </div>
                             @if( isset( $app_top->data->photos->data)
                                     && count($app_top->data->photos->data) > 0 )
+                                <div class="component-fluid">
                                 <a href="{{ route('photo.gallery') }}" class="btn tenposs-readmore">もっと見る</a>
+                                </div>
                             @endif
-                        </div>
+                        
                         @endif  
                     </div><!-- End photogallery -->
                 </div>
                 <div id="template-3">
                     <div id="news">
+                        <div class="component-fluid">
                         @if( isset( $app_top->data->news->data)
                                     && count($app_top->data->news->data) > 0 )
                         <h2 class="aligncenter">ニュース</h2>
-                        <div class="container-fluid">
-                             
                             @foreach( $app_top->data->news->data as $news )
 
                             <div class="item-coupon imageleft clearfix">
@@ -125,10 +128,11 @@
                                 </div>
                             </div><!-- End item coupon -->
                             @endforeach
-
-                            <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
-                        </div>
+                            
+                                <a href="{{ route('news') }}" class="btn tenposs-readmore">もっと見る</a>
+                            
                          @endif
+                         </div>
                     </div><!-- End News -->
                 </div>
                 <div id="template-4">
@@ -182,7 +186,7 @@
                             </li>
                         </ul>
 
-                        <div class="container-fluid">
+                        <div class="component-fluid">
                             <a href="{{ route('reservation') }} " class="btn tenposs-button">予約</a>
                         </div>
                         <script type="text/javascript">

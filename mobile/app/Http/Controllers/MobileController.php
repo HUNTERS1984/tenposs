@@ -59,12 +59,12 @@ class MobileController extends Controller
     }
     
     public function configuration(){
-
         $curl = new Curl();
         $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
         $curl->get( 'https://apinotification.ten-po.com/v1/user/get_push_setting' );
 
         if( isset($curl->response->code) && $curl->response->code == 1000 ){
+
             return view('configurations',
                 [
                     'configs' => $curl->response->data,

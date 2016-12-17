@@ -26,14 +26,21 @@ html, body, .wrap{height:100%;}
 	padding-left:30px;
 }
 .form-login-normal input, .form-login-normal select{
-    font-size:14px;
+    font-size:13px;
     padding:15px 0px;
     border:none;
     border-bottom:1px solid #ededed;
     width:100%;
     border-radius: 0;
     outline:none;
+    height: 60px;
+    background-color: white;
 }
+::-webkit-input-placeholder { color: #dddddd; opacity: 1 !important; }
+:-moz-placeholder { color: #dddddd;}
+::-moz-placeholder {color: #dddddd;}
+:-ms-input-placeholder {color: #dddddd;}
+
 .form-login-normal input.last{
 	border:none;
 }

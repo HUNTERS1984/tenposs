@@ -28,7 +28,7 @@
 </div><!-- End header -->
 
 <div id="main">
-    <div id="content login-page">
+    <div id="content login-page" style="padding-top:5px">
         @include('partials.message')
         <form action="{{ route('login.normal.post') }}" class="form form-login-normal" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">

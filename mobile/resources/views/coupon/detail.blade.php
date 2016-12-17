@@ -21,7 +21,7 @@
 @section('page')
     <div id="header">
         <div class="container-fluid">
-            <h1 class="aligncenter" >{{ Str::words($items_detail_data->title, 8,'..') }}</h1>
+            <h1 class="aligncenter" >{{ Str::words($items_detail_data->title, 6,'..') }}</h1>
             <a href="{{URL::previous()}}" class="h_control-back"></a>
         </div>
     </div><!-- End header -->
@@ -40,52 +40,50 @@
             </div>
         </div><!-- End banner -->
     @endif
-    <div id="main">
-        <div id="content">
-            <div class="container-fluid">
-                @if(count($items_detail_data) > 0)
-                    <div class="infodetail">
-                        <div class="container-fluid">
-                            <p><span>ID{{$items_detail_data->id}}</span> <span class="dot-middle"></span> <a
-                                        href="javascrip:void(0)"> @if(array_key_exists('coupon_type',$items_detail_data))
-                                        {{$items_detail_data->coupon_type->name}}
-                                    @else
-                                        空の入力
-                                    @endif</a></p>
-                            <h3 class="title-coupon">{{$items_detail_data->title}}</h3>
-                            <span class="dateadd">有効期間: {{ date('Y年m月d日', strtotime($items_detail_data->end_date))  }}</span>
-                        </div>
-                        <div class="form-mail">
-                            <div class="input-group">
-                                <?php $ls_tag = '';?>
-                                @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
-                                    @foreach($items_detail_data->taglist as $item)
-                                        <?php $ls_tag .= $item . ',';?>
-                                    @endforeach
-                                    <?php $ls_tag = rtrim($ls_tag, ",");?>
-                                @endif
-                                <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="#{{$ls_tag}}"
-                                       placeholder="ハッシュタグ">
+    <div id="content">
+        <div class="">
+            @if(count($items_detail_data) > 0)
+                <div class="infodetail">
+                    <div class="">
+                        <p><span>ID{{$items_detail_data->id}}</span> <span>・</span> <a
+                                    href="javascrip:void(0)"> @if(array_key_exists('coupon_type',$items_detail_data))
+                                    {{$items_detail_data->coupon_type->name}}
+                                @else
+                                    カテゴリ
+                                @endif</a></p>
+                        <h3 class="title-coupon">{{$items_detail_data->title}}</h3>
+                        <span class="dateadd">有効期間 &nbsp;{{date('Y年m月d日', strtotime($items_detail_data->end_date))  }}まで</span>
+                    </div>
+                    <div class="form-mail">
+                        <div class="input-group">
+                            <?php $ls_tag = '';?>
+                            @if(array_key_exists('taglist',$items_detail_data) && count($items_detail_data->taglist) > 0)
+                                @foreach($items_detail_data->taglist as $item)
+                                    <?php $ls_tag .= $item . ',';?>
+                                @endforeach
+                                <?php $ls_tag = rtrim($ls_tag, ",");?>
+                            @endif
+                            <input style="text-align: center;" type="text" class="form-control" id="target_copy" value="#{{$ls_tag}}"
+                                   placeholder="ハッシュタグ">
 
-                                <div class="input-group-addon" style="cursor: pointer;" id="copy_hashtag"><a  href="javascipt:void(0)">コピー</a>
-                                </div>
+                            <div class="input-group-addon" style="cursor: pointer;" id="copy_hashtag"><a  href="javascipt:void(0)">コピー</a>
                             </div>
                         </div>
                     </div>
-                    <div class="entrydetail justify">
-                        <div class="inner-entrydetail text-justify">
-                            <p>
-                        {!! $items_detail_data->description !!}</p>
-                        </div>
+                </div>
+                <div class="entrydetail justify">
+                    <div class="inner-entrydetail text-justify">
+                        <p>
+                    {!! $items_detail_data->description !!}</p>
                     </div>
-                @else
-                    <p style="text-align: center; margin-top:20px">データなし</p>
-                @endif
-            </div><!-- End container fluid -->
-        </div><!-- End content -->
+                </div>
+            @else
+                <p style="text-align: center; margin-top:20px">データなし</p>
+            @endif
+        </div><!-- End container fluid -->
+    </div><!-- End content -->
 
-        @include('partials.sidemenu')
-    </div><!-- End main -->
+    @include('partials.sidemenu')
     <div id="footer">
 
     </div><!-- End footer -->

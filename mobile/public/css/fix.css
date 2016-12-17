@@ -20,16 +20,33 @@
     max-width: 750px;
 }
 
+#sign-up-page {
+    position: fixed;
+    width: 100%;
+}
 #header{
     box-shadow: 1px 1px 2px 1px #F2F2F2;
     -webkit-box-shadow: 1px 1px 2px 1px #F2F2F2;
     -moz-box-shadow: 1px 1px 2px 1px #F2F2F2;
     -o-box-shadow: 1px 1px 2px 1px #F2F2F2;
 }
-
+#main {
+    margin-top: 75px;
+}
+.container-fluid{
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    max-width: 750px;
+}
 @media screen and (max-width:479px){
     .container-fluid{
         padding: 0 10px;
-
+    }
+    .component-fluid{
+        padding: 0 20px;
+    }
+    #main {
+        margin-top: 48px;
     }
 }

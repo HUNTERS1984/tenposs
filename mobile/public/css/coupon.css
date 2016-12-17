@@ -10,7 +10,25 @@
 }
 
 #category .swiper-button-next, #category .swiper-button-prev {
-    background-size: 15px 44px;
+    background-size: 15px 30px;
+}
+
+@media screen and (max-width: 479px){
+    #category .swiper-button-next, #category .swiper-button-prev {
+        background-size: 7px 14px;
+    }
+}
+#banner {
+    margin-top: 45px;
+}
+
+#row-data {
+    margin-top: 55px;
+    margin-right: 5px;
+    margin-left: 5px 
+}
+.info {
+    padding-top: 8px;
 }
 
 #category .swiper-button-prev {
@@ -47,28 +65,30 @@
 }
 
 .infodetail {
-    padding: 40px 0;
+    padding: 20px 20px 20px 20px;
+    font-size:20px;
 }
 .entrydetail{
     margin: 0 -20px 60px -20px ;
     border-top: 1px solid #c8d2d6;
-    padding: 30px 40px 0;
+    padding: 0px 40px 0;
+    font-size:18px;
 }
 @media screen and (max-width:479px){
 
     .entrydetail{
-        margin: 0 -10px 30px -10px ;
+        margin: 0 0px 30px 0px ;
         border-top: 1px solid #c8d2d6;
-        padding: 30px 20px 0;
+        padding: 0px 20px 0;
 
     }
     .infodetail {
-        padding:20px 0;
+        padding:20px 20px 20px 20px;
         font-size:16px;
     }
 
     .infodetail, .entrydetail p{
-        font-size:14px;
+        font-size:13px;
     }
 }
 
@@ -79,23 +99,30 @@
 .infodetail h3.title-coupon {
     margin:0;
     margin-bottom:5px;
+    font-size:30px;
 }
 @media screen and (max-width: 479px){
     .infodetail h3.title-coupon{
-        font-size:20px;
+        font-size:17px;
         line-height: 24px;
     }
 }
 
 .infodetail .wrap-title-detail h3 {
     margin: 10px 0;
+    font-size:16px;
     width:70%;
     display:inline-block;
     vertical-align: middle;
+    font-size: 20px
 }
 
 .infodetail p span {
     color: #96a0a4;
+    font-weight: 500;
+}
+.infodetail p {
+    margin-bottom: 0px;
 }
 
 .infodetail .dateadd {
@@ -119,8 +146,7 @@
 
 @media screen and (max-width:479px){
     .infodetail .wrap-title-detail h3 {
-        width:63%;
-        font-size:16px;
+        width:63%;  
         margin:0;
     }
     .infodetail .wrap-title-detail .news-dateadd{
@@ -150,6 +176,7 @@
     background:#f8f8fa;
     border:none;
     font-weight: 600;
+    border: 1px solid #eeeeee;
 }
 @media screen and (max-width: 479px){
     .infodetail .form-mail .form-control{
@@ -287,8 +314,8 @@
 }
 @media screen and (max-width:479px){
     .item-coupon img{
-        height:100px;
-        max-width:100px;
+        height:120px;
+        max-width:120px;
 
     }
     .item-coupon .image{
@@ -298,10 +325,11 @@
 /* info coupon */
 .item-coupon a{
     display: block;
+    font-size:18px;
 }
 @media screen and (max-width:479px){
     .item-coupon a{
-        font-size:14px;
+        font-size:13px;
         margin: 0;
     }
 
@@ -310,10 +338,11 @@
     color: #505a5e;
     margin: 20px 0 10px;
     font-size: 24px;
+    font-size:20px;
 }
 @media screen and (max-width:479px){
     .item-coupon h3{
-        font-size:14px;
+        font-size:15px;
         margin: 5px 0;
     }
 }
@@ -321,10 +350,11 @@
     color: #96a0a4;
     max-height: 100px;
     overflow: hidden;
+    font-size:18px;
 }
 @media screen and (max-width:479px){
    .item-coupon p{
-        font-size:14px;
+        font-size:13px;
         max-height: 58px;
    }
 }

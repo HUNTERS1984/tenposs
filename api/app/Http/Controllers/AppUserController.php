@@ -529,7 +529,7 @@ class AppUserController extends Controller
     public function set_push_setting(Request $request)
     {
 
-        $check_items = array('token', 'ranking', 'news', 'coupon', 'chat', 'time', 'sig');
+        $check_items = array('token', 'time', 'sig');
 
         $ret = $this->validate_param($check_items);
         if ($ret)
@@ -539,11 +539,14 @@ class AppUserController extends Controller
 
         if (!$push)
             $push = new UserPush();
-
-        $push->ranking = Input::get('ranking');
-        $push->news = Input::get('news');
-        $push->coupon = Input::get('coupon');
-        $push->chat = Input::get('chat');
+        if (Input::get('ranking'))
+            $push->ranking = Input::get('ranking');
+        if (Input::get('news'))
+            $push->news = Input::get('news');
+        if (Input::get('coupon'))
+            $push->coupon = Input::get('coupon');
+        if (Input::get('chat'))
+            $push->chat = Input::get('chat');
         $push->app_user_id = $request->user->id;
 
         $push->save();

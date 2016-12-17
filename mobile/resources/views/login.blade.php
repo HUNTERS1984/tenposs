@@ -7,10 +7,11 @@
     }
 </style>
 @endsection
-@section('page')
-<div id="main">    
+@section('page')    
     <div id="sign-up-page">
+        <h3 class="tenposs-title">{{$app_info->data->app_setting->title}}</h3>
         @include('partials.message')
+
         <div class="bottom-layout">
             <a href="{{ route('login.facebook') }}" class="btn tenposs-button bg-fb">
                 Facebook ではじめる</a>
@@ -27,8 +28,7 @@
                 スキップ</a>
         </p>
     </div>
-    @include('partials.sidemenu')
-</div><!-- End main -->    
+    @include('partials.sidemenu')    
 @endsection
 
 @section('footerJS')

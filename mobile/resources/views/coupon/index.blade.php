@@ -26,7 +26,7 @@
             <form id="myform" method="post" action="">
                 <input type="hidden" id="current_page" value="{{$page_number}}">
             </form>
-            <div class="container-fluid" id="row-data">
+            <div id="row-data">
                 @if(count($items_data) > 0)
                     @foreach($items_data as $item)
                         <div class="item-coupon imageleft clearfix">
@@ -38,7 +38,7 @@
                                     @if(array_key_exists('coupon_type',$item))
                                         {{$item->coupon_type->name}}
                                     @else
-                                        空の入力
+                                        カテゴリ
                                     @endif
                                 </a>
                                 <a href="{{ route('coupon.detail',$item->id)}}"><h3>{{$item->title}}</h3></a>

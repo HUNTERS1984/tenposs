@@ -16,6 +16,7 @@ html, body, .wrap{height:100%;}
     padding-left:15px;
     position: relative;
     background: #fff url(../img/icon/setting-arrow.jpg) right 30px center no-repeat;
+    background-size: 6px 12px;
 }
 #setting ul li:last-child{
     border-bottom: none;
@@ -23,13 +24,13 @@ html, body, .wrap{height:100%;}
 #setting ul li a{
     color: #505a5e;
     display: block;
-    padding:20px 0;
-    font-size:20px;
-    line-height: 24px;
+    padding:18px 0;
+    font-size:16px;
+    line-height: 18px;
 }
 @media screen and (max-width:479px){
     #setting ul li a{
-        font-size:16px;
+        font-size:13px;
     }
 }
 /* Switch */

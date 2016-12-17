@@ -11,13 +11,13 @@ jQuery('.form-mail a').click(function(){
    jQuery('.notication').fadeIn();
 });
 
-jQuery(document).scroll(function () {
-    var y = jQuery(document).scrollTop(),
-        header = $("#header");
+// jQuery(document).scroll(function () {
+//     var y = jQuery(document).scrollTop(),
+//         header = $("#header");
 
-    if (y >= 40) {
-        header.addClass('sticky');
-    } else {
-        header.removeClass('sticky');
-    }
-});
+//     if (y >= 40) {
+//         header.addClass('sticky');
+//     } else {
+//         header.removeClass('sticky');
+//     }
+// });

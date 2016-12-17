@@ -8,9 +8,16 @@
     font-size: 24px;
 }
 
-#category .swiper-button-next,#category .swiper-button-prev{
-    background-size: 15px 44px;
+#category .swiper-button-next, #category .swiper-button-prev {
+    background-size: 15px 30px;
 }
+
+@media screen and (max-width: 479px){
+    #category .swiper-button-next, #category .swiper-button-prev {
+        background-size: 7px 14px;
+    }
+}
+
 #category .swiper-button-prev{
     left: 5%;
 }

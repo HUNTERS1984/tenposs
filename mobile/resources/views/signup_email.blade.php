@@ -28,14 +28,14 @@
 </div><!-- End header -->
 
 <div id="main">
-    <div id="content">
+    <div id="content" style="padding-top:5px">
         @include('partials.message')
         <form action="{{ route('register.post') }}" class="form form-login-normal" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="wrap-input">
                 <div class="wrap-inner">
                     <div class="form-group-login">
-                        <input value="{{ old('name') }}" class="input-form input-lg" type="text" name="name" placeholder="ユーザー名" />
+                        <input value="{{ old('name') }}" class="input-form input-lg" type="text" name="name" placeholder="ユーザーネーム" />
                     </div>
                      <div class="form-group-login">
                         <input value="{{ old('email') }}" class="input-form input-lg" type="email" name="email" placeholder="メールアドレス" />
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-block btn-login" type="submit">新規会員</button>
+                <button class="btn btn-block btn-login" type="submit">次へ</button>
             </div>
         </form>
         <p class="text-center" style="font-size:14px">

@@ -27,16 +27,7 @@
             <ul>
                 <li><a href="{{ route('profile') }}">プロフィール編集</a></li>  
                 <li>
-                    <a href="#">ランキング</a>
-                    <!-- Rounded switch -->
-                    <label class="switch">
-                        <input name="ranking" type="checkbox" {{ ($configs->ranking == 1 )? 'checked':'' }}
-                        value="{{ $configs->ranking }}">
-                        <div class="slider round"></div>
-                    </label>
-                </li>
-                <li>
-                    <a href="#">ニュース</a>
+                    <a href="#">お知らせを受け取る</a>
                     <!-- Rounded switch -->
                     <label class="switch">
                         <input name="news" type="checkbox" {{ ($configs->news == 1 )? 'checked':'' }}
@@ -45,7 +36,7 @@
                     </label>
                 </li>
                 <li>
-                    <a href="#">クーポン</a>
+                    <a href="#">クーポン情報を受け取る</a>
                     <!-- Rounded switch -->
                     <label class="switch">
                         <input name="coupon" type="checkbox" {{ ($configs->coupon == 1 )? 'checked':'' }}
@@ -53,16 +44,6 @@
                         <div class="slider round"></div>
                     </label>
                 </li>
-                <li>
-                    <a href="#">チャット</a>
-                    <!-- Rounded switch -->
-                    <label class="switch">
-                        <input name="chat" type="checkbox" {{ ($configs->chat == 1 )? 'checked':'' }}
-                        value="{{ $configs->chat }}">
-                        <div class="slider round"></div>
-                    </label>
-                </li>
-                   
                 <li><a href="{{ route('company.info') }}">逼営会社</a></li>   
                 <li><a href="{{ route('user.privacy') }}">採用情報</a></li>   
                 <li><a href="{{ route('logout') }}">ログアウト</a></li> 

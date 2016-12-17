@@ -44,45 +44,43 @@
             </div><!-- End category -->
             <div id="category-detail">
                 <input type="hidden" name="token" value="{{ csrf_token() }}">
-                <div class="container-fluid">
-                    <!-- Slider main container -->
-                    <div class="swiper-container">
-                        <!-- Additional required wrapper -->
-                        <div class="swiper-wrapper">
-                            @if(isset($items_detail) && count($items_detail)>0)
-                            @foreach($items_detail as $items)
-                                @if($items)
-                                <div class="swiper-slide">
-                                    <div class="container-all-img clearfix">
-                                        <div class="load-ajax">
-                                            @foreach($items['data']['items'] as $item)
-                                            <div class="item-product">
-                                                <input type="hidden" name="pagesize{{$items['data']['menu_id']}}" value="{{$pagesize}}">
-                                                <a href="{{ route('menus.detail', $item['id'])}}">
-                                                    <img class="image_size center-cropped" src="{{$item['image_url']}}" alt="{{$item['title']}}"/>
-                                                    <p>{{$item['title']}}</p>
-                                                    <span>¥{{number_format($item['price'], 0, '', ',')}}</span>
-                                                </a>
-                                            </div>
-                                            @endforeach
+                <!-- Slider main container -->
+                <div class="swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        @if(isset($items_detail) && count($items_detail)>0)
+                        @foreach($items_detail as $items)
+                            @if($items)
+                            <div class="swiper-slide">
+                                <div class="container-all-img clearfix" style="margin-top:10px">
+                                    <div class="load-ajax">
+                                        @foreach($items['data']['items'] as $item)
+                                        <div class="item-product">
+                                            <input type="hidden" name="pagesize{{$items['data']['menu_id']}}" value="{{$pagesize}}">
+                                            <a href="{{ route('menus.detail', $item['id'])}}">
+                                                <img class="image_size center-cropped" src="{{$item['image_url']}}" alt="{{$item['title']}}"/>
+                                                <p>{{$item['title']}}</p>
+                                                <span>¥{{number_format($item['price'], 0, '', ',')}}</span>
+                                            </a>
                                         </div>
+                                        @endforeach
                                     </div>
-                                    
-                                    @if (count($items['data']['items']) ==  $pagesize)
-                                    <a href="#" class="btn tenposs-readmore more">もっと見る</a>
-                                    @endif
-
-                                </div><!-- swiper slide -->
-                                @else
-                                <div class="swiper-slide">
-                                    <p style="text-align: center; margin-top:20px">データなし</p>
                                 </div>
+                                
+                                @if (count($items['data']['items']) ==  $pagesize)
+                                <a href="#" class="btn tenposs-readmore more">もっと見る</a>
                                 @endif
-                            @endforeach
+
+                            </div><!-- swiper slide -->
+                            @else
+                            <div class="swiper-slide">
+                                <p style="text-align: center; margin-top:20px">データなし</p>
+                            </div>
                             @endif
-                        </div>
-                    </div><!-- End  swiper -->
-                </div><!-- End container fluid -->
+                        @endforeach
+                        @endif
+                    </div>
+                </div><!-- End  swiper -->
 
             </div><!-- End category detail -->
         </div><!-- End content -->

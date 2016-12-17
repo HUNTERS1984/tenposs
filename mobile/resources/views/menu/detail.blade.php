@@ -29,13 +29,13 @@
         </div>
     </div><!-- End header -->
     <div id="main">
-        <div id="content" class="item-detail">
+        <div id="content">
             @if(count($items_detail_data) > 0)
                 <img class="image_size_detail center-cropped" src="{{$items_detail_data->image_url}}"
                      alt="{{$items_detail_data->title}}"/>
-                <div class="container-fluid">
+                <div id="content" class="item-detail">
                     <div class="info-productdetail">
-                        <div class="container-fluid">
+                        <div>
                             <span class="cat">{{$items_detail_data->menu_name}}</span>
                             <div class="clearfix">
                                 <span class="name">{{$items_detail_data->title}}</span>
@@ -47,14 +47,12 @@
                     </div>
                     <div class="entry-productdetail">
                         <div class="option">
-                            {{--<span class="btn switch switch-on" alt="tab1">説明</span>--}}
-                            {{--<span class="btn switch switch-off"  alt="tab2">サイズ</span>--}}
                             <ul class="nav nav-tabs" id="myTab">
-                                <li class="active"><a href="#tab1">説明</a></li>
+                                <li class="active"><a href="#tab1">商品詳細</a></li>
                                 <li><a href="#tab2">サイズ</a></li>
                             </ul>
                         </div>
-                        <div class="tab-content" style="padding-top: 20px; background: #fff;">
+                        <div class="tab-content" style="padding-top: 10px; background: #fff;">
                             <div id="tab1" class="tab-pane fade in active">
                                 <p>{!! $items_detail_data->description !!}</p>
                                 
@@ -103,7 +101,7 @@
                         {{--<a href="{{$items_detail_data->item_link}}" class="btn pad20 tenposs-button">もっと見る</a>--}}
                         {{--</div>--}}
                     </div>
-                </div><!-- End container fluid -->
+                </div>
             @else
                 <div class="container-fluid" style="text-align: center;">
                     <p style="text-align: center; margin-top:20px">データなし</p>

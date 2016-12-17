@@ -14,6 +14,15 @@ h3,.h3{font-size: 28px;}
     margin-bottom: 35px;
     display: block;
     line-height: 76px;
+
+}
+
+.tenposs-title{
+    text-align:center;
+    color: white;
+    font-size: 35;
+    text-transform: uppercase;
+    margin-top: 70px;
 }
 @media screen and (max-width: 479px){
     .tenposs-readmore{
@@ -26,14 +35,14 @@ h3,.h3{font-size: 28px;}
     display: block;
     font-size: 24px;
     background: #14c8c8;
+
     color: #fff;
     width: 100%;
-    margin-top: 46px;
+    margin-top: 30px;
     margin-bottom: 35px;
     display: block;
     line-height: 50px;
     position:relative;
-    font-weight: 600;
 }
 
 .tenposs-button1{
@@ -72,7 +81,6 @@ h3,.h3{font-size: 28px;}
     margin: 0 auto;
     overflow-x: hidden;
     position: relative;
-    padding-bottom: 20px;
 }
 .container-fluid{
     padding: 0 20px;
@@ -177,7 +185,10 @@ h3,.h3{font-size: 28px;}
 }
 
 .item-product{
-    padding: 0 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 5px;
+    padding-right: 10px;
     float: left;
     width: 50%;
     margin-bottom: 25px;
@@ -187,7 +198,6 @@ h3,.h3{font-size: 28px;}
 
 .item-product img{
     border: 1px solid #eee;
-    border-radius: 4px;
     width: 50vmin; 
     height: 50vmin;
     box-shadow: 0 2px 2px #ddd;
@@ -223,6 +233,8 @@ h3,.h3{font-size: 28px;}
 }
 .item-product:nth-child(2n+1){
     clear: both;
+    padding-left: 10px;
+    padding-right: 5px;
 }
 /*PHOTO GALLERY SECTION*/
 .item-photogallery{
@@ -349,8 +361,8 @@ h3,.h3{font-size: 28px;}
 /* Contact */
 #contact ul{
     list-style: none;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left:0px;
+    padding-right:0px;
 }
 #contact li{
     border-bottom: 1px solid #eee;
@@ -378,7 +390,7 @@ h3,.h3{font-size: 28px;}
     display:inline-block;
     width:75%;
     vertical-align: middle;
-    font-weight: 600
+    font-weight: 500
 }
 #contact li div.table-cell img{
     width: 30px;
@@ -608,5 +620,34 @@ h3,.h3{font-size: 28px;}
     .h_control-nav:before{
         font-size: 28px;
     }
+}
+.swiper-slide-active p {
+    font-size: 14px;
+}
+
+.modal-title {
+    text-align: center;
+    font-weight: bold;
+    color: #283c50;
+}
+
+.modal-text {
+    text-align: center;
+    font-size: 15px;
+}
+.model-close {
+    background: #fafafa;
+    width: 100%;
+    font-size: 95%;
+    height: 36px;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 36px;
+    display: inline-table;
+    border: 1px solid transparent;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: #2498d7;
 }
 

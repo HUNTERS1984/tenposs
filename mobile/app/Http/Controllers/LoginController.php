@@ -182,8 +182,8 @@ class LoginController extends Controller
         
         $message = array(
             'name.required' => '名前のフィールドが必要です。',
-            'email.required' => '電子メールのフィールドは必須です。',
-            'email.email' => 'メール誤タイプ',
+            'email.required' => 'メールのフィールドは必須です。',
+            'email.email' => 'メールが違います。',
             'password.required' => 'パスワードフィールドが必要です。',
             'password.min' => 'パスワードは6文字以上でなければなりません。',
             'password_confirm.required' => 'パスワードの確認フィールドが必要です。',
@@ -213,7 +213,7 @@ class LoginController extends Controller
         }
 
         return back()
-            ->withErrors('再試行する')
+            ->withErrors('登録できませんでした')
             ->withInput();
     }
     
