@@ -334,7 +334,7 @@ class ProcessNotification
                 case 'coupon_use':
                     $email = '';
                     if ($auth_user_id > 0) {
-                        $url = Config::get('api.url_profile_without_jwt') . coupon_use;
+                        $url = Config::get('api.url_profile_without_jwt') . $notification_to;
                         $profile = HttpRequestUtil::getInstance()->get_data_with_basic_auth($url, null);
                         if (count($profile) > 0) {
                             $email = $profile->email;
