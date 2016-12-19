@@ -420,13 +420,19 @@ class LoginController extends Controller
             unset($currentUser->profile);
             $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
             Session::put('user',$updateProfile );
+            //dd($updateProfile->profile->avatar_url);
+
+            if (!@getimagesize($updateProfile->profile->avatar_url)) {
+                $updateProfile->profile->avatar_url = null;
+            } 
             return view('profile',
                 [
                     'fb_url' => (string)$url_fb,
                     'tw_url' => (string)$url_tw,
                     'instagram_login_url' => $this->instagram->getLoginUrl(),
                     'user' => Session::get('user'),
-                    'app_info' => $this->app_info
+                    'app_info' => $this->app_info,
+                    'is_social' => strpos($updateProfile->email, 'fb.com') || strpos($updateProfile->email, 'tw.com'),
                 ]);
         }
 
@@ -444,7 +450,7 @@ class LoginController extends Controller
         
         $messages = array(
             'name.required' => '名前のフィールドが必要です。',
-            'address.required' => 'アドレスがnullではないことができます'
+            'address.required' => 'アドレスがが必要です。'
         );
         
         $v = Validator::make($request->all(), $rules,$messages);
@@ -493,9 +499,22 @@ class LoginController extends Controller
         $curl = $curl->post($this->url_api_profile_update, $params);
 
         if( isset($curl->code) && $curl->code == 1000 ){
-            return back()->withErrors('成功');
+            $curl = new Curl();
+            $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+            $curl->get( $this->url_api_profile ,array(
+                'app_id' => $this->app->app_app_id
+            ));
+
+            if( isset($curl->response->code) && $curl->response->code == 1000 ){
+                $currentUser = Session::get('user');
+                unset($currentUser->profile);
+                $updateProfile = $data = (object)array_merge((array)$currentUser, (array)$curl->response->data->user);
+                Session::put('user',$updateProfile );
+            }
+
+            return back()->withErrors('プロファイルを編集しました');
         }
-        return back()->withErrors('失敗します');
+        return back()->withErrors('プロファイルを編集できませんでした');
         
     }
     

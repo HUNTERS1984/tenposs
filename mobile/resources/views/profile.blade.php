@@ -79,10 +79,10 @@ $arrAddress = array(
             @if( Session::get('user')->profile->name != '' )
                 {{ Str::words(Session::get('user')->profile->name,20) }}
             @else
-                名前のありません
+                
             @endif
         </h1>
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
+        <a href="{{route('configuration')}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 <form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data">
@@ -97,7 +97,7 @@ $arrAddress = array(
                     <?php
                     $avatar = ($user->profile->avatar_url != '')
                         ? $user->profile->avatar_url
-                        : url('/img/icon/icon-user.jpg');
+                        :  url('/img/icon/icon-user.png');
                     ?>
 
                     <label class="avatar">
@@ -111,16 +111,16 @@ $arrAddress = array(
                 </li>
                 <li>
                     <label>ユーザーID</label>
-                    <input type="text" name="name" value="{{ $user->id }}" readonly="readonly"/>
+                    <input type="text" name="id" value="{{ $user->id }}" readonly/>
 
                 </li>
                 <li>
                     <label>ユーザー名</label>
-                    <input readonly type="text" value="{{ $user->profile->name }}"/>
+                    <input type="text" name="name" value="{{ $user->profile->name }}"/>
                 </li>
                 <li>
                     <label>メールアドレス</label>
-                    <input type="email" readonly name="email" value="{{ $user->email }}"/>
+                    <input type="email" {{$is_social ? '' : 'readonly'}}  name="email" value="{{ $user->email }}"/>
                 </li>
                 <li>
                     <label>性别</label>

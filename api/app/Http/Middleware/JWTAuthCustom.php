@@ -25,7 +25,7 @@ class JWTAuthCustom extends BaseMiddleware
     { 
 
         if( !Session::has('jwt_token') )
-            return redirect()->route('admin.login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('ログインしてください');
         // Way 1
         $request->headers->set('Authorization', 'Bearer '.Session::get('jwt_token'));
         $token = $this->auth->setRequest($request)->getToken();
@@ -35,7 +35,7 @@ class JWTAuthCustom extends BaseMiddleware
         $token = JWTAuth::getToken();
         
         if (! $token  ) {
-            return redirect()->route('admin.login')->withErrors('Please login');
+            return redirect()->route('admin.login')->withErrors('ログインしてください');
         }
 
         try {

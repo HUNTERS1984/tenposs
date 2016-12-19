@@ -56,6 +56,7 @@
 #user ul li select{
     border:none;
     outline: none;
+    background-color: white;
 }
 
 #app-icon-review {

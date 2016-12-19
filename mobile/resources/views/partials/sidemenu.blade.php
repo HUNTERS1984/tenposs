@@ -6,14 +6,7 @@
             @if( Session::has('user') )
             <div class="image">
                 <a href="{{ route('profile') }}">
-                    <?php
-                       if( strpos( Session::get('user')->profile->avatar_url , '.jpg' ) !== false ){
-                            $avatar_url = Session::get('user')->profile->avatar_url;
-                       }else{
-                           $avatar_url = url('/img/icon/icon-user.png');
-                       }
-                    ?>
-                    <img class="img-circle" src="{{ $avatar_url }}" alt=""/>
+                    <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : url('/img/icon/icon-user.png') }}" alt=""/>
                 </a>
             </div>
             <p class="font32">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</p>

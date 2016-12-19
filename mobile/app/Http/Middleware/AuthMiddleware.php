@@ -52,15 +52,15 @@ class AuthMiddleware
                 Session::put('user',$updateToken );
             }else{
                 Session::forget('user');
-                return redirect()->route('login')->withErrors('Session expired');
+                return redirect()->route('login')->withErrors('セッションの有効期限が切れました');
             }
 
         } catch (JWTException $e) {
             Session::forget('user');
-            return redirect()->route('login')->withErrors('Session expired');
+            return redirect()->route('login')->withErrors('セッションの有効期限が切れました');
         } catch (TokenBlacklistedException $e) {
             Session::forget('user');
-            return redirect()->route('login')->withErrors('Session expired');
+            return redirect()->route('login')->withErrors('セッションの有効期限が切れました');
         }
         return $next($request);
     }

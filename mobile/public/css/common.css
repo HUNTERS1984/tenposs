@@ -50,7 +50,7 @@ h3,.h3{font-size: 28px;}
     font-size: 24px;
     background: #14c8c8;
     color: #fff;
-    width: 50%;
+    width: 30%;
     margin-top: 20px;
     display: block;
     line-height: 50px;
@@ -70,7 +70,7 @@ h3,.h3{font-size: 28px;}
 
     .tenposs-button1{
         white-space: inherit;
-        line-height: 26px;
+        line-height: 20px;
         font-size:14px;
     }
 }
