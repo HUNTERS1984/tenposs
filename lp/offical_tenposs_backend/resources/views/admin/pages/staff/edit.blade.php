@@ -11,7 +11,7 @@
             </strong>
         </div>
         <div class="right">
-            <a href="{{ URL::previous() }}" class="btn-1">戻る</a>
+            <a href="{{ route('admin.staff.index') }}" class="btn-1">戻る</a>
             <a href="#" class="btn-2" id="btn_submit_form">保存</a>
         </div>
     </div>

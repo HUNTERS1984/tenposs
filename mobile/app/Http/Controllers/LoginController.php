@@ -373,7 +373,7 @@ class LoginController extends Controller
         }else{
             $msg ='ソーシャルフェイルを接続する';
         }
-        return redirect()->back()
+        return back()
             ->withErrors($msg)
             ->route('profile');
     }
