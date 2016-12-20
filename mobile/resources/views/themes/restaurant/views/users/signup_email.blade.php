@@ -1,60 +1,57 @@
-@extends('master')
-
-@section('headCSS')
-<link href="{{ Theme::asset('css/login.css') }}" rel="stylesheet">
-<style>
-    body{
-        font-size: {{ $app_info->data->app_setting->font_size }};
-        font-family: '{{ $app_info->data->app_setting->font_family }}';
-    }
-    .h_control-back:before{
-        color: #{{ $app_info->data->app_setting->menu_icon_color }};
-        }
-    #header h1{
-        color: #{{ $app_info->data->app_setting->title_color }};
-        }
-    #header > .container-fluid{
-        background-color:#{{ $app_info->data->app_setting->header_color }};
-        }
-</style>
-@stop
-
-@section('page')
- <div id="header">
-    <div class="container-fluid">
-        <h1 class="aligncenter">新規会員登録 (1/2)</h1>
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
-    </div>
-</div><!-- End header -->
-
-<div id="main">
-    <div id="content" style="padding-top:5px">
-        @include('partials.message')
-        <form action="{{ route('register.post') }}" class="form form-login-normal" method="post">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <div class="wrap-input">
-                <div class="wrap-inner">
-                    <div class="form-group-login">
-                        <input value="{{ old('name') }}" class="input-form input-lg" type="text" name="name" placeholder="ユーザーネーム" />
-                    </div>
-                     <div class="form-group-login">
-                        <input value="{{ old('email') }}" class="input-form input-lg" type="email" name="email" placeholder="メールアドレス" />
-                    </div>
-                     <div class="form-group-login">
-                        <input value="{{ old('password') }}" class="input-form input-lg" type="password" name="password" placeholder="パスワード" />
-                    </div>
-                    <div class="form-group-login">
-                        <input value="{{ old('password_confirm') }}" class="input-form last input-lg" type="password" name="password_confirm" placeholder="パスワード (確認)" />
-                    </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- Include meta tag to ensure proper rendering and touch zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Include jQuery Mobile stylesheets -->
+    <link rel="stylesheet" href="{{ Theme::asset('css/jquery.mobile-1.4.5.css') }}">
+    <!-- Include the jQuery library -->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- Include the jQuery Mobile library -->
+    <script src="{{ Theme::asset('js/jquery.mobile-1.4.5.min.js') }}"></script>
+    <script>
+        $( document ).on( "pagecreate", function() {
+            $( "body > [data-role='panel']" ).panel();
+            $( "body > [data-role='panel'] [data-role='listview']" ).listview();
+        });
+        $( document ).one( "pageshow", function() {
+            $( "body > [data-role='header']" ).toolbar();
+            $( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+        });
+    </script>
+</head>
+<body class="ui-nosvg header-white">
+<div data-role="header" data-position="fixed" data-theme="a">
+    <a href="{{ route('index.redirect') }}" data-ajax="false" data-direction="reverse" class="ui-alt-icon"  data-icon="carat-l" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+    <h1>ログイン</h1>
+</div>
+<div data-role="page" id="pageone" class="bg_main">
+    <div data-role="main" class="ui-content center-screen ">
+        <form action="sign_up2.html" method="get" data-ajax="false" class="from-froup">
+            <div class="form-input">
+                <div class="ui-field-contain">
+                    <label for="user"><img src="{{ Theme::asset('img/ic-mail-copy@2x.png') }}"></label>
+                    <input type="text" name="textinput-4" id="user" placeholder="ユーザーネーム" value="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="user"><img src="{{ Theme::asset('img/ic-mail@2x.png') }}"></label>
+                    <input type="text" name="email" id="email" placeholder="メールアドレス" value="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="pwd"><img src="{{ Theme::asset('img/ic-password@2x.png') }}"></label>
+                    <input type="password" name="textinput-4" id="pwd" placeholder="パスワード" value="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="repwd"><img src="{{ Theme::asset('img/ic-password@2x.png') }}"></label>
+                    <input type="password" name="pwd" id="repwd" placeholder="パスワード（確認）" value="">
                 </div>
             </div>
-            <div class="form-group">
-                <button class="btn btn-block btn-login" type="submit">次へ</button>
-            </div>
+
+            <label for="submit-4" class="ui-hidden-accessible">次へ</label>
+            <button class="ui-shadow ui-btn ui-corner-all" type="submit" id="submit-4" data->ログイン</button>
         </form>
-        <p class="text-center" style="font-size:14px">
-            すでに会員の方は、<a href="{{ route('login.normal') }}">こちらへ</a>
-        </p>
     </div>
-</div><!-- End header -->
-@endsection
+</div>
+</body>
+</html>

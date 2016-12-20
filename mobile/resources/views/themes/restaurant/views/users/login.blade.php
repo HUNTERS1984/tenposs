@@ -30,15 +30,15 @@
 </div>
 <div data-role="page" id="pageone" class="bg_main">
     <div data-role="main" class="ui-content center-screen ">
-        <form class="from-froup">
+        <form class="from-froup" method="post" action="{{ route('login.normal.post') }}">
             <div class="form-input">
                 <div class="ui-field-contain">
                     <label for="user"><img src="{{ Theme::asset('img/ic-mail@2x.png') }}"></label>
-                    <input type="text" name="textinput-4" id="user" placeholder="メールアドレス" value="">
+                    <input type="text" name="email" id="user" placeholder="メールアドレス" value="{{ old('email') }}">
                 </div>
                 <div class="ui-field-contain">
                     <label for="pwd"><img src="{{ Theme::asset('img/ic-password@2x.png') }}"></label>
-                    <input type="password" name="pwd" id="pwd" placeholder="パスワード" value="">
+                    <input type="password" name="password" id="pwd" placeholder="パスワード" value="{{ old('password') }}">
                 </div>
             </div>
             <label for="submit-4" class="ui-hidden-accessible">ログイン</label>
