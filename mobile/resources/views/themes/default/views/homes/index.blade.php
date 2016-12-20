@@ -149,7 +149,7 @@
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="left-table-cell text-left">
-                                            <img src="{{ url('img/icon/f_location.png') }}" alt="icon">
+                                            <img src="{{ Theme::asset('img/icon/f_location.png') }}" alt="icon">
                                         </div>
                                         <div class="right-table-cell text-left">
                                             {{ $contact->title }}
@@ -161,7 +161,7 @@
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="left-table-cell text-left">
-                                            <img src="{{ url('img/icon/f_time.png') }}" alt="icon">
+                                            <img src="{{ Theme::asset('img/icon/f_time.png') }}" alt="icon">
                                         </div>
                                         <div class="right-table-cell text-left">
 
@@ -175,7 +175,7 @@
                                 <div class="table">
                                     <div class="table-cell">
                                         <div class="left-table-cell text-left">
-                                            <img src="{{ url('img/icon/f_tel.png') }}" alt="icon">
+                                            <img src="{{ Theme::asset('img/icon/f_tel.png') }}" alt="icon">
                                         </div>
                                         <div class="right-table-cell text-left">
                                             <a class="text-phone" href="tel:{{ $contact->tel }}">{{ $contact->tel }}</a>
