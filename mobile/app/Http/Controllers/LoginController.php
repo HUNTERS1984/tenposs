@@ -43,13 +43,13 @@ class LoginController extends Controller
     }
     
     public function login(){
-        return view('login',[
+        return view('users.login',[
             'app_info' => $this->app_info,
         ]);
     }
     
     public function loginNormal(){
-        return view('login_normal',[
+        return view('users.login_email',[
             'app_info' => $this->app_info,
         ]);
     }
@@ -121,7 +121,7 @@ class LoginController extends Controller
     }
     
     public function register(){
-        return view('signup_email',[
+        return view('users.signup_email',[
         'app_info' => $this->app_info,
         ]);
     }
@@ -129,7 +129,7 @@ class LoginController extends Controller
     public function registerStep2(){
         if( ! Session::has('user') )
             return redirect()->route('login');
-        return view('signup_email_step2',[
+        return view('users.signup_email_step2',[
             'app_info' => $this->app_info,
         ]);
     }
@@ -295,7 +295,7 @@ class LoginController extends Controller
 
             return redirect()
                 ->withErrors('社会的にサインアップできない')
-                ->route('login');
+                ->route('users.login');
         }
         else
         {
@@ -425,7 +425,7 @@ class LoginController extends Controller
             if (!@getimagesize($updateProfile->profile->avatar_url)) {
                 $updateProfile->profile->avatar_url = null;
             } 
-            return view('profile',
+            return view('users.profile',
                 [
                     'fb_url' => (string)$url_fb,
                     'tw_url' => (string)$url_tw,

@@ -45,7 +45,7 @@ class StaffController extends Controller
                 }
             }
         }
-        return view('staff',compact('app_info','staff_cate','staff_detail'))->with('pagesize',PAGESIZE);
+        return view('staffs.staff',compact('app_info','staff_cate','staff_detail'))->with('pagesize',PAGESIZE);
     }
 
     public function getDetail($id){
@@ -59,7 +59,7 @@ class StaffController extends Controller
         $detail = json_decode($staff_detail);
         $detail = $detail->data->staffs[0];
 
-        return view('staff_detail',compact('app_info','detail'));
+        return view('staffs.staff_detail',compact('app_info','detail'));
 
     }
 

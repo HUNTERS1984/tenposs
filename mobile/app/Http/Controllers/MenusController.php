@@ -48,7 +48,7 @@ class MenusController extends Controller
             }
         }
         //dd($items_detail);
-        return view('menu.index',compact('app_info','menus','items_detail'))->with('pagesize',TOTAL_ITEMS);
+        return view('menus.index',compact('app_info','menus','items_detail'))->with('pagesize',TOTAL_ITEMS);
     }
 
 
@@ -114,7 +114,7 @@ class MenusController extends Controller
             }
         }
 //        dd($items_relate_data);
-        return view('menu.detail', compact('app_info', 'items_detail_data', 'items_relate_data', 'load_more_releated'));
+        return view('menus.detail', compact('app_info', 'items_detail_data', 'items_relate_data', 'load_more_releated'));
     }
 
     public function related($item_id)
@@ -141,7 +141,7 @@ class MenusController extends Controller
 
         }
         //print_r($total_page);
-        return view('menu.related', compact('app_info', 'items_data', 'items_total_data', 'total_page', 'page_number', 'item_id'));
+        return view('menus.related', compact('app_info', 'items_data', 'items_total_data', 'total_page', 'page_number', 'item_id'));
     }
 
     public function related_get_data()

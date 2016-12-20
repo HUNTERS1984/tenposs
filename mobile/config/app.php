@@ -161,6 +161,7 @@ return [
         
         Laracasts\Flash\FlashServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        YAAP\Theme\ThemeServiceProvider::class,
     ],
 
     /*
@@ -212,7 +213,8 @@ return [
         'OAuth'     => Artdarek\OAuth\Facade\OAuth::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Theme' => YAAP\Theme\Facades\Theme::class
         
     ],
 

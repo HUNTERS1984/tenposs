@@ -48,7 +48,7 @@ class NewsController extends Controller
         }
         //dd($news_cate);
         //dd($news_detail);
-    	return view('news',compact('app_info','news_cate','news_detail'))->with('pagesize',PAGESIZE);
+    	return view('news.news',compact('app_info','news_cate','news_detail'))->with('pagesize',PAGESIZE);
     }
 
     public function getDetail($id){
@@ -65,7 +65,7 @@ class NewsController extends Controller
         $app_info = json_decode($appInfos);
         $app_top = json_decode($appTop);
         $detail = json_decode($news_detail);
-        return view('news_detail',compact('app_info','detail','app_top'));
+        return view('news.news_detail',compact('app_info','detail','app_top'));
     }
 
     public function ajaxLoadmore(Request $request){

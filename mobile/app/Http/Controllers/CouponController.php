@@ -36,7 +36,7 @@ class CouponController extends Controller
 
         }
 //        dd($items_data);
-        return view('coupon.index', compact('app_info', 'items_data', 'items_total_data', 'total_page', 'page_number'));
+        return view('coupons.index', compact('app_info', 'items_data', 'items_total_data', 'total_page', 'page_number'));
     }
 
 
@@ -91,7 +91,7 @@ class CouponController extends Controller
 
         if( isset($curl->response->code) && $curl->response->code == 1000 ){
             $items_detail_data = $curl->response->data->coupons;
-            return view('coupon.detail', array(
+            return view('coupons.detail', array(
                 'app_info' => $this->app_info ,
                 'items_detail_data' => $items_detail_data
             ));

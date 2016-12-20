@@ -9,6 +9,7 @@ use DB;
 use Session;
 use Auth;
 use \Curl\Curl;
+use View;
 
 
 class MobileController extends Controller
@@ -30,8 +31,10 @@ class MobileController extends Controller
     }
 
     public function index(Request $request){
+
+
         if( ! Session::has('user') ){
-            return view('login',array(
+            return view('users.login',array(
                 'app_info' => $this->app_info
             ));
         }
@@ -50,7 +53,7 @@ class MobileController extends Controller
             ->get_data('top',[
                 'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
 
-        return view('index',
+        return view('homes.index',
             [
                 'app_info' => $this->app_info ,
                 'app_top' => json_decode($appTop),

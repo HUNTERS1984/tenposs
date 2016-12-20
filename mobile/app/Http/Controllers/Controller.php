@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
 use Session;
 use File;
 use \Curl\Curl;
+use Theme;
 
 class Controller extends BaseController
 {
@@ -34,8 +35,14 @@ class Controller extends BaseController
         $response = json_decode($get);
         if ( $response->code == 1000 ) {
             $this->app_info = $response;
+
+            if( $this->app_info->data->app_setting->template_id == 1 ){
+                Theme::init('default');
+            }else{
+                Theme::init('restaurant');
+            }
             // write file manifest
-            
+
             if(!File::exists( public_path($response->data->id) )) {
                 File::makeDirectory( public_path($response->data->id) , 0777, true, true);
             }
