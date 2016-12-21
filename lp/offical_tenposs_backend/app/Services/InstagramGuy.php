@@ -28,7 +28,7 @@ class InstagramGuy
             'apiSecret' => 'd839149848c04447bd379ce8bff4d890',
             'apiCallback' => 'http://localhost:8000/test' // must point to success.php
         ));
-        $this->instagram->setAccessToken("3532720007.cd9f614.f085ab9cf7dc456891b8359a175ef443");
+        $this->instagram->setAccessToken("3532720007.cd9f614.9243921bd67542dcb7574a3cad6f6949");
     }
 
     public function fetchByTag($coupon_id)
@@ -37,11 +37,11 @@ class InstagramGuy
 
         $users = SocialProfile::whereSocialType(3)->get()->toArray(); // 3 instagram, 1 facebook, 2 twitter
 
-        //dd($users);
+        
         foreach ($users as $user) {
             if ($user) {
                 $response = $this->instagram->getRecentUserMedia($user['social_id'], self::IMAGES_PER_REQUEST);
-
+                //dd($response);
                 $client = new \GuzzleHttp\Client();
                 while (isset($response->data) && !empty($response->pagination->next_url) && $current < self::IMAGES_TOTAL_LIMIT) {
                     $this->dispatch(new InstagramPaginationJob($coupon_id, $user['app_user_id'], $response->data));
