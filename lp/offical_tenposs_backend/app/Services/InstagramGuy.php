@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AppUser;
+use App\Models\SocialProfile;
 use App\Jobs\InstagramPaginationJob;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use League\OAuth2\Client\Token\AccessToken;
@@ -34,17 +35,16 @@ class InstagramGuy
     {
         $current = 0;
 
-        $users = AppUser::whereHas('social', function ($query) {
-                $query->where('social_type', '=', 1);
-            })->with('social')->get()->toArray();
+        $users = SocialProfile::whereSocialType(3)->get()->toArray(); // 3 instagram, 1 facebook, 2 twitter
 
+        //dd($users);
         foreach ($users as $user) {
             if ($user) {
-                $response = $this->instagram->getRecentUserMedia($user['social']['social_id'], self::IMAGES_PER_REQUEST);
+                $response = $this->instagram->getRecentUserMedia($user['social_id'], self::IMAGES_PER_REQUEST);
 
                 $client = new \GuzzleHttp\Client();
                 while (isset($response->data) && !empty($response->pagination->next_url) && $current < self::IMAGES_TOTAL_LIMIT) {
-                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
+                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['app_user_id'], $response->data));
                     $current += self::IMAGES_PER_REQUEST;
                     $response = json_decode($client->get($response->pagination->next_url)
                         ->getBody()
@@ -53,7 +53,7 @@ class InstagramGuy
 
                 if ($response && isset($response->data) && empty($response->pagination->next_url))
                 {
-                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['id'], $response->data));
+                    $this->dispatch(new InstagramPaginationJob($coupon_id, $user['app_user_id'], $response->data));
                 }
             }
            

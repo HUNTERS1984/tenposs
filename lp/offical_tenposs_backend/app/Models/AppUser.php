@@ -48,7 +48,7 @@ class AppUser extends Model {
     }
 
     public function social(){
-         return $this->hasOne(SocialProfile::class);
+         return $this->hasOne(SocialProfile::class, 'app_user_id');
     }
 
     public function coupons()
