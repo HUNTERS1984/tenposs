@@ -33,7 +33,7 @@
 </div>
 <div data-role="page" id="pageone" class="coupon">
     <div data-role="main" class="ui-content">
-        @include('homes.home_coupon')
+        @include('homes.home_slideshow')
         <div data-role="navbar">
             <ul>
                 <li><a href="{{ route('coupon') }}" class="ui-icon-coupon ui-btn-icon-top">クーポン</a></li>

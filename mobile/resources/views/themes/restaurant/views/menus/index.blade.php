@@ -1,141 +1,236 @@
-@extends('master')
-@section('headCSS')
-    <link href="{{ Theme::asset('css/menu.css') }}" rel="stylesheet">
+@extends('layouts.master')
+@section('title')
+メニュー
+@stop
+@section('header')
+<link rel="stylesheet" href="{{ Theme::asset('css/jqm-demos.css') }}">
+<script src="{{ Theme::asset('js/index.js') }}"></script>
 <style>
+
     body{
-        font-size: {{ $app_info->data->app_setting->font_size }};
-        font-family: {{ $app_info->data->app_setting->font_family }};
-    }
-    .h_control-nav:before{
+    font-size: {{ $app_info->data->app_setting->font_size }};
+    font-family: "{{ $app_info->data->app_setting->font_family }}";
+        }
+
+    div[data-role="header"]{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+    div[data-role="header"] h1{
+        color: #{{ $app_info->data->app_setting->title_color }}
+        }
+    div[data-role="header"] a{
         color: #{{ $app_info->data->app_setting->menu_icon_color }};
-    }
+        }
+
 </style>
-@endsection
-@section('page')
-    <div id="header">
-        <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
-            <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color }};
-            ">メニュー</h1>
-            <a href="javascript:void(0)" class="h_control-nav"></a>
-        </div>
-    </div><!-- End header -->
-    <div id="main">
-        <div id="content">
-            <div id="category">
-                <!-- Slider main container -->
-                <div class="swiper-container">
-                    <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper">
-                        <!-- Slides -->
-                        @if( isset($menus)  && count($menus) > 0 )
-                            @foreach($menus as $cate)
-                                @foreach($cate->data->menus as $name_cate)
-                                     <div class="swiper-slide" data-id="{{$name_cate->id}}">{{$name_cate->name}}</div>
-                                @endforeach
-                            @endforeach
-                        @endif
+@stop
+@section('main')
+
+<div data-role="header" data-position="fixed" data-theme="a">
+    <a href="#outside" class="ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
+    <h1>メニュー</h1>
+</div>
+
+
+<div data-role="page" class="jqm-demos" data-quicklinks="true">
+    <div data-role="main" class="ui-content">
+        <div data-role="tabs" class="tabs">
+            <div data-role="navbar">
+                <ul>
+                    @if( isset($menus)  && count($menus) > 0 )
+                    @foreach($menus as $cate)
+                    @foreach($cate->data->menus as $name_cate)
+                    <li ><a href="#cat{{$name_cate->id}}" data-theme="a" data-ajax="false" class="ui-btn-active">{{$name_cate->name}}</a></li>
+                    @endforeach
+                    @endforeach
+                    @endif
+                </ul>
+            </div>
+
+
+
+            <div id="one" class="ui-content">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product01.jpg" alt="product01">					</figure>
+                            <a href="product_detail.html" data-ajax="false">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
                     </div>
 
-                    <!-- If we need navigation buttons -->
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product02.jpg" alt="product02">					</figure>
+                            <a href="product_detail.html" data-ajax="false">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
                 </div>
-            </div><!-- End category -->
-            <div id="category-detail">
-                <input type="hidden" name="token" value="{{ csrf_token() }}">
-                <!-- Slider main container -->
-                <div class="swiper-container">
-                    <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper">
-                        @if(isset($items_detail) && count($items_detail)>0)
-                        @foreach($items_detail as $items)
-                            @if($items)
-                            <div class="swiper-slide">
-                                <div class="container-all-img clearfix" style="margin-top:10px">
-                                    <div class="load-ajax">
-                                        @foreach($items['data']['items'] as $item)
-                                        <div class="item-product">
-                                            <input type="hidden" name="pagesize{{$items['data']['menu_id']}}" value="{{$pagesize}}">
-                                            <a href="{{ route('menus.detail', $item['id'])}}">
-                                                <img class="image_size center-cropped" src="{{$item['image_url']}}" alt="{{$item['title']}}"/>
-                                                <p>{{$item['title']}}</p>
-                                                <span>¥{{number_format($item['price'], 0, '', ',')}}</span>
-                                            </a>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                
-                                @if (count($items['data']['items']) ==  $pagesize)
-                                <a href="#" class="btn tenposs-readmore more">もっと見る</a>
-                                @endif
-
-                            </div><!-- swiper slide -->
-                            @else
-                            <div class="swiper-slide">
-                                <p style="text-align: center; margin-top:20px">データなし</p>
-                            </div>
-                            @endif
-                        @endforeach
-                        @endif
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product03.jpg" alt="product03">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
                     </div>
-                </div><!-- End  swiper -->
 
-            </div><!-- End category detail -->
-        </div><!-- End content -->
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product04.jpg" alt="product04">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--one-->
+            <div id="two" class="ui-content">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product01.jpg" alt="product01">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
 
-        @include('partials.sidemenu')
-    </div><!-- End main -->
-    <div id="footer">
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product02.jpg" alt="product02">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product03.jpg" alt="product03">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
 
-    </div><!-- End footer -->
-@endsection
-@section('footerJS')
-    <script src="{{ url('js/custom.js') }}"></script>
-    <script type="text/javascript">
-        var cateid;
-        var categorySwiper = new Swiper('#category .swiper-container', {
-            speed: 400,
-            spaceBetween: 0,
-            slidesPerView: 1,
-            nextButton: '#category .swiper-button-next',
-            prevButton: '#category .swiper-button-prev',
-            onInit: function(swiper){
-                cateid = $(".swiper-slide-active").data('id');
-            },
-            onSlideChangeEnd: function(swiper){
-                cateid = $(".swiper-slide-active").data('id');
-            }
-        });
-        var categorydetailSwiper = new Swiper('#category-detail .swiper-container', {
-            speed: 400,
-            spaceBetween: 0,
-            slidesPerView: 1
-        });
-        categorySwiper.params.control = categorydetailSwiper;
-        categorydetailSwiper.params.control = categorySwiper;
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(".tenposs-readmore.more").on('click',function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: "{{route('menus.ajax')}}",
-                    type: 'POST',
-                    data: {cate: cateid, pagesize:$('input[name="pagesize'+cateid+'"]').val(), _token:$('input[name="token"]').val()},
-                    success: function(data){
-                        //$(".swiper-slide-active .load-ajax").empty();
-                        $(".swiper-slide-active .load-ajax").append(data.msg).fadeIn();
-                        $('input[name="pagesize'+cateid+'"]').val(data.pagesize);
-                        if(data.status == 'red'){
-                            $('.swiper-slide-active a.tenposs-readmore').hide();
-                        }
-                    }
-                })
-            })
-        })
-    </script>
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product04.jpg" alt="product04">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="three" class="ui-content">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product01.jpg" alt="product01">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
 
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product02.jpg" alt="product02">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product03.jpg" alt="product03">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
 
-@endsection
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <figure>
+                                <img src="img/product04.jpg" alt="product04">					</figure>
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="four" class="ui-content">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="items">
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+
+                    <div class="ui-block-b">
+                        <div class="items">
+                            <a href="#">松阪牛コース 紅葉</a><br>
+                            <span class="">会席料理コース</span>
+                            <div class="price">¥20,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /page -->
+@stop
+@section('footer')
+<script>
+    $( document ).on( "pagecreate", function() {
+        $( "body > [data-role='panel']" ).panel();
+        $( "body > [data-role='panel'] [data-role='listview']" ).listview();
+    });
+    $( document ).one( "pageshow", function() {
+        $( "body > [data-role='header']" ).toolbar();
+        $( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+    });
+</script>
+@stop

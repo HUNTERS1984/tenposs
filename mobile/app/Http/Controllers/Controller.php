@@ -36,7 +36,7 @@ class Controller extends BaseController
         if ( $response->code == 1000 ) {
             $this->app_info = $response;
 
-            if( $this->app_info->data->app_setting->template_id == 10 ){
+            if( $this->app_info->data->app_setting->template_id == 1 ){
                 Theme::init('default');
             }else{
                 Theme::init('restaurant');
