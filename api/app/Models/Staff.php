@@ -11,7 +11,7 @@ class Staff extends Model {
 
     public function staff_categories()
     {
-        return $this->belongsTo(StaffCategory::class);
+        return $this->belongsTo(StaffCategory::class, 'staff_category_id');
     }
 
 
