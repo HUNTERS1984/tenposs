@@ -109,7 +109,7 @@ class StaffController extends Controller
             if ($category_id > 0) {
                 $total_staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->orderBy('updated_at', 'desc')->count();
                 if ($total_staffs > 0) {
-                    $staffs = Staff::where('staff_category_id', Input::get('category_id'))->whereNull('deleted_at')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $staffs = Staff::where('staff_category_id', Input::get('category_id'))->with('staff_categories')->whereNull('deleted_at')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                 }
             } else {
                 $total_staffs = 0;
@@ -122,7 +122,7 @@ class StaffController extends Controller
                         $total_staffs = Staff::whereIn('staff_category_id', $staff_cat->pluck('id')->toArray())->whereNull('deleted_at')->count();
                     }
                     if ($total_staffs > 0) {
-                        $staffs = Staff::whereIn('staff_category_id', $staff_cat->pluck('id')->toArray())->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('updated_at', 'desc')->get()->toArray();
+                        $staffs = Staff::whereIn('staff_category_id', $staff_cat->pluck('id')->toArray())->with('staff_categories')->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('updated_at', 'desc')->get()->toArray();
                     }
 
                 }
