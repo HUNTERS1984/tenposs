@@ -1452,6 +1452,8 @@ class AppUserController extends Controller
                 }
             }
             DB::commit();
+            $key = sprintf(Config::get('api.cache_profile'), Input::get('app_id'), $this->request->token_info['id']);
+            RedisUtil::getInstance()->clear_cache($key);
             return $this->output($this->body);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
