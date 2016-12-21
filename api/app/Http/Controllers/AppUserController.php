@@ -1445,7 +1445,7 @@ class AppUserController extends Controller
                 $user_profiles->birthday = Input::get('birthday');
             if (Input::get('address'))
                 $user_profiles->address = Input::get('address');
-            if ((Input::get('gender'))
+            if (Input::get('gender'))
                 $user_profiles->gender = Input::get('gender');
             $user_profiles->save();
             if (!empty(Input::get('code'))) {
