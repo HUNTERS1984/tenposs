@@ -29,15 +29,15 @@ class InstagramGuy
             'apiCallback' => 'http://localhost:8000/test' // must point to success.php
         ));
         $this->instagram->setAccessToken("3532720007.cd9f614.9243921bd67542dcb7574a3cad6f6949");
+        //https://instagram.com/oauth/authorize/?client_id=47d2864cac354dad83b28c4d3f604d25&redirect_uri=http://localhost&response_type=token&scope=public_content+follower_list+basic+likes+comments
     }
 
     public function fetchByTag($coupon_id)
     {
         $current = 0;
 
-        $users = SocialProfile::whereSocialType(3)->get()->toArray(); // 3 instagram, 1 facebook, 2 twitter
+        $users = SocialProfile::whereSocialType(3)->groupBy('social_id')->get()->toArray(); // 3 instagram, 1 facebook, 2 twitter
 
-        
         foreach ($users as $user) {
             if ($user) {
                 $response = $this->instagram->getRecentUserMedia($user['social_id'], self::IMAGES_PER_REQUEST);

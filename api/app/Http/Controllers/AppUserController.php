@@ -267,8 +267,12 @@ class AppUserController extends Controller
 
             $profile = new UserProfile();
             $profile->name = Input::get('name');
-            $profile->gender = 0;
-            $profile->address = null;
+            if (Input::get('birthday'))
+                $profile->birthday = Input::get('birthday');
+            if (Input::get('address'))
+                $profile->address = Input::get('address');
+            if (Input::get('gender'))
+                $profile->gender = Input::get('gender');
             $profile->avatar_url = null;
             $profile->facebook_status = 0;
             $profile->twitter_status = 0;
@@ -1437,11 +1441,11 @@ class AppUserController extends Controller
             $user_profiles = UserProfile::find($app_info['profile_id']);
             if (!$user_profiles)
                 $user_profiles = new UserProfile();
-            if (!empty(Input::get('birthday')))
+            if (Input::get('birthday'))
                 $user_profiles->birthday = Input::get('birthday');
-            if (!empty(Input::get('address')))
+            if (Input::get('address'))
                 $user_profiles->address = Input::get('address');
-            if (!empty(Input::get('gender')))
+            if ((Input::get('gender'))
                 $user_profiles->gender = Input::get('gender');
             $user_profiles->save();
             if (!empty(Input::get('code'))) {
