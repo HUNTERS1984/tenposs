@@ -11,82 +11,21 @@
 
     </div><!---gib-a-->
     <div class="menu">
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
+        @if( isset( $app_top->data->items->data)
+        && count($app_top->data->items->data) > 0 )
 
-        </div>
+        @foreach( $app_top->data->items->data as $item )
         <div class="slide">
             <figure>
-                <img src="img/product01.jpg" alt="product01">
+                <a data-ajax="false" href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}">
+                    <img src="{{ $item->image_url }}" alt="{{ $item->title }}">
+                </a>
             </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-
+            <a data-ajax="false" href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}"> {{ $item->title }}</a><br>
+            <span class="">{{ $item->menu }}</span>
+            <div class="price">¥{{number_format($item->price, 0, '', ',')}}</div>
         </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-        </div>
-        <div class="slide">
-            <figure>
-                <img src="img/product01.jpg" alt="product01">
-            </figure>
-            <a href="#">松阪牛コース 紅葉</a><br>
-            <span class="">会席料理コース</span>
-            <div class="price">¥20,000</div>
-
-        </div>
+        @endforeach
+        @endif
     </div><!--menu-->
 </div><!--menu-->

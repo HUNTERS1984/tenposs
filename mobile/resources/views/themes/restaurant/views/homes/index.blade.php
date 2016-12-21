@@ -1,10 +1,31 @@
 @extends('layouts.master')
+
 @section('title')
 ホーム
 @stop
+
 @section('header')
 <script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+<style>
+
+    body{
+    font-size: {{ $app_info->data->app_setting->font_size }};
+    font-family: "{{ $app_info->data->app_setting->font_family }}";
+        }
+
+    div[data-role="header"]{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+    div[data-role="header"] h1{
+        color: #{{ $app_info->data->app_setting->title_color }}
+        }
+    div[data-role="header"] a{
+        color: #{{ $app_info->data->app_setting->menu_icon_color }};
+        }
+
+</style>
 @stop
+
 @section('main')
 <div data-role="header" data-position="fixed" data-theme="a">
     <a href="#outside" class="ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
@@ -15,10 +36,10 @@
         @include('homes.home_coupon')
         <div data-role="navbar">
             <ul>
-                <li><a href="#" class="ui-icon-coupon ui-btn-icon-top">クーポン</a></li>
-                <li><a href="#" class="ui-icon-chat ui-btn-icon-top">チャット</a></li>
-                <li><a href="#" class="ui-icon-phone ui-btn-icon-top">電話</a></li>
-                <li><a href="#" class="ui-icon-direction ui-btn-icon-top">道順</a></li>
+                <li><a href="{{ route('coupon') }}" class="ui-icon-coupon ui-btn-icon-top">クーポン</a></li>
+                <li><a href="{{ route('chat') }}" class="ui-icon-chat ui-btn-icon-top">チャット</a></li>
+                <li><a href="{{ route('reservation') }}" class="ui-icon-phone ui-btn-icon-top">電話</a></li>
+                <li><a href="{{ route('home') }}" class="ui-icon-direction ui-btn-icon-top">道順</a></li>
             </ul>
         </div>
         @include('homes.home_news')

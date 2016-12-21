@@ -1,143 +1,149 @@
-@extends('master')
+@extends('layouts.master')
+@section('title')
+ニュース
+@stop
+@section('header')
+<link rel="stylesheet" href="{{ Theme::asset('css/jqm-demos.css') }}">
+<script src="{{ Theme::asset('js/index.js') }}"></script>
 
-@section('headCSS')
-<link href="{{ Theme::asset('css/coupon.css') }}" rel="stylesheet">
-<link href="{{ Theme::asset('css/news.css') }}" rel="stylesheet">
 <style>
+
     body{
-        font-size: {{ $app_info->data->app_setting->font_size }};
-        font-family: "{{ $app_info->data->app_setting->font_family }}";
-    }
-    .h_control-nav:before{
+    font-size: {{ $app_info->data->app_setting->font_size }};
+    font-family: "{{ $app_info->data->app_setting->font_family }}";
+        }
+
+    div[data-role="header"]{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+    div[data-role="header"] h1{
+        color: #{{ $app_info->data->app_setting->title_color }}
+        }
+    div[data-role="header"] a{
         color: #{{ $app_info->data->app_setting->menu_icon_color }};
         }
+
 </style>
 @stop
+@section('main')
+<div data-role="header" data-position="fixed" data-theme="a">
+    <a href="#outside" class="ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
+    <h1>ニュース</h1>
+</div>
+<div data-role="page" id="pageone">
+    <div data-role="main" class="ui-content">
+        <ul class="bxslider">
 
-@section('page')
-	<div id="header">
-    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
-        <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color }};
-            ">ニュース</h1>
-        <a href="javascript:void(0)" class="h_control-nav"></a>
-        </div>
-    </div><!-- End header -->
-    <div id="main">
-        <div id="content">
-            <div id="category">
-                <!-- Slider main container -->
-                <div class="swiper-container">
-                    <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper">
-                        <!-- Slides -->
-                        @if( isset($news_cate)  && count($news_cate) > 0 )
-	                        @foreach($news_cate as $cate)
-                                @foreach($cate->data->news_categories as $name_cate)
-                                     <div class="swiper-slide" data-id="{{$name_cate->id}}">{{$name_cate->name}}</div>
-                                @endforeach
-							@endforeach
-                        @endif
+            @if(isset($news_detail) && count($news_detail)>0)
+            @foreach($news_detail as $news)
+            @if( $news )
+            <?php
+            $slides = array_slice($news->data->news, 0, 3);
+            ?>
+            @foreach($slides as $news_title)
+            <li><a href="{{route('news.detail',[$news_title->id])}}" data-ajax="false">
+                    <img src="{{$news_title->image_url}}" alt="{{$news_title->title}}"></a>
+                <div class="text_news">
+                    <h3>
+                        <a data-ajax="false" href="{{route('news.detail',[$news_title->id])}}">
+                            {{$news_title->title}}
+                        </a>
+                    </h3>
+                    <p>{{Str::words( strip_tags($news_title->description),20, '..')}}</p>
+                    <p class="date">{{ date('m月d日 H時i分', strtotime($news_title->created_at)) }}</p>
+                </div>
+            </li>
+            @endforeach
+            @endif
+            @endforeach
+            @endif
+        </ul><!--bxslider-->
+        <div id="news">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <h3 class="icon">ニュース</h3>
+                </div>
+                <div class="ui-block-b">
+                    <div class="outside">
+                        <p><!--<span id="slider-prev"></span> | --><span id="news-next"></span></p>
                     </div>
-
-                    <!-- If we need navigation buttons -->
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
                 </div>
-            </div><!-- End category -->
-            <div id="category-detail">
-                <input type="hidden" name="token" value="{{ csrf_token() }}">
-                <div class="container-fluid">
-                    <!-- Slider main container -->
-                    <div class="swiper-container">
-                        <!-- Additional required wrapper -->
-                        <div class="swiper-wrapper">
-                            <!-- Slides -->
-                            @if(isset($news_detail) && count($news_detail)>0)
-                            @foreach($news_detail as $news)
-                                @if($news)
-                                <div class="swiper-slide">
-                                    <div class="container-all-img clearfix">
-                                        <div class="load-ajax">
-                                            @foreach($news->data->news as $news_title)
-                                            <div class="item-coupon imageleft clearfix">
-                                                <input type="hidden" name="pagesize{{$news_title->new_category_id}}" value="{{$pagesize}}">
-                                                <a href="{{route('news.detail',[$news_title->id])}}" class="image">
-                                                    <img class="center-cropped" src="{{$news_title->image_url}}" alt="Nakayo"/>
-                                                </a>
-                                                <div class="info clearfix">
-                                                    <a href="{{route('news.detail',[$news_title->id])}}">{{$news_title->news_cat->name}}</a>
-                                                    <h3>{{$news_title->title}}</h3>
-                                                    <p>{{Str::words( strip_tags($news_title->description),20, '..')}}</p>
-                                                </div>
-                                            </div><!-- End item coupon -->
-                                            @endforeach
-                                        </div>
-                                        @if (count($news->data->news) ==  $pagesize)
-                                        <a href="#" class="btn tenposs-readmore more">もっと見る</a>
-                                        @endif
-                                    </div>
-                                </div><!-- swiper slide -->
-                                @else
-                                <div class="swiper-slide">
-                                    <p style="text-align: center; margin-top:20px">データなし</p>
-                                </div>
-                                @endif
-                            @endforeach
-                            @endif
-                            <!-- Slides -->
+            </div><!---gib-a-->
+            <div class="news">
+                <div class="slide">
+                    <div class="listnews">
+                        @if(isset($news_detail) && count($news_detail)>0)
+                        @foreach($news_detail as $news)
+                        @if( $news )
+                        <?php
+                        $slides = array_slice($news->data->news, 3);
+                        ?>
+                        @foreach($slides as $news_title)
 
-                        </div><!--  -->
-                    </div><!-- Swiper container -->
+                        <div class="items">
+                            <figure>
+                                <a href="{{route('news.detail',[$news_title->id])}}" data-ajax="false">
+                                <img src="{{$news_title->image_url}}" alt="{{$news_title->title}}">
+                                </a>
+                            </figure>
+                            <div class="text">
+                                <h3>
+                                    <a href="{{route('news.detail',[$news_title->id])}}" data-ajax="false">
+                                        {{$news_title->title}}
+                                    </a>
+                                </h3>
+                                <p>アメリカ大統領選挙に向けた最後のテ</p>
+                                <p class="date">{{ date('m月d日 H時i分', strtotime($news_title->created_at)) }}</p>
+                            </div>
+                        </div><!--items-->
+
+                        @endforeach
+                        @endif
+                        @endforeach
+                        @endif
+
+                    </div>
                 </div>
-            </div><!-- Category detail -->
-        </div><!-- End content -->
-        @include('partials.sidemenu')
-    </div><!-- End main -->
-    <div id="footer"></div><!-- End footer -->
+            </div><!--slider1-->
+        </div><!--news-->
+    </div>
+</div>
+
+
 @stop
-@section('footerJS')
-	<script type="text/javascript">
-        var cateid;
-        var categorySwiper = new Swiper('#category .swiper-container', {
-            speed: 400,
-            spaceBetween: 0,
-            slidesPerView: 1,
-            nextButton: '#category .swiper-button-next',
-            prevButton: '#category .swiper-button-prev',
-            onInit: function(swiper){
-                cateid = $(".swiper-slide-active").data('id');
-            },
-            onSlideChangeEnd: function(swiper){
-                cateid = $(".swiper-slide-active").data('id');
-            }
+
+@section('footer')
+<script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+<link rel="stylesheet" href="{{ Theme::asset('css/jquery.bxslider.css') }}" type="text/css" />
+<script>
+    $( document ).on( "pagecreate", function() {
+        $( "body > [data-role='panel']" ).panel();
+        $( "body > [data-role='panel'] [data-role='listview']" ).listview();
+    });
+    $( document ).one( "pageshow", function() {
+        $( "body > [data-role='header']" ).toolbar();
+        $( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.bxslider').bxSlider();
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $('.news').bxSlider({
+            minSlides: 1,
+            maxSlides: 1,
+            pager: false,
+            moveSlides: 2,
+            slideMargin: 10,
+            nextSelector: '#news-next',
+            prevSelector: '#slider-prev',
+            nextText: '<img src="{{ Theme::asset('img/arrow.png')}}">',
+            prevText: '←'
         });
-        var categorydetailSwiper = new Swiper('#category-detail .swiper-container', {
-            speed: 400,
-            spaceBetween: 0,
-            slidesPerView: 1
-        });
-        categorySwiper.params.control = categorydetailSwiper;
-        categorydetailSwiper.params.control = categorySwiper;
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(".tenposs-readmore.more").on('click',function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: "{{route('news.ajax')}}",
-                    type: 'POST',
-                    data: {cate: cateid, pagesize:$('input[name="pagesize'+cateid+'"]').val(), _token:$('input[name="token"]').val()},
-                    success: function(data){
-                        //$(".swiper-slide-active .load-ajax").empty();
-                        $(".swiper-slide-active .load-ajax").append(data.msg).fadeIn();
-                        $('input[name="pagesize'+cateid+'"]').val(data.pagesize);
-                        if(data.status == 'red'){
-                            $('.swiper-slide-active a.tenposs-readmore').hide();
-                        }
-                    }
-                })
-            })
-        })
-    </script>
+    });
+</script>
 @stop

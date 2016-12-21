@@ -10,6 +10,7 @@ use Session;
 use Auth;
 use \Curl\Curl;
 use View;
+use Theme;
 
 
 class MobileController extends Controller
@@ -31,7 +32,6 @@ class MobileController extends Controller
     }
 
     public function index(Request $request){
-
 
         if( ! Session::has('user') ){
             return view('users.login',array(

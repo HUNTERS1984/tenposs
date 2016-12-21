@@ -1,12 +1,38 @@
-<div data-role="panel" id="outside" data-theme="b">
+<div data-role="panel" id="outside" data-theme="b" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
     <ul data-role="listview" class="menu-left">
-        <li class="user">
-            <div class="user-left"><img src="img/user.png"></div>
+        <li class="user" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
+            @if( Session::has('user') )
+            <div class="user-left">
+                <img style="max-height: 50px; object-fit: cover; " src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : url('/img/icon/icon-user.png') }}" alt=""/>
+            </div>
             <div class="user-right">
-                <p>マシュー</p>
+                <p><a data-ajax="false" style="padding-left: 0" href="{{ route('profile') }}">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</a></p>
+                <p>{{ Session::get('user')->email != '' ? Session::get('user')->email : '不名' }}</p>
+            </div>
+            @else
+
+            <div class="user-left"><img src="{{ Theme::asset('img/user.png') }}"></div>
+            <div class="user-right">
+                <p><a data-ajax="false" style="padding-left: 0" href="{{ route('login') }}">マシュー</a></p>
                 <p>matthew@gmail.com</p>
             </div>
+
+            @endif
         </li>
+
+        @foreach ( $app_info->data->side_menu as $menu )
+        <?php $menuItem = \App\Utils\Menus::page($menu->id) ?>
+        @if( $menuItem['display'] )
+        <li class="{{ $menu->icon }}">
+            <a class="{{ $menuItem['classes'] }}" href="{{ $menuItem['href'] }}" style="
+                    font-size: {{ $app_info->data->app_setting->menu_font_size }};
+                    font-family: {{ $app_info->data->app_setting->menu_font_family }};
+                    color: #{{ $app_info->data->app_setting->menu_font_color }};
+                " data-ajax="false">{{ $menu->name }} </a>
+        </li>
+        @endif
+        @endforeach
+        <!--
         <li><a href="index.html" class="ui-icon-home ui-btn-icon-left" data-ajax="false">ホーム</a></li>
         <li><a href="menu.html" class="ui-icon-grid ui-btn-icon-left" data-ajax="false">メニュー</a></li>
         <li><a href="news.html" class="ui-icon-bullets ui-btn-icon-left" data-ajax="false">ニュース</a></li>
@@ -17,5 +43,6 @@
         <li><a href="reserv.html" class="ui-icon-forward ui-btn-icon-left" data-ajax="false">予約</a></li>
         <li><a href="invitation.html" class="ui-icon-heart ui-btn-icon-left" data-ajax="false">招待コード</a></li>
         <li><a href="confi.html" class="ui-icon-gear ui-btn-icon-left" data-ajax="false">設定</a></li>
+        -->
     </ul>
 </div>

@@ -1,64 +1,69 @@
-@extends('master')
+@extends('layouts.master')
+@section('title')
+ニュース
+@stop
+@section('header')
+<link rel="stylesheet" href="{{ Theme::asset('css/jqm-demos.css') }}">
+<script src="{{ Theme::asset('js/index.js') }}"></script>
 
-@section('headCSS')
-<link href="{{ Theme::asset('css/coupon.css') }}" rel="stylesheet">
 <style>
+
     body{
-        font-size: {{ $app_info->data->app_setting->font_size }};
-        font-family: "{{ $app_info->data->app_setting->font_family }}";
-    }
-    .h_control-back:before{
+    font-size: {{ $app_info->data->app_setting->font_size }};
+    font-family: "{{ $app_info->data->app_setting->font_family }}";
+        }
+
+    div[data-role="header"]{
+        background-color:#{{ $app_info->data->app_setting->header_color }};
+        }
+    div[data-role="header"] h1{
+        color: #{{ $app_info->data->app_setting->title_color }}
+        }
+    div[data-role="header"] a{
         color: #{{ $app_info->data->app_setting->menu_icon_color }};
-    }
+        }
+
 </style>
 @stop
-
-@section('page')
-	<div id="header">
-    <div class="container-fluid" style="background-color:#{{ $app_info->data->app_setting->header_color }};">
-        <h1 class="aligncenter" style="
-                color: #{{ $app_info->data->app_setting->title_color }};
-                ">
+@section('main')
+<div data-role="header" data-position="fixed" data-theme="a">
+    <a href="{{ URL::previous() }}" data-ajax="false" data-direction="reverse" data-icon="carat-l"
+       data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+    <h1>ニュース</h1>
+</div>
+<div data-role="page" id="pageone">
+    <div data-role="main" class="ui-content">
+        <div class="content-main">
+            <figure>
                 @if(isset($detail))
-                {{$detail->data->news->title}}</h1>
-                 @endif
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
-        </div>
-    </div><!-- End header -->
-    <div id="main">
-        <div id="content" class="item-detail">
-            <img class="center-cropped" src="{{$detail->data->news->image_url}}" alt=""/>
-            @if(isset($detail))
-            <div class="infodetail">
-                <div class="">
-                    <p style="margin-bottom: 2px"><a href="javascrip:void(0)">{{ $detail->data->news->news_cat->name }} </a></p>
-                    <div class="wrap-title-detail">
-                        <!-- <h3>{{$detail->data->news->title}}</h3> -->
-                        <h3>{{$detail->data->news->title}} </h3>
-                        <span class="news-dateadd">{{ str_replace('-','.',$detail->data->news->date) }}</span>
-                    </div>
-                    
-                </div>
+                <img src="{{$detail->data->news->image_url}}" alt="news_big">
+                @endif
+            </figure>
+            <div class="des">
+                @if(isset($detail))
+                <h3>{{$detail->data->news->title}}</h3>
+                <p>{{ $detail->data->news->news_cat->name }}</p>
+                <p class="date">{{ date('m月d日 H時i分', strtotime($detail->data->news->created_at)) }}</p>
+                {!! $detail->data->news->description !!}
+                @endif
             </div>
-            <div class="entrydetail justify">
-                <p>{!! $detail->data->news->description !!}</p>
-            </div>
-            @endif
-        </div><!-- End content -->
-        @include('partials.sidemenu')
-    </div><!-- End main -->
-    <div id="footer"></div><!-- End footer -->
+        </div><!--content-main-->
+    </div>
+</div>
+
 @stop
-@section('footerJS')
-	<script type="text/javascript">
-        var bannerSwiper = new Swiper('#banner .swiper-container', {
-            autoplay: 2000,
-            speed: 400,
-            loop: true,
-            spaceBetween: 0,
-            slidesPerView: 1,
-            pagination: "#banner .swiper-pagination",
-            paginationClickable: true
-        });
-    </script>
+
+@section('footer')
+
+<script>
+    $( document ).on( "pagecreate", function() {
+        $( "body > [data-role='panel']" ).panel();
+        $( "body > [data-role='panel'] [data-role='listview']" ).listview();
+    });
+    $( document ).one( "pageshow", function() {
+        $( "body > [data-role='header']" ).toolbar();
+        $( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+    });
+</script>
+
 @stop
