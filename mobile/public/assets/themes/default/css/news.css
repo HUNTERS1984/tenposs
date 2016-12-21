@@ -4,3 +4,12 @@
         font-size: 18px;
     }
 }
+
+.item-coupon .info .justify {
+	height: 50px;
+    overflow: hidden;
+}
+
+.item-coupon .info .justify p{
+	margin: 0px;
+}

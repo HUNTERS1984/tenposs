@@ -23,7 +23,7 @@
  <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter">ログイン</h1>
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
+        <a href="{{route('login')}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 
