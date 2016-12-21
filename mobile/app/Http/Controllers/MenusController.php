@@ -22,6 +22,7 @@ class MenusController extends Controller
         
         $menus = [];
         $items_detail = [];
+        $menu_data = array();
 
         foreach($app_info->data->stores as $store){
             $menu = \App\Utils\HttpRequestUtil::getInstance()
@@ -40,15 +41,17 @@ class MenusController extends Controller
                         $item_decode = json_decode($ret, true);
                         if($item_decode['data']['items'] != null){
                             $item_decode['data']['menu_id'] = $item->id;
+                            $menu_data[$item->id] = $item_decode;
                             array_push($items_detail,$item_decode);
                         } else {
+                            $menu_data[$item->id] = null;
                             array_push($items_detail, null);
                         }
                 }
             }
         }
-        //dd($items_detail);
-        return view('menus.index',compact('app_info','menus','items_detail'))->with('pagesize',TOTAL_ITEMS);
+
+        return view('menus.index',compact('app_info','menus','items_detail','menu_data'))->with('pagesize',TOTAL_ITEMS);
     }
 
 
@@ -84,7 +87,7 @@ class MenusController extends Controller
             ]
             , $this->app->app_app_secret);
 
-//        dd($items_detail);
+       //dd(json_decode($items_detail));
 
         $load_more_releated = false;
         $items_detail_data = array();

@@ -47,176 +47,43 @@
                 </ul>
             </div>
 
+            @if( isset($menus)  && count($menus) > 0 )
+            @foreach($menus as $cate)
+            @foreach($cate->data->menus as $name_cate)
+            <div id="cat{{$name_cate->id}}" class="ui-content">
+                @if( isset( $menu_data )
+                && count($menu_data) > 0
+                && isset( $menu_data[$name_cate->id] )
+                && count( $menu_data[$name_cate->id]['data']) > 0 )
 
+                    <?php $loops = array_chunk( $menu_data[$name_cate->id]['data']['items'], 2 )  ?>
+                    @foreach( $loops as $datas )
+                        <div class="ui-grid-a">
+                        <?php $i = 0 ?>
+                        @foreach($datas as $item)
 
-            <div id="one" class="ui-content">
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product01.jpg" alt="product01">					</figure>
-                            <a href="product_detail.html" data-ajax="false">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
+                            <div class="ui-block-{{ ($i%2 == 0) ? 'a' : 'b' }}">
+                                <div class="items">
+                                    <figure>
+                                        <a href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">
+                                        <img src="{{ $item['image_url'] }}" alt="">
+                                        </a>
+                                    </figure>
+                                    <a href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">{{ $item['title'] }}</a><br>
+                                    <span class="">{{ Str::words( strip_tags($item['description']), 10, '..') }}</span>
+                                    <div class="price">¥{{ number_format($item['price']) }}</div>
+                                </div>
+                            </div>
+                        <?php $i++ ?>
+                        @endforeach
                         </div>
-                    </div>
+                    @endforeach
+                @endif
+            <div>
+            @endforeach
+            @endforeach
+            @endif
 
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product02.jpg" alt="product02">					</figure>
-                            <a href="product_detail.html" data-ajax="false">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product03.jpg" alt="product03">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product04.jpg" alt="product04">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-            </div><!--one-->
-            <div id="two" class="ui-content">
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product01.jpg" alt="product01">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product02.jpg" alt="product02">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product03.jpg" alt="product03">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product04.jpg" alt="product04">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="three" class="ui-content">
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product01.jpg" alt="product01">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product02.jpg" alt="product02">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product03.jpg" alt="product03">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <figure>
-                                <img src="img/product04.jpg" alt="product04">					</figure>
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="four" class="ui-content">
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-a">
-                    <div class="ui-block-a">
-                        <div class="items">
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-
-                    <div class="ui-block-b">
-                        <div class="items">
-                            <a href="#">松阪牛コース 紅葉</a><br>
-                            <span class="">会席料理コース</span>
-                            <div class="price">¥20,000</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
