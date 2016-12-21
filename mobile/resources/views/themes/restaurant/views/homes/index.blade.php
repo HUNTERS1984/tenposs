@@ -5,7 +5,7 @@
 @stop
 
 @section('header')
-<script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+<script src="{{ Theme::asset('js/jquery.bxslider.js') }}"></script>
 <style>
 
     body{

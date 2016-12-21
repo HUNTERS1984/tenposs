@@ -113,7 +113,7 @@
 @stop
 
 @section('footer')
-<script src="http://bxslider.com/lib/jquery.bxslider.js"></script>
+<script src="{{ Theme::asset('js/jquery.bxslider.js') }}"></script>
 <link rel="stylesheet" href="{{ Theme::asset('css/jquery.bxslider.css') }}" type="text/css" />
 <script>
     $( document ).on( "pagecreate", function() {
