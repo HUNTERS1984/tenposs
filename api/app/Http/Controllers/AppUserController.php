@@ -267,9 +267,12 @@ class AppUserController extends Controller
 
             $profile = new UserProfile();
             $profile->name = Input::get('name');
-            $profile->birthday = Input::get('birthday');
-            $profile->address = Input::get('address');
-            $profile->gender = Input::get('gender');
+            if (Input::get('birthday'))
+                $profile->birthday = Input::get('birthday');
+            if (Input::get('address'))
+                $profile->address = Input::get('address');
+            if (Input::get('gender') == '0' || Input::get('gender') == '1')
+                $profile->gender = Input::get('gender');
             $profile->avatar_url = null;
             $profile->facebook_status = 0;
             $profile->twitter_status = 0;
