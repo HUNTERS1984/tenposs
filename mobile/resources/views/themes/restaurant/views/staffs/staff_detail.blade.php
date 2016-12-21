@@ -45,7 +45,7 @@
                     </div>
                     <div class="tab-content" style="padding-top: 10px; background: #fff;">
                         <div id="tab1" class="tab-pane fade in active">
-                            <p>{{$detail->introduction}}</p>
+                            <p>{!! $detail->introduction !!}</p>
                         </div>
                         <div id="tab2" class="tab-pane fade">
                             <div class="col-xs-12" style="padding:0px">

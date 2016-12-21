@@ -147,7 +147,7 @@ class HttpRequestUtil
         }
         return $sig;
     }
-
+    
     public function get_data($function, $data_params, $app_secret_key = null)
     {
         try {

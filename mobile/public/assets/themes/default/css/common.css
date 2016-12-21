@@ -22,7 +22,8 @@ h3,.h3{font-size: 28px;}
     color: white;
     font-size: 35;
     text-transform: uppercase;
-    margin-top: 70px;
+    padding-top: 70px;
+    margin: 0px;
 }
 @media screen and (max-width: 479px){
     .tenposs-readmore{
@@ -313,6 +314,10 @@ h3,.h3{font-size: 28px;}
     width: 70%;
     padding-left:10px;
 }
+#news .item-coupon .info .justify{
+    height: 100px;
+    overflow: hidden;
+}
 
 #main #banner img{
     object-fit: cover;
@@ -405,6 +410,11 @@ h3,.h3{font-size: 28px;}
     }
     #contact li div.table-cell img{
         width: 16px;
+    }
+
+    #news .item-coupon .info .justify{
+        height: 60px;
+        overflow: hidden;
     }
 }
 

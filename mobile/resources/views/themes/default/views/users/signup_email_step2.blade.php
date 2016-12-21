@@ -78,7 +78,7 @@
  <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter">新規会員登録 (2/2)</h1>
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
+        <a href="{{route('register')}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 

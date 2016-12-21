@@ -73,19 +73,21 @@ class CouponController extends Controller
 
     public function detail($id)
     {
-
         $curl = new Curl();
         if( Session::has('user') ){
-
             $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
             $curl->get( 'https://api.ten-po.com/api/v2/coupon_detail_login' ,array(
                 'app_id' => $this->app->app_app_id,
                 'id' => $id,
+                'time' => 0,
+                'sig' => 0
             ));
         }else{
-            $curl->get( 'https://api.ten-po.com/api/v2/coupon_detail_login' ,array(
+            $curl->get( 'https://api.ten-po.com/api/v2/coupon_detail' ,array(
                 'app_id' => $this->app->app_app_id,
                 'id' => $id,
+                'time' => 0,
+                'sig' => 0
             ));
         }
 

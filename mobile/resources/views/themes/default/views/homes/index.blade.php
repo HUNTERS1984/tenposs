@@ -124,7 +124,10 @@
                                 <div class="info">
                                     <a href="{{ route('news.detail', [ 'id'=> $news->id ]) }}">{{ $news->news_cat->name }}</a>
                                     <h3>{{ $news->title }}</h3>
-                                    <p>{{ Str::words(strip_tags($news->description),20,'..') }}</p>
+                                    <div class="justify">
+                                    {!! $news->description !!}
+
+                                    </div>
                                 </div>
                             </div><!-- End item coupon -->
                             @endforeach

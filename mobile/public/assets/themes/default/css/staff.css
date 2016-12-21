@@ -188,7 +188,7 @@
 }
 @media screen and (max-width: 479px){
     .entry-productdetail ul li label{
-        width: 40%;
+        width: 30%;
         font-size: 12px;
     }
     .entry-productdetail ul li label.label-title-user{

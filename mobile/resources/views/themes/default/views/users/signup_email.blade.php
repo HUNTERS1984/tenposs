@@ -23,7 +23,7 @@
  <div id="header">
     <div class="container-fluid">
         <h1 class="aligncenter">新規会員登録 (1/2)</h1>
-        <a href="{{URL::previous()}}" class="h_control-back"></a>
+        <a href="{{route('login.normal')}}" class="h_control-back"></a>
     </div>
 </div><!-- End header -->
 
