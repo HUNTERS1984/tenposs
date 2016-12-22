@@ -308,8 +308,8 @@ class AppUserController extends Controller
         else {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
-            $share_code->app_user_id = $app_info['app_user_id'];
-            $share_code->app_id = $app_info['app_id'];
+            $share_code->app_user_id = $user->id;
+            $share_code->app_id = $app['id'];
             $share_code->code = $code;
             $share_code->save();
             $this->body['data']['share_code'] = $code;
@@ -688,8 +688,8 @@ class AppUserController extends Controller
         else {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
-            $share_code->app_user_id = $app_info['app_user_id'];
-            $share_code->app_id = $app_info['app_id'];
+            $share_code->app_user_id = $app_user->id;
+            $share_code->app_id = $app_id;
             $share_code->code = $code;
             $share_code->save();
             $this->body['data']['user']['share_code'] = $code;
@@ -1075,8 +1075,8 @@ class AppUserController extends Controller
             else {
                 $code = ConvertUtils::generate_invite_code(8);
                 $share_code = new ShareCodes();
-                $share_code->app_user_id = $app_info['app_user_id'];
-                $share_code->app_id = $app_info['app_id'];
+                $share_code->app_user_id = $user->id;
+                $share_code->app_id = $app['id'];
                 $share_code->code = $code;
                 $share_code->save();
                 $this->body['data']['share_code'] = $code;
