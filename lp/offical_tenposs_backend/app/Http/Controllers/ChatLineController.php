@@ -96,7 +96,7 @@ class ChatLineController extends Controller
             abort(404);
         }
         return view('chat.requestFriends', array( 'bot' => $bot ) );
-
+    } 
     /*
     * Route: /chat/screen/{app_user_id}
     * View list line accounts
