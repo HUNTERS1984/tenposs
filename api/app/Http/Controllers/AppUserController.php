@@ -683,7 +683,7 @@ class AppUserController extends Controller
 
         $share_code = ShareCodes::where('app_user_id', $app_user->id)
                 ->where('app_id', $app_id)->first();
-        if (count($share_code) =  0) {
+        if (count($share_code) ==  0) {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
             $share_code->app_user_id = $app_user->id;
