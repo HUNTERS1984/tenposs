@@ -69,6 +69,7 @@ class ChatLineController extends Controller
                     $LineAccount = new LineAccount();
                     $LineAccount->displayName = $profile->displayName;
                     $LineAccount->mid = $profile->userId;
+                    $LineAccount->app_id = $botInfo->app_id;
                     $LineAccount->pictureUrl = $profile->pictureUrl;
                     $LineAccount->statusMessage = $profile->statusMessage;
                     $LineAccount->save();
@@ -86,10 +87,21 @@ class ChatLineController extends Controller
         }
         
     }
+
+    public function chatApp($app_id) {
+        $bot = AppBots::where('app_id', $app_id)
+            ->select('add_friend_href,qr_code_href')
+            ->get();
+        if(  !$bot ){
+            abort(404);
+        }
+        return view('chat.requestFriends', array( 'bot' => $bot ) );
+    }
     /*
     * Route: /chat/screen/{app_user_id}
     * View list line accounts
     */
+    /*
     public function chatScreen($app_user_id){
        
         $app_user = AppUser::find($app_user_id);
@@ -133,11 +145,12 @@ class ChatLineController extends Controller
         abort(404);
         
     }
-     public function requestFriend() {
+
+    public function requestFriend() {
         return view('chat.requestFriends');
     }
     
-    /*
+    
     public function login(){
         return view('admin::pages.chat.login');
     }

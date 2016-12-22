@@ -44,6 +44,7 @@ class ClientChatLineController extends Controller
     public function chatAdmin(Request $request){
     
         $botService = AppBots::where('app_id', $request->app->id )->first();
+
     	if( !$botService ){
     	    return view('admin.pages.chat.clients')->withErrors('BOT LINE情報を設定してください' );
     	}
@@ -58,9 +59,8 @@ class ClientChatLineController extends Controller
             return view('admin.pages.chat.clients')->withErrors('再試行する!' );
         }
     
-        $contacts = DB::table('app_users')
-            ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
-            ->where('app_users.app_id', $request->app->id )
+        $contacts = DB::table('line_accounts')
+            ->where('line_accounts.app_id', $request->app->id)
             ->select('line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
             ->orderBy('displayName')
             ->get();
@@ -74,8 +74,7 @@ class ClientChatLineController extends Controller
     public function searchContact(Request $request){
     
         if( $request->ajax() ){
-            $contacts = DB::table('app_users')
-            ->join('line_accounts','line_accounts.app_user_id','=','app_users.id')
+            $contacts = DB::table('line_accounts')
             ->where('app_users.app_id',$request->app->id)
             ->where('displayName','like','%'.$request->input('s').'%')
             ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
