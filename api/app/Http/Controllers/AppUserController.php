@@ -666,6 +666,21 @@ class AppUserController extends Controller
 
         $app_user_profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $app_user_profile->avatar_url);
         $app_user->profile = $app_user_profile;
+
+        $share_code = ShareCodes::where('app_user_id', $app_user->id)
+                ->where('app_id', $app_id)->first();
+        if (count($share_code) > 0)
+            $app_user->share_code = $share_code->code;
+        else {
+            $code = ConvertUtils::generate_invite_code(8);
+            $share_code = new ShareCodes();
+            $share_code->app_user_id = $app_info['app_user_id'];
+            $share_code->app_id = $app_info['app_id'];
+            $share_code->code = $code;
+            $share_code->save();
+            $app_user->share_code = $code;
+        }
+
         $this->body['data']['user'] = $app_user;
         if (count($app_user) > 0)
             RedisUtil::getInstance()->set_cache($key, $this->body);
