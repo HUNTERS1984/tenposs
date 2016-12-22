@@ -90,13 +90,13 @@ class ChatLineController extends Controller
 
     public function chatApp($app_id) {
         $bot = AppBots::where('app_id', $app_id)
-            ->select('add_friend_href,qr_code_href')
-            ->get();
+            ->select('add_friend_href','qr_code_href')
+            ->first();
         if(  !$bot ){
             abort(404);
         }
         return view('chat.requestFriends', array( 'bot' => $bot ) );
-    }
+
     /*
     * Route: /chat/screen/{app_user_id}
     * View list line accounts
