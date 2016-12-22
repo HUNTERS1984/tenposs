@@ -303,16 +303,13 @@ class AppUserController extends Controller
         }
         $share_code = ShareCodes::where('app_user_id', $user->id)
                 ->where('app_id', $app['id'])->first();
-        if (count($share_code) > 0)
-            $this->body['data']['share_code'] = $share_code->code;
-        else {
+        if (count($share_code) == 0) {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
             $share_code->app_user_id = $user->id;
             $share_code->app_id = $app['id'];
             $share_code->code = $code;
             $share_code->save();
-            $this->body['data']['share_code'] = $code;
         }
 
         $this->body['data']['app_id'] = $user->app_id;
@@ -322,7 +319,7 @@ class AppUserController extends Controller
         $this->body['data']['social_type'] = NULL;
         $this->body['data']['social_id'] = NULL;
         $this->body['data']['profile'] = $profile;
-
+        $this->body['data']['share_code'] = $share_code->code;
 
         return $this->output($this->body);
     }
@@ -1068,16 +1065,13 @@ class AppUserController extends Controller
 
             $share_code = ShareCodes::where('app_user_id', $user->id)
                     ->where('app_id', $app['id'])->first();
-            if (count($share_code) > 0)
-                $this->body['data']['share_code'] = $share_code->code;
-            else {
+            if (count($share_code) == 0)
                 $code = ConvertUtils::generate_invite_code(8);
                 $share_code = new ShareCodes();
                 $share_code->app_user_id = $user->id;
                 $share_code->app_id = $app['id'];
                 $share_code->code = $code;
                 $share_code->save();
-                $this->body['data']['share_code'] = $code;
             }
 
 
@@ -1091,6 +1085,7 @@ class AppUserController extends Controller
             $this->body['data']['id'] = $user->id;
             $this->body['data']['email'] = $auth_profile->email;;
             $this->body['data']['profile'] = $profile;
+            $this->body['data']['share_code'] = $share_code->code;
         } else
             return $this->error(9999);
         return $this->output($this->body);
