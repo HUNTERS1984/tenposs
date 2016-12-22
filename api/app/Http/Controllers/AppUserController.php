@@ -301,6 +301,20 @@ class AppUserController extends Controller
             $this->body['data']['refresh_token'] = $login->refresh_token;
             $this->body['data']['access_refresh_token_href'] = $login->access_refresh_token_href;
         }
+        $share_code = ShareCodes::where('app_user_id', $user->id)
+                ->where('app_id', $app['id'])->first();
+        if (count($share_code) > 0)
+            $this->body['data']['share_code'] = $share_code->code;
+        else {
+            $code = ConvertUtils::generate_invite_code(8);
+            $share_code = new ShareCodes();
+            $share_code->app_user_id = $app_info['app_user_id'];
+            $share_code->app_id = $app_info['app_id'];
+            $share_code->code = $code;
+            $share_code->save();
+            $this->body['data']['share_code'] = $code;
+        }
+
         $this->body['data']['app_id'] = $user->app_id;
         $this->body['data']['auth_user_id'] = $auth_user_id;
         $this->body['data']['id'] = $user->id;
@@ -670,7 +684,7 @@ class AppUserController extends Controller
         $share_code = ShareCodes::where('app_user_id', $app_user->id)
                 ->where('app_id', $app_id)->first();
         if (count($share_code) > 0)
-            $app_user->share_code = $share_code->code;
+            $this->body['data']['user']['share_code'] = $share_code->code;
         else {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
@@ -678,7 +692,7 @@ class AppUserController extends Controller
             $share_code->app_id = $app_info['app_id'];
             $share_code->code = $code;
             $share_code->save();
-            $app_user->share_code = $code;
+            $this->body['data']['user']['share_code'] = $code;
         }
 
         $this->body['data']['user'] = $app_user;
@@ -1053,6 +1067,21 @@ class AppUserController extends Controller
                     return $this->error(9999);
                 }
             }
+
+            $share_code = ShareCodes::where('app_user_id', $user->id)
+                    ->where('app_id', $app['id'])->first();
+            if (count($share_code) > 0)
+                $this->body['data']['share_code'] = $share_code->code;
+            else {
+                $code = ConvertUtils::generate_invite_code(8);
+                $share_code = new ShareCodes();
+                $share_code->app_user_id = $app_info['app_user_id'];
+                $share_code->app_id = $app_info['app_id'];
+                $share_code->code = $code;
+                $share_code->save();
+                $this->body['data']['share_code'] = $code;
+            }
+
 
             $data = array('token' => $auth_profile->token,
                 'refresh_token' => $auth_profile->refresh_token,
