@@ -267,8 +267,12 @@ class AppUserController extends Controller
 
             $profile = new UserProfile();
             $profile->name = Input::get('name');
-            $profile->gender = 0;
-            $profile->address = null;
+            if (Input::get('birthday'))
+                $profile->birthday = Input::get('birthday');
+            if (Input::get('address'))
+                $profile->address = Input::get('address');
+            if (Input::get('gender') == '0' || Input::get('gender') == '1')
+                $profile->gender = Input::get('gender');
             $profile->avatar_url = null;
             $profile->facebook_status = 0;
             $profile->twitter_status = 0;
@@ -297,6 +301,17 @@ class AppUserController extends Controller
             $this->body['data']['refresh_token'] = $login->refresh_token;
             $this->body['data']['access_refresh_token_href'] = $login->access_refresh_token_href;
         }
+        $share_code = ShareCodes::where('app_user_id', $user->id)
+                ->where('app_id', $app['id'])->first();
+        if (count($share_code) == 0) {
+            $code = ConvertUtils::generate_invite_code(8);
+            $share_code = new ShareCodes();
+            $share_code->app_user_id = $user->id;
+            $share_code->app_id = $app['id'];
+            $share_code->code = $code;
+            $share_code->save();
+        }
+
         $this->body['data']['app_id'] = $user->app_id;
         $this->body['data']['auth_user_id'] = $auth_user_id;
         $this->body['data']['id'] = $user->id;
@@ -304,7 +319,7 @@ class AppUserController extends Controller
         $this->body['data']['social_type'] = NULL;
         $this->body['data']['social_id'] = NULL;
         $this->body['data']['profile'] = $profile;
-
+        $this->body['data']['share_code'] = $share_code->code;
 
         return $this->output($this->body);
     }
@@ -662,7 +677,20 @@ class AppUserController extends Controller
 
         $app_user_profile->avatar_url = UrlHelper::convertRelativeToAbsoluteURL(url('/'), $app_user_profile->avatar_url);
         $app_user->profile = $app_user_profile;
+
+        $share_code = ShareCodes::where('app_user_id', $app_user->id)
+                ->where('app_id', $app_id)->first();
+        if (count($share_code) ==  0) {
+            $code = ConvertUtils::generate_invite_code(8);
+            $share_code = new ShareCodes();
+            $share_code->app_user_id = $app_user->id;
+            $share_code->app_id = $app_id;
+            $share_code->code = $code;
+            $share_code->save();
+        }
+
         $this->body['data']['user'] = $app_user;
+        $this->body['data']['user']['share_code'] = $share_code->code;
         if (count($app_user) > 0)
             RedisUtil::getInstance()->set_cache($key, $this->body);
         return $this->output($this->body);
@@ -1035,6 +1063,18 @@ class AppUserController extends Controller
                 }
             }
 
+            $share_code = ShareCodes::where('app_user_id', $user->id)
+                    ->where('app_id', $app['id'])->first();
+            if (count($share_code) == 0) {
+                $code = ConvertUtils::generate_invite_code(8);
+                $share_code = new ShareCodes();
+                $share_code->app_user_id = $user->id;
+                $share_code->app_id = $app['id'];
+                $share_code->code = $code;
+                $share_code->save();
+            }
+
+
             $data = array('token' => $auth_profile->token,
                 'refresh_token' => $auth_profile->refresh_token,
                 'access_refresh_token_href' => $auth_profile->access_refresh_token_href);
@@ -1045,6 +1085,7 @@ class AppUserController extends Controller
             $this->body['data']['id'] = $user->id;
             $this->body['data']['email'] = $auth_profile->email;;
             $this->body['data']['profile'] = $profile;
+            $this->body['data']['share_code'] = $share_code->code;
         } else
             return $this->error(9999);
         return $this->output($this->body);
@@ -1437,12 +1478,9 @@ class AppUserController extends Controller
             $user_profiles = UserProfile::find($app_info['profile_id']);
             if (!$user_profiles)
                 $user_profiles = new UserProfile();
-            if (!empty(Input::get('birthday')))
-                $user_profiles->birthday = Input::get('birthday');
-            if (!empty(Input::get('address')))
-                $user_profiles->address = Input::get('address');
-            if (!empty(Input::get('gender')))
-                $user_profiles->gender = Input::get('gender');
+            $user_profiles->birthday = Input::get('birthday');
+            $user_profiles->address = Input::get('address');
+            $user_profiles->gender = Input::get('gender');
             $user_profiles->save();
             if (!empty(Input::get('code'))) {
                 //process code
@@ -1454,6 +1492,8 @@ class AppUserController extends Controller
                 }
             }
             DB::commit();
+            $key = sprintf(Config::get('api.cache_profile'), Input::get('app_id'), $this->request->token_info['id']);
+            RedisUtil::getInstance()->clear_cache($key);
             return $this->output($this->body);
         } catch (QueryException $e) {
             Log::error($e->getMessage());

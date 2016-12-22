@@ -2585,6 +2585,15 @@ table.table.user_01 thead tr th{
 table.table.user_01 .center{
   text-align: center;
 }
+
+table .user-avatar {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ccc;
+  padding: 1px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 a.blue {
   color: #18c0d4;
   text-decoration: underline;

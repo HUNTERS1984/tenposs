@@ -94,7 +94,7 @@
                                         </div>
                                     </th>
                                     <td width="10%" class="center">
-                                        <img src="{{$post->avatar}}" alt="">
+                                        <img class="user-avatar" src="{{$post->avatar}}" alt="">
                                     </td>
                                     <?php
                                     $tag_str = '';
@@ -152,7 +152,7 @@
                                         </div>
                                     </th>
                                     <td width="10%" class="center">
-                                        <img src="{{$post->avatar}}" alt="">
+                                        <img class="user-avatar" src="{{$post->avatar}}" alt="">
                                     </td>
                                     <?php
                                     $tag_str = '';
@@ -211,7 +211,7 @@
                                         </div>
                                     </th>
                                     <td width="10%" class="center">
-                                        <img src="{{$post->avatar}}" alt="">
+                                        <img class="user-avatar" src="{{$post->avatar}}" alt="">
                                     </td>
                                     <?php
                                     $tag_str = '';
