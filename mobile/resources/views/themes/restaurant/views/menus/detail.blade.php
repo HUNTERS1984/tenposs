@@ -33,7 +33,9 @@
 @section('main')
 
 <div data-role="header" data-position="fixed" data-theme="a">
-    <a href="#outside" class="ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
+    
+     <a href="{{ URL::previous() }}" data-ajax="false" data-direction="reverse" data-icon="carat-l"
+       data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
     <h1>@if(count($items_detail_data) > 0)
         {{ $items_detail_data->title }}
         @else
@@ -48,60 +50,61 @@
                 <img src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}">
                 @endif
             </figure>
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    {{$items_detail_data->title}}
-                    <p>{{$items_detail_data->menu_name}}</p>
-                </div>
-                <div class="ui-block-b text-right">
-                    ¥{{number_format($items_detail_data->price, 0, '', ',')}}
-                </div>
-            </div><!--ui-grid-a-->
-            <div class="des">
+            <div class="ui-body">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        {{$items_detail_data->title}}
+                        <p>{{$items_detail_data->menu_name}}</p>
+                    </div>
+                    <div class="ui-block-b text-right">
+                        ¥{{number_format($items_detail_data->price, 0, '', ',')}}
+                    </div>
+                </div><!--ui-grid-a-->
                 <h3>商品詳細</h3>
-                {!! $items_detail_data->description !!}
+                <div class="">
+                    {!! $items_detail_data->description !!}
+                </div>
+                <div class="size">
+                    <h3>商品詳細</h3>
+                    @if(count($items_detail_data->size) > 0)
+                    <table data-role="table" id="table-column-toggle" class="ui-responsive table-stroke">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <?php $category_start = $items_detail_data->size[0]->item_size_category_id;?>
 
-            </div>
-            <div class="size">
-                <h3>商品詳細</h3>
-                @if(count($items_detail_data->size) > 0)
-                <table data-role="table" id="table-column-toggle" class="ui-responsive table-stroke">
-                    <thead>
-                    <tr>
-                        <th style="text-align: center;">#</th>
-                        <?php $category_start = $items_detail_data->size[0]->item_size_category_id;?>
+                            @for($i = 0;$i <count($items_detail_data->size);$i++)
+                            @if($i > 0 && $category_start == $items_detail_data->size[$i]->item_size_category_id)
+                            @break;
+                            @endif
+                            <th style="text-align: center;">{{$items_detail_data->size[$i]->item_size_category_name}}</th>
 
-                        @for($i = 0;$i <count($items_detail_data->size);$i++)
-                        @if($i > 0 && $category_start == $items_detail_data->size[$i]->item_size_category_id)
-                        @break;
+                            @endfor
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php $data_row = \App\Utils\Convert::convert_size_item_to_array($items_detail_data->size); ?>
+                        @if(count($data_row) > 0)
+                        @foreach($data_row as $item)
+                        <tr>
+                            <td style="text-align: center;"
+                                class="col-md-2">{{$item[0]->item_size_type_name}}</td>
+                            @for($t=0;$t <  count($item);$t++)
+                            <td class="col-md-2"
+                                style="text-align: center;">{{round($item[$t]->value,2)}}
+                            </td>
+                            @endfor
+                        </tr>
+                        @endforeach
                         @endif
-                        <th style="text-align: center;">{{$items_detail_data->size[$i]->item_size_category_name}}</th>
-
-                        @endfor
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php $data_row = \App\Utils\Convert::convert_size_item_to_array($items_detail_data->size); ?>
-                    @if(count($data_row) > 0)
-                    @foreach($data_row as $item)
-                    <tr>
-                        <td style="text-align: center;"
-                            class="col-md-2">{{$item[0]->item_size_type_name}}</td>
-                        @for($t=0;$t <  count($item);$t++)
-                        <td class="col-md-2"
-                            style="text-align: center;">{{round($item[$t]->value,2)}}
-                        </td>
-                        @endfor
-                    </tr>
-                    @endforeach
+                        </tbody>
+                    </table>
+                    @else
+                    <p style="text-align:center; margin-top:20px; font-size:20px">データなし</p>
                     @endif
-                    </tbody>
-                </table>
-                @else
-                <p style="text-align:center; margin-top:20px; font-size:20px">データなし</p>
-                @endif
 
-            </div>
+                </div>
+            </div>    
         </div><!--content-main-->
         @if(count($items_relate_data) > 0)
         <div class="product-other">

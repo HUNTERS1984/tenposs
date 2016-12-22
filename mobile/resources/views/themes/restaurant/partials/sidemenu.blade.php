@@ -3,7 +3,7 @@
         <li class="user" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
             @if( Session::has('user') )
             <div class="user-left">
-                <img style="max-height: 50px; object-fit: cover; " src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : url('/img/icon/icon-user.png') }}" alt=""/>
+                <img style="max-height: 50px; object-fit: cover; " src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : Theme::asset('img/user.png') }}" alt=""/>
             </div>
             <div class="user-right">
                 <p><a data-ajax="false" style="padding-left: 0" href="{{ route('profile') }}">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</a></p>

@@ -33,7 +33,8 @@ class Controller extends BaseController
                 $this->app->app_app_secret);
 
         $response = json_decode($get);
-        if ( $response->code == 1000 ) {
+
+        if ( isset($response->code) && $response->code == 1000 ) {
             $this->app_info = $response;
 
             if( $this->app_info->data->app_setting->template_id == 1 ){

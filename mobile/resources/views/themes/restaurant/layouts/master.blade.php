@@ -19,5 +19,16 @@
 @include('partials.sidemenu')
 @yield('footer')
 @include('partials.message')
+@if (count($errors) > 0)
+<script type="text/javascript">
+    $(document).ready(function(){
+        $( "#windown-message" ).popup();
+        setTimeout(function(){
+            $( "#windown-message" ).popup( "open" );
+        }, 700);
+        
+    });
+</script>
+@endif
 </body>
 </html>

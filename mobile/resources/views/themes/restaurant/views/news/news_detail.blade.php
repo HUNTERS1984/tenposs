@@ -41,10 +41,12 @@
             </figure>
             <div class="des">
                 @if(isset($detail))
+                <div class="ui-body">
                 <h3>{{$detail->data->news->title}}</h3>
                 <p>{{ $detail->data->news->news_cat->name }}</p>
                 <p class="date">{{ date('m月d日 H時i分', strtotime($detail->data->news->created_at)) }}</p>
                 {!! $detail->data->news->description !!}
+                </div>
                 @endif
             </div>
         </div><!--content-main-->

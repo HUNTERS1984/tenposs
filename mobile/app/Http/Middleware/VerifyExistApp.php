@@ -33,7 +33,7 @@ class VerifyExistApp
             );
             $response = json_decode($post);
 
-            if( $response->code == 1000  ){
+            if( isset($response->code) && $response->code == 1000  ){
                 Session::put('app',$response->data->app_info);
             }else{
                 abort(404);

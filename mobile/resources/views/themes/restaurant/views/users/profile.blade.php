@@ -87,8 +87,9 @@ $arrAddress = array(
 </div>
 <div data-role="page" id="pageone">
     <div data-role="main" class="ui-content">
-        <form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data" data-ajax="false">
+       
         <div class="content-main">
+            <form action="{{ route('profile.save') }}" method="post" enctype="multipart/form-data" data-ajax="false">
             <div class="edite_user">
                 <figure>
                     <?php
@@ -110,19 +111,19 @@ $arrAddress = array(
                 </figure>
             </div>
             <div class="des profile">
-                <form>
+              
                     <div class="ui-field-contain">
                         <label for="name2">ユーザーID</label>
                         <div class="ui-text">{{ $user->id }}</div>
                     </div>
                     <div class="ui-field-contain">
                         <label for="textarea2">ユーザー名</label>
-                        <input class="" type="text" value="{{ $user->profile->name }}"/>
+                        <input class="" type="text" name="name" value="{{ $user->profile->name }}"/>
 
                     </div>
                     <div class="ui-field-contain">
                         <label for="flip2">メールアドレス</label>
-                        <input class="" type="email" {{$is_social ? '' : 'readonly'}}  name="email" value="{{ $user->email }}"/>
+                        <input class="" type="email" {{$is_social ? '' : 'readonly'}} name="email" value="{{ $user->email }}"/>
                     </div>
                     <div class="ui-field-contain">
                         <label for="select-choice-1" class="select">性別</label>
@@ -144,10 +145,10 @@ $arrAddress = array(
                             </select>
                         </div>
                     </div>
-                </form>
+                
                 <button data-ajax="false" type="submit" class="btn tenposs-button1">保存</button>
             </div>
-
+            </form>
             <div class="social">
                 <form class="from-froup">
                     <div class="form-input">
@@ -190,7 +191,7 @@ $arrAddress = array(
                 </form>
             </div>
         </div><!--content-main-->
-        </form>
+        
     </div>
 </div>
 @stop
