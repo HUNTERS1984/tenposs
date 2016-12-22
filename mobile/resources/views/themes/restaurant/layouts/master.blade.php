@@ -12,6 +12,33 @@
     <!-- Include the jQuery Mobile library -->
     <script src="{{ Theme::asset('js/jquery.mobile-1.4.5.min.js') }}"></script>
     <link rel="stylesheet" href="{{ Theme::asset('css/jquery.bxslider.css') }}" type="text/css" />
+
+    <link rel="manifest" href="{{ url( $app_info->data->app_setting->app_id.'/manifest.json') }}">
+    <script src="{{ Theme::asset('js/notification.js') }}"></script>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            notify.init('{{  Theme::asset("js/notification_worker.js") }}');
+            @if( Session::has('user') && !Session::get('setpushkey') )
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': '{{  csrf_token() }}'
+                    },
+                    url: '{{ route("setpushkey") }}',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        key: notify.data.subscribe()
+                    },
+
+                    success: function(response){
+                        console.log('Setpushkey success');
+                    }
+                })
+                @endif
+            });
+        
+    </script>
+
     @yield('header')
 </head>
 <body class="ui-nosvg">
@@ -26,7 +53,6 @@
         setTimeout(function(){
             $( "#windown-message" ).popup( "open" );
         }, 700);
-        
     });
 </script>
 @endif
