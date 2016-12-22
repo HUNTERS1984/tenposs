@@ -127,12 +127,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
 // Chat for Enduser
 
 Route::group(array('prefix' => 'chat'), function () {
-
+    // Enduser request chat
+    Route::get('app/{app_id}', 'ChatLineController@chatApp');
+    // BOT
     Route::any('bot/{chanel_id}', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
+    /*
     Route::get('screen/{app_user_id}', 'ChatLineController@chatScreen');
     Route::get('request', array('as' => 'chat.request', 'uses' => 'ChatLineController@requestFriend'));
     Route::get('line/{app_user_id}/{mid}', array('as' => 'chat.line', 'uses' => 'ChatLineController@chat'));
-    /*
     Route::get('line/verifined/token/{mid}', array('as' => 'line.verifined.token', 'uses' => 'ChatLineController@verifinedToken'));
     Route::get('verifined', array('as' => 'chat.authentication', 'uses' => 'ChatLineController@verifined'));
     Route::get('login', array('as' => 'chat.login', 'uses' => 'ChatLineController@login'));
