@@ -684,7 +684,7 @@ class AppUserController extends Controller
         $share_code = ShareCodes::where('app_user_id', $app_user->id)
                 ->where('app_id', $app_id)->first();
         if (count($share_code) > 0)
-            $this->body['data']['user']['share_code'] = $share_code->code;
+
         else {
             $code = ConvertUtils::generate_invite_code(8);
             $share_code = new ShareCodes();
@@ -692,10 +692,10 @@ class AppUserController extends Controller
             $share_code->app_id = $app_id;
             $share_code->code = $code;
             $share_code->save();
-            $this->body['data']['user']['share_code'] = $code;
         }
 
         $this->body['data']['user'] = $app_user;
+        $this->body['data']['user']['share_code'] = $share_code->code;
         if (count($app_user) > 0)
             RedisUtil::getInstance()->set_cache($key, $this->body);
         return $this->output($this->body);
