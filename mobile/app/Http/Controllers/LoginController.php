@@ -248,9 +248,7 @@ class LoginController extends Controller
                 return redirect('/');
             }
 
-            return redirect()
-                ->withErrors('社会的にサインアップできない')
-                ->route('login');
+            return back()->withErrors('社会的にサインアップできない');
 
         }
         // if not ask for permission first
@@ -293,9 +291,7 @@ class LoginController extends Controller
             }
 
 
-            return redirect()
-                ->withErrors('社会的にサインアップできない')
-                ->route('users.login');
+            return back()->withErrors('社会的にサインアップできない');
         }
         else
         {
@@ -374,8 +370,7 @@ class LoginController extends Controller
             $msg ='ソーシャルフェイルを接続する';
         }
         return back()
-            ->withErrors($msg)
-            ->route('profile');
+            ->withErrors($msg);
     }
     
     public function socialCancelConnect(Request $request, $type){
