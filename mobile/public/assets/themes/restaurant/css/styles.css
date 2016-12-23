@@ -35,3 +35,7 @@ body {
 	height: 86px;
 	object-position: center;
 }
+
+.edite_user .ui-input-text{
+	border: none;
+}
