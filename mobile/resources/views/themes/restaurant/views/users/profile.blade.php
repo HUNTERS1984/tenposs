@@ -79,10 +79,9 @@ $arrAddress = array(
 ?>
 @section('main')
 <div data-role="header" data-position="fixed" data-theme="a">
-    <a href="{{ URL::previous() }}"
-       data-ajax="false"
-       class="ui-btn-left ui-btn ui-alt-icon ui-icon-delete ui-btn-icon-notext"
-       data-shadow="false" data-icon-shadow="false">Back</a>
+    <a href="{{ route('configuration') }}"
+      data-ajax="false" data-direction="reverse" data-icon="carat-l"
+       data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
     <h1>プロフィール編集</h1>
 </div>
 <div data-role="page" id="pageone">

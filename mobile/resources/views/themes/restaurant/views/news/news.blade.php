@@ -45,7 +45,7 @@
                     <img src="{{$news_title->image_url}}" alt="{{$news_title->title}}"></a>
                 <div class="text_news">
                     <h3>
-                        <a data-ajax="false" href="{{route('news.detail',[$news_title->id])}}">
+                        <a title="{{$news_title->title}}" data-ajax="false" href="{{route('news.detail',[$news_title->id])}}">
                             {{$news_title->title}}
                         </a>
                     </h3>

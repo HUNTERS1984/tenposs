@@ -49,41 +49,30 @@
                 @endif
             </figure>
             <div class="ui-body ">
-                <p>{{$detail->name}}</p>
-                <h3>{{$detail->staff_category_name}}</h3>
-                <div data-role="tabs" id="tabs">
-                    <div data-role="navbar">
-                        <ul>
-                            <li><a href="#one" data-ajax="false">自己紹介</a></li>
-                            <li><a href="#two" data-ajax="false">プロフィール</a></li>
-                        </ul>
-                    </div>
-                    <div id="one" class="">
-                        
-                            {!! $detail->introduction !!}
-                       
-                    </div>
-                    <div id="two">
-                       
-                         <table data-role="table" id="movie-table-custom" data-mode="" class="movie-list ui-responsive" >
+                <p>{{$detail->staff_category_name}}</p>
+                <h3>{{$detail->name}}</h3>
+
+                <h3>自己紹介</h3>
+                {!! $detail->introduction !!}   
+                <h3>プロフィール</h3> 
+                <table data-role="table" id="movie-table-custom" data-mode="" class="movie-list ui-responsive" >
                       
-                            <tr>
-                                <td>性别</td>
-                                <td>{{$detail->gender == '0' ? '女性' : '男性'}}</td>
-                            </tr>
-                            <tr>
-                                <td>価格</td>
-                                <td>¥{{number_format($detail->price)}}</td>
-                            </tr>
-                            <tr>
-                                <td>電話番号</td>
-                                <td> {{$detail->tel}}</td>
-                            </tr>
-                            
-                        </table>
-                       
-                    </div>
-                </div>
+                    <tr>
+                        <td>性别</td>
+                        <td>{{$detail->gender == '0' ? '女性' : '男性'}}</td>
+                    </tr>
+                    <tr>
+                        <td>価格</td>
+                        <td>¥{{number_format($detail->price)}}</td>
+                    </tr>
+                    <tr>
+                        <td>電話番号</td>
+                        <td> {{$detail->tel}}</td>
+                    </tr>
+                    
+                </table>
+
+              
             </div>
         </div>
         <!--content-main-->

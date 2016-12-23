@@ -51,7 +51,7 @@
                             </a>
                         </figure>
                         <a data-ajax="false" href="{{route('staff.detail',$item->id)}}">{{$item->name}}</a><br>
-                        <span class="">{{$item->staff_category_id}}</span>
+                        <span class="">{{$item->staff_categories->name}}</span>
                     </div>
                 </div>
                 <?php $i++ ?>

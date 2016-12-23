@@ -12,6 +12,7 @@
     <!-- Include the jQuery Mobile library -->
     <script src="{{ Theme::asset('js/jquery.mobile-1.4.5.min.js') }}"></script>
     <link rel="stylesheet" href="{{ Theme::asset('css/jquery.bxslider.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ Theme::asset('css/styles.css') }}" type="text/css" />
 
     <link rel="manifest" href="{{ url( $app_info->data->app_setting->app_id.'/manifest.json') }}">
     <script src="{{ Theme::asset('js/notification.js') }}"></script>

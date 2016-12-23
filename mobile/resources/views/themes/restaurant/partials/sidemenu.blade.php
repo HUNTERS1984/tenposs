@@ -14,7 +14,7 @@
             <div class="user-left"><img src="{{ Theme::asset('img/user.png') }}"></div>
             <div class="user-right">
                 <p><a data-ajax="false" style="padding-left: 0" href="{{ route('login') }}">マシュー</a></p>
-                <p>matthew@gmail.com</p>
+                
             </div>
 
             @endif

@@ -66,7 +66,7 @@
             @if( isset($menus)  && count($menus) > 0 )
                 @foreach($menus as $cate)
                     @foreach($cate->data->menus as $name_cate)
-                    <div id="cat{{$name_cate->id}}" class="ui-content">
+                    <div id="cat{{$name_cate->id}}" class="ui-content menuspage">
                         @if( isset( $menu_data )
                         && count($menu_data) > 0
                         && isset( $menu_data[$name_cate->id] )
@@ -84,8 +84,8 @@
                                                 <img src="{{ $item['image_url'] }}" alt="">
                                                 </a>
                                             </figure>
-                                            <a href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">{{ $item['title'] }}</a><br>
-                                            <span class="">{{ Str::words( strip_tags($item['description']), 10, '..') }}</span>
+                                            <a title="{{ $item['title'] }}" href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">{{ Str::words($item['title'],4,'..') }}</a><br>
+                                            <span class="">{{ Str::words( strip_tags($item['description']), 4, '..') }}</span>
                                             <div class="price">¥{{ number_format($item['price']) }}</div>
                                         </div>
                                     </div>

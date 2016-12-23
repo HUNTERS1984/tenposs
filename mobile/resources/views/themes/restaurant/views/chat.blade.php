@@ -29,7 +29,11 @@
 
 <div data-role="page" id="pageone">
     <div data-role="main" class="ui-content">
-       <iframe width="100%" src="https://ten-po.com/chat/app/{{ Session::get('app')->id }}" frameborder="0"></iframe>
+       <iframe 
+       sandbox="allow-scripts allow-modals allow-popups allow-same-origin allow-top-navigation" 
+       width="100%" 
+       src="https://ten-po.com/chat/app/{{ Session::get('app')->id }}" 
+       frameborder="0"></iframe>
     </div>
 </div>
 @stop

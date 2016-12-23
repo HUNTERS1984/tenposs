@@ -1,3 +1,37 @@
 body {
 	background-color: #EDFFD0;
 }
+
+.bx-wrapper .bx-viewport{
+	max-height: 300px;
+	overflow: hidden;
+}
+
+.bx-wrapper .bx-viewport img{
+	object-fit: cover;
+	object-position: center;
+}
+
+#photo .photo img, #menu .menu img{
+	min-height: 150px;
+}
+.ui-fixed-hidden{
+	position: fixed !important;
+}
+
+.menuspage img{
+	min-height: 180px;
+	object-fit: cover;
+	object-position: center;
+}
+
+.menuspage .items span{
+
+}
+
+.edite_user img{
+	object-fit: cover;
+	width: 86px;
+	height: 86px;
+	object-position: center;
+}
