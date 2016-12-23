@@ -350,7 +350,7 @@ class LoginController extends Controller
                 $result = json_decode($tw->request('account/verify_credentials.json'), true);
                 $social_id = $result['id'];
                 $social_token = $token->getAccessToken();
-                $social_secret = $social_token->getAccessTokenSecret();
+                $social_secret = $token->getAccessTokenSecret();
                 $name = $result['name'];
                 $social_type = 2;
             }else{
