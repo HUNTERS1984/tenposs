@@ -45,6 +45,7 @@ class StaffController extends Controller
                 }
             }
         }
+
         return view('staffs.staff',compact('app_info','staff_cate','staff_detail'))->with('pagesize',PAGESIZE);
     }
 
