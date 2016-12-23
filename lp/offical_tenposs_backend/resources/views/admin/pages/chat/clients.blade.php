@@ -365,7 +365,7 @@ function connectToChat() {
         for ( i = package.history.length - 1; i >= 0; i--) {
             drawMessage({
                 text: package.history[i].message,
-                timestamp: moment( parseInt(package.history[i].created_at) ).format() ,
+                timestamp: moment( parseInt(package.history[i].created_at) ).format('MM-DD-YYYY h:m:sa') ,
                 profile: (function(){
                     if(package.history[i].from_mid === profile.mid)
                         return profile;
@@ -448,7 +448,7 @@ function renderChatLists(contacts){
         }
         
         $template.find('.users-name').html(item.displayName);
-        $template.find('.users-status').text(item.statusMessage);
+        $template.find('.users-status').text(  trimwords(item.message,5)  );
         $('.nav-list-user').append($template);
     });
 }

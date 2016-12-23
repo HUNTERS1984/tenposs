@@ -59,12 +59,21 @@ class ClientChatLineController extends Controller
             return view('admin.pages.chat.clients')->withErrors('再試行する!' );
         }
     
-        $contacts = DB::table('line_accounts')
-            ->where('line_accounts.app_id', $request->app->id)
-            ->select('line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
-            ->orderBy('displayName')
-            ->get();
+        $sql = "SELECT l.mid,l.displayName,l.pictureUrl,l.statusMessage, h.message, h.room_id
+                FROM line_accounts as l
+                INNER JOIN
+                (
+                    SELECT t1.* FROM messages t1 
+                    WHERE not exists (
+                        SELECT 1 FROM messages t2 WHERE t1.from_mid = t2.from_mid AND t1.id < t2.id
+                    )
+                  
+                ) as h ON h.from_mid = l.mid
 
+                WHERE h.room_id = ".$botService->chanel_id;
+
+        $contacts = DB::select(DB::raw($sql));
+     
         return view('admin.pages.chat.clients',[
             'contacts' => json_encode($contacts),
             'channel' =>  $botService->chanel_id,
