@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
-use App\Models\Menu;
 use Illuminate\Support\Facades\Log;
 use Mail;
 use App\Address;
