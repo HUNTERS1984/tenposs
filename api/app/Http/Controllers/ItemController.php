@@ -185,7 +185,7 @@ class ItemController extends Controller
                 $tmp_related = $tmp_items->rel_items();
                 if ($tmp_related) {
                     $total_items = $tmp_related->count();
-                    $items = $tmp_related->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
+                    $items = $tmp_related->with('menus')->orderBy('updated_at', 'desc')->skip($skip)->take(Input::get('pagesize'))->get()->toArray();
                     for ($i = 0; $i < count($items); $i++) {
                         $items[$i]['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $items[$i]['image_url']);
                         try {
@@ -197,10 +197,9 @@ class ItemController extends Controller
                                     'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
                                 ->get();
                             $items[$i]['size'] = $items_size;
-                            $menu = Item::find($items[$i]['id'])->menus()->first();
-                            //dd($menus);
-                            if ($menu)
-                                $items[$i]['menu_name'] = $menu->name;
+                            
+                            if (count($items[$i]->menus) >0)
+                                $items[$i]['menu_name'] = $items[$i]->menus[0]->name;
                         } catch (QueryException $ex) {
                             Log::error($ex->getMessage());
                             $items[$i]['size'] = [];
