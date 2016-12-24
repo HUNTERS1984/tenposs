@@ -198,8 +198,8 @@ class ItemController extends Controller
                                 ->get();
                             $items[$i]['size'] = $items_size;
                             
-                            if (count($items[$i]->menus) >0)
-                                $items[$i]['menu_name'] = $items[$i]->menus[0]->name;
+                            if (count($items[$i]['menus']) >0)
+                                $items[$i]['menu_name'] = $items[$i]['menus'][0]['name'];
                         } catch (QueryException $ex) {
                             Log::error($ex->getMessage());
                             $items[$i]['size'] = [];
