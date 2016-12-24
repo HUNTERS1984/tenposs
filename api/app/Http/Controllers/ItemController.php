@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Menu;
 use App\Repositories\Contracts\TopsRepositoryInterface;
 use App\Utils\RedisUtil;
 use Illuminate\Database\QueryException;
@@ -197,6 +198,10 @@ class ItemController extends Controller
                                     'item_sizes.item_size_category_id', 'item_size_categories.name AS item_size_category_name', 'item_sizes.value')
                                 ->get();
                             $items[$i]['size'] = $items_size;
+                            $menus = Item::find($items[$i]['id'])->menus();
+                            dd($menus);
+                            if (count($menu) > 0)
+                                $items[$i]['menu_name'] = $menus[0]->name;
                         } catch (QueryException $ex) {
                             Log::error($ex->getMessage());
                             $items[$i]['size'] = [];
