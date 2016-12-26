@@ -212,26 +212,6 @@ class ClientsController extends Controller
                 if( !$userInfos ){
                     return back()->withErrors('User info not found!');
                 }    
-                        
-                // Active user
-                if( $user->active == 0){
-                    
-                    $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
-                        'email' => $user->email
-                    ])->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
-
-                    $responseActive = $requestActive->send();
-                    $responseActive = json_decode($responseActive->body);
-
-                    if (isset($responseActive->code) && $responseActive->code == 1000) {
-                        $arr_msg[] = '1. Activated user success! <br/>';
-                    } else {
-                        return back()->withErrors('Activated user fail!');
-                    }
-                }else{
-                     $arr_msg[] = '1. User has been activated! <br/>';
-                }
-
 
                 // API create virtual hosts
                 
@@ -250,34 +230,9 @@ class ClientsController extends Controller
                 }else{
                     return back()->withErrors('Creating virtual hosts fail !');
                 }
+                        
                 
-
-                // Send mail to user approved
-                try {
-                    $setting = AdminGlobalSettings::find(1);
-                    
-                    $to = $setting->admin_email ;
-                    $to = 'phanvannhien@gmail.com';
-
-
-                    $sentMail = Mail::send('admin.emails.user_approved',
-                        array('user' => $user)
-                        ,function($message) use ( $user, $to ) {
-                            $message->from( config('mail.from')['address'], config('mail.from')['name'] );
-                            $message->to( $to )
-                                //->cc()
-                                ->subject('お申し込み受付のお知らせ【TENPOSS】');
-                        });
-                    if( $sentMail ){
-                        $arr_msg[] = '3. Sent email to admin success! <br/>' ;
-                    }else{
-                        return back()->withErrors('Sending mail fail !');
-                    }
-                    
-                } catch (Exception $e) {
-
-                }
-
+                
 
                 // Create apps setting default
                 // Create app default info
@@ -455,6 +410,52 @@ class ClientsController extends Controller
                 }else{
                     $arr_msg[] = '9. App top main created before! <br/>';
                 }
+
+                // Active user
+                if( $user->active == 0){
+                    
+                    $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
+                        'email' => $user->email
+                    ])->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
+
+                    $responseActive = $requestActive->send();
+                    $responseActive = json_decode($responseActive->body);
+
+                    if (isset($responseActive->code) && $responseActive->code == 1000) {
+                        $arr_msg[] = '1. Activated user success! <br/>';
+                    } else {
+                        return back()->withErrors('Activated user fail!');
+                    }
+                }else{
+                     $arr_msg[] = '10. User has been activated! <br/>';
+                }
+
+                // Send mail to user approved
+                try {
+                    $setting = AdminGlobalSettings::find(1);
+                    
+                    $to = $setting->admin_email ;
+                    $to = 'phanvannhien@gmail.com';
+
+
+                    $sentMail = Mail::send('admin.emails.user_approved',
+                        array('user' => $user)
+                        ,function($message) use ( $user, $to ) {
+                            $message->from( config('mail.from')['address'], config('mail.from')['name'] );
+                            $message->to( $to )
+                                //->cc()
+                                ->subject('お申し込み受付のお知らせ【TENPOSS】');
+                        });
+                    if( $sentMail ){
+                        $arr_msg[] = '3. Sent email to admin success! <br/>' ;
+                    }else{
+                        return back()->withErrors('Sending mail fail !');
+                    }
+                    
+                } catch (Exception $e) {
+
+                }
+
                
                 return back()->with('success', $arr_msg[]);
             }
