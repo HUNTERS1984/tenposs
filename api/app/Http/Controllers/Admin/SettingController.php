@@ -22,7 +22,7 @@ class SettingController extends Controller
 {
 	public function setting(){
 		$setting = AdminGlobalSettings::all();
-		return ('admin.global.setting', array( 'setting' => $setting ));
+		return view('admin.global.setting', array( 'setting' => $setting ));
 	}
 
 	public function settingPost(Request $request){
