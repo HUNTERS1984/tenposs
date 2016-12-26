@@ -107,14 +107,14 @@
 
     <div id="appy-copy-success" style="display:none">
         <div class="appy-cupon-success-inner">
-            <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
+            <img src="{{ Theme::asset('img/ico_ui_coupon.png') }}"></img>
             <p>ハッシュタグをコピーしました</p>
         </div>
     </div>
 
     <div id="appy-cupon-success" style="display:none">
         <div class="appy-cupon-success-inner">
-            <img src="{{ url('img/ico_ui_coupon.png') }}"></img>
+            <img src="{{ Theme::asset('img/ico_ui_coupon.png') }}"></img>
             <p>このクーポンは使用できません</p>
         </div>
     </div>
