@@ -70,12 +70,19 @@ class CouponController extends Controller
         try {
             $coupons = [];
             if (Input::get('store_id') == 0) {
-                $total_coupon = Coupon::count();
-                if ($total_coupon > 0) {
-                    $coupons = Coupon::skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-//                    for ($i = 0; $i < count($coupons); $i++) {
-//                        $coupons[$i]['code'] = '';
-//                    }
+                $total_coupon = 0;
+                $stores = Store::whereAppId($app['id'])->get();
+
+                if ($stores) {
+                    $coupon_types = CouponType::whereIn('store_id', $stores->pluck('id')->toArray())->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+
+                    if (count($coupon_types) > 0) {
+                        $total_coupon = Coupon::whereIn('coupon_type_id',$coupon_types->pluck('id')->toArray())->whereNull('deleted_at')->count();            
+                    }
+                    if ($total_coupon > 0)
+                    {
+                        $coupons = Coupon::whereIn('coupon_type_id',$coupon_types->pluck('id')->toArray())->with('coupon_type')->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get();
+                    }        
                 }
             } else {
                 $list_coupon_type = CouponType::where('store_id', '=', Input::get('store_id'))->whereNull('deleted_at')->get();
@@ -159,12 +166,20 @@ class CouponController extends Controller
         try {
             $coupons = [];
             if (Input::get('store_id') == 0) {
-                $total_coupon = Coupon::count();
-                if ($total_coupon > 0) {
-                    $coupons = Coupon::skip($skip)->take(Input::get('pagesize'))->get()->toArray();
-//                    for ($i = 0; $i < count($coupons); $i++) {
-//                        $coupons[$i]['code'] = '';
-//                    }
+
+                $total_coupon = 0;
+                $stores = Store::whereAppId($app['id'])->get();
+
+                if ($stores) {
+                    $coupon_types = CouponType::whereIn('store_id', $stores->pluck('id')->toArray())->orderBy('id', 'DESC')->whereNull('deleted_at')->get();
+
+                    if (count($coupon_types) > 0) {
+                        $total_coupon = Coupon::whereIn('coupon_type_id',$coupon_types->pluck('id')->toArray())->whereNull('deleted_at')->count();            
+                    }
+                    if ($total_coupon > 0)
+                    {
+                        $coupons = Coupon::whereIn('coupon_type_id',$coupon_types->pluck('id')->toArray())->with('coupon_type')->whereNull('deleted_at')->skip($skip)->take(Input::get('pagesize'))->orderBy('date', 'desc')->get();
+                    }        
                 }
             } else {
                 $list_coupon_type = CouponType::where('store_id', '=', Input::get('store_id'))->whereNull('deleted_at')->get();
