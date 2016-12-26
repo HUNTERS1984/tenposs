@@ -199,7 +199,7 @@ class CouponController extends Controller
                     ->where('status', 1)->get();
                 if (count($coupon_code) > 0) {
                     $coupons[$i]['code'] = $coupon_code[0]->code;
-                    $coupons['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $app_user->id, $coupons['id'], $coupon_code[0]->code, hash("sha256", $app_user->id . $coupons['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
+                    $coupons[$i]['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $app_user->id, $coupons[$i]['id'], $coupon_code[0]->code, hash("sha256", $app_user->id . $coupons[$i]['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
                 } else {
                     $coupons[$i]['code'] = '';
                     $coupons[$i]['url_scan_qr'] = '';
