@@ -28,7 +28,7 @@ class SettingController extends Controller
 	public function settingPost(Request $request){
 		if( $request->has('admin_email') ){
 			AdminGlobalSettings::update(array(
-				'admin_email' => $request->input('admin_email');
+				'admin_email' => $request->input('admin_email')
 			));
 			return back()->with('success', 'Update success');
 		}
