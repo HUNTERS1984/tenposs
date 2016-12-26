@@ -88,8 +88,9 @@ class ChatLineController extends Controller
         
     }
 
-    public function chatApp($app_id) {
-        $bot = AppBots::where('app_id', $app_id)
+    public function chatApp($app_user_id) {
+        $bot = AppBots::join('app_users','app_users.app_id','=','app_bots.app_id')
+            ->where('app_users.id', $app_user_id)
             ->select('add_friend_href','qr_code_href')
             ->first();
         if(  !$bot ){
