@@ -109,6 +109,9 @@ Route::group(array('prefix' => 'admin',
     Route::get('/clients/{user_id}/apps/{app_id}/line-bot', array('as' => 'admin.clients.bot.setting', 'uses' => 'Admin\ClientsController@configLineBOT'));
     Route::post('/clients/{user_id}/apps/{app_id}/line-bot', array('as' => 'admin.clients.bot.setting.save', 'uses' => 'Admin\ClientsController@configLineBOTSave'));
 
+    Route::get('/setting', array('as' => 'admin.setting', 'uses' => 'Admin\SettingController@setting'));
+    
+
 
 });
 
