@@ -37,6 +37,9 @@
                     <li role="presentation" >
                         <a href="#tab-global-3" aria-controls="tab-global-3" role="tab" data-toggle="tab">Appストア</a>
                     </li>
+                    <li role="presentation" >
+                        <a href="#configurations" aria-controls="configurations" role="tab" data-toggle="tab">構成</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -395,6 +398,21 @@
                 </div>
             </div>
             <!-- //tab-global-3 -->
+            <div role="tabpanel" class="tab-pane" id="configurations">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">企業情報</label>
+                        <textarea name="company_info" id="" cols="30" rows="10">{{ $app_settings->company_info }}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="">ユーザーのプライバシー</label>
+                        <textarea name="user_privacy" id="" cols="30" rows="10">{{ $app_settings->user_privacy }}</textarea>
+                    </div>
+                </div>
+            </div>
+
 
             <div id="modal-appsplash" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 @include('admin.pages.globals.app_splash')

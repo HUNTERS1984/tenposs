@@ -224,7 +224,7 @@ class AdminController extends Controller
         //dd($data_component_dest);
         if( is_null($app_stores) || is_null($app_settings)  )
             abort(404);
-
+        //dd($app_settings);
         return view('admin.pages.global')->with(
             array(
                 'app_stores' => $app_stores,
