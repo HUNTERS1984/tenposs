@@ -16,6 +16,7 @@ use Session;
 use JWTAuth;
 use Config;
 use App\Models\AppBots;
+use App\Models\AdminGlobalSettings;
 
 
 class ClientsController extends Controller
@@ -200,24 +201,28 @@ class ClientsController extends Controller
 
             $user = \App\Helpers\ArrayHelper::searchObject($response->data, $request->input('user_id'));
             if ($user) {
+
+                $arr_msg = array();
                 // Get user to approved
                 $userInfos = DB::table('user_infos')
                     ->where('id', $request->input('user_id'))
                     ->first();
-
+                if( !$userInfos ){
+                    return response()->json(['success' => false, 'msg' => 'User info not found!']);
+                }    
+                        
                 // API active user
                 $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
                     'email' => $user->email
-                ])
-                    ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
+                ])->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
                 $responseActive = $requestActive->send();
                 $responseActive = json_decode($responseActive->body);
 
                 if (isset($responseActive->code) && $responseActive->code == 1000) {
-
+                    $arr_msg[] = '1. Activated user success! <br/>';
                 } else {
-                    return response()->json(['success' => false, 'msg' => 'Try again!']);
+                    return response()->json(['success' => false, 'msg' => 'Activated user fail!']);
                 }
 
                 // API create virtual hosts
@@ -232,16 +237,21 @@ class ClientsController extends Controller
                 );
 
                 $responseCreateVir = json_decode( $requestCreateVir->body );
-                if( $responseCreateVir->code == 1000 ){
-
+                if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
+                     $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
+                }else{
+                    return response()->json(['success' => false, 'msg' => 'Creating virtual hosts fail !']);
                 }
                 
 
 
                 // Send mail to user approved
                 try {
+                    $setting = AdminGlobalSettings::find(1);
                     
-                    $to = $user->email ;
+                    $to = $setting->admin_email ;
+                    $to = 'phanvannhien@gmail.com';
+
 
                     Mail::send('admin.emails.user_approved',
                         array('user' => $user)
@@ -251,34 +261,37 @@ class ClientsController extends Controller
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
                         });
+
+                    $arr_msg[] = '3. Sent email to admin success! <br/>' ;
                 } catch (Exception $e) {
 
                 }
                 // Create apps setting default
                 // Create app default info
                 $app = \App\Models\App::where('user_id', $user->id)->first();
-                if (!empty($app)) {
-                    return response()->json(['success' => true]);
+               
+
+                if( !$app ){
+                    $app = new \App\Models\App;
+                    $app->name = $userInfos->app_name_register;
+                    $app->app_app_id = md5(uniqid(rand(), true));
+                    $app->app_app_secret = md5(uniqid(rand(), true));
+                    $app->description = 'なし';
+                    $app->status = 1;
+                    $app->user_id = $user->id;
+                    $app->business_type = $userInfos->business_type;
+                    $app->domain_type = $userInfos->domain_type;
+                    $app->domain = $userInfos->domain;
+                    $app->save();
+                     $arr_msg[] = '4. App created! <br/>';
                 }
 
-                $app = new \App\Models\App;
-                $app->name = $userInfos->app_name_register;
-                $app->app_app_id = md5(uniqid(rand(), true));
-                $app->app_app_secret = md5(uniqid(rand(), true));
-                $app->description = 'なし';
-                $app->status = 1;
-                $app->user_id = $user->id;
-                $app->business_type = $userInfos->business_type;
-                $app->domain_type = $userInfos->domain_type;
-                $app->domain = $userInfos->domain;
-                $app->save();
 
                 // Set default app templates
                 $templates = \App\Models\Template::first();
                 if (empty($templates)) {
                     $templates->name = 'Default Templates';
                     $templates->save();
-
                 }
 
 
@@ -297,12 +310,13 @@ class ClientsController extends Controller
                 $appSetting->template_id = $templates->id;
                 $appSetting->top_main_image_url = 'uploads/1.jpg';
                 $appSetting->save();
-
+                $arr_msg[] = '5. Set App template default success! <br/>';
 
                 $store = new \App\Models\Store;
                 $store->app_id = $app->id;
                 $store->name = 'Default Store';
                 $store->save();
+                $arr_msg[] = '6. Set App store default success! <br/>';
 
                 $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
                 
@@ -320,6 +334,7 @@ class ClientsController extends Controller
                 }
 
                 $address->save();
+                $arr_msg[] = '7. Set addresses success! <br/>';
 
                 // Set rel_app_settings_sidemenus, rel_app_settings_components
                 $component = DB::table('components')
@@ -351,6 +366,7 @@ class ClientsController extends Controller
 
 
                 }
+                $arr_msg[] = '8. Set app components top and menus success! <br/>';
                 // Create app_stores,rel_apps_stores default
 
                 $stores_default = DB::table('app_stores')->get();
@@ -365,12 +381,15 @@ class ClientsController extends Controller
 
                     }
                 }
+                $arr_msg[] = 'Set app stores success!';
 
                 // setting default rel_app_stores
                 DB::table('app_top_main_images')->insert([
                     'app_setting_id' => $appSetting->id,
                     'image_url' => 'uploads/1.jpg',
                 ]);
+                $arr_msg[] = '9. Set app top main images success! <br/>';
+                Session::flash( 'success' , $arr_msg[]  );
                 return response()->json(['success' => true]);
             }
 
