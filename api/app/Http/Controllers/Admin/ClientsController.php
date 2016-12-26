@@ -192,7 +192,8 @@ class ClientsController extends Controller
     public function approvedUsersProcess(Request $request)
     {
         // get all users
-        $response = cURL::newRequest('get', Config::get('api.api_auth_approvelist'))
+
+        $response = cURL::newRequest('get', 'https://auth.ten-po.com/userlist')
             ->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
             
         $response = $response->send();
