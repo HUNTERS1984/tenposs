@@ -15,7 +15,7 @@
            
             @if( $user )
                 <form id="frm-approved-user" action="{{ route('admin.approved.users.process') }}" method="post">
-                {{ csrf_token() }}
+                {{ csrf_field() }}
                 <input type="hidden" name="user_id" value="{{ $user->id }}">
                 <div class="wrap-btn-content">
                     @if( $user->active == 0)
