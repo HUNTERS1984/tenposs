@@ -208,23 +208,30 @@ class ClientsController extends Controller
                 $userInfos = DB::table('user_infos')
                     ->where('id', $request->input('user_id'))
                     ->first();
+
                 if( !$userInfos ){
-                    return response()->json(['success' => false, 'msg' => 'User info not found!']);
+                    return back()->withErrors('User info not found!');
                 }    
                         
-                // API active user
-                $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
-                    'email' => $user->email
-                ])->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
+                // Active user
+                if( $user->active == 0){
+                    
+                    $requestActive = cURL::newRequest('post', Config::get('api.api_auth_active'), [
+                        'email' => $user->email
+                    ])->setHeader('Authorization', 'Bearer ' . JWTAuth::getToken());
 
-                $responseActive = $requestActive->send();
-                $responseActive = json_decode($responseActive->body);
+                    $responseActive = $requestActive->send();
+                    $responseActive = json_decode($responseActive->body);
 
-                if (isset($responseActive->code) && $responseActive->code == 1000) {
-                    $arr_msg[] = '1. Activated user success! <br/>';
-                } else {
-                    return response()->json(['success' => false, 'msg' => 'Activated user fail!']);
+                    if (isset($responseActive->code) && $responseActive->code == 1000) {
+                        $arr_msg[] = '1. Activated user success! <br/>';
+                    } else {
+                        return back()->withErrors('Activated user fail!');
+                    }
+                }else{
+                     $arr_msg[] = '1. User has been activated! <br/>';
                 }
+
 
                 // API create virtual hosts
                 
@@ -241,10 +248,9 @@ class ClientsController extends Controller
                 if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
                      $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
                 }else{
-                    return response()->json(['success' => false, 'msg' => 'Creating virtual hosts fail !']);
+                    return back()->withErrors('Creating virtual hosts fail !');
                 }
                 
-
 
                 // Send mail to user approved
                 try {
@@ -254,7 +260,7 @@ class ClientsController extends Controller
                     $to = 'phanvannhien@gmail.com';
 
 
-                    Mail::send('admin.emails.user_approved',
+                    $sentMail = Mail::send('admin.emails.user_approved',
                         array('user' => $user)
                         ,function($message) use ( $user, $to ) {
                             $message->from( config('mail.from')['address'], config('mail.from')['name'] );
@@ -262,11 +268,17 @@ class ClientsController extends Controller
                                 //->cc()
                                 ->subject('お申し込み受付のお知らせ【TENPOSS】');
                         });
-
-                    $arr_msg[] = '3. Sent email to admin success! <br/>' ;
+                    if( $sentMail ){
+                        $arr_msg[] = '3. Sent email to admin success! <br/>' ;
+                    }else{
+                        return back()->withErrors('Sending mail fail !');
+                    }
+                    
                 } catch (Exception $e) {
 
                 }
+
+
                 // Create apps setting default
                 // Create app default info
                 $app = \App\Models\App::where('user_id', $user->id)->first();
@@ -284,7 +296,9 @@ class ClientsController extends Controller
                     $app->domain_type = $userInfos->domain_type;
                     $app->domain = $userInfos->domain;
                     $app->save();
-                     $arr_msg[] = '4. App created! <br/>';
+                    $arr_msg[] = '4. App created! <br/>';
+                }else{
+                    $arr_msg[] = '4. App has been created before! <br/>';
                 }
 
 
@@ -295,109 +309,160 @@ class ClientsController extends Controller
                     $templates->save();
                 }
 
-
-                $appSetting = new \App\Models\AppSetting;
-                $appSetting->app_id = $app->id;
-                $appSetting->title = 'Default';
-                $appSetting->title_color = '#b2d5ef';
-                $appSetting->font_size = '12';
-                $appSetting->font_family = 'Arial';
-                $appSetting->header_color = '#aee30d';
-                $appSetting->menu_icon_color = '#eb836f';
-                $appSetting->menu_background_color = '#5a15ee';
-                $appSetting->menu_font_color = '#5ad29f';
-                $appSetting->menu_font_size = '12';
-                $appSetting->menu_font_family = 'Tahoma';
-                $appSetting->template_id = $templates->id;
-                $appSetting->top_main_image_url = 'uploads/1.jpg';
-                $appSetting->save();
-                $arr_msg[] = '5. Set App template default success! <br/>';
-
-                $store = new \App\Models\Store;
-                $store->app_id = $app->id;
-                $store->name = 'Default Store';
-                $store->save();
-                $arr_msg[] = '6. Set App store default success! <br/>';
-
-                $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
+                $appSetting = \App\Models\AppSetting::where('app_id', $app->id)->first();
+                if( !$appSetting ){
+                    $appSetting = new \App\Models\AppSetting;
+                    $appSetting->app_id = $app->id;
+                    $appSetting->title = 'Default';
+                    $appSetting->title_color = '#b2d5ef';
+                    $appSetting->font_size = '12';
+                    $appSetting->font_family = 'Arial';
+                    $appSetting->header_color = '#aee30d';
+                    $appSetting->menu_icon_color = '#eb836f';
+                    $appSetting->menu_background_color = '#5a15ee';
+                    $appSetting->menu_font_color = '#5ad29f';
+                    $appSetting->menu_font_size = '12';
+                    $appSetting->menu_font_family = 'Tahoma';
+                    $appSetting->template_id = $templates->id;
+                    $appSetting->top_main_image_url = 'uploads/1.jpg';
+                    $appSetting->save();
+                    $arr_msg[] = '5. Set App setting default success! <br/>';
+                }else{
+                    $arr_msg[] = '5. App setting has been created before! <br/>';
+                }
                 
-                $response = json_decode($response);
-
-                $address = new \App\Models\Address;
-                $address->store_id = $store->id;
-                $address->title = $userInfos->shop_address;
-                $address->tel = $userInfos->shop_tel;
-                
-                if ($response)
-                {
-                    $address->latitude= $response->results[0]->geometry->location->lat;
-                    $address->longitude= $response->results[0]->geometry->location->lng;
+                $store = \App\Models\Store::where('app_id', $app->id)->first();
+                if( !$store ){
+                    $store = new \App\Models\Store;
+                    $store->app_id = $app->id;
+                    $store->name = 'Default Store';
+                    $store->save();
+                    $arr_msg[] = '6. Set App store default success! <br/>';
+                }else{
+                    $arr_msg[] = '6. App store has been created before! <br/>';
                 }
 
-                $address->save();
-                $arr_msg[] = '7. Set addresses success! <br/>';
+                $address = \App\Models\Address::where('store_id', $store->id)->first();
+                if( !$address ){
+                    $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
+                    $response = json_decode($response);
 
+                    $address = new \App\Models\Address;
+                    $address->store_id = $store->id;
+                    $address->title = $userInfos->shop_address;
+                    $address->tel = $userInfos->shop_tel;
+                    
+                    if ($response)
+                    {
+                        $address->latitude= $response->results[0]->geometry->location->lat;
+                        $address->longitude= $response->results[0]->geometry->location->lng;
+                    }
+
+                    $address->save();
+                    $arr_msg[] = '7. Set addresses success! <br/>';
+                }else{
+                    $arr_msg[] = '7. Addresses has been created before! <br/>';
+                }
+                
                 // Set rel_app_settings_sidemenus, rel_app_settings_components
-                $component = DB::table('components')
-                    ->whereNotNull('sidemenu')
+
+                $rel_app_settings_components = DB::table('rel_app_settings_components')
+                    ->where('app_setting_id',$appSetting->id)
                     ->get();
 
-                $i = 0;
-                $j = 0;
-                foreach ($component as $com) {
-                    if ($com->top !== '') {
-                        DB::table('rel_app_settings_components')->insert(
-                            [
-                                'app_setting_id' => $appSetting->id,
-                                'component_id' => $com->id
-                            ]
-                        );
-                        $j++;
+                if( count($rel_app_settings_components) <= 0 )   {
+                    $component = DB::table('components')
+                        ->whereNotNull('sidemenu')
+                        ->get();
+
+                    $i = 0;
+                    foreach ($component as $com) {
+                        if ($com->top !== '') {
+                            DB::table('rel_app_settings_components')->insert(
+                                [
+                                    'app_setting_id' => $appSetting->id,
+                                    'component_id' => $com->id
+                                ]
+                            );
+                            $i++;
+                        }
                     }
-
-
-                    if ($com->sidemenu !== '') {
-                        DB::table('rel_app_settings_sidemenus')->insert([
-                            'app_setting_id' => $appSetting->id,
-                            'sidemenu_id' => $com->id,
-                            'order' => $i
-                        ]);
-                        $i++;
-                    }
-
-
+                    $arr_msg[] = '8. Set app components success! <br/>';
+                } else{
+                    $arr_msg[] = '8. App components has been created before! <br/>';
                 }
-                $arr_msg[] = '8. Set app components top and menus success! <br/>';
+
+
+                $rel_app_settings_components =  DB::table('rel_app_settings_components')
+                    ->where('app_setting_id', $appSetting->id)->get();
+
+                if( count($rel_app_settings_components) <= 0 )  {
+                    $component = DB::table('components')
+                        ->whereNotNull('sidemenu')
+                        ->get();
+
+                    $i = 0;
+                    foreach ($component as $com) {
+                       
+                        if ($com->sidemenu !== '') {
+                            DB::table('rel_app_settings_sidemenus')->insert([
+                                'app_setting_id' => $appSetting->id,
+                                'sidemenu_id' => $com->id,
+                                'order' => $i
+                            ]);
+                            $i++;
+                        }
+
+                    }
+                    $arr_msg[] = '8. Set app menus success! <br/>';
+                }  
+
+               
                 // Create app_stores,rel_apps_stores default
 
                 $stores_default = DB::table('app_stores')->get();
                 if (count($stores_default) > 0) {
                     foreach ($stores_default as $store) {
+                        $app_store = DB::table('rel_apps_stores')
+                            ->where('app_id',$app->id)
+                            ->where('app_store_id',$store->id)
+                            ->get();
 
-                        DB::table('rel_apps_stores')->insert([
-                            'app_id' => $app->id,
-                            'app_store_id' => $store->id,
-                            'version' => '1.0'
-                        ]);
-
+                        if( count($app_store) <= 0 ){
+                            DB::table('rel_apps_stores')->insert([
+                                'app_id' => $app->id,
+                                'app_store_id' => $store->id,
+                                'version' => '1.0'
+                            ]);
+                            $arr_msg[] = 'Set app stores '.$store->id.' success!';
+                        }else{
+                            $arr_msg[] = 'App stores '.$store->id.' created before!';
+                        }
                     }
                 }
-                $arr_msg[] = 'Set app stores success!';
-
+                
                 // setting default rel_app_stores
-                DB::table('app_top_main_images')->insert([
-                    'app_setting_id' => $appSetting->id,
-                    'image_url' => 'uploads/1.jpg',
-                ]);
-                $arr_msg[] = '9. Set app top main images success! <br/>';
-                Session::flash( 'success' , $arr_msg[]  );
-                return response()->json(['success' => true]);
+                $app_top_main_images = DB::table('app_top_main_images')
+                    ->where('app_setting_id', $appSetting->id)
+                    ->get();
+
+                if( count($app_top_main_images) <= 0 ){ 
+                    DB::table('app_top_main_images')->insert([
+                        'app_setting_id' => $appSetting->id,
+                        'image_url' => 'uploads/1.jpg',
+                    ]);
+                    $arr_msg[] = '9. Set app top main images success! <br/>';
+                }else{
+                    $arr_msg[] = '9. App top main created before! <br/>';
+                }
+               
+                return back()->with('success', $arr_msg[]);
             }
 
 
         }
 
-        return response()->json(['success' => false, 'msg' => 'Try again!']);
+        return back()->withErrors('User not found!');
     }
 
 }

@@ -12,16 +12,19 @@
     <div class="main-content news">
         <div class="wrapper-content">
             @include('admin.partials.message')
+           
             @if( $user )
+                <form id="frm-approved-user" action="{{ route('admin.approved.users.process') }}" method="post">
+                {{ csrf_token() }}
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
                 <div class="wrap-btn-content">
                     @if( $user->active == 0)
-                    <a href="#" data-toggle="modal" data-target="#modal-user" class="btn-me btn-hong">Send email approved</a>
+                    <a href="#" data-toggle="modal" data-target="#modal-user" class="btn-me btn-hong">Approved User</a>
                     @else
                     <a href="#" class="btn-me btn-hong">Edit</a>
                     <a href="#" class="btn-me btn-xanhduongnhat">Delete</a>
                     @endif
                 </div>	<!-- end wrap-btn-content-->
-                
                 
                 <div class="panel panel-info">
                     <div class="panel-heading">User informations</div>
@@ -149,11 +152,12 @@
             				</tbody>
             			 </table>	
                         @endif
-                        
+                        @if( $user->active != 0)
                         <a href="{{ route('admin.clients.apps.create',['user_id' => $user->id ]) }}" class="btn-me btn-hong">Add App</a>
-                        
+                        @endif
                     </div>
-                </div>  
+                </div>
+                </form>
 
             @endif
         </div>
@@ -165,22 +169,8 @@
 @section('footer')
     @if( isset($user) )
     <script type="text/javascript">
-        function approvedUser(uid){
-            $.ajax({
-                url: '{{ route("admin.approved.users.process") }}',
-                method: "POST",
-                dataType: 'json',
-                data: {
-                    user_id: uid
-                },
-                success: function(response){
-                    if( response.success ){
-                        window.location.reload();
-                    }else{
-                        $('#msg').text(response.msg);
-                    }
-                }
-            });
+        function approvedUser(){
+            $('#frm-approved-user').submit();
         }
     </script>
     <div class="modal fade" id="modal-user" tabindex="-1" role="dialog" aria-labelledby="">
@@ -193,12 +183,10 @@
                 </div>
                 <div class="modal-body">
                     Are you sure?
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button onclick="return approvedUser({{ $user->id }})" type="button" class="btn btn-primary">OK</button>
-                    <label class="text-danger" for="" id="msg"></label>
+                    <button onclick="return approvedUser()" type="button" class="btn btn-primary">OK</button>
                 </div>
             </form>
         </div>
