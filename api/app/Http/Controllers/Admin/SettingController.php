@@ -21,8 +21,7 @@ use App\Models\AdminGlobalSettings;
 class SettingController extends Controller
 {
 	public function setting(){
-		$setting = AdminGlobalSettings::all();
-		dd($setting);
+		$setting = AdminGlobalSettings::first();
 		return view('admin.global.setting', array( 'setting' => $setting ));
 	}
 
