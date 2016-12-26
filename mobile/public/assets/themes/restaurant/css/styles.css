@@ -39,3 +39,9 @@ body {
 .edite_user .ui-input-text{
 	border: none;
 }
+
+.popphoto img{
+	object-fit: cover;
+
+	object-position: center;
+}
