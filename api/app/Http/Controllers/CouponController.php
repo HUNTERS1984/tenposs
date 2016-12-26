@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coupon;
+use App\Models\AppUser;
 use App\Models\CouponType;
 use App\Models\Staff;
 use App\Repositories\Contracts\TopsRepositoryInterface;
