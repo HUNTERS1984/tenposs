@@ -22,7 +22,7 @@
                 </a>
             </figure>
             <a data-ajax="false" href="{{ route('menus.detail', [ 'id' =>  $item->id ]) }}"> {{ $item->title }}</a><br>
-            <span class="">{{ $item->menu }}</span>
+            <span class="">{{ $item->menu_name }}</span>
             <div class="price">¥{{number_format($item->price, 0, '', ',')}}</div>
         </div>
         @endforeach
