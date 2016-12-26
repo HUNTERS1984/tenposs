@@ -18,7 +18,7 @@
             {{ csrf_field() }}
             <div class="form-group">
                 <label for="">Admin email</label>
-                <input type="text" name="admin_email" value="{{ $setting->admin_email }}">
+                <input type="text" class="form-control" name="admin_email" value="{{ $setting->admin_email }}">
             </div>  
             <button type="submit" name="save">Save</button>    
         </form>
