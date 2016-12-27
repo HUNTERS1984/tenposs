@@ -212,35 +212,39 @@ class ClientsController extends Controller
                 if( !$userInfos ){
                     return back()->withErrors('User info not found!');
                 }    
-
-                // API create virtual hosts
-//
-//                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
-//                    [
-//                        'domain' => $userInfos->domain,
-//                        'domain_type' => $userInfos->domain_type,
-//                        'time' => '',
-//                        'sig' => ''
-//                    ]
-//                );
+                // Creating virual host
 
 
-//                $responseCreateVir = json_decode( $requestCreateVir->body );
-                $responseCreateVir = HttpRequestUtil::getInstance()->post_data(Config::get('api.api_create_vir'),
-                    [
-                        'domain' => $userInfos->domain,
-                        'domain_type' => $userInfos->domain_type
-                    ]);
-                $responseCreateVir = json_decode( $responseCreateVir->body );
+                $domain = '';
+                if ( $userInfos->domain_type == 'main')
+                    $domain = $userInfos->domain ;
+                else if ( $userInfos->domain_type == 'sub')
+                    $domain = $userInfos->domain . '.ten-po.com';
+                if (!empty($domain)) {
 
-                if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
-                     $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
-                }else{
-                    return back()->withErrors('Creating virtual hosts fail !');
+                    $fileName = Config::get('api.path_host_apache_site_available').$domain.'.conf';
+                    if( !file_exists( $fileName ) ){
+                        try {
+                            $source_file = public_path('assets/template/apache-host.txt'); // upload path
+                            $template = file_get_contents($source_file);
+                            $template = str_replace("#domain#", $domain, $template);
+                            $dest_file = Config::get('api.path_host_apache_site_available');
+                            $newFile = fopen($dest_file . $domain . '.conf', 'w');
+                            fwrite($newFile, $template);
+                            fclose($newFile);
+                            $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
+                        } catch (FileNotFoundException $e) {
+                            Log::error($e->getMessage());
+                            return back()->withErrors('Creating virtual hosts fail !');
+                        } catch (FileException $e) {
+                            Log::error($e->getMessage());
+                            return back()->withErrors('Creating virtual hosts fail !');
+                        }
+                    }else{
+                        $arr_msg[] = '2. Vitural hosts'.$userInfos->domain.' created before! <br/>';
+                    }
+
                 }
-                        
-                
-                
 
                 // Create apps setting default
                 // Create app default info
