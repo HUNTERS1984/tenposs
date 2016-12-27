@@ -213,28 +213,24 @@ class ClientsController extends Controller
                     return back()->withErrors('User info not found!');
                 }    
 
-                // API create virtual hosts
+                // API create virtual host
+//
+//                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
+//                    [
+//                        'domain' => $userInfos->domain,
+//                        'domain_type' => $userInfos->domain_type,
+//                        'time' => '',
+//                        'sig' => ''
+//                    ]
+//                );
 
 
-// API create virtual hosts
-                $returnData = HttpRequestUtil::getInstance()
-                    ->post_data(Config::get('api.api_create_vir'),  [
-                        'domain' => $userInfos->domain,
-                        'domain_type' => $userInfos->domain_type
-                ]);
-
-                 dd( json_decode($returnData) );                   
-                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
+//                $responseCreateVir = json_decode( $requestCreateVir->body );
+                $responseCreateVir = HttpRequestUtil::getInstance()->post_data('',
                     [
                         'domain' => $userInfos->domain,
-                        'domain_type' => $userInfos->domain_type,
-                        'time' => '',
-                        'sig' => ''
-                    ]
-                );
-
-                $responseCreateVir = json_decode( $requestCreateVir->body );
-dd($responseCreateVir);
+                        'domain_type' => $userInfos->domain_type
+                    ]);
                 if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
                      $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
                 }else{
