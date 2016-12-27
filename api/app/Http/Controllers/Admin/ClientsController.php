@@ -132,12 +132,12 @@ class ClientsController extends Controller
                 $userInfos = $response_profile->data;
             }
 
-//            $userInfos =  DB::table('user_infos')
-//                ->where('id',$user_id)->first();
-//
-//            if( !$userInfos ){
-//                return back()->withErrors('Cannot access, Users info not found!');
-//        }
+            $userInfos =  DB::table('user_infos')
+                ->where('id',$user_id)->first();
+
+            if( !$userInfos ){
+                return back()->withErrors('Cannot access, Users info not found!');
+            }
 
             $apps = DB::table('apps')
                 ->where('apps.user_id', $user_id)
