@@ -231,7 +231,7 @@ class ClientsController extends Controller
                         'domain' => $userInfos->domain,
                         'domain_type' => $userInfos->domain_type
                     ]);
-                $responseCreateVir = json_decode( $requestCreateVir->body );
+                $responseCreateVir = json_decode( $responseCreateVir->body );
 
                 if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
                      $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
