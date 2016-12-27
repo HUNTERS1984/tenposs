@@ -93,7 +93,7 @@ $appRoutes = function(){
         Route::get('payment/status', 'PaypalController@getPaymentStatus');
     } );
 };
-//Route::group( ['domain' => '{name}.'.env('APP_DOMAIN') ], $appRoutes);
-//Route::group( ['domain' => env('APP_DOMAIN') ], $appRoutes);
+Route::group( ['domain' => '{name}.'.'ten-po.com' ], $appRoutes);
+Route::group( ['domain' => 'ten-po.com' ], $appRoutes);
 
 
