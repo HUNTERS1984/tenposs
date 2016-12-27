@@ -465,9 +465,8 @@ class ClientsController extends Controller
                 } catch (Exception $e) {
 
                 }
-
                
-                return back()->with('success', $arr_msg[]);
+                return back()->with('success', $arr_msg);
             }
 
 
