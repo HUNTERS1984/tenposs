@@ -57,6 +57,9 @@ class HttpRequestUtil
             case 'staff_detail':
                 $params = Config::get('api.sig_staff_detail');
                 break;
+            case 'create_virtual_host':
+                $params = Config::get('api.sig_create_virtual_host');
+                break;
             default:
                 break;
         }
@@ -229,7 +232,7 @@ class HttpRequestUtil
         }
     }
 
-    public function post_data_with_token($service_url, $data_params,$token)
+    public function post_data_with_token($service_url, $data_params, $token)
     {
         try {
 //            print_r($service_url);
@@ -267,7 +270,7 @@ class HttpRequestUtil
         }
     }
 
-    public function post_data_with_token_return_boolean($service_url, $data_params,$token)
+    public function post_data_with_token_return_boolean($service_url, $data_params, $token)
     {
         try {
 //            print_r($service_url);

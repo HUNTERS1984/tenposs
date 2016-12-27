@@ -214,17 +214,23 @@ class ClientsController extends Controller
                 }    
 
                 // API create virtual hosts
-                
-                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
+//
+//                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
+//                    [
+//                        'domain' => $userInfos->domain,
+//                        'domain_type' => $userInfos->domain_type,
+//                        'time' => '',
+//                        'sig' => ''
+//                    ]
+//                );
+
+
+//                $responseCreateVir = json_decode( $requestCreateVir->body );
+                $responseCreateVir = HttpRequestUtil::getInstance()->post_data('',
                     [
                         'domain' => $userInfos->domain,
-                        'domain_type' => $userInfos->domain_type,
-                        'time' => '',
-                        'sig' => ''
-                    ]
-                );
-
-                $responseCreateVir = json_decode( $requestCreateVir->body );
+                        'domain_type' => $userInfos->domain_type
+                    ]);
                 if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
                      $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
                 }else{
