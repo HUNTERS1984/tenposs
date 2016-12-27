@@ -18,4 +18,11 @@ class ValidateUtil
         $gm = gmdate("Y/m/j H:i:s", time() + 3600 * ($timezone + date("I")));
         return strtotime($gm) * 1000;
     }
+    
+    public static function get_miliseconds_gmt0()
+    {
+        $timezone = 0;
+        $gm = gmdate("Y/m/j H:i:s", time() + 3600 * ($timezone + date("I")));
+        return strtotime($gm) * 1000;
+    }
 }
