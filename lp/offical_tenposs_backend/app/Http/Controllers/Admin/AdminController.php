@@ -18,6 +18,7 @@ use App\Models\AppTopMainImage;
 use App\Models\AdminContacts;
 use App\Models\UserInfos;
 use App\Models\Template;
+use App\Models\PaymentDemo;
 
 use App\Utils\RedisControl;
 use App\Utils\RedisUtil;
@@ -806,6 +807,120 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+
+    public function demo(Request $request){
+        
+        return view('pages.paymentdemo', array(
+            
+        ));
+    }
+
+    public function demopost(Request $request){
+        
+        if ($this->request->price == '' || $this->request->price < 0)
+            return back()->with('warning', 'Please select price');
+
+        $body = array();
+        $credit = array();
+        $credit['b2bMemberId'] = 'test3';
+        $credit['price'] = $this->request->price;
+        $body['credit'] = $credit;
+
+        $request_body['body'] = $body;
+        $request_body['header'] = array("apiAuthCode" => "e5dd52df35aa9879ed7cacd541aad0d4");
+       
+        $response = cURL::newRawRequest('post','https://paid.jp/y/coop/member/creditCheck/ver1.0/p.json',json_encode($request_body))
+        ->setHeader('Content-Type', 'application/json; charset=UTF-8')
+        ->send();
+
+        $result = json_decode($response,true);
+        //dd($result['body']['result']['creditAvailable']);
+        if ($result['header']['status'] == "ERROR" || $result['body']['result']['creditAvailable'] == false)
+            return back()->with('warning', 'The credit is unvailable');
+
+        $paymentdemo = new PaymentDemo();
+        $paymentdemo->code = substr(md5(date('Y-m-d')), 0, 15);
+        $paymentdemo->save();
+
+        $body = array();
+        $credit = array();
+        $credit['b2bMemberId'] = 'test3';
+        $credit['contents'] = 'demo payment for tenposs';
+        $credit['code'] = $paymentdemo->code;
+        $credit['price'] = $this->request->price;
+        $credit['b2bCreditId'] = $paymentdemo->id;
+        $body['credits']['credit'] = array($credit);
+
+        $request_body['body'] = $body;
+        $request_body['header'] = array("apiAuthCode" => "e5dd52df35aa9879ed7cacd541aad0d4");
+        $response = cURL::newRawRequest('post','https://paid.jp/y/coop/Register/b2bMemberId/ver1.0/p.json',json_encode($request_body))
+        ->setHeader('Content-Type', 'application/json; charset=UTF-8')
+        ->send();
+
+        $result = json_decode($response,true);
+        //dd($result);
+        if ($result['header']['status'] == "ERROR")
+            return back()->with('warning', 'Cannot create payment');
+        
+
+        return view('pages.paymentdemofinish', array(
+            'payment' => $paymentdemo,
+        ));
+
+        //$response = cURL::jsonPost($url, json_encode($request_body));
+        //dd($response);
+    }
+
+    public function demoaccept($id){
+        $body = array();
+        $credit = array();
+        $credit['b2bMemberId'] = 'test3';
+        $credit['b2bCreditId'] = $id;
+        $credit['fixedAt'] = date('Y/m/d');
+        $body['credits']['credit'] = [$credit];
+
+        $request_body['body'] = $body;
+        $request_body['header'] = array("apiAuthCode" => "e5dd52df35aa9879ed7cacd541aad0d4");
+       
+        $response = cURL::newRawRequest('post','https://paid.jp/y/coop/Fix/b2bCreditId/ver1.0/p.json',json_encode($request_body))
+        ->setHeader('Content-Type', 'application/json; charset=UTF-8')
+        ->send();
+
+        $result = json_decode($response,true);
+        //dd($result['body']['result']['creditAvailable']);
+        if ($result['header']['status'] == "ERROR" || $result['body']['detailResults']['detailResult'][0]['status'] == "NOT_FOUND")
+            return back()->with('warning', 'Cannot accept payment');
+        //dd($result);
+        return back()->with('status', 'Accept OK');
+
+        //$response = cURL::jsonPost($url, json_encode($request_body));
+        //dd($response);
+    }
+
+    public function democancel($id){
+        $body = array();
+        $credit = array();
+        $credit['b2bMemberId'] = 'test3';
+        $credit['b2bCreditId'] = $id;
+        $body['credits']['credit'] = [$credit];
+
+        $request_body['body'] = $body;
+        $request_body['header'] = array("apiAuthCode" => "e5dd52df35aa9879ed7cacd541aad0d4");
+       
+        $response = cURL::newRawRequest('post','https://paid.jp/y/coop/Cancel/b2bCreditId/ver1.0/p.json',json_encode($request_body))
+        ->setHeader('Content-Type', 'application/json; charset=UTF-8')
+        ->send();
+
+        $result = json_decode($response,true);
+        //dd($result['body']['result']['creditAvailable']);
+        if ($result['header']['status'] == "ERROR" || $result['body']['detailResults']['detailResult'][0]['status'] == "NOT_FOUND")
+            return back()->with('warning', 'Cannot cancel payment');
+
+        return back()->with('status', 'Cancel OK');
+
+        //$response = cURL::jsonPost($url, json_encode($request_body));
+        //dd($response);
+    }
 
 }
 

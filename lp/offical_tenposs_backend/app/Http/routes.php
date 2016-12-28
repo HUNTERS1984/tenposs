@@ -15,6 +15,11 @@ Route::get('/', function () {
    return view('pages.top');
 });
 
+Route::get('paymentdemo',['as'=>'paymentdemo','uses'=>'Admin\AdminController@demo']);
+Route::post('paymentdemo',['as'=>'paymentdemo.post','uses'=>'Admin\AdminController@demopost']);
+Route::get('paymentaccept/{id}',['as'=>'paymentdemo.accept','uses'=>'Admin\AdminController@demoaccept']);
+Route::get('paymentcancel/{id}',['as'=>'paymentdemo.cancel','uses'=>'Admin\AdminController@democancel']);
+
 Route::get('top',function(){
 	return view('pages.top');
 });
