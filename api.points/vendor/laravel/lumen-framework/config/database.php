@@ -69,7 +69,7 @@ return [
             'prefix'    => env('DB_PREFIX', ''),
             'timezone'  => env('DB_TIMEZONE', '+00:00'),
             'strict'    => env('DB_STRICT_MODE', false),
-            'unix_socket' => '/Applications/MAMP/tmp/mysql/mysql.sock',
+            //'unix_socket' => '/Applications/MAMP/tmp/mysql/mysql.sock',
         ],
 
         'pgsql' => [
