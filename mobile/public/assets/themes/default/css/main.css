@@ -103,6 +103,7 @@
     background-image: url('../img/login_bg.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center center;
 }
 
 .bottom-layout{

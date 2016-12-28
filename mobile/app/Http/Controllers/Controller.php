@@ -47,9 +47,11 @@ class Controller extends BaseController
             if(!File::exists( public_path($response->data->id) )) {
                 File::makeDirectory( public_path($response->data->id) , 0777, true, true);
             }
-            if( $file = file_get_contents($this->app_info->data->notification->url_manifest) )
-                File::put( public_path($response->data->id.'/manifest.json') , $file );
-            
+            if( $file = @file_get_contents($this->app_info->data->notification->url_manifest) )
+                if( $file ){
+                    File::put( public_path($response->data->id.'/manifest.json') , $file );
+                }
+                
         } else {
             abort(404);
         }
