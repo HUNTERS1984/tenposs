@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddBillingAgreement' => $baseDir . '/database/migrations/2016_11_02_034243_add_billing_agreement.php',
+    'AddBillingPlans' => $baseDir . '/database/migrations/2016_11_02_034232_add_billing_plans.php',
     'AddPointHistoryTable' => $baseDir . '/database/migrations/2016_10_29_222022_add_point_history_table.php',
     'AddPointRequestHistoryTable' => $baseDir . '/database/migrations/2016_10_30_000806_add_point_request_history_table.php',
     'AddPointRequestTable' => $baseDir . '/database/migrations/2016_10_30_001443_add_point_request_table.php',
