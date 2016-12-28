@@ -383,6 +383,8 @@ class ComposerStaticInitb45e15124693e48f99073515deb2439c
     );
 
     public static $classMap = array (
+        'AddBillingAgreement' => __DIR__ . '/../..' . '/database/migrations/2016_11_02_034243_add_billing_agreement.php',
+        'AddBillingPlans' => __DIR__ . '/../..' . '/database/migrations/2016_11_02_034232_add_billing_plans.php',
         'AddPointHistoryTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_29_222022_add_point_history_table.php',
         'AddPointRequestHistoryTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_30_000806_add_point_request_history_table.php',
         'AddPointRequestTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_30_001443_add_point_request_table.php',

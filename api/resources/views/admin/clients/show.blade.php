@@ -105,7 +105,7 @@
                                 </tr>
                                 <tr>
                                     <td>Shop info</td>
-                                    <td>{{ $userInfos->shop_info }}</td>
+                                    <td>{{ $userInfos->shop_url }}</td>
                                 </tr>
                                 @else
                                  <tr>

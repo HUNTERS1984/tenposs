@@ -132,12 +132,12 @@ class ClientsController extends Controller
                 $userInfos = $response_profile->data;
             }
 
-//            $userInfos =  DB::table('user_infos')
-//                ->where('id',$user_id)->first();
-//
-//            if( !$userInfos ){
-//                return back()->withErrors('Cannot access, Users info not found!');
-//        }
+            $userInfos =  DB::table('user_infos')
+                ->where('id',$user_id)->first();
+
+            if( !$userInfos ){
+                return back()->withErrors('Cannot access, Users info not found!');
+            }
 
             $apps = DB::table('apps')
                 ->where('apps.user_id', $user_id)
@@ -212,34 +212,38 @@ class ClientsController extends Controller
                 if( !$userInfos ){
                     return back()->withErrors('User info not found!');
                 }    
-
-                // API create virtual hosts
-//
-//                $requestCreateVir = cURL::post(Config::get('api.api_create_vir'),
-//                    [
-//                        'domain' => $userInfos->domain,
-//                        'domain_type' => $userInfos->domain_type,
-//                        'time' => '',
-//                        'sig' => ''
-//                    ]
-//                );
+                // Creating virual host
 
 
-//                $responseCreateVir = json_decode( $requestCreateVir->body );
-                $responseCreateVir = HttpRequestUtil::getInstance()->post_data('',
-                    [
-                        'domain' => $userInfos->domain,
-                        'domain_type' => $userInfos->domain_type
-                    ]);
-                if( isset($responseCreateVir->code) && $responseCreateVir->code == 1000 ){
-                     $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
-                }else{
-                    return back()->withErrors('Creating virtual hosts fail !');
+                $domain = '';
+                if ( $userInfos->domain_type == 'main')
+                    $domain = $userInfos->domain ;
+                else if ( $userInfos->domain_type == 'sub')
+                    $domain = $userInfos->domain . '.ten-po.com';
+                if (!empty($domain)) {
+
+                    $fileName = Config::get('api.path_host_apache_site_available').$domain.'.conf';
+                    if( !file_exists( $fileName ) ){
+                        try {
+                            $source_file = public_path('assets/template/apache-host.txt'); // upload path
+                            $template = file_get_contents($source_file);
+                            $template = str_replace("#domain#", $domain, $template);
+                            $dest_file = Config::get('api.path_host_apache_site_available');
+                            $newFile = fopen($dest_file . $domain . '.conf', 'w');
+                            fwrite($newFile, $template);
+                            fclose($newFile);
+                            $arr_msg[] = '2. Created site'.$userInfos->domain.'ten-po.com success! <br/>';
+                        } catch (FileNotFoundException $e) {
+                            Log::error($e->getMessage());
+                            return back()->withErrors('Creating virtual hosts fail !');
+                        } catch (FileException $e) {
+                            Log::error($e->getMessage());
+                            return back()->withErrors('Creating virtual hosts fail !');
+                        }
+                    }else{
+                        $arr_msg[] = '2. Vitural hosts'.$userInfos->domain.' created before! <br/>';
+                    }
                 }
-                        
-                
-                
-
                 // Create apps setting default
                 // Create app default info
                 $app = \App\Models\App::where('user_id', $user->id)->first();
@@ -441,9 +445,7 @@ class ClientsController extends Controller
                     $setting = AdminGlobalSettings::find(1);
                     
                     $to = $setting->admin_email ;
-                    $to = 'phanvannhien@gmail.com';
-
-
+                    
                     $sentMail = Mail::send('admin.emails.user_approved',
                         array('user' => $user)
                         ,function($message) use ( $user, $to ) {
@@ -461,9 +463,8 @@ class ClientsController extends Controller
                 } catch (Exception $e) {
 
                 }
-
                
-                return back()->with('success', $arr_msg[]);
+                return back()->with('success', $arr_msg);
             }
 
 
