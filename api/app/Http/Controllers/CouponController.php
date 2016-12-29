@@ -572,7 +572,7 @@ class CouponController extends Controller
 
     public function v2_coupon_use_new()
     {
-        $check_items = array('app_id', 'code', 'staff_id');
+        $check_items = array('app_id', 'code', 'staff_auth_id');
         $ret = $this->validate_param($check_items);
         if ($ret)
             return $ret;
@@ -587,7 +587,7 @@ class CouponController extends Controller
                 ->whereCode(Input::get('code'))->first();
             if (count($check_exist) > 0) {
                 try {
-
+                    $staff = Staff::where('auth_user_id',Input::get('staff_id'))->first();
                     DB::beginTransaction();
                     $coupon = DB::table('rel_app_users_coupons')
                         ->where(function ($query) {
@@ -595,12 +595,12 @@ class CouponController extends Controller
                         })
                         ->whereCode(Input::get('code'))->update(
                             ['status' => 2,
-                                'staff_id' => Input::get('staff_id'),
+                                'staff_id' => $staff->id,
                                 'user_use_date' => Carbon::now()]);
                     if ($coupon == 0)
                         return $this->error(1014);
                     //call notification to staff
-                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), $check_exist->coupon_id, $check_exist->app_user_id, Input::get('staff_id'), Input::get('code'), $this->request->token);
+                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), $check_exist->coupon_id, $check_exist->app_user_id, $staff->id, Input::get('code'), $this->request->token);
                     if (!$isCall) {
                         DB::rollBack();
                         return $this->error(1021);
