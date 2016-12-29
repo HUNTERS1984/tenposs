@@ -159,10 +159,10 @@ class CouponController extends Controller
         $data = RedisUtil::getInstance()->get_cache($key);
 //        $data = null;
         //check data and return data
-        if ($data != null) {
-            $this->body = $data;
-            return $this->output($this->body);
-        }
+        // if ($data != null) {
+        //     $this->body = $data;
+        //     return $this->output($this->body);
+        // }
         try {
             $coupons = [];
             if (Input::get('store_id') == 0) {
@@ -207,6 +207,9 @@ class CouponController extends Controller
                 $coupons[$i]['can_use'] = DB::table('rel_app_users_coupons')
                         ->whereAppUserId($app_user->id)
                         ->whereCouponId($coupons[$i]['id'])
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })
                         ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                 $coupon_code = DB::table('rel_app_users_coupons')
                     ->whereAppUserId($app_user->id)
@@ -282,6 +285,9 @@ class CouponController extends Controller
                     $coupons['can_use'] = DB::table('rel_app_users_coupons')
                             ->whereAppUserId($this->request->token_info['id'])
                             ->whereCouponId($coupons['id'])
+                            ->where(function ($query) {
+                                $query->where('status', 1)->orWhere('status', 2);
+                            })
                             ->count() > 0 & $dateBegin <= $currentDate & $dateEnd >= $currentDate;
                     $coupon_code = DB::table('rel_app_users_coupons')
                         ->whereAppUserId($this->request->token_info['id'])
@@ -340,10 +346,10 @@ class CouponController extends Controller
         $data = RedisUtil::getInstance()->get_cache($key);
 //        $data = null;
         //check data and return data
-        if ($data != null) {
-            $this->body = $data;
-            return $this->output($this->body);
-        }
+        // if ($data != null) {
+        //     $this->body = $data;
+        //     return $this->output($this->body);
+        // }
         try {
             $coupons = Coupon::where('id', Input::get('id'))->with('coupon_type')->first();
             if (count($coupons) > 0) {
@@ -403,6 +409,9 @@ class CouponController extends Controller
                     $coupon_code = DB::table('rel_app_users_coupons')
                         ->whereAppUserId($app_info['app_user_id'])
                         ->whereCouponId($coupons['id'])
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })
                         ->where(function ($query) {
                             $query->where('status', 1)->orWhere('status', 2);
                         })->get();
