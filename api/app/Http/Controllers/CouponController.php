@@ -566,7 +566,7 @@ class CouponController extends Controller
             $check_exist = DB::table('rel_app_users_coupons')
                 ->whereStatus(1)
                 ->orWhere('status',2)
-                ->whereCode(Input::get('code'))->get();
+                ->whereCode(Input::get('code'))->first();
             if (count($check_exist) > 0) {
                 try {
 
@@ -598,7 +598,7 @@ class CouponController extends Controller
             Log::error($e->getMessage());;
             return $this->error(9999);
         }
-        $this->body['data'] = $coupon;
+        $this->body['data'] = $check_exist;
         return $this->output($this->body);
 
     }
