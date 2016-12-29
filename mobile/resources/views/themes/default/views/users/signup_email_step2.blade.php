@@ -90,7 +90,15 @@
             <div class="wrap-input">
                 <div class="wrap-inner">
                     <div class="form-group-login">
-                        <input readonly value="{{ Session::get('user')->email }}" class="input-form last input-lg" type="text"
+                        <?php
+                            if( Session::has('user') )
+                                $email = Session::get('user')->email;
+
+                            if( Session::has('registerStep1') ){
+                                $email = Session::get('registerStep1')['email'];
+                            }
+                        ?>
+                        <input readonly value="{{ $email }}" class="input-form last input-lg" type="text"
                                name="email" placeholder="メール" />
                     </div>
                     <div class="form-group-login">
@@ -101,21 +109,18 @@
                          </select>　        
                      </div>
                     <div class="form-group-login">
-                        <input data-date-format="yyyy/mm/dd" value="{{ old('birthday') }}"
+                        <input value="{{ old('birthday') }}"
                                 class="input-form input-lg" type="date" name="birthday" placeholder="お誕生日" />
                     </div>
-
-<!--                      <div class="form-group-login">
+                    <div class="form-group-login">
                          <select name="gender" id="" class="input-form input-lg" >
                              <option value="0" {{ ( old('gender') == 0) ? 'selected' : '' }}>男性</option>
                              <option value="1" {{ ( old('gender') == 1) ? 'selected' : '' }}>女性</option>
-                             <option value="2" {{ ( old('gender') == 2) ? 'selected' : '' }}>他の</option>
                          </select>
-                     </div> -->
+                     </div>
                     <div class="form-group-login">
                         <input value="{{ old('code') }}" class="input-form input-lg" type="text" name="code" placeholder="招待コード" />
                     </div>
-
                 </div>
             </div>
             <div class="form-group">

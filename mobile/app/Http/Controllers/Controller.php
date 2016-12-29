@@ -25,6 +25,9 @@ class Controller extends BaseController
     public function __construct(Request $request)
     {
 
+        if( !Session::has('app') ){
+            abort(404);
+        }
         $this->request = $request;
         $this->app = Session::get('app');
         $get = \App\Utils\HttpRequestUtil::getInstance()

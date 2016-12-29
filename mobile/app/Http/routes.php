@@ -22,7 +22,7 @@ $appRoutes = function(){
         Route::get('/register', ['as'=> 'register', 'uses' => 'LoginController@register']);
         Route::post('/register', ['as'=> 'register.post', 'uses' => 'LoginController@registerPost']);
         Route::get('/register/step2', ['as'=> 'register.step2', 'uses' => 'LoginController@registerStep2']);
-        Route::post('/register/step2', ['middleware' => 'auth.custom', 'as'=> 'register.step2.post', 'uses' => 'LoginController@registerStep2Post']);
+        Route::post('/register/step2', ['as'=> 'register.step2.post', 'uses' => 'LoginController@registerStep2Post']);
         Route::get('/login/normal', ['as'=> 'login.normal', 'uses' => 'LoginController@loginNormal']);
         Route::post('/login/normal', ['as'=> 'login.normal.post', 'uses' => 'LoginController@loginNormalPost']);
         Route::get('/logout', ['as'=> 'logout', 'uses' => 'LoginController@logout']);
