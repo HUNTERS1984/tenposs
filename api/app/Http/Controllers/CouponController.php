@@ -478,7 +478,7 @@ class CouponController extends Controller
             $check_exist = DB::table('rel_app_users_coupons')
                 ->whereAppUserId(Input::get('app_user_id'))
                 ->whereStatus(1)
-                ->orWhereStatus(2)
+                ->orWhere('status',2)
                 ->whereCouponId(Input::get('coupon_id'))->get();
             if (count($check_exist) > 0) {
                 try {
@@ -487,7 +487,7 @@ class CouponController extends Controller
                     $coupon = DB::table('rel_app_users_coupons')
                         ->whereAppUserId(Input::get('app_user_id'))
                         ->whereStatus(1)
-                        ->orWhereStatus(2)
+                        ->orWhere('status',2)
                         ->whereCouponId(Input::get('coupon_id'))->update(
                             ['status' => 2,
                                 'staff_id' => Input::get('staff_id'),
@@ -565,7 +565,7 @@ class CouponController extends Controller
         try {
             $check_exist = DB::table('rel_app_users_coupons')
                 ->whereStatus(1)
-                ->orWhereStatus(2)
+                ->orWhere('status',2)
                 ->whereCode(Input::get('code'))->get();
             if (count($check_exist) > 0) {
                 try {
@@ -573,7 +573,7 @@ class CouponController extends Controller
                     DB::beginTransaction();
                     $coupon = DB::table('rel_app_users_coupons')
                         ->whereStatus(1)
-                        ->orWhereStatus(2)
+                        ->orWhere('status',2)
                         ->whereCode(Input::get('code'))->update(
                             ['status' => 2,
                                 'staff_id' => Input::get('staff_id'),
