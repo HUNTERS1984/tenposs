@@ -581,7 +581,7 @@ class CouponController extends Controller
                     if ($coupon == 0)
                         return $this->error(1014);
                     //call notification to staff
-                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), $check_exist[0]->coupon_id, $check_exist[0]->app_user_id, Input::get('staff_id'), Input::get('code'), $this->request->token);
+                    $isCall = $this->call_notification_to_staff(Input::get('app_id'), $check_exist->coupon_id, $check_exist->app_user_id, Input::get('staff_id'), Input::get('code'), $this->request->token);
                     if (!$isCall) {
                         DB::rollBack();
                         return $this->error(1021);
