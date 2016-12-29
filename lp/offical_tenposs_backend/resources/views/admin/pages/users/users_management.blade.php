@@ -90,6 +90,9 @@
                     @else
                     <p>普通会員</p>
                 @endif
+            @else
+            <p>普通会員</p>
+
             @endif
 
         </td>
