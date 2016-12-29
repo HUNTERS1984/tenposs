@@ -598,6 +598,7 @@ class CouponController extends Controller
             Log::error($e->getMessage());;
             return $this->error(9999);
         }
+        $this->body['data'] = $coupon;
         return $this->output($this->body);
 
     }
