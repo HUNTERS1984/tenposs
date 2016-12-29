@@ -87,7 +87,16 @@ $arrAddress = array(
 <div data-role="page" id="pageone" class="bg_main">
     <div data-role="main" class="ui-content center-screen ">
         <form action="{{ route('register.step2.post') }}" method="post" data-ajax="false" class="from-froup">
-            <input readonly value="{{ Session::get('user')->email }}" class="input-form last input-lg" type="hidden"
+            <?php
+                if( Session::has('user') )
+                    $email = Session::get('user')->email;
+
+                if( Session::has('registerStep1') ){
+                    $email = Session::get('registerStep1')['email'];
+                }
+            ?>
+                       
+            <input readonly value="{{ $email }}" class="input-form last input-lg" type="hidden"
                    name="email" placeholder="メール" />
 
             <div class="form-input">
