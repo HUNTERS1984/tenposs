@@ -77,16 +77,22 @@
             {{ $user->id }}
         </td>
         <td class="center">
-            @if ($user->point >= $client->point_setting->rank4)
-                <p>ダイアモンド会員</p>
-                @elseif ($user->point >= $client->point_setting->rank3)
-                <p>プラチナ会員</p>
-                @elseif ($user->point >= $client->point_setting->rank2)
-                <p>ゴールド会員</p>
-                @elseif ($user->point >= $client->point_setting->rank1)
-                <p>シルバー会員</p>
-                @else
-                <p>普通会員</p>
+            @if( isset( $user->point ) && isset( $client->point_setting ) )
+
+                @if ($user->point >= $client->point_setting->rank4)
+                    <p>ダイアモンド会員</p>
+                    @elseif ($user->point >= $client->point_setting->rank3)
+                    <p>プラチナ会員</p>
+                    @elseif ($user->point >= $client->point_setting->rank2)
+                    <p>ゴールド会員</p>
+                    @elseif ($user->point >= $client->point_setting->rank1)
+                    <p>シルバー会員</p>
+                    @else
+                    <p>普通会員</p>
+                @endif
+            @else
+            <p>普通会員</p>
+
             @endif
 
         </td>

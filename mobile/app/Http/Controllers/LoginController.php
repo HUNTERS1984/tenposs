@@ -120,15 +120,13 @@ class LoginController extends Controller
         return redirect('/');
     }
     
-    public function register(){
-        return view('users.signup_email',[
-        'app_info' => $this->app_info,
-        ]);
-    }
+    
 
     public function registerStep2(){
-        if( ! Session::has('user') )
+
+        if( !Session::has('registerStep1') && !Session::has('user') ){
             return redirect()->route('login');
+        }
         return view('users.signup_email_step2',[
             'app_info' => $this->app_info,
         ]);
@@ -136,26 +134,41 @@ class LoginController extends Controller
 
     public function registerStep2Post(Request $request){
 
-        if($request->has('birthday')){
-            $rules = array(
-                'birthday' => 'date_format:Y-m-d',
-            );
-            $message = array(
-                'birthday' => '誕生日の形式yyyy-mm-dd',
-            );
-            $v = Validator::make($request->all(), $rules,$message);
-            if( $v->fails() ){
-                return back()
-                    ->withInput()
-                    ->withErrors($v);
-            }
-        }
+        if( !Session::has('registerStep1') && !Session::has('user'))
+            return redirect()->route('login');
 
+        if( Session::has('registerStep1') ){
+            $curl = new Curl();
+            $curl = $curl->post($this->url_api_signup, array(
+                'email' => trim( Session::get('registerStep1')['email'] ) ,
+                'password' => Session::get('registerStep1')['password'] ,
+                'app_id' => $this->app->app_app_id,
+                'name' => Session::get('registerStep1')['name']
+            ));
+
+           
+            if( isset($curl->code) && $curl->code == 1000 ){
+                Session::put('user', $curl->data);
+            }
+            elseif( isset($curl->code) && $curl->code == 9996 ){
+                return back()
+                    ->withErrors('ユーザーは存在します')
+                    ->withInput();
+            }
+            else{
+                return back()
+                    ->withErrors('エラー')
+                    ->withInput();
+            }
+
+        }
+        
+        // Update profile
         $curl = new Curl();
         $curl->setHeader('Authorization','Bearer '. Session::get('user')->token);
         $curl = $curl->post( 'https://api.ten-po.com/api/v2/update_profile_social_signup', array(
             'app_id' => $this->app->app_app_id ,
-            'birthday' => $request->input('birthday') ,
+            'birthday' => ( $request->has('birthday') ) ? date('Y-d-d',strtotime($request->input('birthday'))) : '' ,
             'address' => $request->input('address') ,
             'code' => $request->input('code'),
             'email' => $request->input('email'),
@@ -166,9 +179,18 @@ class LoginController extends Controller
             return redirect('/');
         }
         return back()
-            ->withErrors('エラー')
+            ->withErrors('登録できませんでした')
             ->withInput();
 
+    }
+
+    public function register(){
+        if( Session::has('registerStep1') )
+            return redirect()->route('register.step2');
+
+        return view('users.signup_email',[
+            'app_info' => $this->app_info,
+        ]);
     }
     
     public function registerPost(Request $request){
@@ -199,22 +221,8 @@ class LoginController extends Controller
                 ->withErrors($v);
         }
 
-        $curl = new Curl();
-        $curl = $curl->post($this->url_api_signup, array(
-            'email' => trim($request->input('email')) ,
-            'password' => $request->input('password') ,
-            'app_id' => $this->app->app_app_id,
-            'name' => $request->input('name')
-        ));
-
-        if( isset($curl->code) && $curl->code == 1000 ){
-            Session::put('user', $curl->data);
-            return redirect()->route('register.step2');
-        }
-
-        return back()
-            ->withErrors('登録できませんでした')
-            ->withInput();
+        Session::put('registerStep1', $request->all());
+        return redirect()->route('register.step2');
     }
     
     public function loginWithFacebook( Request $request ){
