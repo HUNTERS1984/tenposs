@@ -598,7 +598,7 @@ class CouponController extends Controller
             Log::error($e->getMessage());;
             return $this->error(9999);
         }
-        $this->body['data'] = $check_exist;
+        $this->body['data'] = Coupon::find($check_exist->coupon_id);
         return $this->output($this->body);
 
     }
