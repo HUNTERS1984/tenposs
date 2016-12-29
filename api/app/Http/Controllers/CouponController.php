@@ -598,7 +598,10 @@ class CouponController extends Controller
             Log::error($e->getMessage());;
             return $this->error(9999);
         }
-        $this->body['data'] = Coupon::find($check_exist->coupon_id);
+        $coupon = Coupon::find($check_exist->coupon_id);
+        $coupon['code'] = Input::get('code');
+        $coupon['image_url'] = UrlHelper::convertRelativeToAbsoluteURL(Config::get('api.media_base_url'), $coupon['image_url']);
+        $this->body['data'] = $coupon;
         return $this->output($this->body);
 
     }
