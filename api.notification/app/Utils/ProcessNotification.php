@@ -233,6 +233,24 @@ class ProcessNotification
         }
     }
 
+    private function send_message_to_staff($app_setting, $user_setting, $data_notify, $arr_append_data = array())
+    {
+        //process notify
+        if (count($data_notify) > 0) {
+            if (!empty($user_setting['android_push_key']) && !empty($app_setting['android_push_api_key'])) {
+                //notification to google
+                Log::info("send_message_to_staff|android");
+                $rs_android = PushNotification::getInstance()->android($data_notify, $user_setting['android_push_key'], $app_setting['android_push_api_key'], $arr_append_data);
+            }
+            if (!empty($user_setting['apple_push_key'] && !empty($app_setting['staff_apple_push_cer_file'] && !empty($app_setting['staff_apple_push_cer_password'])))) {
+                //notification to apple
+                Log::info("send_message_to_staff|ios");
+                $rs_ios = PushNotification::getInstance()->iOS($data_notify, $user_setting['apple_push_key'], base_path('public/') . $app_setting['staff_apple_push_cer_file'], $app_setting['staff_apple_push_cer_password'], $arr_append_data);
+            }
+        }
+    }
+
+
     private function process_staff($obj)
     {
         if (property_exists($obj, 'app_id')) {
@@ -361,7 +379,7 @@ class ProcessNotification
             }
             if (count($data_notify) > 0) {
                 Log::info("staff_notification_to_one_user|data_notify: " . json_encode($data_notify));
-                $this->send_message_to_user($app_setting, $user_setting, $data_notify, $arr_append_data);
+                $this->send_message_to_staff($app_setting, $user_setting, $data_notify, $arr_append_data);
             } else
                 Log::info("staff_notification_to_one_user|data send empty");
         }
