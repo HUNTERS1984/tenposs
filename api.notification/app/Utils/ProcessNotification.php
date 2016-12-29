@@ -156,7 +156,7 @@ class ProcessNotification
                         break;
                 }
                 if (count($data_notify) > 0) {
-                    Log::info("data_notify: " . json_encode($data_notify));
+                    Log::info("data_notify1: " . json_encode($data_notify));
                     $this->send_message_to_user($app_setting, $user_setting, $data_notify, $arr_append_data);
                 } else
                     Log::info("data send empty");
@@ -378,7 +378,7 @@ class ProcessNotification
                     break;
             }
             if (count($data_notify) > 0) {
-                Log::info("staff_notification_to_one_user|data_notify: " . json_encode($data_notify));
+                Log::info("staff_notification_to_one_user|data_notify2: " . json_encode($data_notify));
                 $this->send_message_to_staff($app_setting, $user_setting, $data_notify, $arr_append_data);
             } else
                 Log::info("staff_notification_to_one_user|data send empty");
