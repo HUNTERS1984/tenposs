@@ -343,6 +343,10 @@ class CouponController extends Controller
         foreach ($approve_list as $post_id) {
             $this->approve_post($post_id, false);
         }
+
+        //delete cache redis
+        RedisControl::delete_cache_redis('coupons');
+
         return json_encode(array('status' => 'success'));    
     }
 
@@ -353,6 +357,10 @@ class CouponController extends Controller
         foreach ($approve_list as $post_id) {
             $this->approve_post($post_id, false);
         }
+
+        //delete cache redis
+        RedisControl::delete_cache_redis('coupons');
+
         return redirect()->back()->with('status','承認しました');  
     }
 
