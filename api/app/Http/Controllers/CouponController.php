@@ -211,7 +211,9 @@ class CouponController extends Controller
                 $coupon_code = DB::table('rel_app_users_coupons')
                     ->whereAppUserId($app_user->id)
                     ->whereCouponId($coupons[$i]['id'])
-                    ->where('status', 1)->orWhere('status', 2)->get();
+                    ->where(function ($query) {
+                        $query->where('status', 1)->orWhere('status', 2);
+                    })->get();
                 if (count($coupon_code) > 0) {
                     $coupons[$i]['code'] = $coupon_code[0]->code;
                     $coupons[$i]['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $app_user->id, $coupons[$i]['id'], $coupon_code[0]->code, hash("sha256", $app_user->id . $coupons[$i]['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
@@ -284,7 +286,9 @@ class CouponController extends Controller
                     $coupon_code = DB::table('rel_app_users_coupons')
                         ->whereAppUserId($this->request->token_info['id'])
                         ->whereCouponId($coupons['id'])
-                        ->where('status', 1)->orWhere('status', 2)->get();
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })->get();
                     if (count($coupon_code) > 0) {
                         $coupons['code'] = $coupon_code[0]->code;
                         $coupons['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $user->id, $coupons['id'], $coupon_code[0]->code, hash("sha256", $user->id . $coupons['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
@@ -399,7 +403,9 @@ class CouponController extends Controller
                     $coupon_code = DB::table('rel_app_users_coupons')
                         ->whereAppUserId($app_info['app_user_id'])
                         ->whereCouponId($coupons['id'])
-                        ->where('status', 1)->orWhere('status', 2)->get();
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })->get();
                     if (count($coupon_code) > 0) {
                         $coupons['code'] = $coupon_code[0]->code;
                         $coupons['url_scan_qr'] = sprintf(Config::get('api.url_open_coupon_code'), $app_info['app_user_id'], $coupons['id'], $coupon_code[0]->code, hash("sha256", $app_info['app_user_id'] . $coupons['id'] . $coupon_code[0]->code . '-' . Config::get('api.secret_key_coupon_use')));
@@ -477,8 +483,9 @@ class CouponController extends Controller
         try {
             $check_exist = DB::table('rel_app_users_coupons')
                 ->whereAppUserId(Input::get('app_user_id'))
-                ->whereStatus(1)
-                ->orWhere('status',2)
+                ->where(function ($query) {
+                        $query->where('status', 1)->orWhere('status', 2);
+                })
                 ->whereCouponId(Input::get('coupon_id'))->get();
             if (count($check_exist) > 0) {
                 try {
@@ -486,8 +493,9 @@ class CouponController extends Controller
                     DB::beginTransaction();
                     $coupon = DB::table('rel_app_users_coupons')
                         ->whereAppUserId(Input::get('app_user_id'))
-                        ->whereStatus(1)
-                        ->orWhere('status',2)
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })
                         ->whereCouponId(Input::get('coupon_id'))->update(
                             ['status' => 2,
                                 'staff_id' => Input::get('staff_id'),
@@ -564,16 +572,18 @@ class CouponController extends Controller
             return $this->error(1004);
         try {
             $check_exist = DB::table('rel_app_users_coupons')
-                ->whereStatus(1)
-                ->orWhere('status',2)
+                ->where(function ($query) {
+                    $query->where('status', 1)->orWhere('status', 2);
+                })
                 ->whereCode(Input::get('code'))->first();
             if (count($check_exist) > 0) {
                 try {
 
                     DB::beginTransaction();
                     $coupon = DB::table('rel_app_users_coupons')
-                        ->whereStatus(1)
-                        ->orWhere('status',2)
+                        ->where(function ($query) {
+                            $query->where('status', 1)->orWhere('status', 2);
+                        })
                         ->whereCode(Input::get('code'))->update(
                             ['status' => 2,
                                 'staff_id' => Input::get('staff_id'),
