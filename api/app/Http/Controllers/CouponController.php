@@ -587,7 +587,7 @@ class CouponController extends Controller
                 ->whereCode(Input::get('code'))->first();
             if (count($check_exist) > 0) {
                 try {
-                    $staff = Staff::where('auth_user_id',Input::get('staff_id'))->first();
+                    $staff = Staff::where('auth_user_id',Input::get('staff_auth_id'))->first();
                     DB::beginTransaction();
                     $coupon = DB::table('rel_app_users_coupons')
                         ->where(function ($query) {
