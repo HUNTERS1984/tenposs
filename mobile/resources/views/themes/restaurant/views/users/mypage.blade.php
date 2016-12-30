@@ -55,7 +55,7 @@
         <p class="text-center text-white">{{ Session::get('user')->email }}</p>   
         <div class="content-white"> 
             <p class="text-center ">Tenpossポイント</p>
-            <div class="text-center name-text-green">{{ $point->points }}ポイント</div>
+            <div class="text-center name-text-green">{{ number_format($point->points) }}ポイント</div>
             <div class="text-center">
                 <div style="position: relative;">
                     <img src="{{ Theme::asset('img/chart_circle.jpg') }}" alt="">
@@ -64,9 +64,9 @@
                 
             </div>
             <div class="clear"></div>
-            <div class="text-center">{{ $point->next_points }}ポイント獲得まであと  {{ $point->next_miles }}マイル    </div>
+            <div class="text-center">{{ number_format($point->next_points) }}ポイント獲得まであと  {{ number_format($point->next_miles) }}マイル </div>
             <figure>
-                {!! QrCode::size(250)->email('foo@bar.com') !!}
+                {!! QrCode::size(250)->generate( Session::get('user')->auth_user_id ) !!}
             </figure>
         </div>  
     </div> <!--content-->

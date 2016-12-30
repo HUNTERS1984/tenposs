@@ -139,3 +139,21 @@
     line-height: 80px;
     border-radius: 6px;
 }
+#point-info::after{
+    content: "";
+    width: 52px;
+    height: 24px;
+    background: url(../img/top-mypage.jpg);
+    position: absolute;
+    bottom: -20px;
+    z-index: 1;
+    left: 50%;
+    margin-left: -26px;
+
+}
+
+#top-mypage{
+    background-image: url(../img/tokio.jpg);
+    background-position: top center;
+    background-size: cover; 
+}
