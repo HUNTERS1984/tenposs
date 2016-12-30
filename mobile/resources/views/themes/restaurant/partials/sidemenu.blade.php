@@ -6,7 +6,7 @@
                 <img style="max-height: 50px; object-fit: cover; " src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : Theme::asset('img/user.png') }}" alt=""/>
             </div>
             <div class="user-right">
-                <p><a data-ajax="false" style="padding-left: 0" href="{{ route('profile') }}">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</a></p>
+                <p><a data-ajax="false" style="padding-left: 0" href="{{ route('mypage') }}">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</a></p>
                 <p>{{ Session::get('user')->email != '' ? Session::get('user')->email : '不名' }}</p>
             </div>
             @else
