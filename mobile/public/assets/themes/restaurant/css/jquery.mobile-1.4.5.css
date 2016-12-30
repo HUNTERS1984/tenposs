@@ -4459,10 +4459,11 @@ figure.logo{
 	text-align:right;
 }
 .bg_main{
-	background-image: url(../img/bg.jpg);
+	background-image: url(../img/bg.jpg) !important;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size:cover;
+	background-color: transparent !important; 
 	
 }
 .bg_main .content{

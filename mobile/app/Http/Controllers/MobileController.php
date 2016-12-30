@@ -11,6 +11,7 @@ use Auth;
 use \Curl\Curl;
 use View;
 use Theme;
+use QrCode;
 
 
 class MobileController extends Controller
@@ -52,7 +53,7 @@ class MobileController extends Controller
         $appTop = \App\Utils\HttpRequestUtil::getInstance()
             ->get_data('top',[
                 'app_id' => $this->app->app_app_id ],$this->app->app_app_secret);
-
+        //dd(json_decode($appTop));    
         return view('homes.index',
             [
                 'app_info' => $this->app_info ,
@@ -114,6 +115,25 @@ class MobileController extends Controller
     
     public function companyInfo(){
         return view( 'company_info', ['app_info' => $this->app_info ] );
+    }
+
+    public function myPage(){
+        
+        $curl = new Curl();
+        $curl->setHeader('Authorization','Bearer '.Session::get('user')->token);
+        $curl->get( 'https://apipoints.ten-po.com/point',[
+            'app_id' => $this->app->app_app_id
+        ]);
+
+        if( isset($curl->response->code) && $curl->response->code == 1000 ){
+            return view('users.mypage', array(
+                'app_info' => $this->app_info ,
+                'point' => $curl->response->data
+            ));
+        }
+
+        abort(404);
+        
     }
     
 }
