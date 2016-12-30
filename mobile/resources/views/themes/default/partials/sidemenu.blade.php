@@ -4,13 +4,21 @@
         ">
         <div class="imageleft clearfix">
             @if( Session::has('user') )
+              <?php
+                if( in_array(  substr(Session::get('user')->profile->avatar_url,3)  , ['jpg', 'png','jpeg']) ){
+                    $avatar = Session::get('user')->profile->avatar_url;
+                }else{
+                    $avatar = Theme::asset('img/no-avatar.png');
+                }
+                ?>
             <div class="image">
-                <a href="{{ route('profile') }}">
-                    <img class="img-circle" src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : url('/img/icon/icon-user.png') }}" alt=""/>
+                <a href="{{ route('mypage') }}">
+                    <img class="img-circle" src="{{ $avatar }}" alt=""/>
                 </a>
             </div>
             <p class="font32">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</p>
             @else
+
             <div class="image">
                 <a href="{{ route('login') }}">
                 <img class="img-circle" src="{{ Theme::asset('img/icon/icon-user.png') }}" alt=""/>
