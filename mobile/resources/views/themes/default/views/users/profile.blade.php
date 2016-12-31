@@ -97,7 +97,7 @@ $arrAddress = array(
                     <?php
                     $avatar = ($user->profile->avatar_url != '')
                         ? $user->profile->avatar_url
-                        :  url('/img/icon/icon-user.png');
+                        :  Theme::asset('/img/icon/icon-user.png');
                     ?>
 
                     <label class="avatar">

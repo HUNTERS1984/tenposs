@@ -117,6 +117,7 @@ class LoginController extends Controller
     
     public function logout(){
         Session::forget('user');
+        Session::forget('app');
         return redirect('/');
     }
     
@@ -256,7 +257,7 @@ class LoginController extends Controller
                 return redirect('/');
             }
 
-            return back()->withErrors('社会的にサインアップできない');
+            return redirect()->route('login')->withErrors('社会的にサインアップできない');
 
         }
         // if not ask for permission first
@@ -299,7 +300,7 @@ class LoginController extends Controller
             }
 
 
-            return back()->withErrors('社会的にサインアップできない');
+            return redirect()->route('login')->withErrors('社会的にサインアップできない');
         }
         else
         {
@@ -337,7 +338,8 @@ class LoginController extends Controller
                 
                 
             }else{
-                abort(404);
+                return redirect()->route('profile')
+                    ->withErrors('接続エラー');
             }
             
         }
@@ -349,16 +351,17 @@ class LoginController extends Controller
             if ( ! is_null($token) && ! is_null($verify))
             {
                 // This was a callback request from twitter, get the token
-                $token = $tw->requestAccessToken($token, $verify);
+                $tokenTwitter = $tw->requestAccessToken($token, $verify);
                 // Send a request with it
                 $result = json_decode($tw->request('account/verify_credentials.json'), true);
                 $social_id = $result['id'];
-                $social_token = $token->getAccessToken();
-                $social_secret = $token->getAccessTokenSecret();
+                $social_token = $tokenTwitter->getAccessToken();
+                $social_secret = $tokenTwitter->getAccessTokenSecret();
                 $name = $result['name'];
                 $social_type = 2;
             }else{
-                abort(404);
+                return redirect()->route('profile')
+                    ->withErrors('接続エラー');
             }
         }
         // Update connect social
@@ -377,7 +380,7 @@ class LoginController extends Controller
         }else{
             $msg ='ソーシャルフェイルを接続する';
         }
-        return back()
+        return redirect()->route('profile')
             ->withErrors($msg);
     }
     
@@ -391,12 +394,16 @@ class LoginController extends Controller
                 'social_type' => $type ,
             ));
             if( isset($curl->code) && $curl->code == 1000 ){
-                return back()->withErrors('プロファイルをキャンセルする!');
+                 return redirect()
+                    ->route('profile')
+                    ->withErrors('プロファイルをキャンセルする!');
 
             }
         }
 
-        return back()->withErrors('プロファイルのキャンセルをキャンセルする!' );
+        return redirect()
+        ->route('profile')
+        ->withErrors('プロファイルのキャンセルをキャンセルする!' );
 
     }
     
@@ -542,9 +549,11 @@ class LoginController extends Controller
             }else{
                 $msg ='ソーシャルフェイルを接続する';
             }
-            return back()
+            return redirect()->route('profile')
                 ->withErrors($msg);
         }
+        return redirect()->route('profile')
+                ->withErrors('接続エラー');
     }
 
     public function setPushKey(Request $request){

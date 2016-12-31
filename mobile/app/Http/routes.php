@@ -87,6 +87,8 @@ $appRoutes = function(){
         Route::get('/configuration',['middleware' => 'auth.custom','as' => 'configuration', 'uses' => 'MobileController@configuration']);
         Route::post('/configuration/save',[ 'middleware' => 'auth.custom','as' => 'configuration.save', 'uses' => 'MobileController@configurationSave']);
 
+        Route::get('/mypage',['middleware' => 'auth.custom','as' => 'mypage', 'uses' => 'MobileController@myPage']);
+
         // You can use "get" or "post" method below for payment..
         Route::get('payment', 'PaypalController@postPayment');
         // This must be get method.
