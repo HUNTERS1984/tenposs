@@ -257,7 +257,7 @@ class LoginController extends Controller
                 return redirect('/');
             }
 
-            return back()->withErrors('社会的にサインアップできない');
+            return redirect()->route('login')->withErrors('社会的にサインアップできない');
 
         }
         // if not ask for permission first
@@ -300,7 +300,7 @@ class LoginController extends Controller
             }
 
 
-            return back()->withErrors('社会的にサインアップできない');
+            return redirect()->route('login')->withErrors('社会的にサインアップできない');
         }
         else
         {
@@ -338,7 +338,8 @@ class LoginController extends Controller
                 
                 
             }else{
-                abort(404);
+                return redirect()->route('profile')
+                    ->withErrors('接続エラー');
             }
             
         }
@@ -359,7 +360,8 @@ class LoginController extends Controller
                 $name = $result['name'];
                 $social_type = 2;
             }else{
-                abort(404);
+                return redirect()->route('profile')
+                    ->withErrors('接続エラー');
             }
         }
         // Update connect social
@@ -392,12 +394,16 @@ class LoginController extends Controller
                 'social_type' => $type ,
             ));
             if( isset($curl->code) && $curl->code == 1000 ){
-                return back()->withErrors('プロファイルをキャンセルする!');
+                 return redirect()
+                    ->route('profile')
+                    ->withErrors('プロファイルをキャンセルする!');
 
             }
         }
 
-        return back()->withErrors('プロファイルのキャンセルをキャンセルする!' );
+        return redirect()
+        ->route('profile')
+        ->withErrors('プロファイルのキャンセルをキャンセルする!' );
 
     }
     
@@ -543,9 +549,11 @@ class LoginController extends Controller
             }else{
                 $msg ='ソーシャルフェイルを接続する';
             }
-            return back()
+            return redirect()->route('profile')
                 ->withErrors($msg);
         }
+        return redirect()->route('profile')
+                ->withErrors('接続エラー');
     }
 
     public function setPushKey(Request $request){
