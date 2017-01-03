@@ -164,7 +164,6 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Spatie\LaravelAnalytics\LaravelAnalyticsServiceProvider::class,
         Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
     ],
 
@@ -224,7 +223,6 @@ return [
         'cURL' => anlutro\cURL\Laravel\cURL::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        'Analytics' => Spatie\LaravelAnalytics\LaravelAnalyticsFacade::class,
     ],
 
 ];

@@ -8,7 +8,8 @@
     <link href="{{ url('admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('admin/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('admin/css/style.css') }}" rel="stylesheet" type="text/css" />
-    
+    <link href="{{ url('admin/css/bootstrap-tagsinput.css') }}" rel="stylesheet" type="text/css" />
+
     @yield('headCSS')
 </head>
 <body class="skin-black">
