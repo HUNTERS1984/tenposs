@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
-        Commands\PushRelugarSchedule::class
+        Commands\PushRelugarSchedule::class,
+        Commands\SNSMediaCommand::class
     ];
 
     /**
