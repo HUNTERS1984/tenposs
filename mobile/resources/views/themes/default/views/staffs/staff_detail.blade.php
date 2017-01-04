@@ -53,7 +53,7 @@
 
                                     <li>
                                         <label>性别</label>
-                                        <input type="text" name="name" value="{{$detail->gender == '0' ? '女性' : '男性'}}" readonly="readonly">
+                                        <input type="text" name="name" value="{{$detail->gender == '0' ? '男性' : '女性'}}" readonly="readonly">
 
                                     </li>
                                     <li>

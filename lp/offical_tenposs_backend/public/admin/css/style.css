@@ -1343,6 +1343,8 @@ ul.link-top-2 li a.active{
 .wrapp-menu-img .content-menu-img .text-menu .text-title-menu{
   text-align: left;
   font-size: 95%;
+  height: 30px;
+  word-break: break-word;
 }
 .wrapp-menu-img .content-menu-img .text-menu a{
   width: 100%;

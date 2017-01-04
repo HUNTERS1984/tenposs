@@ -59,7 +59,7 @@
                       
                     <tr>
                         <td>性别</td>
-                        <td>{{$detail->gender == '0' ? '女性' : '男性'}}</td>
+                        <td>{{$detail->gender == '0' ?  '男性' : '女性'}}</td>
                     </tr>
                     <tr>
                         <td>価格</td>

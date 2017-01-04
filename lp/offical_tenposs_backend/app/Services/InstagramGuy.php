@@ -17,7 +17,7 @@ class InstagramGuy
     use DispatchesJobs;
 
     const IMAGES_PER_REQUEST = 12;
-    const IMAGES_TOTAL_LIMIT = 24;
+    const IMAGES_TOTAL_LIMIT = 100;
 
     private $instagram;
 
@@ -35,13 +35,14 @@ class InstagramGuy
     public function fetchByTag($coupon_id)
     {
         $current = 0;
-
         $users = SocialProfile::whereSocialType(3)->groupBy('social_id')->get()->toArray(); // 3 instagram, 1 facebook, 2 twitter
 
         foreach ($users as $user) {
             if ($user) {
                 $response = $this->instagram->getRecentUserMedia($user['social_id'], self::IMAGES_PER_REQUEST);
-                //dd($response);
+                if($response->meta->code == 400)
+                    continue;
+
                 $client = new \GuzzleHttp\Client();
                 while (isset($response->data) && !empty($response->pagination->next_url) && $current < self::IMAGES_TOTAL_LIMIT) {
                     $this->dispatch(new InstagramPaginationJob($coupon_id, $user['app_user_id'], $response->data));
