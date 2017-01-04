@@ -3,7 +3,7 @@ $('#btnSubmit').click(function (e) {
     var id = $('input[name=push_id]').val();
     var title = $('input[name=title]').val();
     var message = $('textarea[name=message]').val();
-    var app_user_id = $('select[name=app_user_id]').val();
+    var auth_user_id = $('select[name=auth_user_id]').val();
     var time_type = $('select[name=time_type]').val();
     var time_count_repeat = $('input[name=time_count_repeat]').val();
     var time_detail_year = $('select[name=time_detail_year]').val();
@@ -44,7 +44,7 @@ $('#btnSubmit').click(function (e) {
         return false;
     }
 
-    if (a_user && app_user_id == 0) {
+    if (a_user && auth_user_id == 0) {
         $('#customer_message ul li').first().text('ユーザーを選択してください');
         $('#customer_message').show();
         return false;
@@ -57,7 +57,7 @@ $('#btnSubmit').click(function (e) {
             id: id,
             title: title,
             message: message,
-            app_user_id: app_user_id,
+            auth_user_id: auth_user_id,
             time_type: time_type
             ,
             time_count_repeat: time_count_repeat,
@@ -89,9 +89,9 @@ $('#btnSubmit').click(function (e) {
             if (msg == 1) {
                 $('#myModal').modal('show');
                 $('input[name=push_id]').val(0);
-                //$('input[name=title]').val('');
-                //$('textarea[name=message]').val('');
-                $('select[name=app_user_id]').val(0);
+                $('input[name=title]').val('');
+                $('textarea[name=message]').val('');
+                $('select[name=auth_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
                 $('input[name=time_count_repeat]').val(0);
@@ -158,8 +158,8 @@ $(document).ready(function () {
         }
     });
     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
     $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
 });
 
@@ -174,7 +174,7 @@ function clickEditPush(id) {
                 $('input[name=title]').val(obj.title);
                 // $('textarea[name=message]').val(obj.message);
                 $('#editor').trumbowyg('html', obj.message);
-                $('select[name=app_user_id]').val(obj.app_user_id);
+                $('select[name=auth_user_id]').val(obj.auth_user_id);
                 $('select[name=time_type]').val(obj.time_type);
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)

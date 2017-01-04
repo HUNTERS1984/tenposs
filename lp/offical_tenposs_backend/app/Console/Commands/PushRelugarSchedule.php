@@ -67,7 +67,7 @@ class PushRelugarSchedule extends Command
             //cal api push
             HttpRequestUtil::getInstance()->post_data_with_token(
                 \Illuminate\Support\Facades\Config::get('api.url_api_notification'),
-                array('notification_to' => $data->app_user_id,
+                array('notification_to' => $data->auth_user_id,
                     'title' => $data->title,
                     'message' => $data->message,
                     'type' => 'custom',
