@@ -1,5 +1,5 @@
  <header class="header">
-    <a href="global.html" class="logo">
+    <a href="#" class="logo">
         <center>
             <img src="{{ url('admin/images/logo.png') }}" alt="" class="logo-pc">
             <img src="{{ url('admin/images/logo-m.png') }}" alt="" class="logo-m">
