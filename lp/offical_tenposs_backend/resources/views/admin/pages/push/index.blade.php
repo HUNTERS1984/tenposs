@@ -98,22 +98,40 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="メッセージ">メッセージ</label>
-                                            <textarea name="message" class="form-control" rows="5" placeholder="メッセージ文を入力してください (○文字以内)"></textarea>
+                                            <textarea id="editor" name="message" class="form-control" rows="5"
+                                                      placeholder="メッセージ文を入力してください (○文字以内)"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="配信先のセグメント">配信先のセグメント</label>
-                                            <select name="app_user_id" class="form-control">
-                                            <option>お店から1キロ以内のユーザー</option>
-                                            @if(count($app_user) > 0)
-                                            @foreach($app_user as $item)
-                                            <option value="{{$item->id}}">{{$item->profile->name}}</option>
-                                            @endforeach
+                                            <label for="label_to_segment">セグメントに送信する</label>
+                                            {{--<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" placeholder="Add tags" id="tag"/>--}}
 
-                                            @endif
+                                            <select multiple  id="tags-input" name="tags-input">
+                                                <option value="all_users">すべてのユーザー</option>
+                                                <option value="active_user">アクティブユーザー</option>
+                                                <option value="inactive_user">非アクティブなユーザー</option>
+                                                <option value="a_user">ユーザー</option>
                                             </select>
-                                            <!-- {{Form::select('app_user_id',$app_user->pluck('email', 'id'),old('app_user_id'),['class'=>'form-control'])}} -->
+                                            <div id="choose_a_user">
+                                                <label for="配信先のセグメント">ユーザーを選択する</label>
+                                                <select name="app_user_id" class="form-control">
+                                                    <option>お店から1キロ以内のユーザー</option>
+                                                    @if(count($app_user) > 0)
+                                                        @foreach($app_user as $item)
+                                                            @if(count($item) > 0)
+                                                                <option value="{{$item->id}}">
+                                                                    @if(count($item->profile) > 0)
+                                                                        {{$item->profile->name}}
+                                                                    @endif
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        <!-- {{Form::select('app_user_id',$app_user->pluck('email', 'id'),old('app_user_id'),['class'=>'form-control'])}} -->
 
                                         </div>
                                         {{--<div class="form-group">--}}
@@ -129,7 +147,7 @@
                                                         <option>時間を指定して配信</option>
                                                         <option value="1">今</option>
                                                         <option value="2">定期配信</option>
-                                                        <option value="3">意図されました</option>
+                                                        <option value="3">時間を予め選択</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -210,6 +228,59 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div id="time_selected">
+                                                <div class="col-md-12 col-xs-6">
+                                                    <div class="form-group">
+                                                        <select id="time_selected_option" name="time_selected_option" class="form-control">
+                                                            <option value="2h">二時</option>
+                                                            <option value="2d">二日</option>
+                                                            <option value="7d">七日</option>
+                                                            <option value="30d">30日</option>
+                                                            <option value="choose_day">日付を選択</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                                <div id="choose_day">
+                                                    <div class="col-md-4 col-xs-6">
+                                                        <div class="form-group">
+                                                            <select name="time_selected_detail_year" class="form-control">
+                                                                @for ($i = 2017; $i < 2023; $i++)
+                                                                    <option value="{{$i}}">{{$i}}年</option>
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-6">
+                                                        <div class="form-group">
+                                                            <select name="time_selected_detail_month" class="form-control">
+                                                                @for ($i = 1; $i < 13; $i++)
+                                                                    @if($i < 10)
+                                                                        <option value="0{{$i}}">{{$i}}月</option>
+                                                                    @else
+                                                                        <option value="{{$i}}">{{$i}}月</option>
+                                                                    @endif
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-xs-6">
+                                                        <div class="form-group">
+                                                            <select name="time_selected_detail_day" class="form-control">
+                                                                @for ($i = 1; $i < 32; $i++)
+                                                                    @if($i < 10)
+                                                                        <option value="0{{$i}}">{{$i}}日</option>
+                                                                    @else
+                                                                        <option value="{{$i}}">{{$i}}日</option>
+                                                                    @endif
+                                                                @endfor
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -248,7 +319,7 @@
                                                             @elseif($item->time_type == 2)
                                                                 <span class="deliver_push">定期配信</span>
                                                             @elseif($item->time_type == 3)
-                                                            <span class="deliver_push">意図されました</span>
+                                                                <span class="deliver_push">意図されました</span>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -283,5 +354,6 @@
 @endsection
 
 @section('footerJS')
-    {{Html::script('admin/js/push.js')}}
+    {{Html::script('admin/js/bootstrap-tagsinput.js')}}
+    {{Html::script('admin/js/push.js?v=1')}}
 @endsection

@@ -16,7 +16,7 @@ use Session;
 use Log;
 use DB;
 
-define('REQUEST_NOTIFICATION_ITEMS', 2);
+define('REQUEST_ANALYTICS_ITEMS', 10);
 
 class AnalyticController extends Controller
 {

@@ -223,7 +223,6 @@ return [
         'cURL' => anlutro\cURL\Laravel\cURL::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        'Analytics' => Spatie\LaravelAnalytics\LaravelAnalyticsFacade::class,
     ],
 
 ];

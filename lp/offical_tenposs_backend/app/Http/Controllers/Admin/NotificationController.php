@@ -52,7 +52,7 @@ class NotificationController extends Controller
         $app_user = array();
         if (count($apps) > 0)
             $app_user = AppUser::where('app_id', $apps->id)->with('profile')->get();
-        
+
         //time_type: 1 send now, 2: regular, 3: temp
         switch ($type) {
             case 'A':
@@ -82,6 +82,7 @@ class NotificationController extends Controller
             default:
                 break;
         }
+       
         //dd($app_user);
         return view('admin.pages.push.index', compact('app_user', 'list_notification', 'type', 'search_value'));
     }
@@ -102,6 +103,10 @@ class NotificationController extends Controller
             $this->push->title = $this->request->input('title');
             $this->push->message = $this->request->input('message');
             $this->push->app_user_id = $this->request->input('app_user_id');
+            $this->push->segment_all_user = $this->request->input('all_user');
+            $this->push->segment_active_user = $this->request->input('active_user');
+            $this->push->segment_inactive_user = $this->request->input('inactive_user');
+            $this->push->segment_a_user = $this->request->input('a_user');
             $this->push->time_type = $this->request->input('time_type');
             if ($this->request->input('time_type') == 1) {
                 HttpRequestUtil::getInstance()->post_data_with_token(
@@ -159,7 +164,19 @@ class NotificationController extends Controller
                 $this->push_regular->push_id = $this->push->id;
                 $this->push_regular->save();
             } else {
-                $this->push->status = 0; //tmp
+                $time_selected_type = $this->request->input('time_selected_type');
+                if ($time_selected_type == 'choose_day')
+                {
+                    $time_selected_detail_year = $this->request->input('time_selected_detail_year');
+                    $time_selected_detail_month = $this->request->input('time_selected_detail_month');
+                    $time_selected_detail_day = $this->request->input('time_selected_detail_day');
+                    $time_string =$time_selected_detail_year . '/' . $time_selected_detail_month . '/' . $time_selected_detail_day;
+                    $time = \DateTime::createFromFormat('Y/m/d', $time_string);
+                    $this->push->time_selected = $time; //tmp
+                    $this->push->time_selected_string = $time_string; //tmp
+                }
+                $this->push->time_selected_type = $time_selected_type; //tmp
+                $this->push->status = 3; //tmp
                 $this->push->save();
             }
         } catch (QueryException $e) {
