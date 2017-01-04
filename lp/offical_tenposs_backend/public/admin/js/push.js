@@ -19,16 +19,16 @@ $('#btnSubmit').click(function (e) {
     var time_selected_detail_day = $('select[name=time_selected_detail_day]').val();
 
     var all_user = 0;
-    var active_user = 0;
-    var inactive_user = 0;
+    var client_users = 0;
+    var end_users = 0;
     var a_user = 0;
     if (tags_input != null && tags_input.length > 0) {
         if (tags_input.indexOf('all_users') > -1)
             all_user = 1;
-        if (tags_input.indexOf('active_user') > -1)
-            active_user = 1;
-        if (tags_input.indexOf('inactive_user') > -1)
-            inactive_user = 1;
+        if (tags_input.indexOf('client_users') > -1)
+            client_users = 1;
+        if (tags_input.indexOf('end_users') > -1)
+            end_users = 1;
         if (tags_input.indexOf('a_user') > -1)
             a_user = 1;
     }
@@ -70,8 +70,8 @@ $('#btnSubmit').click(function (e) {
             ,
             time_detail_minutes: time_detail_minutes,
             all_user: all_user,
-            active_user: active_user,
-            inactive_user: inactive_user,
+            client_users: client_users,
+            end_users: end_users,
             a_user: a_user,
             time_selected_detail_year: time_selected_detail_year,
             time_selected_detail_month: time_selected_detail_month,
@@ -158,8 +158,8 @@ $(document).ready(function () {
         }
     });
     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
     $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
 });
 
@@ -179,10 +179,10 @@ function clickEditPush(id) {
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)
                     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
-                if (obj.segment_active_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
-                if (obj.segment_inactive_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
+                if (obj.segment_client_users == 1)
+                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'アクティブユーザー'});
+                if (obj.segment_end_users == 1)
+                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: '非アクティブなユーザー'});
                 if (obj.segment_a_user == 1)
                     $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
                 if (obj.time_type == 2) {

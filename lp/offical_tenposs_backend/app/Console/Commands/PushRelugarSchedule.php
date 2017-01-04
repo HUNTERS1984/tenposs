@@ -64,12 +64,19 @@ class PushRelugarSchedule extends Command
     private function callAPIPush($data)
     {
         if ($data->time_count_delivered < $data->time_count_repeat) {
+            $data_push = Push::find($data->push_id);
+            if (!$data_push)
+                return;
+            
             //cal api push
             HttpRequestUtil::getInstance()->post_data_with_token(
                 \Illuminate\Support\Facades\Config::get('api.url_api_notification'),
                 array('notification_to' => $data->auth_user_id,
                     'title' => $data->title,
                     'message' => $data->message,
+                    'all_user' => $data_push->segment_all_user,
+                    'client_users' => $data_push->segment_client_users,
+                    'end_users' => $data_push->segment_end_users,
                     'type' => 'custom',
                     'app_id' => 0),
                 \Illuminate\Support\Facades\Session::get('jwt_token')->token
@@ -78,7 +85,7 @@ class PushRelugarSchedule extends Command
             try {
                 $data->time_count_delivered = $data->time_count_delivered + 1;
                 $data->save();
-                $data_push = Push::find($data->push_id);
+                
                 if (count($data_push) > 0) {
                     $data_push->time_count_delivered = $data->time_count_delivered;
                     if ($data->time_count_delivered == $data->time_count_repeat)
