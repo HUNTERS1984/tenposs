@@ -52,9 +52,10 @@
                     @foreach($menus as $cate)
                     <?php $i = 0; ?>
                     @foreach($cate->data->menus as $name_cate)
-                    <li><a href="#cat{{$name_cate->id}}" data-theme="a" 
+                    <?php $selected = ($i == 0) ? ' ui-btn-active' : '' ; ?>
+                    <li class="{{ $selected }}"><a href="#cat{{$name_cate->id}}" data-theme="a" 
                     data-ajax="false" 
-                    class="{{ ($i == 0)?'ui-btn-active':'' }}">{{$name_cate->name}}</a>
+                    >{{$name_cate->name}}</a>
                     </li>
                     <?php $i++;?>
                     @endforeach

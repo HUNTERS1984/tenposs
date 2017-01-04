@@ -32,16 +32,8 @@
     <h1>ホーム</h1>
 </div>
 <div data-role="page" id="pageone" class="coupon">
-    <div data-role="main" class="ui-content">
+    <div id="session" data-role="main" class="ui-content">
         @include('homes.home_slideshow')
-        <div data-role="navbar">
-            <ul>
-                <li><a href="{{ route('coupon') }}" class="ui-icon-coupon ui-btn-icon-top">クーポン</a></li>
-                <li><a href="{{ route('chat') }}" class="ui-icon-chat ui-btn-icon-top">チャット</a></li>
-                <li><a href="{{ route('reservation') }}" class="ui-icon-phone ui-btn-icon-top">電話</a></li>
-                <li><a href="{{ route('home') }}" class="ui-icon-direction ui-btn-icon-top">道順</a></li>
-            </ul>
-        </div>
         @include('homes.home_news')
         @include('homes.home_menu')
         @include('homes.home_photo')
@@ -111,5 +103,19 @@
         });
     });
 </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        var components = [];
+        @foreach ( $app_info->data->top_components as $component )
+        components.push("{{ $component->id}}");
+        @endforeach
+        console.log(components);
+        for (i = 0; i < components.length; i++) { 
+            var html = '';
+            var html = $('#template-'+components[i]).html();
+            $('#session').append(html);
 
+        }
+    });
 @stop

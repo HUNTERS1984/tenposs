@@ -1,3 +1,4 @@
+<div id="template-5">
 <div id="photo">
     <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -14,9 +15,10 @@
         @if( isset( $app_top->data->photos->data)
         && count($app_top->data->photos->data) > 0 )
         @foreach( $app_top->data->photos->data as $photo )
-        <div class="slide"><a href="#" data-ajax="false"><img src="{{$photo->image_url}}" alt="test"></a></div>
+        <div class="slide"><a href="{{ route('photo.gallery.detail', array('url' => $photo->image_url)) }}" data-ajax="false"><img src="{{$photo->image_url}}" alt="test"></a></div>
         @endforeach
         @endif
 
     </div><!--slider1-->
 </div><!--news-->
+</div>

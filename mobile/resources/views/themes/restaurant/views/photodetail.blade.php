@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-リザーブ
+商品詳細
 @stop
 @section('header')
 <style>
@@ -22,16 +22,16 @@
 </style>
 @stop
 @section('main')
-<div data-role="header" data-position="fixed" data-theme="a">
-    <a href="#outside" class="ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext">Menu</a>
-    <h1>リザーブ</h1>
-</div>
-
-<div data-role="page" id="pageone" class="reserv">
-  <div data-role="main" class="ui-content">
-    @if(isset($reserve_arr) && count($reserve_arr) > 0)
-        <iframe src="{{$reserve_arr[0]->data->reserve[0]->reserve_url}}" width="100%" height="350" frameborder="0"></iframe>
-    @endif
+<div data-role="page" id="pageone" class="bg_black" data-theme="false"> 
+  <div data-role="main" class="ui-content " >
+      <div class="content-main">
+       <a href="{{ URL::previous() }}" data-ajax="false" class="ui-btn-left ui-btn ui-icon-delete ui-btn-icon-notext" data-shadow="false" data-icon-shadow="false">Back</a>
+        <figure class="imagesphoto">
+          <img src="{{ $url }}" alt="" class="img-responsive">
+        </figure>       
+        <div class="des">
+        </div>      
+      </div><!--content-main-->   
   </div>
 </div>
 @stop

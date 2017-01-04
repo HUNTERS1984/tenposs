@@ -28,26 +28,30 @@
 </div>
 
 <div data-role="page" id="pageone">
-    <div data-role="main" class="ui-content">
+    <div data-role="main" class="">
         <div class="grid">
             <!-- Slides -->
+            <?php $i = 0 ?>
             @if(isset($photo_detail) && count($photo_detail) > 0)
                 @foreach($photo_detail as $photo)
                 @if($photo)
                     @if( $photo !== null)
+                        <?php //$j = 0; // Count image at item category ?> 
                         @foreach($photo->data->photos as $item)
-                        <div class="grid-item">
-                            <a href="#photo{{ $item->id }}" data-rel="popup" data-position-to="window" data-transition="fade">
+                        <?php $i++; //$j++ ?>
+                        <?php
+                            $classes = '';
+                            if( $i % 4 == 0 )
+                                $classes = 'grid-item--width2 grid-item--height2';
+                        ?>
+                        <div class="grid-item {{ $classes }}">
+                            <a href="{{ route('photo.gallery.detail', array('url' => $item->image_url)) }}" data-ajax="false">
                                 <figure>
                                     <img class="popphoto" src="{{$item->image_url}}" alt="">
                                 </figure>
                             </a>
-                            <div data-role="popup" id="photo{{ $item->id }}" data-overlay-theme="a"
-                            data-theme="a"
-                            data-corners="false"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-                                <img class="popphoto" src="{{$item->image_url}}" alt="">
-                                </div>
                         </div>
+                        <?php //if( $j == 1 ) break; ?>
                         @endforeach
                     @endif
                 @endif
@@ -55,6 +59,7 @@
             @endif
         
         </div>
+        <div class="clearfix"></div>
     </div>    
 </div>
 @stop

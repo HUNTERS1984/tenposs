@@ -4,9 +4,10 @@
 @stop
 @section('header')
 <style>
-    body{
-        font-size: {{ $app_info->data->app_setting->font_size }};
-        font-family: "{{ $app_info->data->app_setting->font_family }}";
+    body, a, label{
+        font-size: {{ $app_info->data->app_setting->font_size }} !important;
+        font-family: "{{ $app_info->data->app_setting->font_family }}" !important;
+        color: #828282 !important;
     }
     div[data-role="header"]{
         background-color:#{{ $app_info->data->app_setting->header_color }};
@@ -57,11 +58,11 @@
                     </form>
                 </li>
                 <li>
-                    <a href="{{ route('company.info') }}" data-ajax="false">機種変更時引継ぎコード発行</a></li>
+                    <a href="{{ route('company.info') }}" data-ajax="false">運営会社</a></li>
                 <li>
-                    <a href="{{ route('user.privacy') }}" data-ajax="false">運営会社</a> </li>
+                    <a href="{{ route('user.privacy') }}" data-ajax="false">機種変更時引継ぎコード発行</a></li>
                 <li>
-                    <a href="#" data-ajax="false">採用情報</a></li>
+                    <a href="{{ route('logout') }}" data-ajax="false">ログアウト</a></li>
             </ul>
         </div>
     </div>

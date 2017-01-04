@@ -80,7 +80,7 @@ $arrAddress = array(
 ?>
 <body class="ui-nosvg header-white">
 <div data-role="header" data-position="fixed" data-theme="a">
-    <a href="{{ route('login') }}" data-ajax="false"
+    <a href="{{ route('register') }}" data-ajax="false"
        data-direction="reverse" data-icon="delete" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
     <h1>ログイン</h1>
 </div>

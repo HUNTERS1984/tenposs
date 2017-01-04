@@ -36,7 +36,6 @@ class Controller extends BaseController
                 $this->app->app_app_secret);
 
         $response = json_decode($get);
-
         if ( isset($response->code) && $response->code == 1000 ) {
             $this->app_info = $response;
 

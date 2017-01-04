@@ -57,5 +57,15 @@
     });
 </script>
 @endif
+
+<script>
+     $(document).ready(function(){
+        $('#outside').css({
+            'height' : $('#pageone').height() + 44
+        });
+     });
+
+</script>
+
 </body>
 </html>

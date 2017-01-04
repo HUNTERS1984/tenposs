@@ -65,9 +65,9 @@
             </div>
             <div class="clear"></div>
             <div class="text-center">{{ number_format($point->next_points) }}ポイント獲得まであと  {{ number_format($point->next_miles) }}マイル </div>
-            <figure>
+            <div class="text-center">
                 {!! QrCode::size(250)->generate( Session::get('user')->auth_user_id ) !!}
-            </figure>
+            </div>
         </div>  
     </div> <!--content-->
 </div><!--page-->
