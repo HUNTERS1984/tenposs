@@ -185,9 +185,9 @@
                             <div class="form-group">
                                 {{Form::label('gender','性別')}}
                                 <input type="radio" id="gender" name="gender"
-                                       value="1" {{ old('gender')=="1" ? 'checked='.'"'.'checked'.'"' : '' }} />男性
+                                       value="1" {{ old('gender')=="0" ? 'checked='.'"'.'checked'.'"' : '' }} />男性
                                 <input type="radio" id="gender" name="gender"
-                                       value="0" {{ old('gender')=="0" ? 'checked='.'"'.'checked'.'"' : '' }} />女性
+                                       value="0" {{ old('gender')=="1" ? 'checked='.'"'.'checked'.'"' : '' }} />女性
                             </div>
                             <div class="form-group">
                                 {{Form::label('tel','電話番号')}}
