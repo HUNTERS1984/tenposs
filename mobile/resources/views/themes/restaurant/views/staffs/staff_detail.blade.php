@@ -45,7 +45,7 @@
         <div class="content-main">
             <figure>
                 @if(count($detail) > 0)
-                <img src="{{$detail->image_url}}" alt="{{$detail->name}}">
+                <img class="img-responsive" src="{{$detail->image_url}}" alt="{{$detail->name}}">
                 @endif
             </figure>
             <div class="ui-body ">

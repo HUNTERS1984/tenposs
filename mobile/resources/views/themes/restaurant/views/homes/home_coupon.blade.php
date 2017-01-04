@@ -1,3 +1,4 @@
+<div id="template-4">
 <ul class="bxslider coupon">
     <li><img src="{{ Theme::asset('img/photo01_detail.jpg') }}" alt="photo01_detail">
         <div class="bx-caption">
@@ -24,3 +25,4 @@
         </div>
     </li>
 </ul><!--bxslider-->
+</div>

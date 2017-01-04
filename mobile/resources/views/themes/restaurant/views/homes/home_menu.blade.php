@@ -1,3 +1,4 @@
+<div id="template-2">
 <div id="menu">
     <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -29,3 +30,4 @@
         @endif
     </div><!--menu-->
 </div><!--menu-->
+</div>

@@ -118,6 +118,7 @@ class LoginController extends Controller
     public function logout(){
         Session::forget('user');
         Session::forget('app');
+        Session::flush();
         return redirect('/');
     }
     
@@ -435,6 +436,9 @@ class LoginController extends Controller
             if (!@getimagesize($updateProfile->profile->avatar_url)) {
                 $updateProfile->profile->avatar_url = null;
             } 
+
+            //dd( Session::get('user') );
+
             return view('users.profile',
                 [
                     'fb_url' => (string)$url_fb,

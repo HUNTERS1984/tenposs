@@ -1,4 +1,4 @@
-
+<div id="template-3">
 <div id="news">
     <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -36,3 +36,4 @@
 
     </div><!--slider1-->
 </div><!--news-->
+</div>

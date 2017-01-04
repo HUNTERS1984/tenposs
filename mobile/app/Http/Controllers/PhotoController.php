@@ -44,6 +44,7 @@ class PhotoController extends Controller
         		}
         	}
         }
+        //dd($photo_detail);
         return view('photo',compact('app_info','photo_cate','photo_detail'))->with('pagesize',PAGESIZE);
     }
 
@@ -63,5 +64,28 @@ class PhotoController extends Controller
             return response()->json(['msg'=>$view,'status'=>$status,'pagesize'=>$pagesize]);
             
         }
+    }
+
+    public function detail(Request $request){
+        $url = $request->input('url');
+        return view('photoDetail', array(
+                'app_info' => $this->app_info,
+                'url' => $url
+            ));
+
+        return back()->withErrors('写真のカテゴリの詳細を取得できません');
+        /*
+        $photo = \App\Utils\HttpRequestUtil::getInstance()
+            ->get_data('photo',['app_id'=>$this->app->app_app_id,'category_id'=> $id,'pageindex'=>1,'pagesize'=> PAGESIZE],$this->app->app_app_secret);
+        $photo = json_decode($photo);
+        if( $photo )
+            return view('photoDetail', array(
+                'app_info' => $this->app_info,
+                'photo' => $photo
+            ));
+
+        return back()->withErrors('写真のカテゴリの詳細を取得できません');
+        */
+
     }
 }

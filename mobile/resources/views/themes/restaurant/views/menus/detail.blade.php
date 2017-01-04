@@ -47,13 +47,13 @@
         <div class="content-main">
             <figure>
                 @if(count($items_detail_data) > 0)
-                <img src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}">
+                <img class="img-responsive" src="{{$items_detail_data->image_url}}" alt="{{$items_detail_data->title}}">
                 @endif
             </figure>
             <div class="ui-body">
                 <div class="ui-grid-a">
                     <div class="ui-block-a">
-                        {{$items_detail_data->title}}
+                        {{ Str::words($items_detail_data->title,20,'..') }}
                         <p>{{$items_detail_data->menu_name}}</p>
                     </div>
                     <div class="ui-block-b text-right">
@@ -113,17 +113,17 @@
             @foreach($loops as $items)
                 <?php $i = 0 ?>
                 <div class="ui-grid-a">
-                    @foreach($items_relate_data as $item_relate)
+                    @foreach($items_relate_data as $item)
                     <div class="ui-block-{{ ($i%2 == 0) ? 'a' : 'b' }}">
                         <div class="items">
                             <figure>
-                                <a href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">
-                                    <img src="{{ $item['image_url'] }}" alt="">
+                                <a href="{{ route('menus.detail', $item->id )}}" data-ajax="false">
+                                    <img src="{{ $item->image_url }}" alt="">
                                 </a>
                             </figure>
-                            <a href="{{ route('menus.detail', $item['id'])}}" data-ajax="false">{{ $item['title'] }}</a><br>
-                            <span class="">{{ Str::words( strip_tags($item['description']), 10, '..') }}</span>
-                            <div class="price">¥{{ number_format($item['price']) }}</div>
+                            <a href="{{ route('menus.detail', $item->id)}}" data-ajax="false">{{ $item->title }}</a><br>
+                            <span class="">{{ Str::words( strip_tags($item->description), 10, '..') }}</span>
+                            <div class="price">¥{{ number_format( $item->price ) }}</div>
                         </div>
                     </div>
                     @endforeach

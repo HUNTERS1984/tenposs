@@ -3,18 +3,28 @@
         <li class="user" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
             @if( Session::has('user') )
             <div class="user-left">
-                <img style="max-height: 50px; object-fit: cover; " src="{{ Session::get('user')->profile->avatar_url ? Session::get('user')->profile->avatar_url : Theme::asset('img/user.png') }}" alt=""/>
+               <?php
+                if( in_array(  substr(Session::get('user')->profile->avatar_url,3)  , ['jpg', 'png','jpeg']) ){
+                    $avatar = Session::get('user')->profile->avatar_url;
+                }else{
+                    $avatar = Theme::asset('img/user.png');
+                }
+                 
+                 ?>
+                 <a data-ajax="false" style="padding-left: 0" href="{{ route('mypage') }}">
+                <img style="max-height: 50px; object-fit: cover; height: 50px " src="{{ $avatar }}" alt=""/>
+                </a>
             </div>
             <div class="user-right">
                 <p><a data-ajax="false" style="padding-left: 0" href="{{ route('mypage') }}">{{ Session::get('user')->profile->name != '' ? Session::get('user')->profile->name : '不名' }}</a></p>
-                <p>{{ Session::get('user')->email != '' ? Session::get('user')->email : '不名' }}</p>
+                <p>{{ Session::get('user')->email != '' ? Str::limit(Session::get('user')->email,20,'..') : '不名' }}</p>
             </div>
             @else
 
             <div class="user-left"><img src="{{ Theme::asset('img/user.png') }}"></div>
             <div class="user-right">
                 <p><a data-ajax="false" style="padding-left: 0" href="{{ route('login') }}">マシュー</a></p>
-                
+                <p>matthew@gmail.com</p>
             </div>
 
             @endif

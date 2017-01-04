@@ -28,6 +28,9 @@ class ReserveController extends Controller
                 array_push($reserve_arr,json_decode($reserve_json));
             }
         }
+
+       // dd($reserve_arr);
+
         return view('reserve',compact('app_info','reserve_arr'));
     }
 }
