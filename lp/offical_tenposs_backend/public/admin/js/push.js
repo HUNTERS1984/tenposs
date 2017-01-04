@@ -1,4 +1,5 @@
 $('#btnSubmit').click(function (e) {
+    $('#customer_message').hide();
     var id = $('input[name=push_id]').val();
     var title = $('input[name=title]').val();
     var message = $('textarea[name=message]').val();
@@ -32,9 +33,23 @@ $('#btnSubmit').click(function (e) {
             a_user = 1;
     }
     if (title == '' || message == '') {
-        alert("title or message is require")
+        $('#customer_message ul li').first().text('タイトルと内容を入力してください');
+        $('#customer_message').show();
         return false;
     }
+
+    if (time_type == 0) {
+        $('#customer_message ul li').first().text('配信時間指定を選択してください');
+        $('#customer_message').show();
+        return false;
+    }
+
+    if (a_user && app_user_id == 0) {
+        $('#customer_message ul li').first().text('ユーザーを選択してください');
+        $('#customer_message').show();
+        return false;
+    }
+
     $.ajax({
         type: "POST",
         url: '/admin/push/store',
@@ -63,13 +78,19 @@ $('#btnSubmit').click(function (e) {
             time_selected_detail_day: time_selected_detail_day,
             time_selected_type: time_selected_type
         },
+        beforeSend: function() {
+            $('#loading').fadeIn();
+        },
+        complete: function() {
+            $('#loading').fadeOut();
+        },
         success: function (msg) {
             // $("#ajaxResponse").append("<div>"+msg+"</div>");
             if (msg == 1) {
                 $('#myModal').modal('show');
                 $('input[name=push_id]').val(0);
-                $('input[name=title]').val('');
-                $('textarea[name=message]').val('');
+                //$('input[name=title]').val('');
+                //$('textarea[name=message]').val('');
                 $('select[name=app_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
@@ -86,8 +107,11 @@ $('#btnSubmit').click(function (e) {
                 $('select[name=time_selected_detail_month]').val('01');
                 $('select[name=time_selected_detail_day]').val('01');
             }
-            else
-                alert('プッシュに失敗しました');
+            else {
+                $('#customer_message ul li').first().text('プッシュに失敗しました');
+                $('#customer_message').show();
+            }
+            $('#loading').fadeOut();
         }
     });
 
@@ -121,6 +145,7 @@ $(document).ready(function () {
             $('#choose_day').hide();
 
     });
+
     $("#tags-input").on('itemAdded', function (event) {
         console.log('item added : ' + event.item);
     });
@@ -132,7 +157,10 @@ $(document).ready(function () {
 
         }
     });
-
+    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
 });
 
 function clickEditPush(id) {
@@ -150,13 +178,13 @@ function clickEditPush(id) {
                 $('select[name=time_type]').val(obj.time_type);
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', text: 'すべてのユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
                 if (obj.segment_active_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', text: 'アクティブユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', label: 'アクティブユーザー'});
                 if (obj.segment_inactive_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', text: '非アクティブなユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', label: '非アクティブなユーザー'});
                 if (obj.segment_a_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', text: 'ユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
                 if (obj.time_type == 2) {
                     $('#time_config').show();
                     $('#time_selected').hide();

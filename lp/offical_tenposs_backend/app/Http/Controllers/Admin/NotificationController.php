@@ -115,6 +115,9 @@ class NotificationController extends Controller
                         'title' => $this->request->input('title'),
                         'message' => $this->request->input('message'),
                         'type' => 'custom',
+                        'all_user' => $this->request->input('all_user'),
+                        'active_user' => $this->request->input('active_user'),
+                        'inactive_user' => $this->request->input('inactive_user'),
                         'app_id' => $apps->app_app_id),
                     Session::get('jwt_token')->token
                 );

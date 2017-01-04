@@ -52,8 +52,10 @@ class ProcessNotification
     {
         if (property_exists($obj, 'app_id')) {
             if (property_exists($obj, "all_user") && $obj->all_user == 1) {
+                Log::info("process_user all ");
                 //notification to all user on app
             } else {
+                Log::info("process_user 1 ");
                 //notification to one user
                 //get auth_user_id ~ notification_to from app_use_id
                 $data_id = 0;
