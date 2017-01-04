@@ -54,8 +54,39 @@ class ProcessNotification
             if (property_exists($obj, "all_user") && $obj->all_user == 1) {
                 Log::info("process_user all ");
                 //notification to all user on app
+
+                $data_id = 0;
+                if (property_exists($obj, 'data_id'))
+                    $data_id = $obj->data_id;
+                $app_user_id = 0;
+                if (property_exists($obj, 'app_user_id'))
+                    $app_user_id = $obj->app_user_id;
+                if ($app_user_id > 0) {
+                    $datas = $this->get_data_from_id_with_api('get_app_user', $app_user_id, $obj->app_id, Config::get('api.url_v2'));
+                    if (count($datas) > 0) {
+                        $obj->notification_to = $datas->auth_user_id;
+                    }
+                }
+
+                if (property_exists($obj, 'notification_to')) {
+                    $tile = 0;
+                    if (property_exists($obj, 'title'))
+                        $tile = $obj->title;
+                    $message = 0;
+                    if (property_exists($obj, 'message'))
+                        $message = $obj->message;
+                    $auth_user_id = 0;
+                    if (property_exists($obj, 'auth_user_id'))
+                        $auth_user_id = $obj->auth_user_id;
+                    $action = '';
+                    if (property_exists($obj, 'action'))
+                        $action = $obj->action;
+
+                    $this->notification_to_one_user($obj->app_id, $auth_user_id, $obj->notification_to, $obj->type, $obj->user_type, $data_id, $tile, $message, $action);
+                }
+
             } else {
-                Log::info("process_user 1 ");
+                Log::info("process_user:".$obj->notification_to);
                 //notification to one user
                 //get auth_user_id ~ notification_to from app_use_id
                 $data_id = 0;
@@ -71,8 +102,7 @@ class ProcessNotification
                     }
                 }
 
-                if (property_exists($obj, 'notification_to')) {
-
+                if (property_exists($obj, 'notification_to')) {          
                     $tile = 0;
                     if (property_exists($obj, 'title'))
                         $tile = $obj->title;

@@ -115,13 +115,13 @@
                                             </select>
                                             <div id="choose_a_user" style="padding-top: 10px;">
                                                 <label for="配信先のセグメント">ユーザーを選択する</label>
-                                                <select name="app_user_id" class="form-control">
+                                                <select name="auth_user_id" class="form-control">
                                                     <option value="0">ユーザーの選択</option>
                                                     @if(count($app_user) > 0)
                                                         @foreach($app_user as $item)
                                                             @if((count($item) > 0) && (count($item->profile) > 0) && ($item->profile->name != ''))
-                                                                <option value="{{$item->id}}">
-                                                                    {{$item->profile->name}}
+                                                                <option value="{{$item->auth_user_id}}">
+                                                                    {{$item->profile->name}} ({{$item->auth_user_id}})
                                                                 </option>
                                                             @endif
                                                         @endforeach
