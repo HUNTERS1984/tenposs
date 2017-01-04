@@ -120,10 +120,11 @@ class PushNotification
             exit("Failed to connect: $err $errstr" . PHP_EOL);
         // Create the payload body
         $body['aps'] = array(
-            'alert' => array(
-                'title' => $data['title'],
-                'body' => $data['desc'],
-            ),
+            // 'alert' => array(
+            //     'title' => $data['title'],
+            //     'body' => $data['desc'],
+            // ),
+            'alert' => ''.$data['title'],
             'sound' => 'default'
         );
         $body['data'] = array('type' => $data['type'],
