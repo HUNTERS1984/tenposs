@@ -104,8 +104,8 @@ class NotificationController extends Controller
             $this->push->message = $this->request->input('message');
             $this->push->auth_user_id = $this->request->input('auth_user_id');
             $this->push->segment_all_user = $this->request->input('all_user');
-            $this->push->segment_active_user = $this->request->input('active_user');
-            $this->push->segment_inactive_user = $this->request->input('inactive_user');
+            $this->push->segment_client_users = $this->request->input('client_users');
+            $this->push->segment_end_users = $this->request->input('end_users');
             $this->push->segment_a_user = $this->request->input('a_user');
             $this->push->time_type = $this->request->input('time_type');
             if ($this->request->input('time_type') == 1) {
@@ -116,8 +116,8 @@ class NotificationController extends Controller
                         'message' => $this->request->input('message'),
                         'type' => 'custom',
                         'all_user' => $this->request->input('all_user'),
-                        'active_user' => $this->request->input('active_user'),
-                        'inactive_user' => $this->request->input('inactive_user'),
+                        'client_users' => $this->request->input('client_users'),
+                        'end_users' => $this->request->input('end_users'),
                         'app_id' => $apps->app_app_id),
                     Session::get('jwt_token')->token
                 );
@@ -183,6 +183,7 @@ class NotificationController extends Controller
                 $this->push->save();
             }
         } catch (QueryException $e) {
+            dd($e);
             \Illuminate\Support\Facades\Log::error($e->getMessage());
             return 0;
 //            return redirect()->back()->withErrors('Cannot create the category');

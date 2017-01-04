@@ -109,8 +109,8 @@
 
                                             <select multiple class="form-control" id="tags-input" name="tags-input">
                                                 <option value="all_users">すべてのユーザー</option>
-                                                <option value="active_user">アクティブユーザー</option>
-                                                <option value="inactive_user">非アクティブユーザー</option>
+                                                <option value="client_users">クライエント</option>
+                                                <option value="end_users">エンドユーザ</option>
                                                 <option value="a_user">ユーザー</option>
                                             </select>
                                             <div id="choose_a_user" style="padding-top: 10px;">
