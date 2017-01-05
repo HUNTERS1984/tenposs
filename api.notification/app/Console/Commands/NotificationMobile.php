@@ -60,7 +60,7 @@ class NotificationMobile extends Command
             } catch
             (ConnectionException $ex) {
                 $isloop = true;
-                Log::error($ex);
+                //Log::error($ex);
 //                Log::info("Redis subscribe " . Carbon::now()) . ' - ' . $ex->getMessage();
             } catch (\RedisException $e) {
                 $isloop = true;
