@@ -619,6 +619,7 @@ class CouponController extends Controller
                 'data_id' => $this->entity->id,
                 'data_title' => '',
                 'data_value' => '',
+                'all_user' => '1',
                 'created_by' => Session::get('user')->email
             );
         
