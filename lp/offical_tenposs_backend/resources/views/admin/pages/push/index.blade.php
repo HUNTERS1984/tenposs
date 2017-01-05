@@ -119,7 +119,7 @@
                                                     <option value="0">ユーザーの選択</option>
                                                     @if(count($app_user) > 0)
                                                         @foreach($app_user as $item)
-                                                            @if((count($item) > 0) && (count($item->profile) > 0) && ($item->profile->name != ''))
+                                                            @if((count($item) > 0) && (count($item->profile) > 0) && ($item->profile->name != '') && ($item->auth_user_id > 0))
                                                                 <option value="{{$item->auth_user_id}}">
                                                                     {{$item->profile->name}} ({{$item->auth_user_id}})
                                                                 </option>
