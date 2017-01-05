@@ -33,7 +33,7 @@ return [
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain', 'time'),
-    'sig_get_push_setting' => array('token', 'time'),_
+    'sig_get_push_setting' => array('token', 'time'),
     'sig_set_push_setting' => array('token', 'ranking', 'news', 'coupon', 'chat', 'time'),
     'sig_web_push_current' => array('app_id', 'key', 'time'),
     'sig_delete_data_web_notification' => array('app_id', 'id', 'time'),
