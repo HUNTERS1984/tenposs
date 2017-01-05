@@ -158,8 +158,8 @@ $(document).ready(function () {
         }
     });
     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
     $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
 });
 
