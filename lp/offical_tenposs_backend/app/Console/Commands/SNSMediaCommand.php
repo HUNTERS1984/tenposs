@@ -45,7 +45,7 @@ class SNSMediaCommand extends Command
         // */15 * * * * php /var/www/html/tenposs/lp/offical_tenposs_backend/artisan fetching:mediadata
         echo 'START FETCHING IMAGE '.date('Y-m-d H:i:s').PHP_EOL;
         $now = date('Y-m-d');
-        $coupons = Coupon::where('end_date', '>=', $now)->where('start_date', '<=', $now)->whereNull('deleted_at')->orderBy('updated_at', 'desc')->get()->toArray();
+        $coupons = Coupon::where('end_date', '>=', $now)->where('start_date', '<=', $now)->whereNull('deleted_at')->orderBy('updated_at', 'desc')->get();
         //dd($coupons);
         foreach ($coupons as $coupon) {
             echo 'Fetching coupon:'. $coupon->id;
