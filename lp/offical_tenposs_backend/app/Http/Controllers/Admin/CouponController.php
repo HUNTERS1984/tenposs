@@ -310,14 +310,17 @@ class CouponController extends Controller
             //dd($coupon_id);
             try {
                 $app_user->coupons()->attach($coupon_id, ['status' => 1, 'code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
-               
+                $app_data = App::where('user_id', $request->user['sub'])->first();
                 if (count($app_user) > 0) {
                     $data_push = array(
                         'app_user_id' => $app_user->id,
-                        'type' => 'coupon',
+                        'notification_to' => $app_user->auth_user_id,
+                        'user_type' => 'user',
+                        'type' => 'coupon_approve',
                         'data_id' => $coupon_id,
                         'data_title' => '',
                         'data_value' => '',
+                        'app_id' => $app_data->app_app_id,
                         'created_by' => Session::get('user')->name
                     );
                     $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_user_id'), $data_push);
@@ -364,40 +367,6 @@ class CouponController extends Controller
         return redirect()->back()->with('status','承認しました');  
     }
 
-    public function approve_bk($coupon_id, $post_id)
-    {
-        $app_user = Post::find($post_id)->app_user()->first();
-
-        $app_user->coupons()->attach($coupon_id);
-        //create code for QR
-        $data_info = \Illuminate\Support\Facades\DB::table('rel_app_users_coupons')
-            ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])->get();
-        if (count($data_info) > 0) {
-            if (empty($data_info[0]->code)) {
-                \Illuminate\Support\Facades\DB::table('users')
-                    ->where([['app_user_id', '=', $app_user->id], ['coupon_id', '=', $coupon_id]])
-                    ->update(['code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
-            }
-        }
-        //push notify to all user on app
-//        $app_data = App::where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->first();
-        if (count($app_user) > 0) {
-            $data_push = array(
-                'app_user_id' => $app_user->id,
-                'type' => 'coupon',
-                'data_id' => $coupon_id,
-                'data_title' => '',
-                'data_value' => '',
-                'created_by' => \Illuminate\Support\Facades\Auth::user()->email
-            );
-            $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_user_id'), $data_push);
-            if (!$push)
-                Log::info('push fail: ' . json_decode($data_push));
-            //end push
-        }
-
-        return redirect()->back()->with('status','承認しました');
-    }
 
     public function unapprove($coupon_id, $post_id)
     {
@@ -644,8 +613,9 @@ class CouponController extends Controller
             //push notify to all user on app
             $app_data = App::where('user_id', $request->user['sub'])->first();
             $data_push = array(
-                'app_id' => $app_data->id,
+                'app_id' => $app_data->app_app_id,
                 'type' => 'coupon',
+                'user_type' => 'user',
                 'data_id' => $this->entity->id,
                 'data_title' => '',
                 'data_value' => '',
