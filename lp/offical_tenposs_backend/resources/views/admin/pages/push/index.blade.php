@@ -51,6 +51,7 @@
         </div>
         <section class="content">
             <div class="col-md-12">
+                @include('admin.layouts.messages')
                 <div class="main-search-btn">
                     <div class="row">
                         <div class="col-md-6">
@@ -105,25 +106,22 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="label_to_segment">セグメントに送信する</label>
-                                            {{--<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" placeholder="Add tags" id="tag"/>--}}
 
-                                            <select multiple  id="tags-input" name="tags-input">
+                                            <select multiple class="form-control" id="tags-input" name="tags-input">
                                                 <option value="all_users">すべてのユーザー</option>
-                                                <option value="active_user">アクティブユーザー</option>
-                                                <option value="inactive_user">非アクティブなユーザー</option>
+                                                <!-- <option value="client_users">クライエント</option>
+                                                <option value="end_users">エンドユーザ</option> -->
                                                 <option value="a_user">ユーザー</option>
                                             </select>
-                                            <div id="choose_a_user">
+                                            <div id="choose_a_user" style="padding-top: 10px;">
                                                 <label for="配信先のセグメント">ユーザーを選択する</label>
-                                                <select name="app_user_id" class="form-control">
-                                                    <option>お店から1キロ以内のユーザー</option>
+                                                <select name="auth_user_id" class="form-control">
+                                                    <option value="0">ユーザーの選択</option>
                                                     @if(count($app_user) > 0)
                                                         @foreach($app_user as $item)
-                                                            @if(count($item) > 0)
-                                                                <option value="{{$item->id}}">
-                                                                    @if(count($item->profile) > 0)
-                                                                        {{$item->profile->name}}
-                                                                    @endif
+                                                            @if((count($item) > 0) && (count($item->profile) > 0) && ($item->profile->name != '') && ($item->auth_user_id > 0))
+                                                                <option value="{{$item->auth_user_id}}">
+                                                                    {{$item->profile->name}} ({{$item->auth_user_id}})
                                                                 </option>
                                                             @endif
                                                         @endforeach
@@ -131,12 +129,7 @@
                                                     @endif
                                                 </select>
                                             </div>
-                                        <!-- {{Form::select('app_user_id',$app_user->pluck('email', 'id'),old('app_user_id'),['class'=>'form-control'])}} -->
-
                                         </div>
-                                        {{--<div class="form-group">--}}
-                                        {{--<a href="" class="link_create"><i class="fa fa-plus" aria-hidden="true"></i> セグメントを作成する</a>--}}
-                                        {{--</div>--}}
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">
@@ -144,7 +137,7 @@
                                                 <div class="form-group">
                                                     <label for="配信時間指定">配信時間指定</label>
                                                     <select id="time_type" name="time_type" class="form-control">
-                                                        <option>時間を指定して配信</option>
+                                                        <option value="0">時間を指定して配信</option>
                                                         <option value="1">今</option>
                                                         <option value="2">定期配信</option>
                                                         <option value="3">時間を予め選択</option>
@@ -232,11 +225,11 @@
                                                 <div class="col-md-12 col-xs-6">
                                                     <div class="form-group">
                                                         <select id="time_selected_option" name="time_selected_option" class="form-control">
-                                                            <option value="2h">二時</option>
-                                                            <option value="2d">二日</option>
-                                                            <option value="7d">七日</option>
-                                                            <option value="30d">30日</option>
                                                             <option value="choose_day">日付を選択</option>
+                                                            <option value="2h">2時</option>
+                                                            <option value="2d">2日</option>
+                                                            <option value="7d">7日</option>
+                                                            <option value="30d">30日</option>
                                                         </select>
                                                     </div>
 
@@ -356,4 +349,5 @@
 @section('footerJS')
     {{Html::script('admin/js/bootstrap-tagsinput.js')}}
     {{Html::script('admin/js/push.js?v=1')}}
+  
 @endsection

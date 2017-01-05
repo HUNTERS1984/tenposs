@@ -1,8 +1,9 @@
 $('#btnSubmit').click(function (e) {
+    $('#customer_message').hide();
     var id = $('input[name=push_id]').val();
     var title = $('input[name=title]').val();
     var message = $('textarea[name=message]').val();
-    var app_user_id = $('select[name=app_user_id]').val();
+    var auth_user_id = $('select[name=auth_user_id]').val();
     var time_type = $('select[name=time_type]').val();
     var time_count_repeat = $('input[name=time_count_repeat]').val();
     var time_detail_year = $('select[name=time_detail_year]').val();
@@ -18,23 +19,37 @@ $('#btnSubmit').click(function (e) {
     var time_selected_detail_day = $('select[name=time_selected_detail_day]').val();
 
     var all_user = 0;
-    var active_user = 0;
-    var inactive_user = 0;
+    var client_users = 0;
+    var end_users = 0;
     var a_user = 0;
     if (tags_input != null && tags_input.length > 0) {
         if (tags_input.indexOf('all_users') > -1)
             all_user = 1;
-        if (tags_input.indexOf('active_user') > -1)
-            active_user = 1;
-        if (tags_input.indexOf('inactive_user') > -1)
-            inactive_user = 1;
+        if (tags_input.indexOf('client_users') > -1)
+            client_users = 1;
+        if (tags_input.indexOf('end_users') > -1)
+            end_users = 1;
         if (tags_input.indexOf('a_user') > -1)
             a_user = 1;
     }
     if (title == '' || message == '') {
-        alert("title or message is require")
+        $('#customer_message ul li').first().text('タイトルと内容を入力してください');
+        $('#customer_message').show();
         return false;
     }
+
+    if (time_type == 0) {
+        $('#customer_message ul li').first().text('配信時間指定を選択してください');
+        $('#customer_message').show();
+        return false;
+    }
+
+    if (a_user && auth_user_id == 0) {
+        $('#customer_message ul li').first().text('ユーザーを選択してください');
+        $('#customer_message').show();
+        return false;
+    }
+
     $.ajax({
         type: "POST",
         url: '/admin/push/store',
@@ -42,7 +57,7 @@ $('#btnSubmit').click(function (e) {
             id: id,
             title: title,
             message: message,
-            app_user_id: app_user_id,
+            auth_user_id: auth_user_id,
             time_type: time_type
             ,
             time_count_repeat: time_count_repeat,
@@ -55,13 +70,19 @@ $('#btnSubmit').click(function (e) {
             ,
             time_detail_minutes: time_detail_minutes,
             all_user: all_user,
-            active_user: active_user,
-            inactive_user: inactive_user,
+            client_users: client_users,
+            end_users: end_users,
             a_user: a_user,
             time_selected_detail_year: time_selected_detail_year,
             time_selected_detail_month: time_selected_detail_month,
             time_selected_detail_day: time_selected_detail_day,
             time_selected_type: time_selected_type
+        },
+        beforeSend: function() {
+            $('#loading').fadeIn();
+        },
+        complete: function() {
+            $('#loading').fadeOut();
         },
         success: function (msg) {
             // $("#ajaxResponse").append("<div>"+msg+"</div>");
@@ -70,7 +91,7 @@ $('#btnSubmit').click(function (e) {
                 $('input[name=push_id]').val(0);
                 $('input[name=title]').val('');
                 $('textarea[name=message]').val('');
-                $('select[name=app_user_id]').val(0);
+                $('select[name=auth_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
                 $('input[name=time_count_repeat]').val(0);
@@ -86,8 +107,11 @@ $('#btnSubmit').click(function (e) {
                 $('select[name=time_selected_detail_month]').val('01');
                 $('select[name=time_selected_detail_day]').val('01');
             }
-            else
-                alert('プッシュに失敗しました');
+            else {
+                $('#customer_message ul li').first().text('プッシュに失敗しました');
+                $('#customer_message').show();
+            }
+            $('#loading').fadeOut();
         }
     });
 
@@ -121,6 +145,7 @@ $(document).ready(function () {
             $('#choose_day').hide();
 
     });
+
     $("#tags-input").on('itemAdded', function (event) {
         console.log('item added : ' + event.item);
     });
@@ -132,7 +157,10 @@ $(document).ready(function () {
 
         }
     });
-
+    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
 });
 
 function clickEditPush(id) {
@@ -146,17 +174,17 @@ function clickEditPush(id) {
                 $('input[name=title]').val(obj.title);
                 // $('textarea[name=message]').val(obj.message);
                 $('#editor').trumbowyg('html', obj.message);
-                $('select[name=app_user_id]').val(obj.app_user_id);
+                $('select[name=auth_user_id]').val(obj.auth_user_id);
                 $('select[name=time_type]').val(obj.time_type);
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', text: 'すべてのユーザー'});
-                if (obj.segment_active_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'active_user', text: 'アクティブユーザー'});
-                if (obj.segment_inactive_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'inactive_user', text: '非アクティブなユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
+                if (obj.segment_client_users == 1)
+                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'アクティブユーザー'});
+                if (obj.segment_end_users == 1)
+                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: '非アクティブなユーザー'});
                 if (obj.segment_a_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', text: 'ユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
                 if (obj.time_type == 2) {
                     $('#time_config').show();
                     $('#time_selected').hide();

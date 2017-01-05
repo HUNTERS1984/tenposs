@@ -102,19 +102,22 @@ class NotificationController extends Controller
                 $this->push = new Push();
             $this->push->title = $this->request->input('title');
             $this->push->message = $this->request->input('message');
-            $this->push->app_user_id = $this->request->input('app_user_id');
+            $this->push->auth_user_id = $this->request->input('auth_user_id');
             $this->push->segment_all_user = $this->request->input('all_user');
-            $this->push->segment_active_user = $this->request->input('active_user');
-            $this->push->segment_inactive_user = $this->request->input('inactive_user');
+            $this->push->segment_client_users = $this->request->input('client_users');
+            $this->push->segment_end_users = $this->request->input('end_users');
             $this->push->segment_a_user = $this->request->input('a_user');
             $this->push->time_type = $this->request->input('time_type');
             if ($this->request->input('time_type') == 1) {
                 HttpRequestUtil::getInstance()->post_data_with_token(
                     Config::get('api.url_api_notification'),
-                    array('notification_to' => $this->request->input('app_user_id'),
+                    array('notification_to' => $this->request->input('auth_user_id'),
                         'title' => $this->request->input('title'),
                         'message' => $this->request->input('message'),
                         'type' => 'custom',
+                        'all_user' => $this->request->input('all_user'),
+                        'client_users' => $this->request->input('client_users'),
+                        'end_users' => $this->request->input('end_users'),
                         'app_id' => $apps->app_app_id),
                     Session::get('jwt_token')->token
                 );
@@ -151,7 +154,7 @@ class NotificationController extends Controller
                 $this->push_regular = new PushRegularCurrent();
                 $this->push_regular->title = $this->request->input('title');
                 $this->push_regular->message = $this->request->input('message');
-                $this->push_regular->app_user_id = $this->request->input('app_user_id');
+                $this->push_regular->auth_user_id = $this->request->input('auth_user_id');
                 $this->push_regular->time_type = $this->request->input('time_type');
                 $this->push_regular->time_count_repeat = $time_count_repeat;
                 $this->push_regular->time_count_delivered = 0;
@@ -180,6 +183,7 @@ class NotificationController extends Controller
                 $this->push->save();
             }
         } catch (QueryException $e) {
+            dd($e);
             \Illuminate\Support\Facades\Log::error($e->getMessage());
             return 0;
 //            return redirect()->back()->withErrors('Cannot create the category');
