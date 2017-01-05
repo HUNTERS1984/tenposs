@@ -76,7 +76,7 @@ class PushRelugarSchedule extends Command
                 return;
 
             try {
-                Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(array('notification_to' => $data->auth_user_id,
+                Redis::publish('notification_center', json_encode(array('notification_to' => $data->auth_user_id,
                     'title' => $data->title,
                     'message' => $data->message,
                     'all_user' => $data_push->segment_all_user,

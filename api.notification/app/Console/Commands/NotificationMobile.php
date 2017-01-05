@@ -47,7 +47,7 @@ class NotificationMobile extends Command
         while ($isloop) {
             try {
                 $isloop = false;
-                $this->info("Start subscribe");
+                $this->info("Start subscribe:".Config::get('api.redis_chanel_notification'));
                 Redis::subscribe([Config::get('api.redis_chanel_notification')], function ($message) {
                     try {
                         $this->info('receive message:' . $message);
