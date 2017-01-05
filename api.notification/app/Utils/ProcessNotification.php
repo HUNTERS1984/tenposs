@@ -70,12 +70,13 @@ class ProcessNotification
                     $message = 0;
                     if (property_exists($obj, 'message'))
                         $message = $obj->message;
-                    Log::info("process_user user: ".$auth_user_id);
+                    
                     $action = '';
                     if (property_exists($obj, 'action'))
                         $action = $obj->action;
 
                     $this->notification_to_one_user($obj->app_id, $auth_user_id, $user->auth_user_id, $obj->type, $obj->user_type, $data_id, $tile, $message, $action);
+                    Log::info("process_user user: ".$user->auth_user_id);
                 }
             } else {
                 Log::info("process_user:".$obj->notification_to);
