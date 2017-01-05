@@ -22,12 +22,12 @@ class CreateTablePushRelugarCurrent extends Migration
             $table->smallInteger('time_type');
             $table->integer('time_count_repeat')->nullable();
             $table->integer('time_count_delivered')->nullable();
-            $table->string('time_detail_year',10)->nullable();
-            $table->string('time_detail_month',10)->nullable();
-            $table->string('time_detail_day',10)->nullable();
+            $table->integer('time_detail_year',10)->nullable();
+            $table->integer('time_detail_month',10)->nullable();
+            $table->integer('time_detail_day',10)->nullable();
             $table->string('time_detail_type',10)->nullable();
-            $table->string('time_detail_hours',10)->nullable();
-            $table->string('time_detail_minutes',10)->nullable();
+            $table->integer('time_detail_hours',10)->nullable();
+            $table->integer('time_detail_minutes',10)->nullable();
             $table->timestamps();
             $table->index('time_detail_day');
             $table->index('time_detail_hours');

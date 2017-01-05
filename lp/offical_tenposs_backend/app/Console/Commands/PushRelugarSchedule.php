@@ -8,9 +8,12 @@ use App\Utils\HttpRequestUtil;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Log;
-use League\Flysystem\Config;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+use Predis\PredisException;
+use App\Utils\RedisUtil;
 
 class PushRelugarSchedule extends Command
 {
@@ -39,18 +42,21 @@ class PushRelugarSchedule extends Command
         $current_date = date('Y-m-d H:i:s');
         $format = 'Y-m-d H:i:s';
         $date = \DateTime::createFromFormat($format, $current_date);
-        $new_date = $date->format('Y-m-d h:i:s a');
+        $new_date = $date->format('Y-m-d h:i:s');
         $arr_date = explode(' ', $new_date);
         if (count($arr_date) > 0) {
             $arr_day = explode('-', $arr_date[0]);
             $arr_hour = explode(':', $arr_date[1]);
-            print_r($arr_day);
-            print_r($arr_hour);
-            if (count($arr_day) > 0 && count($arr_hour) > 0) {
-                $data_push = PushRegularCurrent::where('time_detail_day', $arr_day[2])
-                    ->where('time_detail_hours', $arr_hour[0])
-                    ->where('time_detail_minutes', $arr_hour[1])
-                    ->get();
+            //print_r($arr_day);
+            //print_r($arr_hour);
+            if (count($arr_hour) > 0) {
+                $data_push = PushRegularCurrent::where('time_type', '=',  2)
+                ->where(function ($query) use ($arr_hour){
+                    return $query->where('time_detail_hours', '<=',  $arr_hour[0])
+                            ->orWhere(function ($query) use ($arr_hour){
+                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '<=', $arr_hour[1]);
+                            });
+                })->get();
 
                 if (count($data_push) > 0) {
                     for ($i = 0; $i < count($data_push); $i++) {
@@ -64,23 +70,26 @@ class PushRelugarSchedule extends Command
     private function callAPIPush($data)
     {
         if ($data->time_count_delivered < $data->time_count_repeat) {
+
             $data_push = Push::find($data->push_id);
             if (!$data_push)
                 return;
-            
-            //cal api push
-            HttpRequestUtil::getInstance()->post_data_with_token(
-                \Illuminate\Support\Facades\Config::get('api.url_api_notification'),
-                array('notification_to' => $data->auth_user_id,
+
+            try {
+                Redis::publish(Config::get('api.redis_chanel_notification'), json_encode(array('notification_to' => $data->auth_user_id,
                     'title' => $data->title,
                     'message' => $data->message,
                     'all_user' => $data_push->segment_all_user,
                     'client_users' => $data_push->segment_client_users,
                     'end_users' => $data_push->segment_end_users,
                     'type' => 'custom',
-                    'app_id' => 0),
-                \Illuminate\Support\Facades\Session::get('jwt_token')->token
-            );
+                    'app_id' => 0)));
+            } catch (PredisException $e) {
+                Log::error($e->getMessage());
+                dd($e);
+                return $this->error(9999);
+            }
+
             //update
             try {
                 $data->time_count_delivered = $data->time_count_delivered + 1;
