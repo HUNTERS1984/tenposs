@@ -50,7 +50,10 @@ class PushRelugarSchedule extends Command
             //print_r($arr_day);
             //print_r($arr_hour);
             if (count($arr_hour) > 0) {
-                $data_push = PushRegularCurrent::where('time_type', '=',  2)
+                $data_push = PushRegularCurrent::where('time_type', '=',  3)
+                ->where('time_detail_year', '=',  $arr_day[0])
+                ->where('time_detail_month', '=',  $arr_day[1])
+                ->where('time_detail_day', '=',  $arr_day[2])
                 ->where(function ($query) use ($arr_hour){
                     return $query->where('time_detail_hours', '<=',  $arr_hour[0])
                             ->orWhere(function ($query) use ($arr_hour){
@@ -63,6 +66,23 @@ class PushRelugarSchedule extends Command
                         $this->callAPIPush($data_push[$i]);
                     }
                 }
+
+                $data_push = PushRegularCurrent::where('time_type', '=',  2)
+                ->where(function ($query) use ($arr_hour){
+                    return $query->where('time_detail_hours', '<=',  $arr_hour[0])
+                            ->orWhere(function ($query) use ($arr_hour){
+                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '<=', $arr_hour[1]);
+                            });
+                })->get();
+
+
+                if (count($data_push) > 0) {
+                    for ($i = 0; $i < count($data_push); $i++) {
+                        $this->callAPIPush($data_push[$i]);
+                    }
+                }
+
+  
             }
         }
     }

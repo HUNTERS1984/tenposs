@@ -94,6 +94,7 @@ $('#btnSubmit').click(function (e) {
                 $('select[name=auth_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
+                $('#repeat_config').hide();
                 $('input[name=time_count_repeat]').val(1);
                 $('select[name=time_detail_year]').val(2017);
                 $('select[name=time_detail_month]').val('01');
@@ -134,8 +135,10 @@ $(document).ready(function () {
             $('#choose_day').hide();
         }
         else {
+            $('#repeat_config').hide();
             $('#time_config').hide();
             $('#date_config').hide();
+            $('#choose_day').hide();
         }
 
     });
