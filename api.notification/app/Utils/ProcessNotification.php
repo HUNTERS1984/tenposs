@@ -81,6 +81,9 @@ class ProcessNotification
                     if (property_exists($obj, 'message'))
                         $message = $obj->message;
                     
+                    $auth_user_id = 0;
+                    if (property_exists($obj, 'auth_user_id'))
+                        $auth_user_id = $obj->auth_user_id;
                     $action = '';
                     if (property_exists($obj, 'action'))
                         $action = $obj->action;
