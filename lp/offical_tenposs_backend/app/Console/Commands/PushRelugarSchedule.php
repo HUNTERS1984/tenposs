@@ -83,6 +83,7 @@ class PushRelugarSchedule extends Command
                     'client_users' => $data_push->segment_client_users,
                     'end_users' => $data_push->segment_end_users,
                     'type' => 'custom',
+                    'user_type' => 'user',
                     'app_id' => $data_push->app_app_id)));
             } catch (PredisException $e) {
                 Log::error($e->getMessage());
