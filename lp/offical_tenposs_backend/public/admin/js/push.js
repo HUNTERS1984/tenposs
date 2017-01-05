@@ -94,14 +94,14 @@ $('#btnSubmit').click(function (e) {
                 $('select[name=auth_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
-                $('input[name=time_count_repeat]').val(0);
+                $('input[name=time_count_repeat]').val(1);
                 $('select[name=time_detail_year]').val(2017);
                 $('select[name=time_detail_month]').val('01');
                 $('select[name=time_detail_day]').val('01');
                 $('select[name=time_detail_type]').val('am');
                 $('select[name=time_detail_hours]').val('00');
                 $('select[name=time_detail_minutes]').val('00');
-                $('#time_selected').hide();
+                $('#date_config').hide();
                 $('select[name=time_selected_option]').val('2h');
                 $('select[name=time_selected_detail_year]').val(2017);
                 $('select[name=time_selected_detail_month]').val('01');
@@ -118,27 +118,30 @@ $('#btnSubmit').click(function (e) {
 });
 $(document).ready(function () {
     $('#time_config').hide();
-    $('#time_selected').hide();
+    $('#repeat_config').hide();
+    $('#date_config').hide();
     $('#time_type').on('change', function () {
         var selectVal = $("#time_type option:selected").val();
         if (selectVal == 2) {
             $('#time_config').show();
-            $('#time_selected').hide();
+            $('#repeat_config').show();
+            $('#date_config').hide();
         }
         else if (selectVal == 3) {
-            $('#time_config').hide();
-            $('#time_selected').show();
+            $('#time_config').show();
+            $('#repeat_config').hide();
+            $('#date_config').show();
             $('#choose_day').hide();
         }
         else {
             $('#time_config').hide();
-            $('#time_selected').hide();
+            $('#date_config').hide();
         }
 
     });
 
-    $('#time_selected_option').on('change', function () {
-        var selectVal = $("#time_selected_option option:selected").val();
+    $('#date_config_option').on('change', function () {
+        var selectVal = $("#date_config_option option:selected").val();
         if (selectVal == 'choose_day')
             $('#choose_day').show();
         else
@@ -156,6 +159,11 @@ $(document).ready(function () {
             $('#choose_a_user').hide();
 
         }
+    });
+    $('#tags-input').tagsinput({
+      allowDuplicates: false,
+        itemValue: 'id',  // this will be used to set id of tag
+        itemText: 'label' // this will be used to set text of tag
     });
     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
     //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
@@ -180,14 +188,15 @@ function clickEditPush(id) {
                 if (obj.segment_all_user == 1)
                     $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
                 if (obj.segment_client_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'アクティブユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
                 if (obj.segment_end_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: '非アクティブなユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
                 if (obj.segment_a_user == 1)
                     $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
                 if (obj.time_type == 2) {
                     $('#time_config').show();
-                    $('#time_selected').hide();
+                    $('#repeat_config').show();
+                    $('#date_config').hide();
                     $('input[name=time_count_repeat]').val(obj.time_count_repeat);
                     if (obj.time_regular_string != null && obj.time_regular_string != '') {
 
@@ -209,8 +218,9 @@ function clickEditPush(id) {
                     }
                 }
                 else if (obj.time_type == 3) {
-                    $('#time_selected').show();
-                    $('#time_config').hide();
+                    $('#date_config').show();
+                    $('#time_config').show();
+                    $('#repeat_config').hide();
                     $('input[name=time_selected_option]').val(obj.time_selected_type);
                     if (obj.time_selected_string != null && obj.time_selected_string != '') {
 

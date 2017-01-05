@@ -108,11 +108,7 @@
                                             <label for="label_to_segment">セグメントに送信する</label>
 
                                             <select multiple class="form-control" id="tags-input" name="tags-input">
-                                                <option value="all_users">すべてのユーザー</option>
-                                                <!-- <option value="client_users">クライエント</option>
-                                                <option value="end_users">エンドユーザ</option> -->
-                                                <option value="a_user">ユーザー</option>
-                                            </select>
+ -->                                        </select>
                                             <div id="choose_a_user" style="padding-top: 10px;">
                                                 <label for="配信先のセグメント">ユーザーを選択する</label>
                                                 <select name="auth_user_id" class="form-control">
@@ -144,17 +140,19 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div id="time_config">
+                                            <div id="repeat_config">
                                                 <div class="col-md-12 col-xs-6">
                                                     <div class="form-group">
                                                         <input class="form-control" name="time_count_repeat"
-                                                               type="number" placeholder="繰り返し数">
+                                                               type="number" placeholder="繰り返し数" value="1">
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div id="date_config">
                                                 <div class="col-md-4 col-xs-6">
                                                     <div class="form-group">
                                                         <select name="time_detail_year" class="form-control">
-                                                            @for ($i = 2016; $i < 2023; $i++)
+                                                            @for ($i = 2017; $i < 2117; $i++)
                                                                 <option value="{{$i}}">{{$i}}年</option>
                                                             @endfor
                                                         </select>
@@ -186,6 +184,8 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div id="time_config">
                                                 <div class="col-md-4 col-xs-6">
                                                     <div class="form-group">
                                                         <select name="time_detail_type" class="form-control">
@@ -221,15 +221,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="time_selected">
+                                            <div id="time_selected" hidden>
                                                 <div class="col-md-12 col-xs-6">
                                                     <div class="form-group">
                                                         <select id="time_selected_option" name="time_selected_option" class="form-control">
                                                             <option value="choose_day">日付を選択</option>
-                                                            <option value="2h">2時</option>
-                                                            <option value="2d">2日</option>
-                                                            <option value="7d">7日</option>
-                                                            <option value="30d">30日</option>
+                                                            <option value="2h">+2時</option>
+                                                            <option value="2d">+2日</option>
+                                                            <option value="7d">+7日</option>
+                                                            <option value="30d">+30日</option>
                                                         </select>
                                                     </div>
 
@@ -310,9 +310,9 @@
                                                             @if($item->time_type == 1)
                                                                 <span class="deliver_push">今</span>
                                                             @elseif($item->time_type == 2)
-                                                                <span class="deliver_push">定期配信</span>
+                                                                <span class="deliver_push">定期配信 ({{$item->time_regular_string}})</span>
                                                             @elseif($item->time_type == 3)
-                                                                <span class="deliver_push">意図されました</span>
+                                                                <span class="deliver_push">意図されました ({{$item->time_selected_string}})</span>
                                                             @endif
                                                         </div>
                                                     </div>

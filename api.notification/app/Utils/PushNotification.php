@@ -127,7 +127,7 @@ class PushNotification
             'alert' => ''.$data['title'],
             'sound' => 'default'
         );
-        $body['data'] = array('type' => $data['type'],
+        $body['data'] = array('type' => $data['type'], 'desc' => $data['desc'],
             'id' => $data['id'], 'image_url' => $data['image_url']);
         if (count($array_append_data) > 0)
             $body['data'] = array_merge($body['data'], $array_append_data);
