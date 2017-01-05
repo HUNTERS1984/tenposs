@@ -108,6 +108,7 @@ class NotificationController extends Controller
             $this->push->segment_end_users = $this->request->input('end_users');
             $this->push->segment_a_user = $this->request->input('a_user');
             $this->push->time_type = $this->request->input('time_type');
+            $this->push->app_app_id = $apps->app_app_id;
             if ($this->request->input('time_type') == 1) {
                 HttpRequestUtil::getInstance()->post_data_with_token(
                     Config::get('api.url_api_notification'),
