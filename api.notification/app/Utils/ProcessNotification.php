@@ -62,7 +62,7 @@ class ProcessNotification
                 $users = UserPush::where('app_app_id', $obj->app_id)
                 ->where(function ($query){
                     return $query->whereNotNull('android_push_key')->orWhereNotNull('apple_push_key')->orWhereNotNull('web_push_key');
-                })->get()->toArray();
+                })->get();
                 foreach ($users as $user) {
                     $tile = 0;
                     if (property_exists($obj, 'title'))
@@ -70,13 +70,12 @@ class ProcessNotification
                     $message = 0;
                     if (property_exists($obj, 'message'))
                         $message = $obj->message;
-                    $auth_user_id = $user->auth_user_id;
                     Log::info("process_user user: ".$auth_user_id);
                     $action = '';
                     if (property_exists($obj, 'action'))
                         $action = $obj->action;
 
-                    $this->notification_to_one_user($obj->app_id, $auth_user_id, $obj->notification_to, $obj->type, $obj->user_type, $data_id, $tile, $message, $action);
+                    $this->notification_to_one_user($obj->app_id, $auth_user_id, $user->auth_user_id, $obj->type, $obj->user_type, $data_id, $tile, $message, $action);
                 }
             } else {
                 Log::info("process_user:".$obj->notification_to);
