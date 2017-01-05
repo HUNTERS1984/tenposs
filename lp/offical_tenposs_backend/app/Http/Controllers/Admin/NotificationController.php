@@ -126,6 +126,39 @@ class NotificationController extends Controller
             } else if ($this->request->input('time_type') == 2) //regular
             {
                 $time_count_repeat = $this->request->input('time_count_repeat');
+                $time_detail_type = $this->request->input('time_detail_type');
+                $time_detail_hours = $this->request->input('time_detail_hours');
+//                if ($time_detail_hours < 10)
+//                    $time_detail_hours = '0' . $time_detail_hours;
+                $time_detail_minutes = $this->request->input('time_detail_minutes');
+//                if ($time_detail_minutes < 10)
+//                    $time_detail_minutes = '0' . $time_detail_minutes;
+                $time_string = $time_detail_hours . ':' . $time_detail_minutes . ":00 " . $time_detail_type;
+//                $time = Carbon::createFromFormat("Y/m/d h:i:s a",$time_string)->setTimezone('UTC');;
+                $time = \DateTime::createFromFormat('h:i:s a', $time_string);
+                $this->push->time_count_repeat = $time_count_repeat;
+                $this->push->time_count_delivered = 0;
+                $this->push->time_regular = $time->format('H:i:s');
+                $this->push->time_regular_string = $time_string;
+                $this->push->status = 2;
+                $this->push->save();
+
+                $this->push_regular = new PushRegularCurrent();
+                $this->push_regular->title = $this->request->input('title');
+                $this->push_regular->message = $this->request->input('message');
+                $this->push_regular->auth_user_id = $this->request->input('auth_user_id');
+                $this->push_regular->time_type = $this->request->input('time_type');
+                $this->push_regular->time_count_repeat = $time_count_repeat;
+                $this->push_regular->time_count_delivered = 0;
+                $this->push_regular->time_detail_type = '24 hours';
+                if ($this->request->input('time_detail_type') == 'pm')
+                    $time_detail_hours += 12;
+                $this->push_regular->time_detail_hours = $time_detail_hours;
+                $this->push_regular->time_detail_minutes = $time_detail_minutes;
+                $this->push_regular->push_id = $this->push->id;
+                $this->push_regular->save();
+            } else {
+                
                 $time_detail_year = $this->request->input('time_detail_year');
                 $time_detail_month = $this->request->input('time_detail_month');
 //                if ($time_detail_month < 10)
@@ -142,13 +175,15 @@ class NotificationController extends Controller
 //                    $time_detail_minutes = '0' . $time_detail_minutes;
                 $time_string = $time_detail_year . '/' . $time_detail_month .
                     '/' . $time_detail_day . ' ' . $time_detail_hours . ':' . $time_detail_minutes . ":00 " . $time_detail_type;
-//                $time = Carbon::createFromFormat("Y/m/d h:i:s a",$time_string)->setTimezone('UTC');;
-                $time = \DateTime::createFromFormat('Y/m/d h:i:s a', $time_string);
-                $this->push->time_count_repeat = $time_count_repeat;
+
+                    
+                $time = \DateTime::createFromFormat('Y-m-d H:i:s', $time_string);
+                $this->push->time_count_repeat = 1;
                 $this->push->time_count_delivered = 0;
-                $this->push->time_regular = $time->format('Y-m-d H:i:s');
-                $this->push->time_regular_string = $time_string;
-                $this->push->status = 2;
+                $this->push->time_selected = $time; //tmp
+                $this->push->time_selected_string = $time_string; //tmp
+                
+                $this->push->status = 3; //tmp
                 $this->push->save();
 
                 $this->push_regular = new PushRegularCurrent();
@@ -156,31 +191,18 @@ class NotificationController extends Controller
                 $this->push_regular->message = $this->request->input('message');
                 $this->push_regular->auth_user_id = $this->request->input('auth_user_id');
                 $this->push_regular->time_type = $this->request->input('time_type');
-                $this->push_regular->time_count_repeat = $time_count_repeat;
+                $this->push_regular->time_count_repeat = 1;
                 $this->push_regular->time_count_delivered = 0;
-                $this->push_regular->time_detail_year = $this->request->input('time_detail_year');
+                $this->push_regular->time_detail_year = $time_detail_year;
                 $this->push_regular->time_detail_month = $time_detail_month;
                 $this->push_regular->time_detail_day = $time_detail_day;
-                $this->push_regular->time_detail_type = $this->request->input('time_detail_type');
+                $this->push_regular->time_detail_type = '24 hours';
+                if ($this->request->input('time_detail_type') == 'pm')
+                    $time_detail_hours += 12;
                 $this->push_regular->time_detail_hours = $time_detail_hours;
                 $this->push_regular->time_detail_minutes = $time_detail_minutes;
                 $this->push_regular->push_id = $this->push->id;
                 $this->push_regular->save();
-            } else {
-                $time_selected_type = $this->request->input('time_selected_type');
-                if ($time_selected_type == 'choose_day')
-                {
-                    $time_selected_detail_year = $this->request->input('time_selected_detail_year');
-                    $time_selected_detail_month = $this->request->input('time_selected_detail_month');
-                    $time_selected_detail_day = $this->request->input('time_selected_detail_day');
-                    $time_string =$time_selected_detail_year . '/' . $time_selected_detail_month . '/' . $time_selected_detail_day;
-                    $time = \DateTime::createFromFormat('Y/m/d', $time_string);
-                    $this->push->time_selected = $time; //tmp
-                    $this->push->time_selected_string = $time_string; //tmp
-                }
-                $this->push->time_selected_type = $time_selected_type; //tmp
-                $this->push->status = 3; //tmp
-                $this->push->save();
             }
         } catch (QueryException $e) {
             dd($e);
