@@ -33,7 +33,7 @@ return [
     'sig_news_detail' => array('app_id', 'time', 'id'),
     'sig_coupon_detail' => array('app_id', 'time', 'id'),
     'sig_app_domain' => array('domain', 'time'),
-    'sig_get_push_setting' => array('token', 'time'),
+    'sig_get_push_setting' => array('token', 'time'),_
     'sig_set_push_setting' => array('token', 'ranking', 'news', 'coupon', 'chat', 'time'),
     'sig_web_push_current' => array('app_id', 'key', 'time'),
     'sig_delete_data_web_notification' => array('app_id', 'id', 'time'),
@@ -70,7 +70,7 @@ return [
     'noti_google_url' => 'https://fcm.googleapis.com/fcm/send',
     'noti_apple_url' => 'ssl://gateway.sandbox.push.apple.com:2195',
     'noti_web_url' => 'https://android.googleapis.com/gcm/send',
-    'redis_chanel_notification' => 'notification_mobile',
+    'redis_chanel_notification' => 'notification_center',
 
     'cache_staff' => 'staff_%s_%s_%s_%s', // app_id,category_id,pageindex,pagesize
     'cache_staff_detail' => 'staff_detail_%s_%s', // app_id,id

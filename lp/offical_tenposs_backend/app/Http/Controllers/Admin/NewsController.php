@@ -132,13 +132,16 @@ class NewsController extends Controller
             //push notify to all user on app
             $app_data = App::where('user_id', Session::get('user')->id )->first();
             $data_push = array(
-                'app_id' => $app_data->id,
+                'app_id' => $app_data->app_app_id,
                 'type' => 'news',
+                'user_type' => 'user',
+                'all_user' => '1',
                 'data_id' => $this->entity->id,
                 'data_title' => '',
                 'data_value' => '',
                 'created_by' => Session::get('user')->email
             );
+            //dd($data_push);
             $push = HttpRequestUtil::getInstance()->post_data_return_boolean(Config::get('api.url_api_notification_app_id'), $data_push);
             return redirect()->route('admin.news.index')->with('status','追加しました');
         } catch (\Illuminate\Database\QueryException $e) {
