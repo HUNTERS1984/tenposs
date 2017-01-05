@@ -1,4 +1,20 @@
-<div data-role="panel" id="outside" data-theme="b" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
+<style>
+    .sidemenu{
+        font-size: {{ $app_info->data->app_setting->menu_font_size }} !important;
+        font-family: {{ $app_info->data->app_setting->menu_font_family }} !important;
+        color: #{{ $app_info->data->app_setting->menu_font_color }} !important;
+        text-decoration: none;
+    }
+    .user .user-right a, .user .user-right p {
+        font-family: {{ $app_info->data->app_setting->menu_font_family }} !important;
+        color: #{{ $app_info->data->app_setting->menu_font_color }} !important;
+        text-decoration: none;
+    }
+
+
+
+</style>
+<div data-role="panel" id="outside" data-theme="false" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
     <ul data-role="listview" class="menu-left">
         <li class="user" style="background: #{{ $app_info->data->app_setting->menu_background_color}}">
             @if( Session::has('user') )
@@ -34,11 +50,7 @@
         <?php $menuItem = \App\Utils\Menus::page($menu->id) ?>
         @if( $menuItem['display'] )
         <li class="{{ $menu->icon }}">
-            <a class="{{ $menuItem['classes'] }}" href="{{ $menuItem['href'] }}" style="
-                    font-size: {{ $app_info->data->app_setting->menu_font_size }};
-                    font-family: {{ $app_info->data->app_setting->menu_font_family }};
-                    color: #{{ $app_info->data->app_setting->menu_font_color }};
-                " data-ajax="false">{{ $menu->name }} </a>
+            <a class="sidemenu {{ $menuItem['classes'] }}" href="{{ $menuItem['href'] }}" data-ajax="false">{{ $menu->name }} </a>
         </li>
         @endif
         @endforeach
