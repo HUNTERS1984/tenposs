@@ -59,6 +59,16 @@ class ProcessNotification
                 if (property_exists($obj, 'data_id'))
                     $data_id = $obj->data_id;
                 
+                $app_user_id = 0;
+                if (property_exists($obj, 'app_user_id'))
+                    $app_user_id = $obj->app_user_id;
+                if ($app_user_id > 0) {
+                    $datas = $this->get_data_from_id_with_api('get_app_user', $app_user_id, $obj->app_id, Config::get('api.url_v2'));
+                    if (count($datas) > 0) {
+                        $obj->notification_to = $datas->auth_user_id;
+                    }
+                }
+
                 $users = UserPush::where('app_app_id', $obj->app_id)
                 ->where(function ($query){
                     return $query->whereNotNull('android_push_key')->orWhereNotNull('apple_push_key')->orWhereNotNull('web_push_key');
