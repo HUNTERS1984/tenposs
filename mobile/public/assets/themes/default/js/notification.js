@@ -39,6 +39,7 @@ var notify = {
                         console.log("DONE to register for push");
                     }
                     console.log("subscribe_id" + subscribe_id);
+                    
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': '{{  csrf_token() }}'

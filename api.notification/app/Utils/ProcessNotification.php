@@ -155,7 +155,7 @@ class ProcessNotification
                         $data = $this->get_data_from_id_with_api('news', $data_id, $app_id);
                         Log::info("data_news: " . json_encode($data));
                         if ($data != null && count($data) > 0) {
-                            $data_notify = array('title' => "「".$data->title."」が追加されています。",
+                            $data_notify = array('title' => "「".$data->title."」ニュースが追加されています。",
                                 'desc' => '',
                                 'subtitle' => '',
                                 'tickertext' => '',
@@ -167,7 +167,7 @@ class ProcessNotification
                     case 'coupon':
                         $data = $this->get_data_from_id_with_api('coupon', $data_id, $app_id);
                         if ($data != null && count($data) > 0) {
-                            $data_notify = array('title' => "「".$data->title."」が追加されています。",
+                            $data_notify = array('title' => "「".$data->title."」クーポンが追加されています。",
                                 'desc' => '',//$data->description,
                                 'subtitle' => '',
                                 'tickertext' => '',
@@ -179,7 +179,7 @@ class ProcessNotification
                     case 'coupon_approve':
                         $data = $this->get_data_from_id_with_api('coupon', $data_id, $app_id);
                         if ($data != null && count($data) > 0) {
-                            $data_notify = array('title' => "「".$data->title."」が承認されています。",
+                            $data_notify = array('title' => "「".$data->title."」クーポンが承認されています。",
                                 'desc' => '',//$data->description,
                                 'subtitle' => '',
                                 'tickertext' => '',
@@ -192,7 +192,7 @@ class ProcessNotification
                         //data_id ~ coupont id
                         $data = $this->get_data_from_id_with_api('coupon', $data_id, $app_id);
                         if ($data != null && count($data) > 0) {
-                            $data_notify = array('title' => "「".$data->title."」が使用されています。",
+                            $data_notify = array('title' => "「".$data->title."」クーポンが使用されています。",
                                 'desc' => '',//$data->description,
                                 'subtitle' => '',
                                 'tickertext' => '',
@@ -410,7 +410,7 @@ class ProcessNotification
                     }
                     $data = $this->get_data_from_id_with_api('coupon', $coupon_id, $app_id);
                     if ($data != null && count($data) > 0) {
-                        $data_notify = array('title' => $data->title,
+                        $data_notify = array('title' => "「".$data->title."」クーポンが要求されています。",
                             'desc' => '',
                             'subtitle' => '',
                             'tickertext' => '',
