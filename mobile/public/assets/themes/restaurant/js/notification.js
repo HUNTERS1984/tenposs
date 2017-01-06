@@ -35,8 +35,26 @@ var notify = {
                         });
                     }
                     else {
+                        subscribe_id = subscription.endpoint.split("/").slice(-1)[0];
                         console.log("DONE to register for push");
                     }
+                    console.log("subscribe_id" + subscribe_id);
+                    
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': '{{  csrf_token() }}'
+                        },
+                        url: '{{ route("setpushkey") }}',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            key: subscribe_id
+                        },
+
+                        success: function(response){
+                            console.log('Setpushkey success');
+                        }
+                    })
                 })
             });
 
@@ -51,7 +69,7 @@ var notify = {
              // return sub.endpoint.substring(idx + findvalue.length, sub.endpoint.length);
              return sub.endpoint.slice(sub.endpoint.lastIndexOf('/') + 1);
              }*/
-            return subscribe_id;
+            //return subscribe_id;
         },
         unsubscribe: function () {
             sub.unsubscribe().then(function (event) {
