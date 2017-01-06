@@ -48,7 +48,9 @@
         <script src="{{ Theme::asset('js/notification.js') }}"></script>
         <script type="application/javascript">
             $(document).ready(function () {
-                notify.init('{{ url("js/notification_worker.js") }}');
+                @if( Session::has('user') && !Session::get('setpushkey') )
+                    notify.init('{{  Theme::asset("js/notification_worker.js") }}');  
+                @endif
                 @if (count($errors) > 0)
                 $('#modal-message').modal();
                 @endif
