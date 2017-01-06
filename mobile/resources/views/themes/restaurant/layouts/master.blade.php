@@ -17,14 +17,11 @@
     <link rel="manifest" href="{{ url( $app_info->data->app_setting->app_id.'/manifest.json') }}">
     <script src="{{ Theme::asset('js/notification.js') }}"></script>
     <script type="application/javascript">
-        $(document).ready(function () {
-            
+        $(document).ready(function () { 
             @if( Session::has('user') && !Session::get('setpushkey') )
-                notify.init('{{  Theme::asset("js/notification_worker.js") }}');
-                
+                notify.init('{{  Theme::asset("js/notification_worker.js") }}');   
             @endif
         });
-        
     </script>
 
     @yield('header')

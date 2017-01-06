@@ -256,23 +256,6 @@
           'showImageNumberLabel': false
         });
 
-        @if( Session::has('user') && !Session::get('setpushkey') )
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{  csrf_token() }}'
-            },
-            url: '{{ route("setpushkey") }}',
-            type: 'post',
-            dataType: 'json',
-            data: {
-                key: notify.data.subscribe()
-            },
-
-            success: function(response){
-                console.log('Setpushkey success');
-            }
-        })
-        @endif
     });
 </script>
 

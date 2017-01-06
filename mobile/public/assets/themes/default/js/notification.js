@@ -39,12 +39,13 @@ var notify = {
                         console.log("DONE to register for push");
                     }
                     console.log("subscribe_id" + subscribe_id);
-                    
+                    var getUrl = window.location;
+                    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': '{{  csrf_token() }}'
                         },
-                        url: '{{ route("setpushkey") }}',
+                        url: baseUrl + '/setpushkey',
                         type: 'post',
                         dataType: 'json',
                         data: {
