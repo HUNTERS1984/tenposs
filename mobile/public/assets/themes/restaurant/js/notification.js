@@ -40,7 +40,7 @@ var notify = {
                     }
                     console.log("subscribe_id" + subscribe_id);
                     var getUrl = window.location;
-                    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+                    var baseUrl = getUrl .protocol + "//" + getUrl.host;
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': '{{  csrf_token() }}'
