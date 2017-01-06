@@ -18,25 +18,12 @@
     <script src="{{ Theme::asset('js/notification.js') }}"></script>
     <script type="application/javascript">
         $(document).ready(function () {
-            notify.init('{{  Theme::asset("js/notification_worker.js") }}');
+            
             @if( Session::has('user') && !Session::get('setpushkey') )
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': '{{  csrf_token() }}'
-                    },
-                    url: '{{ route("setpushkey") }}',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        key: notify.data.subscribe()
-                    },
-
-                    success: function(response){
-                        console.log('Setpushkey success');
-                    }
-                })
-                @endif
-            });
+                notify.init('{{  Theme::asset("js/notification_worker.js") }}');
+                
+            @endif
+        });
         
     </script>
 
