@@ -38,9 +38,11 @@ class CostController extends Controller
                 ->setHeader('Authorization',  'Bearer '. Session::get('jwt_token')->token)->send();
             $transactions = json_decode($response->body);
             $transaction_num = 0;
-            foreach ($transactions->data->agreement_transaction_list as $trans) {
-                if ($trans->status == "Completed")
-                     $transaction_num++;
+            if ($transactions)
+                foreach ($transactions->data->agreement_transaction_list as $trans) {
+                    if ($trans->status == "Completed")
+                         $transaction_num++;
+                }
             }
             $member_months = $transaction_num;
 
