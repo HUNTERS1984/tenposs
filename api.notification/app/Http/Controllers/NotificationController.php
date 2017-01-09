@@ -86,11 +86,11 @@ class NotificationController extends Controller
                     } else {
 //                        return $this->error(99953);
                         $user_setting = new UserPushSetting();
-                        $user_setting->ranking = '0';
-                        $user_setting->news = '0';
-                        $user_setting->coupon = '0';
-                        $user_setting->chat = '0';
-                        $user_setting->other = '0';
+                        $user_setting->ranking = '1';
+                        $user_setting->news = '1';
+                        $user_setting->coupon = '1';
+                        $user_setting->chat = '1';
+                        $user_setting->other = '1';
                         $user_setting->app_app_id = $app_id;
                         $user_setting->auth_user_id = $info['id'];
                         $user_setting->app_type = 'user';
