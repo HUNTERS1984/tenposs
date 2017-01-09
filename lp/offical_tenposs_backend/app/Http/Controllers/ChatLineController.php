@@ -54,7 +54,9 @@ class ChatLineController extends Controller
         Log::info(print_r($data, true));
         $data = $data->events[0];
         
-        $botInfo = AppBots::where('chanel_id',$chanel_id )->first();
+        $botInfo = AppBots::where('chanel_id',$chanel_id )
+            ->select('id','app_id','chanel_id','chanel_secret','chanel_access_token','user_id')
+            ->first();
         if( $botInfo ){
             
             $LineAccount = LineAccount::where('mid',$data->source->userId )->first();
@@ -88,9 +90,9 @@ class ChatLineController extends Controller
         
     }
 
-    public function chatApp($app_user_id) {
+    public function chatApp($auth_user_id) {
         $bot = AppBots::join('app_users','app_users.app_id','=','app_bots.app_id')
-            ->where('app_users.id', $app_user_id)
+            ->where('app_users.auth_user_id', $auth_user_id)
             ->select('add_friend_href','qr_code_href')
             ->first();
         if(  !$bot ){

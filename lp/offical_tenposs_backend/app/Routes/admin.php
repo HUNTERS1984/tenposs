@@ -128,7 +128,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['jwt.auth.custom'] ], functi
 
 Route::group(array('prefix' => 'chat'), function () {
     // Enduser request chat
-    Route::get('screen/{app_user_id}', 'ChatLineController@chatApp');
+    Route::get('screen/{auth_user_id}', 'ChatLineController@chatApp');
     //Route::get('app/{app_id}', 'ChatLineController@chatApp');
     // BOT
     Route::any('bot/{chanel_id}', array('as' => 'line.bot', 'uses' => 'ChatLineController@index'));
