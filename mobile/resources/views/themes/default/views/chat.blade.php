@@ -22,7 +22,7 @@
 
 <div id="main">
     <div id="content">
-       <iframe width="100%" src="https://ten-po.com/chat/screen/{{ Session::get('user')->id }}" frameborder="0"></iframe>
+       <iframe width="100%" src="https://ten-po.com/chat/screen/{{ Session::get('user')->auth_user_id }}" frameborder="0"></iframe>
     </div>
     @include('partials.sidemenu')
 </div><!-- End header -->                        
