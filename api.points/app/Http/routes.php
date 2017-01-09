@@ -38,20 +38,20 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
         ];
     });
 
-    $app->get('/auth/refresh', 'App\Http\Controllers\Auth\AuthController@getRefresh');
-    $app->delete('/auth/invalidate', 'App\Http\Controllers\Auth\AuthController@deleteInvalidate');
-    $app->get('/point','App\Http\Controllers\PointController@get_point_info');
-    $app->get('/point/client','App\Http\Controllers\PointController@get_client_point_info');
-    $app->post('/point/setting','App\Http\Controllers\PointController@set_point_setting');
-    $app->post('/point/bonus/{type}','App\Http\Controllers\PointController@bonus');
-    $app->post('/point/payment/method','App\Http\Controllers\PointController@set_payment_method');
-    $app->post('/point/request/user','App\Http\Controllers\PointController@request_point_for_end_user');
-    $app->post('/point/approve/request/user','App\Http\Controllers\PointController@approve_request_point_for_end_user');
-    $app->post('/point/use/user','App\Http\Controllers\PointController@request_use_point_for_end_user');
-    $app->post('/point/approve/use/user','App\Http\Controllers\PointController@approve_use_point_for_end_user');
-    $app->get('/point/request/list','App\Http\Controllers\PointController@request_list');
-    $app->get('/point/use/list','App\Http\Controllers\PointController@use_list');
-    $app->get('/point/history','App\Http\Controllers\PointController@history_list');
+    $app->get('/auth/refresh', 'Auth\AuthController@getRefresh');
+    $app->delete('/auth/invalidate', 'Auth\AuthController@deleteInvalidate');
+    $app->get('/point','PointController@get_point_info');
+    $app->get('/point/client','PointController@get_client_point_info');
+    $app->post('/point/setting','PointController@set_point_setting');
+    $app->post('/point/bonus/{type}','PointController@bonus');
+    $app->post('/point/payment/method','PointController@set_payment_method');
+    $app->post('/point/request/user','PointController@request_point_for_end_user');
+    $app->post('/point/approve/request/user','PointController@approve_request_point_for_end_user');
+    $app->post('/point/use/user','PointController@request_use_point_for_end_user');
+    $app->post('/point/approve/use/user','PointController@approve_use_point_for_end_user');
+    $app->get('/point/request/list','PointController@request_list');
+    $app->get('/point/use/list','PointController@use_list');
+    $app->get('/point/history','PointController@history_list');
 
     $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers','middleware' => 'jwt.auth'], function($app)
     {
