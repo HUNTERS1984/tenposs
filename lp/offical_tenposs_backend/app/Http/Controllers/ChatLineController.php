@@ -53,21 +53,22 @@ class ChatLineController extends Controller
         }
         Log::info(print_r($data, true));
         $data = $data->events[0];
-        
+
+        // Get app bots info
         $botInfo = AppBots::where('chanel_id',$chanel_id )
-            ->select('id','app_id','chanel_id','chanel_secret','chanel_access_token','user_id')
+            //->select('id','app_id','chanel_id','chanel_secret','chanel_access_token','user_id')
             ->first();
         if( $botInfo ){
-            
+            // Check line account send to BOT
             $LineAccount = LineAccount::where('mid',$data->source->userId )->first();
             if( ! $LineAccount ){
-                // Save new Line Account info
-                // Get profile
+                // Get profile line account
                 $requestProfile = $this->curl->newRequest('get','https://api.line.me/v2/bot/profile/'.$data->source->userId )
                      ->setHeader('Authorization', 'Bearer '.$botInfo->chanel_access_token);
                 $responseProfile = $requestProfile->send();
                 $profile = json_decode($responseProfile->body);
                 if($profile){
+                    // Save new Line Account info
                     $LineAccount = new LineAccount();
                     $LineAccount->displayName = $profile->displayName;
                     $LineAccount->mid = $profile->userId;

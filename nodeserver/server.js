@@ -65,7 +65,9 @@ redisClient.on("message", function (channel, message) {
     logger.info('Message from BOT');
     logger.info(message);
 
+    // comments block code because enduser not use webchat
     // Find from is online
+    /*
     findClientInRoomByMid(message.channel.chanel_id ,message.data.source.userId, 
         function( fromUser ){
         if( fromUser ){
@@ -77,7 +79,9 @@ redisClient.on("message", function (channel, message) {
             });
         }
         
-    });
+    });*/
+
+    // Push message to clients
     findIsClientInRoom( message.channel.chanel_id, function(toUser){
                
         LineAccounts.checkExistAccounts( {
@@ -145,18 +149,22 @@ redisClient.on("message", function (channel, message) {
     );
     
     */
+      Messages.saveMessage(
+            message.channel.chanel_id,  
+            message.data.source.userId, 
+            message.channel.mid, 
+            message.data.message.text, 
+            function(inserID){
+                logger.info('Save message BOT success');
+            }
+        );
+
+    /*
      Bot.getProfileByToken( message.channel.chanel_access_token, function( botprofile ){
         if( botprofile ){
-           Messages.saveMessage(message.channel.chanel_id,  
-           message.data.source.userId, 
-           botprofile.mid, 
-           message.data.message.text, 
-           function(inserID){
-                logger.info('Save message BOT success');
-            });
             
         }
-     });
+     });*/
     
 });
 

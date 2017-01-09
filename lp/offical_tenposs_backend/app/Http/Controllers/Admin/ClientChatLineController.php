@@ -48,6 +48,8 @@ class ClientChatLineController extends Controller
     	if( !$botService ){
     	    return view('admin.pages.chat.clients')->withErrors('BOT LINE情報を設定してください' );
     	}
+       
+
         // Get profile
         $requestProfile = $this->curl->newRequest('get', self::API_REQUEST_PROFILE )
             ->setHeader('Authorization',  'Bearer '. $botService->chanel_access_token  );
@@ -56,8 +58,16 @@ class ClientChatLineController extends Controller
         $profile = json_decode($responseProfile->body);
 
         if( !$profile ){
-            return view('admin.pages.chat.clients')->withErrors('再試行する!' );
+            return view('admin.pages.chat.clients')->withErrors('再試行する, このページを再読み込みしてください!' );
         }
+
+         // Update profiles
+        $botService->displayName = $profile->displayName;
+        $botService->mid = $profile->mid;
+        $botService->pictureUrl = $profile->pictureUrl;
+        $botService->statusMessage = $profile->statusMessage;
+        $botService->save();
+
     
         $sql = "SELECT l.mid,l.displayName,l.pictureUrl,l.statusMessage, h.message, h.room_id
                 FROM line_accounts as l
