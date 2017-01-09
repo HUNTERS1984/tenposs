@@ -53,7 +53,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
     $app->get('/point/use/list','PointController@use_list');
     $app->get('/point/history','PointController@history_list');
 
-    $app->group(['prefix' => 'api/v1','namespace' => 'App\Http\Controllers','middleware' => 'jwt.auth'], function($app)
+    $app->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function($app)
     {
         $app->get('payment','PaymentController@index');
       
@@ -75,6 +75,7 @@ $app->group(['middleware' => 'jwt.auth'], function ($app) {
 
         $app->get('billingtransactions/{agreement_id}','PaymentController@billingTransactions');
 
+        $app->post('customerRegister', 'CustomersController@register');
     });
 
 
