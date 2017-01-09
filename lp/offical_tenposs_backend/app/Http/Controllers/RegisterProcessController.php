@@ -208,7 +208,7 @@ class RegisterProcessController extends Controller
                     $ret[0]['営業時間'] = $ret[0]['Operating Hours'];
                     $ret[0]['定休日'] = $ret[0]['Shop holidays'];
                     $ret[0]['カテゴリー'] = 1;
-                    if (count($ret) > 3)
+                    if (count($ret) > 3 && isset($ret[3]['The homepage']))
                         $ret[0]['お店のホームページ'] = $ret[3]['The homepage'];
                     echo json_encode($ret[0]);
                 }
