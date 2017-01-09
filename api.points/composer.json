@@ -13,7 +13,10 @@
         "tymon/jwt-auth": "0.5.*",
         "illuminate/cookie": "^5.3",
         "anouar/paypalpayment": "^1.1",
-        "basicit/lumen-vendor-publish": "^2.0"
+        "stripe/stripe-php": "4.*",
+        "laravelista/lumen-vendor-publish": "^2.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "rap2hpoutre/laravel-log-viewer": "^0.8.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

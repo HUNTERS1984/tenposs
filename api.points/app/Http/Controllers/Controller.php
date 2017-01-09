@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Classes\Payment\Paid_Payment;
+use App\Classes\Payment\Stripe_Payment;
 
 class Controller extends BaseController
 {
@@ -23,11 +26,12 @@ class Controller extends BaseController
         '1006' => 'Email not correct',
         '1007' => 'Address does not exist',
         '1008' => 'Can not send email',
-        '1009' => 'Accout is not active',
+        '1009' => 'Account is not active',
         '1010' => 'Create Room Success.',
         '1011' => 'Time expire.',
         '1012' => 'Parameter sig not exist.',
         '1013' => 'Parameter sig is not valid.',
+        '1014' => 'Create new account failed',
         '10010' => 'The token is invalid',
         '10011' => 'Token is no longer valid because it has expired.',
         '10012' => 'Token exception.',
@@ -43,6 +47,19 @@ class Controller extends BaseController
         'message' => 'OK',
         'data' => array()
     );
+
+    //Payment id
+    protected $_paypalId; 
+    protected $_stripeId;
+    protected $_paidjpId;
+
+    public function __construct()
+    {
+        $payment_common = config('payment_common');
+        $this->_paypalId = $payment_common['PAYMENT_ID']['PAYPAL'];
+        $this->_stripeId = $payment_common['PAYMENT_ID']['STRIPE'];
+        $this->_paidjpId = $payment_common['PAYMENT_ID']['PAIDJP'];
+    }
 
     function output($body = array())
     {
@@ -93,5 +110,34 @@ class Controller extends BaseController
             }
         }
         return 0;
+    }
+
+    protected function validateAuth($acceptRoles = array())
+    {
+        $data_token = JWTAuth::parseToken()->getPayload();
+        if(!$data_token) $this->error(9997);
+
+        $auth_id = $data_token->get('id');
+        $auth_role = $data_token->get('role');
+        if(count($acceptRoles) == 0) return false;
+
+        if (!in_array($auth_role, $acceptRoles)) {
+            return $this->error(9997);
+        } 
+        return false;
+    }
+
+    protected function getPaymentHandler($paymentId)
+    {
+        $paymentHandler = false;
+        switch ($paymentId) {
+            case $this->_stripeId:
+                $paymentHandler = new Stripe_Payment();
+                break;
+            case $this->_paidjpId:
+                $paymentHandler = new Paid_Payment();
+                break;
+        }
+        return $paymentHandler;
     }
 }

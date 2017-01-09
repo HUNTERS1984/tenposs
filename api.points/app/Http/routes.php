@@ -21,6 +21,15 @@ $app->get('/', function () use ($app) {
 $app->post('/auth/login', 'Auth\AuthController@postLogin');
 $app->get('api/v1/excecuteagreement','PaymentController@excecuteAgreement');
 
+$app->group(['prefix' => 'webhook'], function($app){
+    $app->post('all', 'WebhookController@all');
+});
+
+//Laravel log viewer
+// $app->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($app) {
+//     $app->get('logs', 'LogViewerController@index');
+// });
+
 $app->group(['middleware' => 'jwt.auth'], function ($app) {
 //    $app->get('/', function () use ($app) {
 //        return [
