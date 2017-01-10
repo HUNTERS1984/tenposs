@@ -32,10 +32,18 @@ class UserController extends Controller
     }
     public function postLogin(Request $request){
         
+        $message = array(
+            'email.required' => 'メールが必要です。',
+            'email.max' => 'メールは255文字以下でなければなりません。',
+            'email.email' => '正しいメールを入力してください。',
+            'password.min' => 'パスワードは6文字以上でなければなりません。',
+            'password.required' => 'パスワードが必要です。',
+        );
+
         $validator = Validator::make( $request->all() , [
             'email' => 'required|email|max:255',
             'password' => 'required|min:6',
-        ]);
+        ],$message);
         
         if ( $validator->fails() ) {
             return back()
@@ -83,10 +91,19 @@ class UserController extends Controller
     public function postRegister(Request $request)
     {
 
+        $message = array(
+            'email.required' => 'メールが必要です。',
+            'email.max' => 'メールは255文字以下でなければなりません。',
+            'email.email' => '正しいメールを入力してください。',
+            'password.min' => 'パスワードは6文字以上でなければなりません。',
+            'password.required' => 'パスワードが必要です。',
+            'password.confirmed' => '確認パスワードが違います。',
+        );
+
         $validator = Validator::make( $request->all() , [
             'email' => 'required|email|max:255',
             'password' => 'required|min:6|confirmed',
-        ]);
+        ],$message);
 
         if ( $validator->fails() ) {
             return back()
@@ -115,7 +132,7 @@ class UserController extends Controller
             return back()->withErrors('ユーザーが存在します!')->withInput();
         }
         return back()->withErrors('登録できません!')->withInput();
-        /*
+        
         $url_authorize = '';
         Mail::send('emails.register',
 			 array( 'url_authorize' => $url_authorize)
@@ -126,7 +143,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-        */   
+           
         
     }
     
@@ -135,10 +152,17 @@ class UserController extends Controller
     }
     
     public function sendResetLinkEmail(Request $request){
+
+        $message = array(
+            'email.required' => 'メールが必要です。',
+            'email.max' => 'メールは255文字以下でなければなりません。',
+            'email.email' => '正しいメールを入力してください。',
+        );
+
         // send mail reset
         $validator = Validator::make( $request->all() , [
             'email' => 'required|email|max:255',
-        ]);
+        ],$message);
 
 
         if ( $validator->fails() ) {
@@ -164,11 +188,17 @@ class UserController extends Controller
     }
     
     public function resetPost(Request $request){
+        $message = array(
+            'password.min' => 'パスワードは6文字以上でなければなりません。',
+            'password.required' => 'パスワードが必要です。',
+            'password.confirmed' => '確認パスワードが違います。',
+        );
+
         // validate password
         $validator = Validator::make( $request->all() , [
             'password' => 'required|min:6',
             'password_confirmation' => 'required|min:6|confirmed',
-        ]);
+        ], $message);
          if ( $validator->fails() ) {
             return back()
                 ->withInput()

@@ -71,6 +71,14 @@ class RegisterProcessController extends Controller
         
         if( !$request->exists('shop_name_register') ){
            
+            $message = array(
+                'business_type.required' => '事業形態が必要です。',
+                'app_name_register.max' => 'アプリ名は255文字以下でなければなりません。',
+                'app_name_register.required' => 'アプリ名が必要です。',
+                'domain.required' => 'ドメインが必要です。',
+                'domain_type.required' => 'ドメインタイプが必要です。',
+            );
+
             $validator = Validator::make(  $request->all()  , [
                 'business_type'=>'required',
                 'app_name_register'=>'required|max:255',
@@ -78,7 +86,7 @@ class RegisterProcessController extends Controller
     			'domain_type'=>'required',
                 //'tel'=>'required|numeric',
                 //'fax'=>'required|numeric'
-            ]);
+            ],$message);
             
             if ($validator->fails())
     		{

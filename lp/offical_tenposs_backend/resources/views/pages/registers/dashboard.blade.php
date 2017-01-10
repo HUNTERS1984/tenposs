@@ -160,13 +160,13 @@ app作成アカウントの開設有難うございます。この管理画面�
 					                               placeholder="">
 					                    </div>
 					                </div>
-					                <div class="form-group">
+<!-- 					                <div class="form-group">
 					                    <label for="inputEmail3" class="col-sm-offset-2 col-sm-4">ファックス</label>
 					                    <div class="col-sm-4">
 					                        <input type="text" class="form-control" id="fax" name="fax" value="{{ old('fax') }}"
 					                               placeholder="">
 					                    </div>
-					                </div>
+					                </div> -->
 					                <p class="text-center">
 					                	<button type="submit" class="btn btn-primary btn-xanhduong"> 次へ </button>
 					                </p>
