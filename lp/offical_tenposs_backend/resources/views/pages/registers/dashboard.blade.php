@@ -53,9 +53,8 @@
 						    <div id="collapseOne" class="panel-collapse collapse {{ $step['step1']['active'] }}" role="tabpanel" aria-labelledby="headingOne">
 						      <div class="panel-body">
 						      	<p style="padding:30px">
-						      			TENPOSSへようこそ！ショップ開設あ	りがとうございます。
-この画面ではショップをオープンするまでの道のりを案内したり、商品が売れた通知やTENPOSSからのキャンペーンのお知らせ、上手にショップを運営するためのヒント等を表示します。
-まずはショップの公開まで進めてみましょう！
+						      			Tenpossへようこそ！
+app作成アカウントの開設有難うございます。この管理画面ではアプリ登録までのステップを案内したり、クーポンを利用されたユーザーの通知やTenposs からのキャンペーンのお知らせ、上手にアプリを運営するためのヒント等を表示します。 まずはアプリの公開まで進めてみましょう！
 						      	</p>
 						       	<p class="text-center">
 					       			<button onClick="window.location.reload()" class="btn btn-primary btn-xanhduong" >次へ</button>
@@ -292,8 +291,7 @@
 						<img src="{{ url('assets/frontend/img/logo-agree.jpg') }}" alt="">
 						<p class="text-center">
 							この度はTenpossをお申し込みいただき、ありがとうございます。<br/><br/>
-							現時点ではまだお申し込み手続きが完了しておりませんので、管理者から確認する必要があります。
-							確認にかかる時間は1日以内です
+							現時点ではまだお申し込み手続きが完了しておりません。簡単な審査と確認を行います。 確認にかかるお時間は最大で3営業日になります。よろしくお願いします。
 						</p>
 					</div>
 					@endif

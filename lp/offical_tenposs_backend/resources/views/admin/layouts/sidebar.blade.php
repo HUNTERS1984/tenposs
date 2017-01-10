@@ -68,6 +68,9 @@
                 <a href="{{route('admin.client.contact')}}"><span>お問い合わせ</span></a>
             </li>
             <li>
+                <a href="{{route('logout')}}"><span>ログアウト</span></a>
+            </li>
+            <li>
                 <a href="http://pon.cm/" target="_blank" class="img-nav">
                     <img src="{{ url('admin/images/pon-nav-bottom.png') }}" alt="">
                 </a>

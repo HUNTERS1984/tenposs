@@ -76,8 +76,8 @@ class RegisterProcessController extends Controller
                 'app_name_register'=>'required|max:255',
                 'domain'=>'required|unique:user_infos',
     			'domain_type'=>'required',
-                'tel'=>'required|numeric',
-                'fax'=>'required|numeric'
+                //'tel'=>'required|numeric',
+                //'fax'=>'required|numeric'
             ]);
             
             if ($validator->fails())
@@ -93,8 +93,10 @@ class RegisterProcessController extends Controller
             $userInfos->app_name_register = $request->input('app_name_register');
             $userInfos->domain = $request->input('domain');
             $userInfos->company = $request->input('company');
-            $userInfos->tel = $request->input('tel');
-            $userInfos->fax = $request->input('fax');
+            if ($request->input('tel'))
+                $userInfos->tel = $request->input('tel');
+            if ($request->input('fax'))
+                $userInfos->fax = $request->input('fax');
             $userInfos->domain_type = $request->input('domain_type');
 
             $userInfos->save();
