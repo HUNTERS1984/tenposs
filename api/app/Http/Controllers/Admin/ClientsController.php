@@ -444,7 +444,7 @@ class ClientsController extends Controller
                 try {
                     $setting = AdminGlobalSettings::find(1);
                     
-                    $to = $setting->admin_email ;
+                    $to = array($setting->admin_email, $user->email);
                     
                     $sentMail = Mail::send('admin.emails.user_approved',
                         array('user' => $user)
