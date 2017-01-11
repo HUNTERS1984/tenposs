@@ -3118,7 +3118,7 @@ a:hover.btn-user-poup-log-poup-right{
 .chat-body .answer {
   position: relative;
   clear: both;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 .chat-body .answer.left {
   padding: 0 0 0 58px;
@@ -3166,11 +3166,15 @@ a:hover.btn-user-poup-log-poup-right{
   border-bottom-width: 0;
 }
 .chat-body .answer.left .time {
-  right: -92px;
+  left: : 55px;
 }
 .chat-body .answer .time {
-  bottom: 0;
-  position: absolute;
+  bottom: -17px;
+    position: absolute;
+    width: 200px;
+    font-size: 10px;
+    color: #ccc;
+
 }
 .chat-body .answer.left .time span{
   color: #a0a9ac;
@@ -3197,9 +3201,7 @@ a:hover.btn-user-poup-log-poup-right{
   background: url(../images/bg-chat-arrow-right.png) no-repeat right bottom;
 }
 .chat-body .answer.right .time {
-  padding-right: 12px;
-  color: #333333;
-  left: -90px;
+  right: 55px;
 }
 .chat-body .answer.right .time span{
   color: #a0a9ac;
