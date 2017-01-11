@@ -232,9 +232,9 @@ class PushNotification
         // Build the binary notification
         $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;
         
-        if (!is_resource($this->pushStream))
+        if (!$this->pushStream or !is_resource($this->pushStream))
             $this->reconnectPush();
-
+        Log::info("APN: {$this->pushStream}");
         // Send it to the server
         $result = fwrite($this->pushStream, $msg, strlen($msg));
         if (!$result) {
