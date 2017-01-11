@@ -487,7 +487,7 @@ $(document).ready(function(){
                },
                success: function(response){
                    if ( response ){
-                       renderChatLists(response.data);
+                       renderChatLists(response);
                    }
                    console.log(response);
                }
