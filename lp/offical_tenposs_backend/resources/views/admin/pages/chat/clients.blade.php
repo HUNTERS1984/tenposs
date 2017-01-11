@@ -14,14 +14,14 @@
         <div class="wrapp-user-chat">
             <div class="left-user-chat">
                 <div class="wrapp_search_user_chat">
-                    <form class="form-horizontal">
+                    <div class="form-horizontal">
                         <div class="input-group">
                             <input id="search_input" type="text" class="form-control" placeholder="ユーザー名">
-                            <a href="javascript:void(0)" class="input-group-addon">
+                            <a href="javascript:void(0)" class="input-group-addon btn btn-primary">
                                 <img src="{{ url('admin/images/search.png') }}" alt="">
                             </a>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div id="contacts-lists" class="list-user" data-ss-container>
                     <ul class="nav-list-user"></ul>
