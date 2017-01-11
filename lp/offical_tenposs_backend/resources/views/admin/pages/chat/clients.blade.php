@@ -169,7 +169,7 @@ function drawMessage(message){
         $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
     }
 
-    $message.find('.time').text( moment(message.timestamp).format('LTS') );
+    $message.find('.time').text( moment(message.timestamp).format('MM-DD-YYYY h:m:sa') );
     $message.addClass('appeared');
 	// Append to windows
 	$('#messages-windows').append($message);
@@ -475,6 +475,7 @@ $(document).ready(function(){
     });
     // Search contact
     $('#search_input').on('keyup',function (e) {
+        e.preventDefault();
         var s = $(this).val();
         if (e.which === 13 && s.length > 0) {
             $.ajax({
@@ -482,6 +483,7 @@ $(document).ready(function(){
                type: 'post',
                data:{
                    s : s,
+                   chanel: channel
                },
                success: function(response){
                    if ( response ){

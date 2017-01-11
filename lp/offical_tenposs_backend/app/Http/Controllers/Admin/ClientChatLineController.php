@@ -93,13 +93,20 @@ class ClientChatLineController extends Controller
     public function searchContact(Request $request){
     
         if( $request->ajax() ){
-            $contacts = DB::table('line_accounts')
-            ->where('app_users.app_id',$request->app->id)
-            ->where('displayName','like','%'.$request->input('s').'%')
-            ->select('line_accounts.mid','line_accounts.mid','line_accounts.displayName','line_accounts.pictureUrl','line_accounts.statusMessage')
-            ->orderBy('displayName')
-            ->paginate(20);
-            
+            $sql = "SELECT l.mid,l.displayName,l.pictureUrl,l.statusMessage, h.message, h.room_id
+                FROM line_accounts as l
+                INNER JOIN
+                (
+                    SELECT t1.* FROM messages t1 
+                    WHERE not exists (
+                        SELECT 1 FROM messages t2 WHERE t1.from_mid = t2.from_mid AND t1.id < t2.id
+                    )
+                  
+                ) as h ON h.from_mid = l.mid 
+                WHERE l.displayName LIKE %".$request->input('s')."%
+                WHERE h.room_id = ".$request->input('chanel')." ORDER BY l.displayName";
+
+            $contacts = DB::select(DB::raw($sql));    
             return response()->json($contacts);
         }
         
