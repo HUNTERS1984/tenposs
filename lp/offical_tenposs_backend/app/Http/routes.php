@@ -125,7 +125,7 @@ Route::get('users/authorize_email/{token}', [ 'as' => 'user.activate', 'uses' =>
 
 Route::get('login',['as'=>'login','uses'=>'UserController@getLogin']);
 Route::post('login',['as'=>'login.post','uses'=>'UserController@postLogin']);
-Route::get('logout', 'UserController@logout');
+Route::get('logout', ['as'=>'logout','uses'=>'UserController@logout']);
 
 
 Route::get('password/reset/{token?}',['as'=>'password.reset','uses'=>'UserController@showResetForm']);

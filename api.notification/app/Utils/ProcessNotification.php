@@ -369,7 +369,7 @@ class ProcessNotification
 
     public function check_permission_notify_from_data($app_id, $auth_user_id, $notification_to, $type)
     {
-        if ($type == 'custom' || $type == 'coupon_use')
+        if ($type == 'custom' || $type == 'coupon_use' || $type == 'coupon_approve')
             return true;
         $isValid = false;
         $data = $this->get_permission_setting_user($app_id, $notification_to);

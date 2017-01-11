@@ -56,9 +56,9 @@ class PushRelugarSchedule extends Command
                 ->where('time_detail_month', '=',  $arr_day[1])
                 ->where('time_detail_day', '=',  $arr_day[2])
                 ->where(function ($query) use ($arr_hour){
-                    return $query->where('time_detail_hours', '<=',  $arr_hour[0])
+                    return $query->where('time_detail_hours', '>',  $arr_hour[0])
                             ->orWhere(function ($query) use ($arr_hour){
-                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '<=', $arr_hour[1]);
+                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '>=', $arr_hour[1]);
                             });
                 })->get();
                 
@@ -72,9 +72,9 @@ class PushRelugarSchedule extends Command
                 ->whereRaw('time_count_delivered <> time_count_repeat')
                 ->whereRaw('date(updated_at) < CURDATE()')
                 ->where(function ($query) use ($arr_hour){
-                    return $query->where('time_detail_hours', '<=',  $arr_hour[0])
+                    return $query->where('time_detail_hours', '>',  $arr_hour[0])
                             ->orWhere(function ($query) use ($arr_hour){
-                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '<=', $arr_hour[1]);
+                                return $query->where('time_detail_hours', '=',  $arr_hour[0])->where('time_detail_minutes', '>=', $arr_hour[1]);
                             });
                 })->get();
                 if (count($data_push) > 0) {

@@ -310,7 +310,7 @@ class CouponController extends Controller
             //dd($coupon_id);
             try {
                 $app_user->coupons()->attach($coupon_id, ['status' => 1, 'code' => md5($coupon_id . date('Y-m-d H:i:s'))]);
-                $app_data = App::where('user_id', $request->user['sub'])->first();
+                $app_data = App::where('user_id', $this->request->user['sub'])->first();
                 if (count($app_user) > 0) {
                     $data_push = array(
                         'app_user_id' => $app_user->id,

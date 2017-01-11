@@ -168,10 +168,10 @@ $(document).ready(function () {
         itemValue: 'id',  // this will be used to set id of tag
         itemText: 'label' // this will be used to set text of tag
     });
-    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: '全員に送信'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエントに送信'});
+    //$('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザに送信'});
+    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー指定送信'});
 });
 
 function clickEditPush(id) {
@@ -189,13 +189,13 @@ function clickEditPush(id) {
                 $('select[name=time_type]').val(obj.time_type);
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: 'すべてのユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: '全員に送信'});
                 if (obj.segment_client_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエント'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエントに送信'});
                 if (obj.segment_end_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザ'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザに送信'});
                 if (obj.segment_a_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー'});
+                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー指定送信'});
                 if (obj.time_type == 2) {
                     $('#time_config').show();
                     $('#repeat_config').show();

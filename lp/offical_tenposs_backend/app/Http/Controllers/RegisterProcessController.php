@@ -71,14 +71,22 @@ class RegisterProcessController extends Controller
         
         if( !$request->exists('shop_name_register') ){
            
+            $message = array(
+                'business_type.required' => '事業形態が必要です。',
+                'app_name_register.max' => 'アプリ名は255文字以下でなければなりません。',
+                'app_name_register.required' => 'アプリ名が必要です。',
+                'domain.required' => 'ドメインが必要です。',
+                'domain_type.required' => 'ドメインタイプが必要です。',
+            );
+
             $validator = Validator::make(  $request->all()  , [
                 'business_type'=>'required',
                 'app_name_register'=>'required|max:255',
                 'domain'=>'required|unique:user_infos',
     			'domain_type'=>'required',
-                'tel'=>'required|numeric',
-                'fax'=>'required|numeric'
-            ]);
+                //'tel'=>'required|numeric',
+                //'fax'=>'required|numeric'
+            ],$message);
             
             if ($validator->fails())
     		{
@@ -93,8 +101,10 @@ class RegisterProcessController extends Controller
             $userInfos->app_name_register = $request->input('app_name_register');
             $userInfos->domain = $request->input('domain');
             $userInfos->company = $request->input('company');
-            $userInfos->tel = $request->input('tel');
-            $userInfos->fax = $request->input('fax');
+            if ($request->input('tel'))
+                $userInfos->tel = $request->input('tel');
+            if ($request->input('fax'))
+                $userInfos->fax = $request->input('fax');
             $userInfos->domain_type = $request->input('domain_type');
 
             $userInfos->save();
@@ -208,7 +218,7 @@ class RegisterProcessController extends Controller
                     $ret[0]['営業時間'] = $ret[0]['Operating Hours'];
                     $ret[0]['定休日'] = $ret[0]['Shop holidays'];
                     $ret[0]['カテゴリー'] = 1;
-                    if (count($ret) > 3)
+                    if (count($ret) > 3 && isset($ret[3]['The homepage']))
                         $ret[0]['お店のホームページ'] = $ret[3]['The homepage'];
                     echo json_encode($ret[0]);
                 }

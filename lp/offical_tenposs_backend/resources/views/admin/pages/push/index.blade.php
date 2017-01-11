@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="label_to_segment">セグメントに送信する</label>
+                                            <label for="label_to_segment">送信先設定</label>
 
                                             <select multiple class="form-control" id="tags-input" name="tags-input">
  -->                                        </select>
