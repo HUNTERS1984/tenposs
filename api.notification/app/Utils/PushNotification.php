@@ -30,6 +30,7 @@ class PushNotification
 
         $this->timeout = 60;
         $this->connection_start = 0;
+        $this->pushStream = 0;
     }
 
     public static function getInstance()
@@ -145,7 +146,9 @@ class PushNotification
         if ($this->pushStream && is_resource($this->pushStream))
         {
           $this->connection_start = 0;
-          return @fclose($this->pushStream);
+          @fclose($this->pushStream);
+          $this->pushStream = 0;
+          return true;
         }
         else
           return true;
@@ -233,7 +236,7 @@ class PushNotification
         $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;
         
         if (!$this->pushStream or !is_resource($this->pushStream))
-            $this->reconnectPush();
+            $this->reconnectPush($path_pem_file, $pass_cer);
         Log::info("APN: {$this->pushStream}");
         // Send it to the server
         $result = fwrite($this->pushStream, $msg, strlen($msg));
