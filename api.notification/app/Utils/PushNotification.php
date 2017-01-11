@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class PushNotification
 {
+    protected $pushStream;
+    private $connection_start;
+    private $timeout;
+
     private $gooole_url;
     private $web_url;
     private $apple_url;
@@ -23,6 +27,9 @@ class PushNotification
         $this->gooole_url = Config::get('api.noti_google_url');
         $this->apple_url = Config::get('api.noti_apple_url');
         $this->web_url = Config::get('api.noti_web_url');
+
+        $this->timeout = 60;
+        $this->connection_start = 0;
     }
 
     public static function getInstance()
@@ -104,6 +111,137 @@ class PushNotification
             return false;
         }
     }
+
+
+
+    protected function connect($path_pem_file, $pass_cer) {
+        Log::info("APN: connecting to {$server}");
+        Log::info("APN: local_cert: $this->keyCertFilePath");
+        Log::info("APN: passphrase: $this->passphrase");
+        Log::info("APN: timeout: $this->timeout");
+
+        $ctx = stream_context_create();
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $path_pem_file);
+        stream_context_set_option($ctx, 'ssl', 'passphrase', $pass_cer);
+
+        $stream = stream_socket_client($server, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+        Log::info("APN: Maybe some errors: $err: $errstr");
+        
+        
+        if (!$stream) {
+          
+          if ($err)
+            Log::error( "APN Failed to connect: $err $errstr");
+          else
+            Log::error( "APN Failed to connect: Something wrong with context");
+            
+          return false;
+        }
+        else {
+          stream_set_timeout($stream,20);
+          Log::info("APN: Opening connection to: {$server}");
+          return $stream;
+        }
+      }
+
+    function disconnectPush()
+    {
+        Log::info("APN: disconnectPush");
+        if ($this->pushStream && is_resource($this->pushStream))
+        {
+          $this->connection_start = 0;
+          return @fclose($this->pushStream);
+        }
+        else
+          return true;
+    }
+
+    protected function timeoutSoon($left_seconds = 5)
+    {
+        $t = ( (round(microtime(true) - $this->connection_start) >= ($this->timeout - $left_seconds)));
+        return (bool)$t;
+    }
+
+
+    function reconnectPush($path_pem_file, $pass_cer)
+    {
+        $this->disconnectPush();
+            
+        if ($this->connectToPush($path_pem_file, $pass_cer))
+        {
+          Log::info("APN: reconnect");
+          return true;
+        }
+        else
+        {
+          Log::info("APN: cannot reconnect");
+          return false;
+        }
+    }
+  
+    function tryReconnectPush($path_pem_file, $pass_cer)
+    {
+
+        if($this->timeoutSoon())
+        {
+            return $this->reconnectPush($path_pem_file, $pass_cer);
+        }
+        
+        return false;
+    }
+    public function connectToPush($path_pem_file, $pass_cer)
+    {
+        if (!$this->pushStream or !is_resource($this->pushStream))
+        {
+          Log::info("APN: connectToPush");
+
+          $this->pushStream = $this->connect($path_pem_file, $pass_cer);
+          
+          if ($this->pushStream)
+          {
+            $this->connection_start = microtime(true);
+            //stream_set_blocking($this->pushStream,0);
+          }
+        }
+
+        return $this->pushStream;
+    }
+
+    public function iOS_stream($data, $device_token, $path_pem_file, $pass_cer, $array_append_data = array())
+    {
+        if (!ctype_xdigit($deviceToken))
+        {
+          Log::info("APN: Error - '$deviceToken' token is invalid. Provided device token contains not hexadecimal chars");
+          $this->error = 'Invalid device token. Provided device token contains not hexadecimal chars';
+          return false;
+        }
+        
+        // restart the connection
+        $this->tryReconnectPush($path_pem_file, $pass_cer);
+
+        
+        // Create the payload body
+        $body['aps'] = array(
+            'alert' => ''.$data['title'],
+            'sound' => 'default'
+        );
+        $body['data'] = array('type' => $data['type'], 'desc' => $data['desc'],
+            'id' => $data['id'], 'image_url' => $data['image_url']);
+        if (count($array_append_data) > 0)
+            $body['data'] = array_merge($body['data'], $array_append_data);
+
+        // Encode the payload as JSON
+        $payload = json_encode($body);
+        // Build the binary notification
+        $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;
+        // Send it to the server
+        $result = fwrite($this->pushStream, $msg, strlen($msg));
+        if (!$result)
+            return false;//'Message not delivered' . PHP_EOL;
+        else
+            return true;//'Message successfully delivered' . PHP_EOL;
+    }
+
 
     // Sends Push notification for iOS users
     public function iOS($data, $device_token, $path_pem_file, $pass_cer, $array_append_data = array())

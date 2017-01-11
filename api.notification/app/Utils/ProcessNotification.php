@@ -274,7 +274,7 @@ class ProcessNotification
             }
             if (!empty($user_setting['apple_push_key'] && !empty($app_setting['apple_push_cer_file'] && !empty($app_setting['apple_push_cer_password'])))) {
                 //notification to apple
-                $rs_ios = PushNotification::getInstance()->iOS($data_notify, $user_setting['apple_push_key'], base_path('public/') . $app_setting['apple_push_cer_file'], $app_setting['apple_push_cer_password'], $arr_append_data);
+                $rs_ios = PushNotification::getInstance()->iOS_stream($data_notify, $user_setting['apple_push_key'], base_path('public/') . $app_setting['apple_push_cer_file'], $app_setting['apple_push_cer_password'], $arr_append_data);
             }
             if (!empty($app_setting['web_push_server_key'] && !empty($user_setting['web_push_key']))) {
                 //notification to apple
@@ -295,7 +295,7 @@ class ProcessNotification
             if (!empty($user_setting['apple_push_key'] && !empty($app_setting['staff_apple_push_cer_file'] && !empty($app_setting['staff_apple_push_cer_password'])))) {
                 //notification to apple
                 Log::info("send_message_to_staff|ios");
-                $rs_ios = PushNotification::getInstance()->iOS($data_notify, $user_setting['apple_push_key'], base_path('public/') . $app_setting['staff_apple_push_cer_file'], $app_setting['staff_apple_push_cer_password'], $arr_append_data);
+                $rs_ios = PushNotification::getInstance()->iOS_stream($data_notify, $user_setting['apple_push_key'], base_path('public/') . $app_setting['staff_apple_push_cer_file'], $app_setting['staff_apple_push_cer_password'], $arr_append_data);
             }
         }
     }
