@@ -168,8 +168,8 @@ function drawMessage(message){
     }else{
         $message.find('.avatar img').attr('src', profileTemp.pictureUrl +'/small')
     }
-
-    $message.find('.time').text( moment(message.timestamp).format('MM-DD-YYYY h:m:sa') );
+    //console.log( moment( parseInt(message.timestamp) ).format('MM-DD-YYYY h:m:sa'));
+    $message.find('.time').text( moment( parseInt(message.timestamp) ).format('MM-DD-YYYY h:m:sa') );
     $message.addClass('appeared');
 	// Append to windows
 	$('#messages-windows').append($message);
