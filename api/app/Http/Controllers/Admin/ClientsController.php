@@ -308,7 +308,7 @@ class ClientsController extends Controller
                 }
 
                 $address = \App\Models\Address::where('store_id', $store->id)->first();
-                if( !$address ){
+                if( !$address  && $userInfos->shop_address){
                     $response = cURL::newRequest('get', "https://maps.googleapis.com/maps/api/geocode/json?address=".$userInfos->shop_address)->send();
                     $response = json_decode($response);
 
@@ -317,7 +317,7 @@ class ClientsController extends Controller
                     $address->title = $userInfos->shop_address;
                     $address->tel = $userInfos->shop_tel;
                     
-                    if ($response)
+                    if ($response && count($response->results) > 0)
                     {
                         $address->latitude= $response->results[0]->geometry->location->lat;
                         $address->longitude= $response->results[0]->geometry->location->lng;

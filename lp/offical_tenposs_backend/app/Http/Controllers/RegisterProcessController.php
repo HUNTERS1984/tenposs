@@ -113,37 +113,43 @@ class RegisterProcessController extends Controller
                 ->with('status','アプリ登録は完了しました。');
         }else{
             //dd($request->all());
-            $validator = Validator::make(  $request->all() , [
-                'shop_category'=>'required',
-                'shop_tel_register'=>'required',
-                'shop_close_register'=>'required|max:255',
-                'shop_time_register'=>'required|max:255',
-                'shop_address_register'=>'required',
-                'shop_name_register'=>'required|max:255',
-                'shop_description_register'=>'required|max:1000',
-            ]);
+      //       $validator = Validator::make(  $request->all() , [
+      //           'shop_category'=>'required',
+      //           'shop_tel_register'=>'required',
+      //           'shop_close_register'=>'required|max:255',
+      //           'shop_time_register'=>'required|max:255',
+      //           'shop_address_register'=>'required',
+      //           'shop_name_register'=>'required|max:255',
+      //           'shop_description_register'=>'required|max:1000',
+      //       ]);
             
-            if ($validator->fails())
-    		{
-    			 return back()
-                    ->withInput()
-                    ->withErrors($validator);
-    		}
+      //       if ($validator->fails())
+    		// {
+    		// 	 return back()
+      //               ->withInput()
+      //               ->withErrors($validator);
+    		// }
             $userInfos = UserInfos::find($request->user['sub']);
             if( !$userInfos  ){
                 return back()
                     ->with('warning','アプリ登録を完了してください');
             }
-           
-            $userInfos->shop_category = $request->input('shop_category');
+            if ($request->input('shop_category'))
+                $userInfos->shop_category = $request->input('shop_category');
             if ($request->input('shop_url_register'))
                 $userInfos->shop_url = $request->input('shop_url_register');
-            $userInfos->shop_tel = $request->input('shop_tel_register');
-            $userInfos->shop_regular_holiday = $request->input('shop_close_register');
-            $userInfos->shop_business_hours = $request->input('shop_time_register');
-            $userInfos->shop_address = $request->input('shop_address_register');
-            $userInfos->shop_name = $request->input('shop_name_register');
-            $userInfos->shop_description = $request->input('shop_description_register');
+            if ($request->input('shop_tel_register'))
+                $userInfos->shop_tel = $request->input('shop_tel_register');
+            if ($request->input('shop_close_register'))
+                $userInfos->shop_regular_holiday = $request->input('shop_close_register');
+            if ($request->input('shop_time_register'))
+                $userInfos->shop_business_hours = $request->input('shop_time_register');
+            if ($request->input('shop_address_register'))
+                $userInfos->shop_address = $request->input('shop_address_register');
+            if ($request->input('shop_name_register'))
+                $userInfos->shop_name = $request->input('shop_name_register');
+            if ($request->input('shop_description_register'))
+                $userInfos->shop_description = $request->input('shop_description_register');
             $userInfos->save();
                 
             return back()
