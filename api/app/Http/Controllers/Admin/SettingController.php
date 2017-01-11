@@ -31,6 +31,7 @@ class SettingController extends Controller
 			if( $setting )
 			{
 				 $setting->admin_email = $request->input('admin_email');
+				 $setting->save();
 				 return back()->with('success', 'Update success');
 			}
 			
