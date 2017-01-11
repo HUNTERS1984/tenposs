@@ -211,6 +211,8 @@ class PushNotification
           return false;
         }
         
+        
+
         // restart the connection
         $this->tryReconnectPush($path_pem_file, $pass_cer);
 
@@ -229,13 +231,17 @@ class PushNotification
         $payload = json_encode($body);
         // Build the binary notification
         $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;
+        
+        if (!is_resource($this->pushStream))
+            $this->reconnectPush();
+
         // Send it to the server
         $result = fwrite($this->pushStream, $msg, strlen($msg));
         if (!$result) {
-            Log::info("APN: send ok");
+            Log::info("APN: send not ok");
             return false;
         } else {
-            Log::info("APN: send not OK");
+            Log::info("APN: send OK");
             return true;
         }
     }
@@ -279,10 +285,10 @@ class PushNotification
         fclose($fp);
         Log::info("ios: " . $result);
         if (!$result) {
-            Log::info("APN: send ok");
+            Log::info("APN: send not OK");
             return false;
         } else {
-            Log::info("APN: send not OK");
+            Log::info("APN: send OK");
             return true;
         }
     }
