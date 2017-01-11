@@ -115,16 +115,11 @@ class PushNotification
 
 
     protected function connect($path_pem_file, $pass_cer) {
-        Log::info("APN: connecting to {$server}");
-        Log::info("APN: local_cert: $this->keyCertFilePath");
-        Log::info("APN: passphrase: $this->passphrase");
-        Log::info("APN: timeout: $this->timeout");
-
         $ctx = stream_context_create();
         stream_context_set_option($ctx, 'ssl', 'local_cert', $path_pem_file);
         stream_context_set_option($ctx, 'ssl', 'passphrase', $pass_cer);
 
-        $stream = stream_socket_client($server, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+        $stream = stream_socket_client($this->apple_url, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
         Log::info("APN: Maybe some errors: $err: $errstr");
         
         
@@ -139,7 +134,7 @@ class PushNotification
         }
         else {
           stream_set_timeout($stream,20);
-          Log::info("APN: Opening connection to: {$server}");
+          Log::info("APN: Opening connection to: {$this->apple_url}");
           return $stream;
         }
       }
@@ -163,7 +158,7 @@ class PushNotification
     }
 
 
-    function reconnectPush($path_pem_file, $pass_cer)
+    protected function reconnectPush($path_pem_file, $pass_cer)
     {
         $this->disconnectPush();
             
@@ -179,8 +174,8 @@ class PushNotification
         }
     }
   
-    function tryReconnectPush($path_pem_file, $pass_cer)
-    {
+    protected function tryReconnectPush($path_pem_file, $pass_cer)
+    {   
 
         if($this->timeoutSoon())
         {
@@ -209,7 +204,7 @@ class PushNotification
 
     public function iOS_stream($data, $device_token, $path_pem_file, $pass_cer, $array_append_data = array())
     {
-        if (!ctype_xdigit($deviceToken))
+        if (!ctype_xdigit($device_token))
         {
           Log::info("APN: Error - '$deviceToken' token is invalid. Provided device token contains not hexadecimal chars");
           $this->error = 'Invalid device token. Provided device token contains not hexadecimal chars';
@@ -236,10 +231,13 @@ class PushNotification
         $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;
         // Send it to the server
         $result = fwrite($this->pushStream, $msg, strlen($msg));
-        if (!$result)
-            return false;//'Message not delivered' . PHP_EOL;
-        else
-            return true;//'Message successfully delivered' . PHP_EOL;
+        if (!$result) {
+            Log::info("APN: send ok");
+            return false;
+        } else {
+            Log::info("APN: send not OK");
+            return true;
+        }
     }
 
 
@@ -280,10 +278,13 @@ class PushNotification
         // Close the connection to the server
         fclose($fp);
         Log::info("ios: " . $result);
-        if (!$result)
-            return false;//'Message not delivered' . PHP_EOL;
-        else
-            return true;//'Message successfully delivered' . PHP_EOL;
+        if (!$result) {
+            Log::info("APN: send ok");
+            return false;
+        } else {
+            Log::info("APN: send not OK");
+            return true;
+        }
     }
 
     // Curl
