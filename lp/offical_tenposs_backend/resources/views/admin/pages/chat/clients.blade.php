@@ -365,7 +365,7 @@ function connectToChat() {
         for ( i = package.history.length - 1; i >= 0; i--) {
             drawMessage({
                 text: package.history[i].message,
-                timestamp: moment( parseInt(package.history[i].created_at) ).format('MM-DD-YYYY h:m:sa') ,
+                timestamp: package.history[i].created_at ,
                 profile: (function(){
                     if(package.history[i].from_mid === profile.mid)
                         return profile;
