@@ -103,8 +103,7 @@ class ClientChatLineController extends Controller
                     )
                   
                 ) as h ON h.from_mid = l.mid 
-                WHERE l.displayName LIKE %".$request->input('s')."%
-                WHERE h.room_id = ".$request->input('chanel')." ORDER BY l.displayName";
+                WHERE l.displayName LIKE '%".$request->input('s')."%' AND h.room_id = '".$request->input('chanel')."' ORDER BY l.displayName";
 
             $contacts = DB::select(DB::raw($sql));    
             return response()->json($contacts);
