@@ -131,7 +131,7 @@ class UserController extends Controller
         if( !empty($response) && isset( $response->code ) && $response->code == 9996 ){
             return back()->withErrors('ユーザーが存在します!')->withInput();
         }
-        return back()->withErrors('登録できません!')->withInput();
+        
         
         $url_authorize = '';
         Mail::send('emails.register',
@@ -143,7 +143,7 @@ class UserController extends Controller
 					 ->subject('【Tenposs】新規登録のお知らせ');
 			 });   
        
-           
+        return back()->withErrors('登録できません!')->withInput();
         
     }
     
