@@ -71,7 +71,7 @@ class ProcessNotification
 
                 $users = UserPush::where('app_app_id', $obj->app_id)
                 ->where(function ($query){
-                    return $query->whereNotNull('android_push_key')->orWhereNotNull('apple_push_key')->orWhereNotNull('web_push_key');
+                    return $query->where('android_push_key', '!=', '')->orWhere('apple_push_key', '!=', '')->orWhere('web_push_key', '!=', '');
                 })->get();
                 foreach ($users as $user) {
                     $tile = 0;

@@ -6,7 +6,7 @@
         <div class="left">
             <span>メニュー</span>
             <strong>
-                メニューの登緑・編集が可能
+                登緑・編集が可能
             </strong>
         </div>
         <div class="right">

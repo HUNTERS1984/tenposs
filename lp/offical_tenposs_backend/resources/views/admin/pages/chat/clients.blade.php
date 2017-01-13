@@ -5,7 +5,7 @@
     <div class="wrapp-breadcrumds">
         <div class="left">
             <span>チャット</span><!-- <span class="circle-bre">19</span> -->
-            <strong>顧客のチャットが可能 </strong>
+            <strong>ユーザーとのチャットが可能 </strong>
         </div>
     </div>
     <section class="content">

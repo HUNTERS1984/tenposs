@@ -107,8 +107,11 @@
                                         <div class="form-group">
                                             <label for="label_to_segment">送信先設定</label>
 
-                                            <select multiple class="form-control" id="tags-input" name="tags-input">
- -->                                        </select>
+                                            <select class="form-control" id="tags-input" name="tags-input">
+                                                <option value="">選択します</option>
+                                                <option value="0">全員に送信</option>
+                                                <option value="1">ユーザー指定送信</option>
+                                            </select>
                                             <div id="choose_a_user" style="padding-top: 10px;">
                                                 <label for="配信先のセグメント">ユーザーを選択する</label>
                                                 <select name="auth_user_id" class="form-control">

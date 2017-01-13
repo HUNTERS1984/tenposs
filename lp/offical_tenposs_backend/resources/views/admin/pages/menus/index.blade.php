@@ -6,7 +6,7 @@
         <div class="left">
             <span>メニュー</span>
             <strong>
-                メニューの登緑・編集が可能
+                登緑・編集が可能
             </strong>
         </div>
         <div class="right">
@@ -15,8 +15,8 @@
                     <input type="checkbox" name="check-1" value="4" class="lcs_check" autocomplete="disable">
                     <div class="lcs_switch  lcs_checkbox_switch lcs_off">
                         <div class="lcs_cursor"></div>
-                        <div class="lcs_label lcs_label_on">表示項</div>
-                        <div class="lcs_label lcs_label_off">表示項</div>
+                        <div class="lcs_label lcs_label_on">表示</div>
+                        <div class="lcs_label lcs_label_off">非表示</div>
                     </div>
                 </div>
             </span>
@@ -76,7 +76,7 @@
         <div class="col-md-8">
             <div class="btn-menu">
                 <a href="{{ route('admin.menus.cat') }}" class="btn-3">
-                    <i class="glyphicon glyphicon-plus"></i> カテゴリ追加
+                    <i class="glyphicon glyphicon-plus"></i> カテゴリ追加・編集
                 </a>
                 <a href="javascript:avoid()" class="btn-4" data-toggle="modal" data-target="#AddItem">
                     <i class="glyphicon glyphicon-plus"></i> メニュー追加

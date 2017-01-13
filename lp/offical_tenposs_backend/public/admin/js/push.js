@@ -22,16 +22,12 @@ $('#btnSubmit').click(function (e) {
     var client_users = 0;
     var end_users = 0;
     var a_user = 0;
-    if (tags_input != null && tags_input.length > 0) {
-        if (tags_input.indexOf('all_users') > -1)
-            all_user = 1;
-        if (tags_input.indexOf('client_users') > -1)
-            client_users = 1;
-        if (tags_input.indexOf('end_users') > -1)
-            end_users = 1;
-        if (tags_input.indexOf('a_user') > -1)
-            a_user = 1;
-    }
+    
+    if (tags_input == 0)
+        all_user = 1;
+    else if (tags_input == 1)
+        a_user = 1;
+    
     if (title == '' || message == '') {
         $('#customer_message ul li').first().text('タイトルと内容を入力してください');
         $('#customer_message').show();
@@ -90,7 +86,8 @@ $('#btnSubmit').click(function (e) {
                 $('#myModal').modal('show');
                 $('input[name=push_id]').val(0);
                 $('input[name=title]').val('');
-                $('textarea[name=message]').val('');
+                //$('textarea[name=message]').val('');
+                $('#editor').trumbowyg('html', '');
                 $('select[name=auth_user_id]').val(0);
                 $('select[name=time_type]').val(0);
                 $('#time_config').hide();
@@ -152,26 +149,13 @@ $(document).ready(function () {
 
     });
 
-    $("#tags-input").on('itemAdded', function (event) {
-        console.log('item added : ' + event.item);
-    });
-
-    $("#tags-input").on('itemRemoved', function (event) {
-        console.log('item removed : ' + event.item);
-        if (event.item == 'a_user') {
+    $('#choose_a_user').hide();
+    $("select[name=tags-input]" ).change(function() {
+        if ($( this ).val() == 1)
+            $('#choose_a_user').show();
+        else
             $('#choose_a_user').hide();
-
-        }
     });
-    $('#tags-input').tagsinput({
-      allowDuplicates: false,
-        itemValue: 'id',  // this will be used to set id of tag
-        itemText: 'label' // this will be used to set text of tag
-    });
-    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: '全員に送信'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエントに送信'});
-    //$('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザに送信'});
-    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー指定送信'});
 });
 
 function clickEditPush(id) {
@@ -189,13 +173,9 @@ function clickEditPush(id) {
                 $('select[name=time_type]').val(obj.time_type);
                 $('select[name=tags-input]').tagsinput('removeAll');
                 if (obj.segment_all_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'all_users', label: '全員に送信'});
-                if (obj.segment_client_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'client_users', label: 'クライエントに送信'});
-                if (obj.segment_end_users == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'end_users', label: 'エンドユーザに送信'});
+                    $('select[name=tags-input]').val(0);
                 if (obj.segment_a_user == 1)
-                    $('select[name=tags-input]').tagsinput('add', {id: 'a_user', label: 'ユーザー指定送信'});
+                    $('select[name=tags-input]').val(1);
                 if (obj.time_type == 2) {
                     $('#time_config').show();
                     $('#repeat_config').show();

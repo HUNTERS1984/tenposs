@@ -6,7 +6,7 @@
         <div class="left">
             <span>ニュース</span>
             <strong>
-                ニュースの登録・編集が可能
+                最新の情報を登録・編集が可能です。
             </strong>
         </div>
         <div class="right">
