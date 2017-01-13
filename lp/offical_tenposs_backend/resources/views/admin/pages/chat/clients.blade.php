@@ -484,7 +484,7 @@ $(document).ready(function(){
     $('a#rm-log-chat').on('click', function(e){
 
         e.preventDefault();
-        if( $('#message-wrapper').attr('data-id') != '' ){
+        if( $('#message-wrapper').attr('data-id') ){
             socket.emit('admin.send.removelogchat', {
                 'from_mid' : $('#message-wrapper').attr('data-id'),
                 'channel' : channel

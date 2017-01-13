@@ -366,7 +366,17 @@ io.on('connection', function (socket) {
         
     });
     
-    
+
+    socket.on('admin.send.removelogchat',function( data ){
+        Messages.removeMessage( data.channel, data.from_mid, function( success ){
+            if( success ){
+                socket.emit('admin.receive.removelogchat',data);
+            }
+        } );
+        
+        
+    });
+
     
     // handle message from endusers
     /**

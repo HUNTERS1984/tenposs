@@ -99,3 +99,27 @@ exports.saveMessage = function(room_id, from,to, message, _callback){
         });
 
     }
+
+
+exports.removeMessage = function(room_id, mid , _callback){
+        
+        var sql = 'DELETE FROM messages WHERE room_id = ? AND ( from_mid = ? OR to_mid = ? )';
+        connection = mysql.createConnection(mysqlConfig);
+        connection.connect(); 
+       
+        var query = connection.query({
+           sql: sql,
+               values: [room_id, mid, mid]
+           }, function (error, results, fields) {
+               if(error) {
+                   connection.end();
+                   return false;
+               }else{
+                   connection.end();
+                   console.log(query.sql);
+                   return _callback( true );
+               }
+               
+           });
+
+    }
