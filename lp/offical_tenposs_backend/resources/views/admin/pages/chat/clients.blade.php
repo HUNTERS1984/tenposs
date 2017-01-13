@@ -42,16 +42,16 @@
                         <div class="modal-content">
                             <h4>本当に削除しますか?</h4>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-left">キャンセル</a>
+                                <a href="#" data-dismiss="modal" class="btn-user-poup-log-poup-left">キャンセル</a>
                             </div>
                             <div class="col-md-6 col-xs-6">
-                                <a href="" class="btn-user-poup-log-poup-right">削除</a>
+                                <a href="#" id="rm-log-chat" class="btn-user-poup-log-poup-right">削除</a>
                             </div>
                         </div>
                       </div>
                     </div>
                     <div class="dropdown drop-user-top">
-                        <a href="" id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a href="#" id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="glyphicon glyphicon-cog"></i>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dLabel">
@@ -350,7 +350,13 @@ function connectToChat() {
         package.status = 'Online';
         drawSystemMessage(package);
     })
+
+    socket.on('admin.receive.removelogchat',function(package){
+        $('#log-user').modal('hide');
+    })
     
+    
+
     socket.on('receive.admin.disconnect',function(package){
         package.status = 'Offline';
         drawSystemMessage(package);
@@ -473,6 +479,24 @@ $(document).ready(function(){
         return sendMessage(this);
     	
     });
+
+
+    $('a#rm-log-chat').on('click', function(e){
+
+        e.preventDefault();
+        if( $('#message-wrapper').attr('data-id') != '' ){
+            socket.emit('admin.send.removelogchat', {
+                'from_mid' : $('#message-wrapper').attr('data-id'),
+                'channel' : channel
+            });
+        }else{
+            alert('Select user chat to remove');
+            return false;
+        }
+        
+
+    });
+
     // Search contact
     $('#search_input').on('keyup',function (e) {
         e.preventDefault();
