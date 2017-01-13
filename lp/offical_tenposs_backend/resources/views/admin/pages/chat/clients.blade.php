@@ -352,6 +352,9 @@ function connectToChat() {
     })
 
     socket.on('admin.receive.removelogchat',function(package){
+        console.log('remove log message');
+        console.log(package);
+        $('#messages-windows').empty();
         $('#log-user').modal('hide');
     })
     
